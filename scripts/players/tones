@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ -s /etc/sound_48Khz_only ]
+then exec /usr/local/bin/tones -s 48000 -f -o /proc/self/fd/1 $* | sox -t raw -w -s -r 48000 -c 1 - -t ossdsp -c 2 $DSP_DEVICE
+else exec /usr/local/bin/tones -f -o /proc/self/fd/1 $* | sox -t raw -w -s -r 22050 -c 1 - -t ossdsp -c 2 $DSP_DEVICE
+fi

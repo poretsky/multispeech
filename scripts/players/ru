@@ -10,4 +10,8 @@ else FREQUENCY=10000
 fi
 
 #exec rawplay -sbv $VOLUME -f $FREQUENCY
-exec sox -t raw -s -b -r $FREQUENCY -v $VOLUME - -t ossdsp $DSP_DEVICE
+
+if [ -s /etc/sound_48Khz_only ]
+then exec sox -t raw -s -b -r $FREQUENCY -c 1 -v $VOLUME - -t ossdsp -r 48000 -c 2 -w $DSP_DEVICE
+else exec sox -t raw -s -b -r $FREQUENCY -c 1 -v $VOLUME - -t ossdsp -c 2 -w $DSP_DEVICE
+fi

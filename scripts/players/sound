@@ -1,3 +1,6 @@
 #!/bin/sh
 
-exec play -d $DSP_DEVICE -
+if [ -s /etc/sound_48Khz_only ]
+then exec sox - -t ossdsp -r 48000 -c 2 -w $DSP_DEVICE
+else exec sox - -t ossdsp -c 2 -w $DSP_DEVICE
+fi
