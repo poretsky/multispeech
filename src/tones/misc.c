@@ -54,7 +54,7 @@ err_rpt(err,msg)
 short int err;
 char *msg;
 
- { extern int sys_nerr;
+{ /* extern int sys_nerr; */
  /*   extern const char *const sys_errlist[];*/
    extern char *sys;
 
