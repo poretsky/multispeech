@@ -217,6 +217,28 @@ int main(int argc, char **argv)
 	  jobs<<tts->prepare(text);
 	}
 
+      else if (parent.command == "tts_sync_state")
+	{
+	  int c, s, r;		// capitalize, split caps, speech rate
+	  if (3 != sscanf(parent.data, "%*s %d %*s %d %d", &c, &s, &r))
+	    continue;
+	  switch (*parent.data)
+	    {
+	      case 'n':
+		punctuations::mode = 0;
+		break;
+	      case 's':
+		punctuations::mode =1;
+		break;
+	      case 'a':
+		punctuations::mode = 2;
+		break;
+	    }
+	  speech::capitalize = c;
+	  speech::split_caps = s;
+	  speech::rate = r;
+	}
+
       else if (parent.command == "exit")
 	break;
 
