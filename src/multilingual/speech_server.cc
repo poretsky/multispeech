@@ -82,7 +82,7 @@ void speech_task(int s)
 
 int main(int argc, char **argv)
 {
-  setlocale(LC_CTYPE, "koi8");
+  setlocale(LC_CTYPE, "ru_RU.KOI8-R");
   speech_device = getenv("SPEECH_DEVICE");
   if (!speech_device) speech_device = default_device;
   sound_device = getenv("SOUND_DEVICE");
