@@ -106,7 +106,8 @@ public:
     {
       mark += *new substitutor("(^|[^a-z\243À-ß])([bvhjqwxyzÂ×ÇÄÖÚÊËÌÍÎĞÒÓÔÆÈÃŞÛİßØ]+)([^a-z\243À-ß]|$)", "\\1 \\2m\\3");
       mark += *new substitutor(" ?( [×ËÓ])m([, ]|$)", "\\1\\2");
-      mark += *new substitutor("([\243À-ß]+[ÁÅÉÏÕÙÜÀÑ\243]) +([ÂÖ])m", "\\1\\2");
+      mark += *new substitutor("([\243À-ß]+[ÁÅÉÏÕÙÜÀ\243]) +([ÂÖ])m", "\\1\\2");
+      mark += *new substitutor("([\243À-ß]*Ñ) +([ÂÖ])m", "\\1\\2");
       mark += *new substitutor("(^|[\\(\\[{<\"'`,-]) ([×ËÓ])m([-, ]|$)", "\\1\\2\\3");
       unmark += *new substitutor(" w ", " ÄÕÂÌØ×Üa ");
       unmark += *new substitutor(" y ", " ÉaÇÒÅË ");
