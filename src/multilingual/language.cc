@@ -124,7 +124,7 @@ int language::sound_access(char *text)
   int stat;
   char *s = (char *)xmalloc(strlen(letters_lib) + strlen(id) + strlen(text) + 10);
   sprintf(s, "%s/%s/%s.raw", letters_lib, id, text);
-  stat = !access(clean(s), 4);
+  stat = !access(clean(s), R_OK);
   free(s);
   return stat;
 }
@@ -154,4 +154,5 @@ char *language::letter(char *&text)
   speech::rate = saved_rate;
   speech::pitch = saved_pitch;
   punctuations::mode = saved_mode;
+  return text;
 }
