@@ -9,10 +9,10 @@ BINS = src/freephone/freephone src/multilingual/speech_server src/tones/tones sr
 DOCS = src/tones/tones.1
 
 all: speech_server rawplay freephone tones lisp letters
-	mkdir binaries
-	cp $(BINS) binaries
-	mkdir docs
-	cp $(DOCS) docs
+	mkdir -p binaries
+	cp -f $(BINS) binaries
+	mkdir -p docs
+	cp -f $(DOCS) docs
 
 # Build speech_server
 speech_server:
@@ -44,11 +44,11 @@ letters_ru: letters/ru/dot.raw
 
 # English letters
 letters/en/dot.raw:
-	cd letters/en; cat letters.lst | gawk -f ../../scripts/generate_letters tts=../../scripts/tts/en rate=0.5 default_pitch=1.0 high_pitch=1.25 volume=2.0 frequency=16000
+	cd letters/en; cat letters.lst | awk -f ../../scripts/generate_letters tts=../../scripts/tts/en rate=0.5 default_pitch=1.0 high_pitch=1.25 volume=2.0 frequency=16000
 
 # Russian letters
 letters/ru/dot.raw:
-	cd letters/ru; cat letters.lst | gawk -f ../../scripts/generate_letters tts=../../scripts/tts/ru rate=0.0 default_pitch=0.2 high_pitch=0.4 volume=0.8 frequency=10000
+	cd letters/ru; cat letters.lst | awk -f ../../scripts/generate_letters tts=../../scripts/tts/ru rate=0.0 default_pitch=0.2 high_pitch=0.4 volume=0.8 frequency=10000
 
 clean:
 	cd src/freephone; $(MAKE) clean

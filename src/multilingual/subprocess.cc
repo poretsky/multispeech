@@ -51,13 +51,13 @@ void subprocess::run(char *program, char *input_file, char **argv)
       else
 	{
 	  close(channel[1]);
-	  if (dup2(channel[0], 0) < 0) exit(EXIT_FAILURE);
+	  if (dup2(channel[0], 0) < 0) _exit(EXIT_FAILURE);
 	  close(channel[0]);
 	}
       setbuf(stdin, NULL);
       if (prev_pid)
 	{
-	  if (dup2(fd, 1) < 0) exit(EXIT_FAILURE);
+	  if (dup2(fd, 1) < 0) _exit(EXIT_FAILURE);
 	  close(fd);
 	  setbuf(stdout, NULL);
 	}
@@ -71,7 +71,7 @@ void subprocess::run(char *program, char *input_file, char **argv)
       freopen("/dev/null", "w", stderr);
       setenv("DSP_DEVICE", dsp_device, 1);
       execv(program, argv);
-      exit(EXIT_FAILURE);
+      _exit(EXIT_FAILURE);
     }
 }
 
@@ -93,7 +93,7 @@ void subprocess::abort(void)
 
 void subprocess::operator << (char *instruction)
 {
-  int i;
+  int i, n, td, tf;
   char *program, *input_file, *argv[6];
   char cmd, *s = instruction;
   if (!instruction) return;
@@ -128,7 +128,24 @@ void subprocess::operator << (char *instruction)
 	argv[1] = new char[10];
 	argv[2] = new char[10];
 	strcpy(argv[0], tone_generator);
-	sscanf(s, "%s %s\n", argv[1], argv[2]);
+	sscanf(s, "%i %i\n", &td, &tf);
+	n = (td * tf) % 500;
+	if (n)
+	  {
+	    n = (n >= 250) ? 1 : -1;
+	    for (i = 2; (i << 2) <= td; i++)
+	      {
+		if ((((td + n) * tf) % 500) == 0)
+		  {
+		    td += n;
+		    break;
+		  }
+		if (n < 0) n += i;
+		else n -= i;
+	      }
+	  }
+	sprintf(argv[1], "%i\0", td);
+	sprintf(argv[2], "%i\0", tf);
 	argv[3] = NULL;
 	input_file = NULL;
 	s = NULL;

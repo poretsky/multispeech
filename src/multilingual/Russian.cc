@@ -105,7 +105,8 @@ public:
   ru_abbreviations(void)
     {
       mark += *new substitutor("(^|[^a-z\243À-ß])([bvhjqwxyzÂ×ÇÄÖÚÊËÌÍÎĞÒÓÔÆÈÃŞÛİßØ]+)([^a-z\243À-ß]|$)", "\\1 \\2m\\3");
-      mark += *new substitutor(" ( [Â×ËÓ])m([, ]|$)", "\\1\\2");
+      mark += *new substitutor(" ?( [×ËÓ])m([, ]|$)", "\\1\\2");
+      mark += *new substitutor("([\243À-ß]+[ÁÅÉÏÕÙÜÀÑ\243]) +([ÂÖ])m", "\\1\\2");
       mark += *new substitutor("(^|[\\(\\[{<\"'`,-]) ([×ËÓ])m([-, ]|$)", "\\1\\2\\3");
       unmark += *new substitutor(" w ", " ÄÕÂÌØ×Üa ");
       unmark += *new substitutor(" y ", " ÉaÇÒÅË ");
@@ -113,7 +114,7 @@ public:
       unmark += *new substitutor(" Ø ", " ÍÑcÇËÉÊ ÚÎÁaË ");
       unmark += *new substitutor(" ß ", " Ô×\243cÒÄÙÊ ÚÎÁaË ");
       unmark += *new substitutor(" m", "");
-      preparator += *new substitutor("( [bvÂ×])([a-zÀ-ß]*m|\\.)", "\\1Ü \\2");
+      preparator += *new substitutor("( [bvÂ×Ö])([a-zÀ-ß]*m|\\.)", "\\1Ü \\2");
       preparator += *new substitutor("( Ë)([a-zÀ-ß]*m)", "\\1Á \\2");
       preparator += *new substitutor(" (Ó)([a-zÀ-ß]*m)", " Ü\\1 \\2");
       preparator += *new substitutor("( h)([a-zÀ-ß]*m)", " ÁÛ \\2");
@@ -121,7 +122,7 @@ public:
       preparator += *new substitutor("( q)([a-zÀ-ß]*m)", " ËÕ \\2");
       preparator += *new substitutor("( x)([a-zÀ-ß]*m)", " ÉËÓ \\2");
       preparator += *new substitutor("( z)([a-zÀ-ß]*m)", " ÚÜÔ \\2");
-      preparator += *new substitutor("( [wyÇÄÖÚÊÌÍÎĞÒÔÆÈÃŞÛİßØ])([a-zÀ-ß]*m)", "\\1  \\2");
+      preparator += *new substitutor("( [wyÇÄÚÊÌÍÎĞÒÔÆÈÃŞÛİßØ])([a-zÀ-ß]*m)", "\\1  \\2");
     }
 };
 

@@ -1,9 +1,13 @@
 #!/bin/sh
-if [ $3 ]; then VOLUME=$3
+
+if [ $3 ]
+then VOLUME=$3
 else VOLUME=0.8
 fi
-if [ $4 ]; then FREQUENCY=$4
+if [ $4 ]
+then FREQUENCY=$4
 else FREQUENCY=10000
 fi
+
 #exec rawplay -sbv $VOLUME -f $FREQUENCY
 exec sox -t raw -s -b -r $FREQUENCY -v $VOLUME - -t ossdsp $DSP_DEVICE

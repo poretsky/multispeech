@@ -40,7 +40,7 @@ See command emacspeak-toggle-auditory-icons bound to \\[emacspeak-toggle-auditor
 (setq emacspeak-speak-messages nil)
 
 ;;;  Russian stuf loading
-(setq emacspeak-unspeakable-rule "^[^0-9a-zA-Z\243\263\300-\377\xe30-\xe6f\xe21\xe71]+$")
+(setq emacspeak-unspeakable-rule "^\W+$")
 (setq-default dtk-speak-nonprinting-chars nil)
 (let ((coding-system-for-read 'raw-text))
   (load-library "Russian-spelling"))

@@ -22,13 +22,13 @@ BEGIN {
 { 
 	letter = $1
 	word = $2
-	$generate_command = "echo " word " | " tts " " rate " " pitch " " volume " " frequency " > " letter ".raw 2>/dev/null"
+	generate_command = "echo " word " | " tts " " rate " " pitch " " volume " " frequency " > " letter ".raw 2>/dev/null"
 	# uncomment the next line if you want to see the commands being used
 	# to create the sound files.
-	#print $generate_command
+	#print generate_command
 
 	# generate the .raw file for the letter.
-	system ($generate_command)
+	system (generate_command)
 }
 
 # prints a summary.

@@ -1,3 +1,4 @@
 #!/bin/sh
+
 #exec rawplay -swv 1.0 -f 16000
 exec sox -t raw -s -w -r 16000 - -t ossdsp $DSP_DEVICE
