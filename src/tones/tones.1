@@ -1,0 +1,170 @@
+.TH tones 1 "20 Feb 1998" "Release 2" "Linux System Manual"
+.SH NAME
+.I tones \- a sequential tone generator program
+.SH SYNOPSIS
+.B tones [-8|-16] [-s samplerate] [-loop] [-w wavfile|-o file] 
+.B [-i file] [-c channels] [waveform] T freq(s)|notes(s)
+.SH DESCRIPTION
+.I tones
+generates one or more tones of various types (waveforms) and duration (T
+millisecs) of the specified frequencies or notes, or mixtures of frequencies
+or notes. 
+Possible waveforms are, sine
+(default), cosine, square, pulse, triangle, sawtooth. T is the number of
+millisecs that each tone is played for. Frequencies (freq(s)) are specified
+in Hertz as integers. A frequency of 0 causes T millisecs of silence to be
+played. Notes are specified as the musical note letter with an
+optional '#' to sharpen the note, then an octave number. Octaves run from 
+C to C. Middle C is C3, the immediately preceding note is B2! The first
+Octave is from C0 to C1.
+.PP
+Several frequencies/notes can be played at once, by specifying the 
+frequencies/notes required joined by a ',' character (but no spaces!).
+.PP
+e.g.
+.I 1000,1500,2000 
+specifies that the three frequencies are played together.
+.PP
+Each freq specification can optionally contain a duration, by
+appending ':T', where 'T' is the duration in millisecs. This duration
+overrides the default duration. Also the default duration can be changed 
+by using a the ':T' format on it's own - not appended to a freq spec.
+.PP
+e.g. 
+.I 1200,600:1000
+play the two freqs for 1 sec
+.PP
+e.g.
+.I c3,e3,g3
+play the C major chord
+.PP
+e.g. 
+.I :250
+set the default tone duration to 250ms
+.PP
+Waveforms can be specified/altered at anytime. A single waveform name
+specifies that waveform to be used for all channels. Alternatively
+a comma (',') seperated list of waveforms can be given to specify or alter
+the waveform to use for a given channel. Ommitting a waveform in a list,
+means that the previous waveform is left unchanged.
+.PP
+e.g. 
+.I square,,triangle
+specifies to use square waves for chan 1,
+chan 2 is left unchanged, and triangle waves are used for channel 3.
+.PP
+Their are some special 'commands' that can be specified, that may be useful
+in input files.
+.IP echo
+The rest of the line of the input file, or the rest of the command line
+parameter (NB to use quotes where necessary) is output to stdout.
+.IP reset
+All generator points are reset to the start of the waveform buffers. This
+forces subsequant generation of multiple frequencies/waveforms to be in phase.
+.PP
+The digital samples (either 8 or 16 bits) are played by default to the Linux
+.I /dev/dsp
+device at a samplerate of 22050 samples per second, in mono mode.
+.PP
+Fractional Hertz frequencies are not supported. Of course, only frequencies 
+less than half the samplerate (number of samples/sec) can be accurately 
+generated; but the program doesn't check this.
+.PP
+Instead of playing the output to 
+.I /dev/dsp
+the samples can be written to a file as raw samples (-o file) or written in
+WAV format (-w wavfile). These data files can then be played back quickly
+with a raw data or WAV file player (e.g. vplay) without the overhead of
+actually generating the samples.
+.SH OPTIONS
+.IP -8\ |\ -b\ 8
+set 8 bit unsigned data samples
+.IP -16\ |\ -b\ 16
+set 16 bit signed little-endian data samples.
+.IP -a
+when used in conjunction with the -o option, data is appended to the file.
+.IP -c\ CHANNELS
+set the maximum number of channels (concurrent played frequencies) to 
+CHANNELS. The default number is 4. There is some virtue in keeping the
+number of channels to a minimum.
+.IP -f
+when used in conjunction with the -o or -w options, any existing file is
+silently overwritten.
+.IP -h
+display usage and help info
+.IP -i\ file
+read frequencies/waveforms to generate from file 'file'.
+Reads from standard input if filename is '-'. Any command line specifications
+are actioned before the input file is read.
+.IP -loop
+play the tone sequence repetitively. Forced off if writing samples to a file
+with the -o or -w options.
+.IP -o\ file
+write out samples to a raw data file. You will have to remember the data
+format, e.g. samplerate and 8/16 bit.
+.IP -s\ samplerate
+set the number of samples per second to samplerate. For many simple uses a
+samplerate of 8000 is sufficient, making any saved data files smaller.
+.IP -w\ wavfile
+write samples out in WAV format to wavfile. The WAV header contains details
+of whether the data is 8 or 16 bits and the sampling rate. You cannot use the
+append (-a) option with WAV files.
+.IP -v
+be verbose
+.SH EXAMPLES
+.IP tones\ 50\ 1000\ 700,1200\ 800,1100,1300
+generates 3 50 millisecs sine tones, the first consisting of only 1000Hz,
+the second of 700Hz and 1200Hz and the third of 800Hz, 1100Hz and 1300Hz
+.IP tones\ -loop\ square\ 200\ 700\ 900\ 400\ 500
+generates a sequence of 4 200 millisecs square wave tones which is repeated
+until the program is interupted.
+.IP tones\ -w\ seq.wav\ 70\ 1016\ 1200\ 1080\ 1150\ 1016
+generates a sequence of 5 70 millisecs sine tones, and instead of playing them
+the samples are stored in WAV format in seq.wav which can be played by any
+WAV file player.
+.SH FILES
+.SH
+.SH SEE  ALSO
+sgen, swgen, siggen, sweepgen
+.SH BUGS
+.SH
+.SH COPYING
+.I Copyright 1995, 1996, 1997, 1998 the author (see below)
+.PP
+The software described by this manual is covered by the GNU General
+Public License, Version 2, June 1991, issued by :
+.IP
+Free Software Foundation, Inc.,
+.br
+675 Mass Ave,
+.br
+Cambridge, MA 02139, USA
+.PP
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+.PP
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+.PP
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be included in
+translation instead of in the original English.
+.SH AUTHOR
+.I Jim Jackson
+.br
+.I School of Computer Studies
+.br
+.I University of Leeds
+.I The University of Leeds
+.br
+.I Leeds, LS2 9JT
+.br
+.I UK
+.br
+.sp
+.I Email: jj@scs.leeds.ac.uk
+.br

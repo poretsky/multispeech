@@ -1,0 +1,72 @@
+
+Some notes on the 'tones' program.                             Jim Jackson
+----------------------------------                                Feb 1998
+
+The tones program has growed out of a simple sequential tone generator that
+I wrote for Michael Meifert <mime@dk3hg.hanse.de> for generating a sequence
+of tones for control purposes. Since then I've expanded it to maintain a set
+of 'channels', each channel having a seperately configured waveform, and
+frequency, all the channels are mixed to provide the output signal.
+
+Musical note generation
+
+Also I've added the ability to generate musical notes, by being able to
+specify a note + optional sharp + octave digit, e.g. C3 is middle C.
+The tuning is based on the standard concert A of 440Hz (A3), and an equally
+tempered scale. Thanks to Ivor Dykes for the music lessons! If you want a
+different tuning then the frequencies are defined in an array in tonesgen.c,
+and can easily be altered to taste. 
+
+Installation
+
+Is upto you. Copy the scripts into a suitable directory, your own ~/bin
+directory or /usr/local/bin. You will have to edit the scripts to put in
+the location of the tones program - usually /usr/local/bin - or to as you
+wish. The only script worth installing really is 'dtmf' - and I'm sure that 
+can be improved! Feel free - let me know the results.
+
+Some examples
+
+tones 2000 sin c3,e3,g3
+   plays the C Major chord
+   
+tones 100 sin 941,1336 0,0 697,1209 0,0 697,1209 0,0 697,1477 0,0
+   generate the dtmf dial tones for '0' '1' '1' '3'
+   Here are the frequencies to use.....
+   1 = 697,1209    2 = 697,1336    3 = 697,1477    4 = 770,1209
+   5 = 770,1336    6 = 770,1477    7 = 852,1209    8 = 852,1336
+   9 = 852,1477    0 = 941,1336    * = 941,1209    # = 941,1477
+   
+tones -loop :2000 sin 1000 square 1000 tri 1000 saw 1000 0
+   generate a series of test waveforms repeatedly. The ':' infront
+   of the default duration setting forces this to be a duration setting
+   even on the loop - otherwise it would be treated as a freq. spec.
+   Yeah it's a bug - but I couldn't see an easy fix.
+
+More examples in the tones.eg directory
+
+In sub-directory, tones.eg, there are some examples using the tones program.
+Run make in the tones.eg directory to create the very simple programs ramp,
+randtone and randnote. Then try the shell scripts ramp.sh, randtone.sh and
+randnote.sh
+
+ramp.sh     generate a slow ramp modulated frequency. Edit the script to
+            change the parameters. 'ramp' simple generates a suitable series
+            of incrementing (or decrementing) numbers that tones converts into
+	    successive short tones.
+
+randtone.sh  generates random tones of varying duration.
+
+randnote.sh  generates random notes
+
+tune.sh      plays a couple of tunes! File tune.notes contains the notes for
+             a simple tune. tune2.notes contains the notes for a more
+	     complex tune with harmony (clemetine). Just for fun.
+
+dtmf         script to create dtmf dial tones for single digits given
+             as parameters to the script. e.g. dtmf 0 1 1 3 6 6 6
+
+Jim Jackson                  jj@scs.leeds.ac.uk
+School of Computer Studies
+University of Leeds
+UK

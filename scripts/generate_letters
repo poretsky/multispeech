@@ -1,0 +1,37 @@
+##############################################################################
+# This is a gawk script
+#
+# This script is used to generate the sound files for letters and some other
+# things like space and slash etc. It is part of the multilingual speech
+# server for emacspeak.
+#
+##############################################################################
+
+BEGIN { 
+	# settings
+	# none at this moment
+}
+
+# set pitch for lower case letters
+{	pitch = default_pitch }
+# set pitch for upper case letters
+/^[A-Z\341-\377]/ {
+	pitch = high_pitch }
+
+# this action generates a .raw file for each letter
+{ 
+	letter = $1
+	word = $2
+	$generate_command = "echo " word " | " tts " " rate " " pitch " " volume " " frequency " > " letter ".raw 2>/dev/null"
+	# uncomment the next line if you want to see the commands being used
+	# to create the sound files.
+	#print $generate_command
+
+	# generate the .raw file for the letter.
+	system ($generate_command)
+}
+
+# prints a summary.
+END {	print "finished letter generation."
+}
+
