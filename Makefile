@@ -3,12 +3,12 @@
 # and make sure there is all right. :-)
 #
 # binaries.
-BINS = src/freephone/freephone src/multilingual/speech_server src/tones/tones src/rawplay/rawplay
+BINS = src/freephone/freephone src/multilingual/speech_server src/tones/tones
 #
 # documentation files.
 DOCS = src/tones/tones.1
 
-all: speech_server rawplay freephone tones letters
+all: speech_server freephone tones letters
 	mkdir -p binaries
 	cp -f $(BINS) binaries
 	mkdir -p docs
@@ -21,10 +21,6 @@ speech_server:
 # build our modified version of freephone
 freephone:
 	cd src/freephone; $(MAKE) all
-
-# build rawplay from rawplay.c
-rawplay:
-	cd src/rawplay; $(MAKE)
 
 # build the tones prg
 tones:
@@ -48,6 +44,5 @@ letters/ru/dot.raw:
 
 clean:
 	cd src/freephone; $(MAKE) clean
-	cd src/rawplay; $(MAKE) clean
 	cd src/tones; $(MAKE) clean
 	cd src/multilingual; $(MAKE) clean
