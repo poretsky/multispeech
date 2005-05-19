@@ -15,7 +15,7 @@ BEGIN {
 # set pitch for lower case letters
 {	pitch = default_pitch }
 # set pitch for upper case letters
-/^[A-Z\341-\377]/ {
+/^[A-Z\263\340-\377]/ {
 	pitch = high_pitch }
 
 # this action generates a .raw file for each letter
