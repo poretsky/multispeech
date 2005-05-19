@@ -14,18 +14,18 @@
 ############################################################################
 # Sun users
 # CC = gcc
-# CFLAGS = -g -Wall -pedantic
+# CFLAGS = -O2 -s
 # LIBS = -lm
 ############################################################################
 # FreeBSD users
 # CC = gcc
-# CFLAGS = -O2 -Wall -pedantic
+# CFLAGS = -O2 -DFBSD_DATABASE -s
 # LIBS = -lm
 ############################################################################
 # Linux users
 CC = gcc
-CFLAGS = -s -O2 -Wall -pedantic
-LIBS = -lm -lgdbm
+CFLAGS = -O2 -DBERKELEYDB -pedantic -s
+LIBS = -lm -ldb-3
 ############################################################################
 
 

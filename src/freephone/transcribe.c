@@ -9,9 +9,11 @@
 
 #include <sys/types.h>
 #include <limits.h>
-/* FreeBSD, and Linux?  */
-#ifdef FBSD_DATABASE
+
+#if defined(FBSD_DATABASE)
 #include <db.h>
+#elif defined(BERKELEYDB)
+#include <db_185.h>
 #else
 #include <ndbm.h>
 #endif
@@ -54,7 +56,7 @@ export void transcribe(CONFIG *config, LING_LIST *ling_list)
   }
 }
 
-#ifdef FBSD_DATABASE
+#if defined(FBSD_DATABASE) || defined(BERKELEYDB)
 
 static char *lookup_db(char *word, CONFIG *config)
 {
@@ -68,7 +70,7 @@ static char *lookup_db(char *word, CONFIG *config)
  
  
   if(config->db != NULL) {
-    (config->db->get)((DB *)config->db,&inKey,&inVal,0);
+    (((DB *)(config->db))->get)((DB *)(config->db),&inKey,&inVal,0);
     return(inVal.data);
   } else 
     return(NULL);
