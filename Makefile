@@ -8,7 +8,7 @@ BINS = src/freephone/freephone src/multilingual/speech_server src/tones/tones sr
 # documentation files.
 DOCS = src/tones/tones.1
 
-all: speech_server rawplay freephone tones lisp letters
+all: speech_server rawplay freephone tones letters
 	mkdir -p binaries
 	cp -f $(BINS) binaries
 	mkdir -p docs
@@ -29,10 +29,6 @@ rawplay:
 # build the tones prg
 tones:
 	cd src/tones; $(MAKE) all
-
-# Compiling lisp files
-lisp:
-	cd lisp; $(MAKE) all
 
 # generates the pre-synthesized letters.
 # dot.raw is the last "letter", so let's suppose if that one exists, all
