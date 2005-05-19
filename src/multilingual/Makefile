@@ -10,7 +10,7 @@ clean:
 	g++ -s -o $@ $^ -lm
 
 .c.o:
-	g++ -c -O2 $<
+	gcc -c -O2 $<
 
 .cc.o:
 	g++ -c -O2 $<
