@@ -63,7 +63,7 @@ static char *lookup_db(char *word, CONFIG *config)
   DBT inKey, inVal;
  
   inKey.data = word;
-  inKey.size = strlen(word)+1;
+  inKey.size = strlen(word);
  
   inVal.data = NULL;
   inVal.size = 0;
@@ -83,7 +83,7 @@ static char *lookup_db(char *word, CONFIG *config)
   datum Key;
 
   Key.dptr = word;
-  Key.dsize = strlen(word)+1;
+  Key.dsize = strlen(word);
 
   if(config->db != NULL)
     return(dbm_fetch((DBM *)config->db,Key).dptr);
