@@ -127,7 +127,7 @@ public:
     }
 };
 
-language *Russian = new language("ru", "[ю-Ъ\243\263]",
+language *Russian = new language("ru", "ru_RU.koi8r", "Русский", "[ю-Ъ\243\263]",
 				 *new ru_recoder("аbцдефгhиjклмнопqрстуvwxyz") +=
 				 *new substitutor("[\\+-]?[0-9]+(\\.[0-9]+)?", " & ") +=
 				 *new substitutor("-([0-9])", " минус \\1") +=

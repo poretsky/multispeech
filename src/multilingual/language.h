@@ -31,25 +31,34 @@ class speech: public chain
   static int rate, frequency, split_caps, capitalize, space_special_chars;
 
   speech(chain &, voice &);
+  speech(voice &);
 };
 
 class language
 {
+ protected:
+  virtual char* post_prepare (char *&);
+  chain prepare_chain;
+
  private:
   regexp *charset;
   chain clean;
 
  public:
   char *id;
-  chain prepare;
+  char* name;
+  char* locale;
 
-  language(char *, char *, chain &, voice &);
+  language(char *, char *, char*, char *, chain &, voice &);
+  language(char *, char *, char*, voice &);
   ~language(void);
 
   int check(char *);
   int sound_access(char *);
   char *say(char *&);
   char *letter(char *&);
+  char *prepare (char *&);
+
 };
 
 #endif

@@ -1,5 +1,13 @@
 // Language description procedures
+// Update: 
+// * 2005 Gilles Casse <gcasse@oralux.org>
+// prepare : method updated. Call the post_prepare method before 
+//           calling the chain () operator. 
+//           Helpful for some basic TTS where e.g. numbers are not allowed. 
+//           See e.g. the Brazilian class.
+//           
 
+// By default this method has no action.
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -49,6 +57,10 @@ speech::speech(chain &text_preparations, voice &command_insertion)
   *this += *new substitutor("([-\\.,!?;:'])+", "\\1");
   *this += command_insertion;
 }
+speech::speech(voice &command_insertion)
+{
+  *this += command_insertion;
+}
 
 char *speech::perform(char *&text)
 {
@@ -93,13 +105,36 @@ char *speech::perform(char *&text)
   return text;
 }
 
-language::language(char *lang, char *chars, chain &tpreps, voice &pars)
+char *language::post_prepare (char *&text)
+{
+  return text;
+}
+
+char *language::prepare (char *&text)
+{
+  prepare_chain( text);
+  char* s=post_prepare( text);
+  return s;
+}
+
+language::language(char *lang, char *theLocale, char* label, char *chars, chain &tpreps, voice &pars)
 {
   id = lang;
+  name = label;
+  locale = theLocale;
   charset = regcomp(chars);
-  prepare += *new speech(tpreps, pars);
+  prepare_chain += *new speech(tpreps, pars);
   clean += *new substitutor("\\[[^]]*\\]", "");
   clean += *new substitutor(" +", "");
+}
+
+language::language(char *lang, char *theLocale, char* label, voice &pars)
+{
+  id = lang;
+  name = label;
+  locale = theLocale;
+  charset = NULL;
+  prepare_chain += *new speech(pars);
 }
 
 language::~language(void)
@@ -154,5 +189,7 @@ char *language::letter(char *&text)
   speech::rate = saved_rate;
   speech::pitch = saved_pitch;
   punctuations::mode = saved_mode;
+
   return text;
 }
+

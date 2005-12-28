@@ -52,7 +52,7 @@ public:
     }
 };
 
-language *English = new language("en", "[a-zA-Z]",
+language *English = new language("en", "en_US.iso885915", "English", "[a-zA-Z]",
 				 *new substitutor("\\.,", " dot comma ") +=
 				 *new substitutor("\\.\\.\\.", " dot dot dot ") +=
 				 *new substitutor("\\.\\.", " dot dot ") +=
