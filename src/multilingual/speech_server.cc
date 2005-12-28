@@ -33,8 +33,12 @@
 #include "source.h"
 #include "punctuations.h"
 #include "language.h"
+#include "Brazilian.h"
 #include "English.h"
+#include "French.h"
+#include "German.h"
 #include "Russian.h"
+#include "Spanish.h"
 
 // Default paths and names
 char *letters_lib = "/usr/local/lib/multispeech/letters";
@@ -46,6 +50,7 @@ char *default_device = "/dev/dsp";
 char *speech_device;
 char *sound_device;
 char *tones_device;
+int auto_switch;
 
 // Common objects
 queue jobs, urgent, backup;
@@ -53,13 +58,53 @@ source parent;
 subprocess speaker;
 int talking = 0;
 int sflag = 0;
-language *tts = English;
+language *tts = NULL;
 
 void define_language(char *text)
 {
-  if (Russian->check(text)) tts = Russian;
-  else if (English->check(text)) tts = English;
+  if (auto_switch)
+    {
+      if (Russian->check(text)) tts = Russian;
+      else if (English->check(text)) tts = English;
+    }
 }
+
+// Select language
+static language* languages[] =
+  {
+    Brazilian,
+    English,
+    French,
+    German,
+    Russian,
+    Spanish
+  };
+enum {MAX_AVAILABLE_LANG = sizeof(languages) / sizeof(languages[0])};
+
+int set_language(char *lang)
+{
+  int found = 0;
+  int i;
+  
+  if (!lang)
+    {
+      return 0;
+    }
+
+  for (i=0; i < MAX_AVAILABLE_LANG; i++)
+    {
+      if (strcmp(languages[i]->id, lang) == 0) 
+	{
+	  tts = languages[i];
+	  setlocale(LC_CTYPE, tts->locale);
+	  found = 1;
+	  break;
+	}
+    }
+  return found;
+}
+//
+
 
 void speech_task(int s)
 {
@@ -82,7 +127,16 @@ void speech_task(int s)
 
 int main(int argc, char **argv)
 {
-  setlocale(LC_CTYPE, "ru_RU.KOI8-R");
+  if (!set_language( getenv("LANGUAGE")))
+  {
+    set_language("ru");
+    //  setlocale(LC_CTYPE, "koi8"); GC: will be ru_RU.koi8r (set_language)
+  }
+
+  // is language switching authorized?
+  char* s = getenv("MULTISPEECH_LANG_SWITCH");
+  auto_switch = (s && !strcmp(s,"1")); 
+
   speech_device = getenv("SPEECH_DEVICE");
   if (!speech_device) speech_device = default_device;
   sound_device = getenv("SOUND_DEVICE");
@@ -217,6 +271,33 @@ int main(int argc, char **argv)
 	  jobs<<tts->prepare(text);
 	}
 
+      else if (parent.command == "set_lang")
+	{
+	  char lang[4];
+	  int aLength=2;
+	  if (parent.data[aLength] != ' ')
+	    {
+	      aLength++;
+	      if (parent.data[aLength] != ' ')
+		{
+		  break;
+		}
+	    }
+	  strncpy(lang,parent.data,aLength);
+	  lang[aLength] = 0;
+
+	  set_language(lang);
+
+	  if (parent.data[aLength+1] == 't') 
+	    { // announce the new language
+	      char *text = strdup(tts->name);
+	      urgent.clear();
+	      urgent<<tts->say(text);
+	      jobs.clear();
+	      talking = 0;
+	    }
+	}
+
       else if (parent.command == "tts_sync_state")
 	{
 	  int c, s, r;		// capitalize, split caps, speech rate
@@ -224,15 +305,15 @@ int main(int argc, char **argv)
 	    continue;
 	  switch (*parent.data)
 	    {
-	      case 'n':
-		punctuations::mode = 0;
-		break;
-	      case 's':
-		punctuations::mode =1;
-		break;
-	      case 'a':
-		punctuations::mode = 2;
-		break;
+	    case 'n':
+	      punctuations::mode = 0;
+	      break;
+	    case 's':
+	      punctuations::mode =1;
+	      break;
+	    case 'a':
+	      punctuations::mode = 2;
+	      break;
 	    }
 	  speech::capitalize = c;
 	  speech::split_caps = s;
