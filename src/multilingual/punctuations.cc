@@ -4,9 +4,9 @@
 #include "punctuations.h"
 #include "substitutor.h"
 
-char *punctuations_set = "!'?,.;:-@#$%^&*_()+=[]{}\\|\"/`~<>";
-
 int punctuations::mode = 1;
+
+const char *punctuations::punctuations_set = "!'?,.;:-@#$%^&*_()+=[]{}\\|\"/`~<>";
 
 punctuations::punctuations(char **pronounce)
 {

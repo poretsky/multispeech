@@ -17,6 +17,9 @@ class punctuations: public chain
   static int mode;
 
   punctuations(char **);
+
+  static const char *punctuations_set;
+
 };
 
 #endif
