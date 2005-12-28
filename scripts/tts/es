@@ -1,0 +1,3 @@
+#!/bin/sh
+exec ircha_tts.pl | mbrola -t $1 -f $2 -v $3 -l $4 -e /usr/local/share/mbrola/voices/es1 - -A
+

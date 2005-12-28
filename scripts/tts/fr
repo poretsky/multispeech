@@ -1,0 +1,10 @@
+#!/bin/sh
+export LLIAPHON_NOARCH="/usr/local/share/lliaphon"
+
+pkill -KILL lliaphon-client
+
+if [ -ne $(pgrep lliaphon) ]; then
+    lliaphonctl start
+fi
+
+exec lliaphon-client | mbrola -t $1 -f $2 -v $3 -l $4 -I $LLIAPHON_NOARCH/initfile.lia -e /usr/local/share/mbrola/voices/fr4 - -A

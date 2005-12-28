@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ -s /etc/sound_48Khz_only ]
+then exec sox -t raw -s -w -r 22050 -c 1 - -t ossdsp -r 48000 -c 2 $DSP_DEVICE
+else exec sox -t raw -s -w -r 22050 -c 1 - -t ossdsp -c 2 $DSP_DEVICE
+fi
