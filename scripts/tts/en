@@ -1,3 +1,3 @@
 #!/bin/sh
-exec freephone -h /usr/local/lib/mbrola/tts/English/lexicon -i - -o - \
- | mbrola -t $1 -f $2 -v $3 -l $4 -e /usr/local/lib/mbrola/voices/en1/en1 - -A
+exec freephone -h /usr/local/share/mbrola/lexicon.en -i - -o - \
+ | mbrola -t $1 -f $2 -v $3 -l $4 -e /usr/local/share/mbrola/voices/en1 - -A
