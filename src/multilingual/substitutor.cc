@@ -19,7 +19,7 @@ substitutor::substitutor(char *orig, char *subst)
 {
   symbol = 0;
   pattern = new regex_t;
-  if (regcomp(pattern, orig, REG_EXTENDED | REG_NEWLINE))
+  if (regcomp(pattern, orig, REG_EXTENDED))
     {
       delete pattern;
       pattern = NULL;
