@@ -114,13 +114,7 @@ export void init(CONFIG *config, BUFFER *buffer, LING_LIST *ling_list, SENT *sen
 
   /*	what follows is an example for use as a template  */
   load_context_rules("context_rules");
-  /* this goes with the rule engine code...
-     for(i=0;i<nrules;i++) {
-     rule[i].lc = regcomp(rule[i].left_context);
-     rule[i].rc = regcomp(rule[i].right_context);
-     }
-     */
- 
+
   phon_rules_init();
 
 
