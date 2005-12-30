@@ -45,9 +45,9 @@ OBJS = go.o t2s.o space.o tags.o grammar.o \
 	phon_rules.o edin2sampa.o
 #coeffs.o excitation.o durations.o pitch.o audio.o ulaw.o \
 
-RULE_SRC = rule_engine.c regerror.c regexp.c regsub.c read_rules.c
+RULE_SRC = rule_engine.c read_rules.c
 
-RULE_OBJS = rule_engine.o regerror.o regexp.o regsub.o read_rules.o
+RULE_OBJS = rule_engine.o read_rules.o
 
 
 NRL_SRC = interface.c english.c nrl_edin.c phoneme.c saynum.c spellwor.c
@@ -63,7 +63,7 @@ MAIN_SRC = main.c
 
 MAIN = main.o
 
-HEADERS = regexp.h regmagic.h rule_engine.h t2s.h prototypes.h
+HEADERS = rule_engine.h t2s.h prototypes.h
 
 all: freephone
 
@@ -96,5 +96,5 @@ distribution:
 $(OBJS) : t2s.h
 $(TEST_OBJS) : t2s.h
 $(MAIN) : t2s.h
-$(RULE_OBJS) : regexp.h regmagic.h
+$(RULE_OBJS) :
 rule-engine.c : rule_engine.h

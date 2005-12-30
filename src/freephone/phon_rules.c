@@ -62,24 +62,64 @@ export void load_context_rules(char * filename)
     */
 }
 
-/* replace string in situ  */
-export void phon_rules_init()
-{
-  int i;
-
-  for(i=0;i<nrules;i++) {
-    alloetc[i].lc = regcomp(alloetc[i].left_context);
-    alloetc[i].rc = regcomp(alloetc[i].right_context);
-  }
-}
-
 export void phon_rules_free()
 {
   int i;
 
   for(i=0;i<nrules;i++) {
-    free(alloetc[i].lc);
-    free(alloetc[i].rc);
+    if (alloetc[i].lc) {
+      regfree(alloetc[i].lc);
+      free (alloetc[i].lc);
+      alloetc[i].lc = NULL;
+    }
+    if (alloetc[i].rc) {
+      regfree(alloetc[i].rc);
+      free(alloetc[i].rc);
+      alloetc[i].rc = NULL;
+    }
+  }
+}
+
+/* replace string in situ  */
+export void phon_rules_init()
+{
+  int i, err, msgsize;
+  char *msg;
+
+  for(i=0;i<nrules;i++) {
+    alloetc[i].lc = malloc(sizeof(regex_t));
+    if (!alloetc[i].lc) {
+      fprintf(stderr, "Memory allocation error\n");
+      phon_rules_free();
+      exit(EXIT_FAILURE);
+    }
+    err = regcomp(alloetc[i].lc, alloetc[i].left_context,
+		  REG_EXTENDED | REG_NEWLINE);
+    if (err) {
+      msgsize = regerror(err, alloetc[i].lc, NULL, 0);
+      msg = malloc(msgsize);
+      (void)regerror(err, alloetc[i].lc, msg, msgsize);
+      (void)fprintf(stderr, "regcomp: %s\n", msg);
+      phon_rules_free();
+      free(msg);
+      exit(EXIT_FAILURE);
+    }
+    alloetc[i].rc = malloc(sizeof(regex_t));
+    if (!alloetc[i].rc) {
+      fprintf(stderr, "Memory allocation error\n");
+      exit(EXIT_FAILURE);
+    }
+    err = regcomp(alloetc[i].rc, alloetc[i].right_context,
+		  REG_EXTENDED | REG_NEWLINE);
+    if (err) {
+      msgsize = regerror(err, alloetc[i].rc, NULL, 0);
+      msg = malloc(msgsize);
+      (void)regerror(err, alloetc[i].rc, msg, msgsize);
+      (void)fprintf(stderr, "regcomp: %s\n", msg);
+      phon_rules_free();
+      free(msg);
+      exit(EXIT_FAILURE);
+    }
   }
 }
 

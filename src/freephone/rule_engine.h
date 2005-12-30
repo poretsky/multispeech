@@ -1,10 +1,10 @@
 
 typedef struct {
 	char *left_context;
-	regexp *lc;
+	regex_t *lc;
 	char *target;
 	char *right_context;
-	regexp *rc;
+	regex_t *rc;
 	char *output;
 } RULE;
 

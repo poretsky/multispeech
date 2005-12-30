@@ -6,15 +6,16 @@
 //           Helpful for some basic TTS where e.g. numbers are not allowed. 
 //           See e.g. the Brazilian class.
 //           
-
 // By default this method has no action.
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <regex.h>
 #include "xmalloc.h"
-#include "regexp.h"
 #include "chain.h"
 #include "substitutor.h"
 #include "punctuations.h"
@@ -122,7 +123,12 @@ language::language(char *lang, char *theLocale, char* label, char *chars, chain 
   id = lang;
   name = label;
   locale = theLocale;
-  charset = regcomp(chars);
+  charset = new regex_t;
+  if (regcomp(charset, chars, REG_EXTENDED | REG_NEWLINE))
+    {
+      delete charset;
+      charset = NULL;
+    }
   prepare_chain += *new speech(tpreps, pars);
   clean += *new substitutor("\\[[^]]*\\]", "");
   clean += *new substitutor(" +", "");
@@ -139,7 +145,11 @@ language::language(char *lang, char *theLocale, char* label, voice &pars)
 
 language::~language(void)
 {
-  free(charset);
+  if (charset)
+    {
+      regfree(charset);
+      delete charset;
+    }
 }
 
 int language::check(char *text)
@@ -147,7 +157,10 @@ int language::check(char *text)
   char *t = strdup(text);
   if (clean(t))
     {
-      int status = regexec(charset, t);
+      int status;
+      if (charset)
+	status = !regexec(charset, t, 0, NULL, 0);
+      else status = 1;
       free(t);
       return status;
     }

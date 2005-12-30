@@ -9,7 +9,9 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <regex.h>
 #include "queue.h"
+#include "chain.h"
 #include "language.h"
 #include "subprocess.h"
 

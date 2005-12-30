@@ -5,6 +5,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
+#include <regex.h>
 #include "chain.h"
 #include "substitutor.h"
 #include "punctuations.h"

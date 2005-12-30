@@ -4,9 +4,6 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H 1
 
-#include "regexp.h"
-#include "chain.h"
-
 class voice: public chain
 {
  protected:
@@ -41,7 +38,7 @@ class language
   chain prepare_chain;
 
  private:
-  regexp *charset;
+  regex_t *charset;
   chain clean;
 
  public:

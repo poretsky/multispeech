@@ -22,7 +22,7 @@
 export void rule_exec(int type,int nrules, RULE *rule, SENT *sent)
 {
   int i;
-  int lmatch = 0, rmatch = 0;
+  int lmatch = REG_NOMATCH, rmatch = REG_NOMATCH;
   char *input = buffer_text(&(sent->list));
   BUFFER ib;
   BUFFER prev;
@@ -31,13 +31,13 @@ export void rule_exec(int type,int nrules, RULE *rule, SENT *sent)
   buffer_init(&prev);
   while (*input) {
     for(i=0;i<nrules;i++) {
-      lmatch = 0;
-      rmatch = 0;
+      lmatch = REG_NOMATCH;
+      rmatch = REG_NOMATCH;
       if(!strncmp(input,rule[i].target,strlen(rule[i].target))) {
 	/* candidate for rule match  */
-	lmatch = regexec(rule[i].lc,buffer_text(&prev));
-	rmatch = regexec(rule[i].rc,input+strlen(rule[i].target));
-	if(lmatch && rmatch) {
+	lmatch = regexec(rule[i].lc,buffer_text(&prev),0,NULL,0);
+	rmatch = regexec(rule[i].rc,input+strlen(rule[i].target),0,NULL,0);
+	if(!(lmatch || rmatch)) {
 	  buffer_add_str(&ib, rule[i].output);
 	  input += strlen(rule[i].target);
 	  buffer_add_str(&prev, rule[i].target);
@@ -45,16 +45,16 @@ export void rule_exec(int type,int nrules, RULE *rule, SENT *sent)
 	}
       }
     }
-    if(lmatch && rmatch) {
-      ;
-    } else if (type|SAME) {
-      buffer_add_char(&ib, *input);
-      buffer_add_char(&prev, *input);
-      input++;
-    } else {
-      buffer_free(&prev);
-      buffer_free(&ib);
-      return;
+    if(lmatch || rmatch) {
+      if (type|SAME) {
+	buffer_add_char(&ib, *input);
+	buffer_add_char(&prev, *input);
+	input++;
+      } else {
+	buffer_free(&prev);
+	buffer_free(&ib);
+	return;
+      }
     }
   }
   buffer_clear(&(sent->list));
