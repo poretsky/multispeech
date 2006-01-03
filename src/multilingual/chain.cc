@@ -1,6 +1,7 @@
 // Base chain functions
 
-#include <stdlib.h>
+#include <cstdlib>
+
 #include "chain.h"
 
 chain::chain(void)

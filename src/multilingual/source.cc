@@ -1,10 +1,12 @@
 // Input commands from client
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cerrno>
+#include <cstring>
+
 #include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
+
 #include "xmalloc.h"
 #include "source.h"
 

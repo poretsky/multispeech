@@ -2,10 +2,12 @@
 // This stuff is language dependent and
 // oriented for an Mbrola TTS
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
+
 #include <sys/types.h>
 #include <regex.h>
+
 #include "chain.h"
 #include "substitutor.h"
 #include "punctuations.h"

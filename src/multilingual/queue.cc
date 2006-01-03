@@ -1,6 +1,7 @@
 // Queue manipulation functions
 
-#include <stdlib.h>
+#include <cstdlib>
+
 #include "queue.h"
 
 queue::queue(void)

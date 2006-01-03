@@ -1,9 +1,11 @@
 // Global regular substitution mechanism
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
+
 #include <sys/types.h>
 #include <regex.h>
+
 #include "chain.h"
 #include "substitutor.h"
 #include "xmalloc.h"

@@ -2,11 +2,13 @@
 // This stuff is language dependent and
 // oriented for ttpport and Mbrola TTS
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+
 #include <sys/types.h>
 #include <regex.h>
+
 #include "chain.h"
 #include "substitutor.h"
 #include "punctuations.h"

@@ -8,13 +8,15 @@
 //           
 // By default this method has no action.
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <cctype>
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <regex.h>
+
 #include "xmalloc.h"
 #include "chain.h"
 #include "substitutor.h"

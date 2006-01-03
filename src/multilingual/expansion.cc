@@ -9,10 +9,12 @@
     You may distribute under the terms of the GNU General Public
     Licence as specified in the README file.
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+
 #include "xmalloc.h"
 #include "expansion.h"
 

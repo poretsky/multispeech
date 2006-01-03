@@ -2,11 +2,13 @@
 // This stuff is language dependent and
 // oriented for Ru_tts
 
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+
 #include <sys/types.h>
 #include <regex.h>
+
 #include "chain.h"
 #include "substitutor.h"
 #include "punctuations.h"

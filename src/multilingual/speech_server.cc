@@ -18,16 +18,18 @@
 // along with GNU Emacs; see the file COPYING.  If not, write to
 // the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <clocale>
+#include <csignal>
+
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <locale.h>
-#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <regex.h>
+
 #include "xmalloc.h"
 #include "queue.h"
 #include "subprocess.h"
