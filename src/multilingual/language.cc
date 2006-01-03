@@ -76,7 +76,7 @@ char *speech::perform(char *&text)
     {
       char *tptr=t;
       char *option;
-      while (option = strsep(&tptr, " "))
+      while ((option = strsep(&tptr, " ")))
 	{
 	  double p;
 	  int q;
@@ -85,19 +85,19 @@ char *speech::perform(char *&text)
 	    {
 	      case 'r':
 		if (*s == 'a')
-		  if (p = atof(option)) voice::ra = p;
+		  if ((p = atof(option))) voice::ra = p;
 		break;
 	      case 'p':
 		if (*s == 'i')
-		  if (p = atof(option)) voice::pi = p;
+		  if ((p = atof(option))) voice::pi = p;
 		break;
 	      case 'v':
 		if (*s == 'o')
-		  if (p = atof(option)) voice::vo = p;
+		  if ((p = atof(option))) voice::vo = p;
 		break;
 	      case 'f':
 		if (*s == 'r')
-		  if (q = atoi(option)) voice::fr = q;
+		  if ((q = atoi(option))) voice::fr = q;
 		break;
 	    }
 	}

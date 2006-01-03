@@ -56,7 +56,7 @@ int source::read(void)
   // Returns nonzero if success.
 {
   char *s, *sprev;
-  int i;
+  unsigned int i;
 
   if (!bufsize) buffer = (char *)xmalloc(bufsize = 64);
   s = buffer;
@@ -77,7 +77,7 @@ int source::read(void)
 		{
 		  int count = 0, c;
 		  *s = ' ';	// treat newline as whitespace
-		  for (s = buffer; c = *s; s++)
+		  for (s = buffer; (c = *s); s++)
 		    {
 		      if ((c < ' ') && (c >= 0)) *s =' ';
 		      switch(c)

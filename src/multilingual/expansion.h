@@ -10,7 +10,7 @@ class expansion
   // theDecimalPoint: e.g " point" in English
   expansion( char* theNumericPoint, char* theNumericComma);
 
-  ~expansion();
+  virtual ~expansion();
 
   char* perform(char *&theText);
 

@@ -48,7 +48,7 @@ class language
 
   language(char *, char *, char*, char *, chain &, voice &);
   language(char *, char *, char*, voice &);
-  ~language(void);
+  virtual ~language(void);
 
   int check(char *);
   int sound_access(char *);

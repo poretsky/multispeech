@@ -123,7 +123,7 @@ class br_abbreviations: public substitutor
 private:
   virtual char *perform(char *&t)
     {
-      int l = 0;
+      unsigned int l = 0;
       while (l < strlen(t))
 	{
 	  l = strlen(t);
@@ -160,7 +160,7 @@ br_expansion::br_expansion()
 
 void br_expansion::sayChar(char c)
 {
-  int i;
+  unsigned int i;
 
   for (i=0; i < strlen( punctuations::punctuations_set); i++)
   {
@@ -289,7 +289,6 @@ void br_expansion::putCardinal(long int theValue)
 // 	 Note: this is recursive.
 void br_expansion::putOrdinal(long int theValue, gender theGender)
 {
-  char* aString=NULL;
   if (theValue < 0)
     {
       appendString(TheMinus); 

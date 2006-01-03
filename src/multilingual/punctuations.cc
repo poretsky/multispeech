@@ -13,7 +13,7 @@ const char *punctuations::punctuations_set = "!'?,.;:-@#$%^&*_()+=[]{}\\|\"/`~<>
 
 punctuations::punctuations(char **pronounce)
 {
-  int i;
+  unsigned int i;
   for (i = 0; i < strlen(punctuations_set); i++)
     {
       if (i < 8)

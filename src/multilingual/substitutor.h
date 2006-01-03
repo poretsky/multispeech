@@ -18,7 +18,7 @@ class substitutor: public chain
  public:
   substitutor(char, char *);
   substitutor(char *, char *);
-  ~substitutor(void);
+  virtual ~substitutor(void);
 };
 
 #endif

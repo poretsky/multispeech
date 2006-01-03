@@ -79,7 +79,7 @@ public:
       table[179] = 163;
     }
 
-  ~ru_recoder(void)
+  virtual ~ru_recoder(void)
     {
       delete table;
     }
@@ -92,7 +92,7 @@ private:
 
   virtual char *perform(char *&t)
     {
-      int l = 0;
+      unsigned int l = 0;
       t = mark(t);
       while (l < strlen(t))
 	{

@@ -40,7 +40,7 @@ class fr_abbreviations: public substitutor
 private:
   virtual char *perform(char *&t)
     {
-      int l = 0;
+      unsigned int l = 0;
       while (l < strlen(t))
 	{
 	  l = strlen(t);

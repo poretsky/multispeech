@@ -253,7 +253,6 @@ void expansion::putCardinal(long int theValue)
 // 	 Note: this is recursive.
 void expansion::putOrdinal(long int theValue)
 {
-  char* aString=NULL;
   if (theValue < 0)
     {
       appendString(" minus");
@@ -415,7 +414,6 @@ void expansion::have_number()
 {
   long int aValue;
   int aLastdigit;
-  int aCharIsDigit=1;
 
   aValue = myChar - '0';
   aLastdigit = myChar;
@@ -512,8 +510,8 @@ void expansion::have_letter()
 
 expansion::expansion( char* theNumericPoint, char* theNumericComma)
   : myBuffer(NULL)
-  , myBufferIndex(0)
   , myBufferSize(0)
+  , myBufferIndex(0)
 {
   myNumericPoint = strdup( theNumericPoint);
   myNumericComma = strdup( theNumericComma);

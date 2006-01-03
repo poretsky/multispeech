@@ -96,7 +96,7 @@ void subprocess::abort(void)
 void subprocess::operator << (char *instruction)
 {
   int i, n, td, tf;
-  char *program, *input_file, *argv[6];
+  char *program, *input_file = NULL, *argv[6];
   char cmd, *s = instruction;
   if (!instruction) return;
   cmd = *s++;
@@ -108,7 +108,7 @@ void subprocess::operator << (char *instruction)
 	sscanf(s, "%s %s %s %s %s\n", argv[0], argv[1], argv[2], argv[3], argv[4]);
 	argv[5] = NULL;
 	input_file = NULL;
-	if (s = strchr(s, '\n')) s++;
+	if ((s = strchr(s, '\n'))) s++;
 	break;
       case 'l':
 	dsp_device = speech_device;
@@ -146,8 +146,8 @@ void subprocess::operator << (char *instruction)
 		else n -= i;
 	      }
 	  }
-	sprintf(argv[1], "%i\0", td);
-	sprintf(argv[2], "%i\0", tf);
+	sprintf(argv[1], "%i", td);
+	sprintf(argv[2], "%i", tf);
 	argv[3] = NULL;
 	input_file = NULL;
 	s = NULL;
