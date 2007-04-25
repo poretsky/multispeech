@@ -93,6 +93,10 @@ int set_language(char *lang)
     {
       return 0;
     }
+  else if (!strcmp(lang,"us"))
+    {
+      lang="en";
+    }
 
   for (i=0; i < MAX_AVAILABLE_LANG; i++)
     {
