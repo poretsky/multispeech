@@ -1,9 +1,9 @@
 #!/bin/sh
 export LLIAPHON_NOARCH="/usr/local/share/lliaphon"
+MYUID=`id -u`
+pkill -u $MYUID -KILL lliaphon-client
 
-pkill -KILL lliaphon-client
-
-if [ -ne $(pgrep lliaphon) ]; then
+if [ -ne $(pgrep -u $MYUID lliaphon) ]; then
     lliaphonctl start
 fi
 
