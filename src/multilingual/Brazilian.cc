@@ -407,7 +407,7 @@ int br_expansion::isOrdinal( long int theValue, int theLastdigit)
 //< br_language
 
 br_language::br_language()
-  :language("br", "pt_BR.iso88591", "Brasileiro", "[a-zA-Z]", // not used (no automatic charset detection)
+  :language("pt_BR", "pt_BR.iso88591", "Brasileiro", "[a-zA-Z]", // not used (no automatic charset detection)
 	    *new substitutor("\\.,", " ponto vírgula ") +=
 	    *new substitutor("\\.\\.\\.", " ponto ponto ponto ") +=
 	    *new substitutor("\\.\\.", " ponto ponto ") +=

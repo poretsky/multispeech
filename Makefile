@@ -29,9 +29,9 @@ tones:
 # generates the pre-synthesized letters.
 # dot.raw is the last "letter", so let's suppose if that one exists, all
 # others have been generated as well
-letters: letters_br letters_de letters_en letters_es letters_fr letters_ru
+letters: letters_pt_BR letters_de letters_en letters_es letters_fr letters_ru
 
-letters_br: letters/br/dot.raw
+letters_pt_BR: letters/pt_BR/dot.raw
 letters_de: letters/de/dot.raw
 letters_en: letters/en/dot.raw
 letters_es: letters/es/dot.raw
@@ -39,8 +39,8 @@ letters_fr: letters/fr/dot.raw
 letters_ru: letters/ru/dot.raw
 
 # Brazilian letters
-letters/br/dot.raw:
-	cd letters/br; cat letters.lst | awk -f ../../scripts/generate_letters tts=../../scripts/tts/br rate=0.41 default_pitch=1.0 high_pitch=1.25 volume=0.8 frequency=16000
+letters/pt_BR/dot.raw:
+	cd letters/pt_BR; cat letters.lst | awk -f ../../scripts/generate_letters tts=../../scripts/tts/pt_BR rate=0.41 default_pitch=1.0 high_pitch=1.25 volume=0.8 frequency=16000
 
 # German letters
 letters/de/dot.raw:
