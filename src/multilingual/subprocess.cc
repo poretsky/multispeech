@@ -82,11 +82,18 @@ void subprocess::run(char *program, char *input_file, char **argv)
 int subprocess::busy(void)
 {
   if (pid)
-    if (pid == waitpid(-1, NULL, WNOHANG))
-      {
-	pid = 0;
-	flag = 1;
-      }
+    {
+      // Check that the player process is finished
+      int a_status_1=waitpid(pid, NULL, WNOHANG);
+      // Remove the zombie tts process 
+      int a_status_2=waitpid(-1, NULL, WNOHANG);
+
+      if ((pid == a_status_1)||(pid == a_status_2))
+	{
+	  pid = 0;
+	  flag = 1;
+	}
+    }
   return pid != 0;
 }
 
