@@ -13,7 +13,7 @@ clean:
 	gcc -c -O2 $<
 
 .cc.o:
-	g++ -c -O2 $<
+	g++ -c -Wall -O2 $<
 
 # Dependencies
 xmalloc.o: xmalloc.c
