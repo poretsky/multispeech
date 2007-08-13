@@ -1,6 +1,3 @@
 #!/bin/sh
 
-if [ -s /etc/sound_48Khz_only ]
-then exec sox -t raw -s -w -r 16000 -c 1 - -t ossdsp -r 48000 -c 2 $DSP_DEVICE
-else exec sox -t raw -s -w -r 16000 -c 1 - -t ossdsp -c 2 $DSP_DEVICE
-fi
+exec rawplay -swf 16000 -v 1.0 -d $DSP_DEVICE

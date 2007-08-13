@@ -9,7 +9,4 @@ then FREQUENCY=$4
 else FREQUENCY=10000
 fi
 
-if [ -s /etc/sound_48Khz_only ]
-then exec sox -t raw -s -b -r $FREQUENCY -c 1 -v $VOLUME - -t ossdsp -r 48000 -c 2 -w $DSP_DEVICE
-else exec sox -t raw -s -b -r $FREQUENCY -c 1 -v $VOLUME - -t ossdsp -c 2 -w $DSP_DEVICE
-fi
+exec rawplay -sbf $FREQUENCY -v $VOLUME -d $DSP_DEVICE
