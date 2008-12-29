@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec rawplay -swf 22050 -v 1.0 -d $DSP_DEVICE

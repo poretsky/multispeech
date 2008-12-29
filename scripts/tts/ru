@@ -1,2 +1,0 @@
-#!/bin/sh
-exec ru_tts -r $1 -p $2 -s /usr/local/lib/ru_tts/lexicon

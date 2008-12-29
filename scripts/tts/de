@@ -1,5 +1,0 @@
-#!/bin/sh
-exec txt2pho -p /usr/local/share/txt2pho/ -m | mbrola -t $1 -f $2 -l $4 -v $3 -e /usr/local/share/mbrola/voices/de6 - -A
-
-
-

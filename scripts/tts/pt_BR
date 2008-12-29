@@ -1,2 +1,0 @@
-#!/bin/sh
-exec ttpport | mbrola -t $1 -f $2 -v $3 -l $4 -e /usr/local/share/mbrola/voices/br1 - -A 

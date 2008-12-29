@@ -1,0 +1,122 @@
+This file describes historical Multispeech interface
+as a multilingual speech server for Emacspeak.
+
+To use Multispeech with Emacspeak you should make symlink named
+"multispeech" pointing to it's executable in the directory where
+Emacspeak's speech servers normally live.
+
+Being started Multispeech accepts commands on it's standard input. All
+these commands are in the form:
+
+command [arguments]
+
+Each command starts from a new line, but arguments may spread on
+several lines. In that cases arguments must be enclosed in curly
+braces. When a command with all it's arguments occupies just one line
+these braces are optional. Some commands have no arguments at all.
+
+
+The following commands are recognized and served by Multispeech:
+
+q text
+  Place specified text into the server queue.
+
+a file
+  Place specified file into the server queue.
+
+d
+  Proceed the server queue. Do nothing if it is proceeding at the
+  moment.
+
+tts_pause
+  Immediately stop all current sound activities and save the server
+  queue.
+
+tts_resume
+  Immediately stop all current sound activities, restore the server
+  queue and proceed it.
+
+tts_say text
+  Immediately stop all current sound activities and say specified text
+  attempting to treat it as a character name, but applying general
+  speech parameters.
+
+l text
+  Say specified text treating it as a character name. Current speech
+  (if any) will be immediately stopped. If sounds and tones are not
+  asynchronous they will be stopped too.
+
+p file
+  Play specified sound file.
+
+t frequency duration
+  Produce tone signal specified by it's frequency in Hz and duration
+  in milliseconds. If duration is omitted then 50 milliseconds is used
+  by default. If no arguments are specified at all then beep of 440 Hz
+  and 50 milliseconds will be produced.
+
+s
+  Immediately stop all current sound activities.
+
+r rate
+tts_set_speech_rate rate
+  Set specified speech rate. The value is treated according to
+  Emacspeak conventions.
+
+set_lang language
+  Change speaking language. Allowed values are "en" for English, "ru"
+  for Russian and "autodetect" for automatic language detection by the
+  text nature.
+
+tts_set_punctuations mode
+  Change punctuations speaking mode. Allowed values are "all", "some"
+  and "none". Only the first character is checked in the mode
+  specification.
+
+tts_set_character_scale value
+  Change voice pitch for single letters pronunciation.
+
+tts_capitalize flag
+  Enable/disable "capitalize" mode. The value 1 or 0 is
+  expected. Actually do nothing. This functionality is not implemented
+  in fact.
+
+tts_split_caps flag
+  Enable/disable "split caps" mode. Value 1 or 0 is expected. Actually
+  do nothing. This functionality is not implemented in fact.
+
+tts_sync_state punctuation_mode capitalize_mode split_caps_mode speech_rate
+  Set specified speech parameters.
+
+tts_reset
+  Stop all current sound activities and reset all general speech
+  parameters to the default state.
+
+exit
+  Exit Multispeech.
+
+
+Embedded speech parameters.
+
+The text passed as an argument for the "q" and "tts_say" commands may
+include a special sequence of the form "[_: key:value ...]". This
+sequence should be placed at the very beginning of the text. It allows
+to alter some speech parameters for that text chunk locally leaving
+global settings untouched. Each "key:value" pair represents local
+value for the corresponding parameter. The recognized keys are as
+follows:
+
+vo -- speech volume;
+pi -- voice pitch;
+ra -- speech rate;
+fr -- sampling frequency.
+
+Volume, pitch and rate are specified relatively to the corresponding
+parameters obtained from the Multispeech configuration, but rate is
+scaled as it is assumed according to the Emacspeak
+conventions. Sampling frequency is specified in assumption that it is
+under TTS engine control and the normal value is 16000 Hz, but
+Multispeech tries to recalculate and apply it properly to achieve
+equivalent deviation in all circumstances. Thus, the embedded speech
+parameters "[_: vo:1.0 pi:1.0 ra:200 fr:16000]" actually result in
+normal speech just as it was configured.

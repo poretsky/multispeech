@@ -1,0 +1,37 @@
+	Multispeech - Multilingual speech server
+
+Multispeech was primarily designed as a multilingual speech server
+for Emacspeak, but it can be useful in some other circumstances
+as well, when multilingual speech feedback is needed.
+Multispeech produces audible speech, sounds and tone signals
+according to the commands passed by client. It utilizes third party
+speech synthesis software to perform actual TTS transformation.
+See comments in the sample configuration file and corresponding
+manual pages for further details.
+
+Following additional libraries are necessary to compile the program:
+Sndfile, PortAudio19, SoundTouch, Bobcat and the Boost C++ library
+including following items: libboost-thread, libboost-regex,
+libboost-filesystem, libboost-iostreams and libboost-program-options.
+See the file INSTALL for generic compilation and installation instructions.
+
+
+  Copyright (C) 2008 Igor B. Poretsky
+
+  Multispeech is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Comments are welcome.
+
+	- Igor B. Poretsky <poretsky@mlbox.ru>

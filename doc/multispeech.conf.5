@@ -1,0 +1,307 @@
+.\"                              hey, Emacs:   -*- nroff -*-
+.\" multispeech is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; see the file COPYING.  If not, write to
+.\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+.\"
+.TH MULTISPEECH.CONF 5 "December 29, 2008"
+.\" Please update the above date whenever this man page is modified.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins (default)
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+multispeech.conf \- Multispeech configuration file
+.SH DESCRIPTION
+\fBmultispeech\fP expects to find it's configuration
+in \(oq/etc/multispeech.conf\(cq and \(oq~/.multispeechrc\(cq.
+At least one of these files must exist.
+The user settings provided by \(oq~/.multispeechrc\(cq
+always take precedence over the system\-wide ones
+from \(oq/etc/multispeech.conf\(cq.
+.SH "SYNTAX"
+The syntax is quite simple.
+.PP
+Lines started from the \(oq#\(cq character are treated as comments.
+Blank lines are ignored. Each option entry looks like follows:
+.PP
+keyword = value
+.PP
+Case is significant.
+.PP
+All options are logically grouped by sections.
+Each section is started by its name in square brackets on a separate
+line.
+.SH "CLIENT INTERACTION CONTROL OPTIONS"
+These options are grouped in the section named \(oqfrontend\(cq. These
+options are as follows:
+.TP
+.B charset
+.br
+Input charset should be specified by its name. Available names
+can be found in \(oq/usr/share/i18n/SUPPORTED\(cq or wherever else
+it is on your system. By default this option is not set
+so current locale setting is used.
+.TP
+.B interface
+.br
+This option specifies client interaction conventions.
+The default value \(oqhistorical\(cq means that \fBmultispeech\fP behaves
+in quite the same manner as it did in previous versions.
+.SH "GENERAL AUDIO OUTPUT CONTROL OPTIONS"
+Section name is \(oqaudio\(cq. It contains following options:
+.TP
+.B general_volume
+.br
+Volume level applied to all audio output in general.
+It should be in the range of (0.0..1.0]. When this option is not
+specified the default value 0.8 is used.
+.TP
+.B latency
+.br
+Audio output latency in seconds. Default value 0.0 implies
+that reasonable latency will be chosen automatically.
+Normally this option should not be set up explicitly.
+Do it only if you are pretty unsatisfied by the automatic choice.
+.SH "SOUNDS PLAYING CONTROL OPTIONS"
+Section name is \(oqsounds\(cq. It contains several options that
+affect sound file playing capability:
+.TP
+.B device
+.br
+Sound files playing audio device specification. If it is not
+specified explicitly, then system default will be used.
+The DSP device specifications (such as \(oq/dev/dsp\(cq)
+are allowed here as well as the ALSA ones.
+.TP
+.B volume
+.br
+Relative volume level for sound files playing. It is 1.0
+by default.
+.TP
+.B asynchronous
+.br
+This option enables or disables to play sound files
+simultaneously with other audio activities, such as
+speech and tone signals producing. It is enabled by default.
+Use the word \(oqyes\(cq or \(oqon\(cq to enable and the word
+\(oqno\(cq or \(oqoff\(cq to disable.
+.SH "TONE SIGNALS PRODUCING CONTROL OPTIONS"
+Section name is \(oqtones\(cq. It consists of the following options:
+.TP
+.B device
+.br
+Tone signals playing audio device specification. If it is not
+specified explicitly, then system default will be used.
+The DSP device specifications (such as \(oq/dev/dsp\(cq)
+are allowed here as well as the ALSA ones.
+.TP
+.B volume
+.br
+Relative volume level for tone signals producing. It is 1.0
+by default.
+.TP
+.B sampling
+.br
+Sampling frequency for generated tone signals. It is 44100
+by default.
+.TP
+.B asynchronous
+.br
+This option enables or disables to produce tone signals
+simultaneously with other audio activities, such as
+speech and sound files playing. It is enabled by default.
+Use the word \(oqyes\(cq or \(oqon\(cq to enable and the word
+\(oqno\(cq or \(oqoff\(cq to disable.
+.SH "GENERAL SPEECH CONTROL OPTIONS"
+Section name is \(oqspeech\(cq. These options affect speech output in
+general:
+.TP
+.B device
+.br
+Speech output audio device specification. If it is not
+specified explicitly, then system default will be used.
+The DSP device specifications (such as \(oq/dev/dsp\(cq)
+are allowed here as well as the ALSA ones.
+.TP
+.B volume
+.br
+Relative volume level for speech output. It is 1.0 by default.
+.TP
+.B language
+.br
+This option specifies default language. Allowed values are: \(oqen\(cq
+for English, \(oqru\(cq for Russian or \(oqautodetect\(cq for
+automatic detection from the text nature. By default language is
+autodetected.
+.SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
+There is a separate section for each supported language named
+\(oqen\(cq for English and \(oqru\(cq for Russian. These sections
+contain quite the same collection of options that affect speech on a
+specific language. Actual speech engine is chosen by the key option
+\(oqengine\(cq. This option has no default. If it is not set then the
+language will not be available in Multispeech. It is not necessary to
+define speech engine for each language, but at least one must be
+defined. It is wise to define speech engine for only those languages
+that are actually to be used.
+.PP
+Each language specific section consists of the following options:
+.TP
+.B engine
+.br
+TTS engine specification. Allowed values are as follows:
+.br
+\fBfreephone\fP \- English speech with Freephone and Mbrola voice
+\(oqen1\(cq;
+.br
+\fBru_tts\fP \- Russian speech with Ru_tts speech synthesizer;
+.br
+\fBEspeak\fP \- English and Russian speech with Espeak TTS engine;
+.br
+\fBespeak.mbrola\fP \- English speech with Espeak and Mbrola voices.
+.TP
+.B volume
+.br
+Specific voice loudness relatively to the general speech volume
+level. It is 1.0 by default.
+.TP
+.B pitch
+.br
+Specific voice pitch adjustment relative to it's normal level.
+It is 1.0 by default. Greater value causes higher pitch.
+.TP
+.B rate
+.br
+Relative speech rate for specific voice. It is 1.0 by default.
+Higher value causes quicker speech.
+.TP
+.B acceleration
+.br
+Apply additional speech tempo acceleration. Speech rate
+will be changed by specified difference in percents
+compared to the original tempo. Positive values cause
+speech acceleration while the negative ones actually imply
+slowing it down. Default value is 0 so no additional
+tempo change is applied.
+.TP
+.B char_pitch
+.br
+Relative voice pitch control applied to the single
+letters pronunciation. By default 1.0 is suggested.
+.TP
+.B char_rate
+.br
+Relative speech rate control applied to the single
+letters pronunciation. By default 1.0 is suggested.
+.TP
+.B caps_factor
+.br
+Voice pitch factor for capital letters. By default it is 1.2
+so capital letters are pronounced by slightly higher pitch.
+.SH "MBROLA RELATED OPTIONS"
+Section named \(oqmbrola\(cq contains some options affecting
+\fBmultispeech\fP interaction with \fBmbrola\fP speech engine:
+.TP
+.B executable
+.br
+Path to the Mbrola executable. If only program name is specified
+(as it is by default) then environment variable \fBPATH\fP
+will be examined and all paths mentioned there will be searched.
+.TP
+.B voices
+.br
+Path to the directory where Mbrola voice files are stored.
+By default \(oq/usr/local/share/mbrola/voices\(cq is suggested.
+.SH "FREEPHONE RELATED OPTIONS"
+Section named \(oqfreephone\(cq is devoted to \fBfreephone\fP speech
+backend. Here are the following options:
+.TP
+.B executable
+.br
+Path to the Freephone executable. If only program name is specified
+(as it is by default) then environment variable \fBPATH\fP
+will be examined and all paths mentioned there will be searched.
+.TP
+.B lexicon
+.br
+Path to the lexical database. It is not set by default
+so no lexical data will be used and TTS will be done only by rules.
+.SH "RU TTS RELATED OPTIONS"
+Section named \(oqru_tts\(cq consists of options that control
+\fBmultispeech\fP interaction with \fBru_tts\fP speech synthesizer:
+.TP
+.B executable
+.br
+Path to the Ru_tts executable. If only program name is specified
+(as it is by default) then environment variable \fBPATH\fP
+will be examined and all paths mentioned there will be searched.
+.TP
+.B lexicon
+.br
+Path to the lexical database. It is not set by default
+so no lexical pronunciation data and stress information will be used.
+.TP
+.B log
+.br
+Optional file to collect unknown words. This file must be writable
+for the Multispeech user. The collected data can be used later
+to improve lexical database. No such file is suggested by default
+so unknown words are not stored.
+.SH "ESPEAK RELATED OPTIONS"
+Interaction with \fBespeak\fP TTS engine is controlled by the options
+grouped in section \(oqespeak\(cq:
+.TP
+.B executable
+.br
+Path to the Espeak executable. If only program name is specified
+(as it is by default) then environment variable \fBPATH\fP
+will be examined and all paths mentioned there will be searched.
+.TP
+.B en
+.br
+English voice specification. By default \(oqen\(cq is
+suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
+alternatives.
+.TP
+.B ru
+.br
+Russian voice specification. By default \(oqru\(cq is
+suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
+alternatives.
+.SH "ESPEAK AND MBROLA COMBINED SPEECH BACKEND RELATED OPTIONS"
+This section is named \(oqespeak.mbrola\(cq. It is devoted to
+assigning Mbrola voices to the supported languages. To see the list of
+the voices supported by Espeak try to invoke \(oqespeak \-\-voices\(cq.
+Only Mbrola voices are allowed here. Also make sure
+that you have corresponding Mbrola voices itself.
+See Espeak documentation for further details.
+.PP
+The following options are allowed here:
+.TP
+.B en
+.br
+English voice. By default \(oqen1\(cq is used.
+.SH "SEE ALSO"
+.BR espeak(1),
+.BR freephone(1),
+.BR mbrola(1),
+.BR multispeech(1),
+.BR ru_tts(1).
+.SH AUTHOR
+Igor B. Poretsky <poretsky@mlbox.ru>.
