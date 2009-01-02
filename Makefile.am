@@ -3,5 +3,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src doc
-sysconf_DATA = multispeech.conf
-EXTRA_DIST = bootstrap multispeech.conf
+doc_DATA = AUTHORS ChangeLog README TODO
+dist_sysconf_DATA = multispeech.conf
+EXTRA_DIST = bootstrap
