@@ -73,6 +73,8 @@ multispeech_historical::get_command(void)
   while (cmd.empty() || count)
     {
       getline(cin, s);
+      if (cin.eof() || cin.fail())
+        s = "exit";
       data = intern_string(s, input_charset);
       if (count)
         cmd += L' ';
@@ -107,10 +109,7 @@ multispeech_historical::get_command(void)
 bool
 multispeech_historical::perform_command(void)
 {
-  if (cin.fail())
-    return false;
-
-  else if (cmd.empty())
+  if (cmd.empty())
     return true;
 
   else if (L"exit" == cmd)
