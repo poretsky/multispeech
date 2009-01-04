@@ -6,3 +6,6 @@ config.status
 configure
 Makefile
 Makefile.in
+stamp-h1
+sysconfig.h
+sysconfig.h.in
