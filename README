@@ -10,9 +10,10 @@ See comments in the sample configuration file and corresponding
 manual pages for further details.
 
 Following additional libraries are necessary to compile the program:
-Sndfile, PortAudio19, SoundTouch, Bobcat and the Boost C++ library
-including following items: libboost-thread, libboost-regex,
-libboost-filesystem, libboost-iostreams and libboost-program-options.
+Sndfile, PortAudio19 with C++ support, SoundTouch, Bobcat
+and the Boost C++ library including following items:
+libboost-thread, libboost-regex, libboost-filesystem,
+libboost-iostreams and libboost-program-options.
 See the file INSTALL for generic compilation and installation instructions.
 
 
