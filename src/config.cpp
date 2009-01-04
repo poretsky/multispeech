@@ -32,6 +32,10 @@
 #include "loudspeaker.hpp"
 #include "speech_engine.hpp"
 
+#ifndef SYSCONF_DIR
+#define SYSCONF_DIR "/etc"
+#endif
+
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
@@ -39,7 +43,7 @@ using namespace boost::program_options;
 
 // Configuration files:
 
-const path configuration::global_conf("/etc/multispeech.conf");
+const path configuration::global_conf(complete("multispeech.conf", SYSCONF_DIR));
 const path configuration::local_conf(complete(".multispeechrc", getenv("HOME")));
 
 

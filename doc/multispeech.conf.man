@@ -30,11 +30,11 @@
 multispeech.conf \- Multispeech configuration file
 .SH DESCRIPTION
 \fBmultispeech\fP expects to find it's configuration
-in \(oq/etc/multispeech.conf\(cq and \(oq~/.multispeechrc\(cq.
+in \fI/etc/multispeech.conf\fP and \fI~/.multispeechrc\fP.
 At least one of these files must exist.
-The user settings provided by \(oq~/.multispeechrc\(cq
+The user settings provided by \fI~/.multispeechrc\fP
 always take precedence over the system\-wide ones
-from \(oq/etc/multispeech.conf\(cq.
+from \fI/etc/multispeech.conf\fP.
 .SH "SYNTAX"
 The syntax is quite simple.
 .PP
