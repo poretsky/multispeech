@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH MULTISPEECH.CONF 5 "December 29, 2008"
+.TH MULTISPEECH.CONF 5 "January 5, 2009"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -29,12 +29,14 @@
 .SH NAME
 multispeech.conf \- Multispeech configuration file
 .SH DESCRIPTION
-\fBmultispeech\fP expects to find it's configuration
+On startup \fBmultispeech\fP expects to find it's configuration
 in \fI/etc/multispeech.conf\fP and \fI~/.multispeechrc\fP.
-At least one of these files must exist.
 The user settings provided by \fI~/.multispeechrc\fP
 always take precedence over the system\-wide ones
-from \fI/etc/multispeech.conf\fP.
+from \fI/etc/multispeech.conf\fP. And all these settings in turn
+can be overridden by an extra configuration file specified via the
+command line. Some configuration options are mandatory, so at least
+one of these files must exist.
 .SH "SYNTAX"
 The syntax is quite simple.
 .PP

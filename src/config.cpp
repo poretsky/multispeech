@@ -18,8 +18,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <string>
+#include <sysconfig.h>
+
 #include <cstdlib>
+#include <string>
+#include <sstream>
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -205,11 +208,35 @@ namespace options
 
 // Parsing and applying configuration options
 
-configuration::configuration(void)
-{
-  options_description conf;
+string configuration::stage;
 
-  // Declare options
+configuration::configuration(int argc, char* argv[])
+{
+  options_description conf, cl_desc("Available options");
+  variables_map cl_opt;
+  bool noconf = true;
+
+  // Declare command line options:
+  cl_desc.add_options()
+    ("help,h", "produce help message and exit")
+    ("version,V", "print program version and exit")
+    ("config,c", value<string>(), "read configuration from specified file");
+
+  // Parse command line:
+  stage = " in command line";
+  store(parse_command_line(argc, argv, cl_desc), cl_opt);
+  stage.erase();
+  notify(cl_opt);
+  if (cl_opt.count("help"))
+    {
+      ostringstream usage;
+      usage << "Usage: " << argv[0] << " [options]\n" << cl_desc;
+      throw usage.str();
+    }
+  if (cl_opt.count("version"))
+    throw string(PACKAGE_STRING);
+
+  // Declare configuration options:
   using namespace options;
   conf.add_options()
 
@@ -281,10 +308,27 @@ configuration::configuration(void)
     (ru_tts::log.c_str(), value<string>());
 
   // Parse config files and store values
-  if (!exists(local_conf) && !exists(global_conf))
+  if (cl_opt.count("config"))
+    {
+      path extra_conf(cl_opt["config"].as<string>());
+      if (exists(extra_conf))
+        {
+          read(extra_conf, conf);
+          noconf = false;
+        }
+    }
+  if (exists(local_conf))
+    {
+      read(local_conf, conf);
+      noconf = false;
+    }
+  if (exists(global_conf))
+    {
+      read(global_conf, conf);
+      noconf = false;
+    }
+  if (noconf)
     throw configuration_error("No configuration files found");
-  read(local_conf, conf);
-  read(global_conf, conf);
   notify(option_value);
 }
 
@@ -295,7 +339,9 @@ void
 configuration::read(const path& config_file, const options_description& conf)
 {
   boost::filesystem::ifstream source(config_file);
+  stage = " in " + config_file.file_string();
   store(parse_config_file(source, conf), option_value);
+  stage.erase();
 }
 
 

@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <memory>
 #include <exception>
+#include <string>
 #include <iostream>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
 
   try
     {
-      configuration conf;
+      configuration conf(argc, argv);
       if (conf.option_value.count(options::frontend::interface))
         {
           if (conf.option_value[options::frontend::interface].as<string>()
@@ -49,9 +50,19 @@ int main(int argc, char* argv[])
         }
       else multispeech.reset(new multispeech_historical(conf));
     }
-  catch (const exception &error)
+  catch (const string& info)
+    {
+      cout << info << endl;
+      return EXIT_SUCCESS;
+    }
+  catch (const configuration_error& error)
     {
       cerr << "Configuration error: " << error.what() << endl;
+      return EXIT_FAILURE;
+    }
+  catch (const exception& error)
+    {
+      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
       return EXIT_FAILURE;
     }
 

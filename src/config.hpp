@@ -187,10 +187,13 @@ class configuration
 {
 public:
   // The constructor reads and parses configuration by the way
-  configuration(void);
+  configuration(int argc, char* argv[]);
 
   // Options value container:
   boost::program_options::variables_map option_value;
+
+  // What we are parsing now:
+  static std::string stage;
 
 private:
   // Read configuration file:
