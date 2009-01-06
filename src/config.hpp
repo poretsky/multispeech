@@ -22,7 +22,7 @@
 #define CONFIG_HPP
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
@@ -195,6 +195,13 @@ public:
   // What we are parsing now:
   static std::string stage;
 
+  // Error signaling:
+  class error: public std::logic_error
+  {
+  public:
+    error(const std::string& message);
+  };
+
 private:
   // Read configuration file:
   void read(const boost::filesystem::path& config_file,
@@ -202,18 +209,6 @@ private:
 
   // Configuration files:
   static const boost::filesystem::path global_conf, local_conf;
-};
-
-class configuration_error: public std::exception
-{
-public:
-  configuration_error(const std::string& message) throw();
-  ~configuration_error(void) throw();
-
-  const char* what(void) const throw();
-
-private:
-  const std::string reason;
 };
 
 #endif

@@ -19,18 +19,23 @@
 */
 
 #include <string>
+#include <iostream>
 #include <cmath>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
+#include <bobcat/syslogstream>
+
 #include "ru_tts.hpp"
 
 #include "Russian.hpp"
+#include "server.hpp"
 
 using namespace std;
 using namespace boost;
 using namespace boost::filesystem;
+using namespace FBB;
 
 
 // Object construction:
@@ -49,14 +54,19 @@ ru_tts::ru_tts(const configuration& conf):
           path lexicon(conf.option_value[options::compose(name, option_name::lexicon)].as<string>());
           if (exists(lexicon))
             cmd += " -s " + lexicon.file_string();
-          else throw configuration_error(lexicon.file_string() + " does not exist");
+          else
+            {
+              server::log << SyslogStream::warning << lexicon.file_string() << " does not exist" << endl;
+              if (server::verbose)
+                cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
+            }
         }
       if (conf.option_value.count(options::compose(name, option_name::log)) &&
           !conf.option_value[options::compose(name, option_name::log)].as<string>().empty())
         cmd += " -l " + conf.option_value[options::compose(name, option_name::log)].as<string>();
       command(cmd);
     }
-  else throw configuration_error("no path to " + name);
+  else throw configuration::error("no path to " + name);
 }
 
 

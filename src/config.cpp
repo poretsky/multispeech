@@ -34,6 +34,7 @@
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 #include "speech_engine.hpp"
+#include "server.hpp"
 
 #ifndef SYSCONF_DIR
 #define SYSCONF_DIR "/etc"
@@ -219,8 +220,10 @@ configuration::configuration(int argc, char* argv[])
   // Declare command line options:
   cl_desc.add_options()
     ("help,h", "produce help message and exit")
-    ("version,V", "print program version and exit")
-    ("config,c", value<string>(), "read configuration from specified file");
+    ("config,c", value<string>(), "read configuration from specified file")
+    ("debug,d", "log debug information")
+    ("verbose,v", "print diagnostic messages on stderr")
+    ("version,V", "print program version and exit");
 
   // Parse command line:
   stage = " in command line";
@@ -235,6 +238,10 @@ configuration::configuration(int argc, char* argv[])
     }
   if (cl_opt.count("version"))
     throw string(PACKAGE_STRING);
+  if (cl_opt.count("debug"))
+    server::debug = true;
+  if (cl_opt.count("verbose"))
+    server::verbose = true;
 
   // Declare configuration options:
   using namespace options;
@@ -328,8 +335,16 @@ configuration::configuration(int argc, char* argv[])
       noconf = false;
     }
   if (noconf)
-    throw configuration_error("No configuration files found");
+    throw configuration::error("No configuration files found");
   notify(option_value);
+}
+
+
+// Configuration errors signaling:
+
+configuration::error::error(const string& message):
+  logic_error(message)
+{
 }
 
 
@@ -342,22 +357,4 @@ configuration::read(const path& config_file, const options_description& conf)
   stage = " in " + config_file.file_string();
   store(parse_config_file(source, conf), option_value);
   stage.erase();
-}
-
-
-// Configuration errors signaling:
-
-configuration_error::configuration_error(const string& message) throw():
-  reason(message)
-{
-}
-
-configuration_error::~configuration_error(void) throw()
-{
-}
-
-const char*
-configuration_error::what(void) const throw()
-{
-  return reason.c_str();
 }

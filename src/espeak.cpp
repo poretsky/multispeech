@@ -39,7 +39,7 @@ espeak::espeak(const configuration& conf, const char* lang):
   speech_engine(conf, speaker::espeak, novoice, make_language(lang), soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
-    throw configuration_error(language->id + " voice for " + name + " is not specified");
+    throw configuration::error(language->id + " voice for " + name + " is not specified");
   if (conf.option_value.count(options::compose(name, option_name::executable)) &&
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
@@ -47,7 +47,7 @@ espeak::espeak(const configuration& conf, const char* lang):
       cmd += " --stdin --stdout -z -s %rate -p %pitch -v " + voice;
       command(cmd);
     }
-  else throw configuration_error("no path to " + name);
+  else throw configuration::error("no path to " + name);
 }
 
 // Language choosing:
@@ -58,7 +58,7 @@ espeak::make_language(const char* lang)
     return new English;
   else if (lang_id::ru == string(lang))
     return new Russian;
-  throw configuration_error(string("unsupported language ") + lang + " specified for " + speaker::espeak);
+  throw configuration::error(string("unsupported language ") + lang + " specified for " + speaker::espeak);
 }
 
 // Making up voice parameters:
@@ -84,7 +84,7 @@ mbrespeak::mbrespeak(const configuration& conf, const char* lang):
       cmd += " --stdin -q -z -v mb-" + voice;
       command(cmd);
     }
-  else throw configuration_error(string("no path to ") + speaker::espeak);
+  else throw configuration::error(string("no path to ") + speaker::espeak);
 }
 
 // Language choosing:
@@ -93,5 +93,5 @@ mbrespeak::make_language(const char* lang)
 {
   if (lang_id::en == string(lang))
     return new English;
-  throw configuration_error(string("unsupported language ") + lang + " specified for " + options::compose(speaker::espeak, speaker::mbrola));
+  throw configuration::error(string("unsupported language ") + lang + " specified for " + options::compose(speaker::espeak, speaker::mbrola));
 }

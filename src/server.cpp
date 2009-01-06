@@ -18,6 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <sysconfig.h>
+
+#include <iostream>
 #include <exception>
 
 #include "server.hpp"
@@ -30,7 +33,9 @@ using namespace FBB;
 
 
 // Open logging stream:
-SyslogStream server::log("Multispeech", WARNING);
+SyslogStream server::log(PACKAGE_NAME, NOTICE, USER, LOG_PID);
+bool server::verbose = false;
+bool server::debug = false;
 
 
 // Construct / destroy:
@@ -65,6 +70,8 @@ server::run(void)
         cmd.erase();
         data.erase();
         log << failure.what() << endl;
+        if (verbose)
+          cerr << failure.what() << endl;
       }
   while (perform_command());
   soundmaster.stop();

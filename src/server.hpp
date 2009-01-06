@@ -48,6 +48,12 @@ public:
   // Logging stream:
   static FBB::SyslogStream log;
 
+  // When true print messages on stderr.
+  static bool verbose;
+
+  // Whether to log debug information.
+  static bool debug;
+
 protected:
   // Data read from input:
   std::wstring cmd, data;

@@ -40,7 +40,7 @@ mbrola::mbrola(const configuration& conf,
   speech_engine(conf, backend, voice_id, lang, soundfile::s16, sampling, 1, false)
 {
   if (voice.empty())
-    throw configuration_error(language->id + " voice for " + name + " is not specified");
+    throw configuration::error(language->id + " voice for " + name + " is not specified");
   if (conf.option_value.count(options::compose(speaker::mbrola, option_name::executable)) &&
       !conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
     {
@@ -52,13 +52,13 @@ mbrola::mbrola(const configuration& conf,
                                    conf.option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
           if (exists(voice_file))
             cmd += voice_file.file_string();
-          else throw configuration_error(voice_file.file_string() + " does not exist");
+          else throw configuration::error(voice_file.file_string() + " does not exist");
         }
-      else throw configuration_error(string("no path to ") + speaker::mbrola + " voices");
+      else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
       cmd += " - -A";
       command(cmd);
     }
-  else throw configuration_error(string("no path to ") + speaker::mbrola);
+  else throw configuration::error(string("no path to ") + speaker::mbrola);
 }
 
 

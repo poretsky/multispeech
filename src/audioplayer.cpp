@@ -51,9 +51,9 @@ audioplayer::audioplayer(const string& device_name):
             break;
           }
       if (found == system.devicesEnd())
-        throw configuration_error("audio device \"" + device_name + "\" is not found");
+        throw configuration::error("audio device \"" + device_name + "\" is not found");
       if (found->isInputOnlyDevice())
-        throw configuration_error("audio device \"" + device_name + "\" is not valid");
+        throw configuration::error("audio device \"" + device_name + "\" is not valid");
     }
   if (latency <= 0.0)
     latency = system.deviceByIndex(device).defaultLowOutputLatency();
@@ -62,7 +62,7 @@ audioplayer::audioplayer(const string& device_name):
                                                                latency, NULL));
   params.setSampleRate(system.deviceByIndex(device).defaultSampleRate());
   if (!params.isSupported())
-    throw configuration_error("cannot properly initialize audio device \"" + device_name + "\"");
+    throw configuration::error("cannot properly initialize audio device \"" + device_name + "\"");
 }
 
 audioplayer::~audioplayer(void)

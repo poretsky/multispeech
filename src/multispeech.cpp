@@ -23,6 +23,8 @@
 #include <string>
 #include <iostream>
 
+#include <bobcat/syslogstream>
+
 #include <portaudiocpp/PortAudioCpp.hxx>
 
 #include "config.hpp"
@@ -30,6 +32,7 @@
 #include "historical.hpp"
 
 using namespace std;
+using namespace FBB;
 using namespace portaudio;
 
 int main(int argc, char* argv[])
@@ -45,7 +48,7 @@ int main(int argc, char* argv[])
           if (conf.option_value[options::frontend::interface].as<string>()
               == "historical")
             multispeech.reset(new multispeech_historical(conf));
-          else throw configuration_error("unknown interface type " +
+          else throw configuration::error("unknown interface type " +
                                          conf.option_value[options::frontend::interface].as<string>());
         }
       else multispeech.reset(new multispeech_historical(conf));
@@ -55,14 +58,18 @@ int main(int argc, char* argv[])
       cout << info << endl;
       return EXIT_SUCCESS;
     }
-  catch (const configuration_error& error)
+  catch (const configuration::error& error)
     {
-      cerr << "Configuration error: " << error.what() << endl;
+      server::log << SyslogStream::err << error.what() << endl;
+      if (server::verbose)
+        cerr << "Configuration error: " << error.what() << endl;
       return EXIT_FAILURE;
     }
   catch (const exception& error)
     {
-      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
+      server::log << SyslogStream::err << error.what() << configuration::stage << endl;
+      if (server::verbose)
+        cerr << "Error" << configuration::stage << ": " << error.what() << endl;
       return EXIT_FAILURE;
     }
 

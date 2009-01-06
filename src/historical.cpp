@@ -24,6 +24,8 @@
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <bobcat/syslogstream>
+
 #include "historical.hpp"
 
 #include "strcvt.hpp"
@@ -32,6 +34,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace FBB;
 
 
 // Static data:
@@ -238,6 +241,17 @@ multispeech_historical::perform_command(void)
             speech_engine::speech_rate(lexical_cast<double>(wstring(parse_result[3].first, parse_result[3].second))
                                        / rate_scale);
         }
+    }
+  else if (debug)
+    {
+      string message("Unrecognized command");
+      message += " \"" + extern_string(cmd, locale(""));
+      if (!data.empty())
+        message += " " + extern_string(data, locale(""));
+      message += '\"';
+      log << SyslogStream::debug << message << endl;
+      if (verbose)
+        cerr << message << endl;
     }
 
   return true;

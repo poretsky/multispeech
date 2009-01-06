@@ -54,7 +54,7 @@ polyglot::polyglot(const configuration& conf):
         initialized = true;
       }
   if (!initialized)
-    throw configuration_error("no speech backends are defined");
+    throw configuration::error("no speech backends are defined");
   if (conf.option_value.count(options::speech::language))
     language(conf.option_value[options::speech::language].as<string>());
   else language(lang_id::autodetect);
@@ -62,7 +62,7 @@ polyglot::polyglot(const configuration& conf):
     {
       if (conf.option_value.count(options::speech::language) &&
           (conf.option_value[options::speech::language].as<string>() != lang_id::autodetect))
-        throw configuration_error("unsupported language " +
+        throw configuration::error("unsupported language " +
                                   conf.option_value[options::speech::language].as<string>());
       for (int i = 0; i < langs.size(); i++)
         {
@@ -72,7 +72,7 @@ polyglot::polyglot(const configuration& conf):
         }
     }
   if ((lang >= langs.size()) || !talker[lang].get())
-    throw configuration_error("no speech backend for chosen language");
+    throw configuration::error("no speech backend for chosen language");
 }
 
 
@@ -158,5 +158,5 @@ polyglot::speech_backend(const string& name,
     return new espeak(conf, lang.c_str());
   else if (options::compose(speaker::espeak, speaker::mbrola) == name)
     return new mbrespeak(conf, lang.c_str());
-  throw configuration_error("unknown speech backend " + name);
+  throw configuration::error("unknown speech backend " + name);
 }

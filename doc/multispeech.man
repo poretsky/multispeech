@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH MULTISPEECH 1 "January 5, 2009"
+.TH MULTISPEECH 1 "January 6, 2009"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -32,10 +32,10 @@ multispeech \- Multilingual speech server
 .B multispeech
 .RI [ options ]
 .SH DESCRIPTION
-\fBmultispeech\fP was primarily designed as a multilingual speech server
+\fBMultispeech\fP was primarily designed as a multilingual speech server
 for \fBemacspeak\fP, but it can be useful in some other circumstances
 as well, when multilingual speech feedback is needed.
-\fBmultispeech\fP produces audible speech, sounds and tone signals
+\fBMultispeech\fP produces audible speech, sounds and tone signals
 according to the commands passed by it's client. It utilizes third
 party speech synthesis software to perform actual TTS transformation.
 .PP
@@ -48,12 +48,24 @@ ones from \fI/etc/multispeech.conf\fP. And all these settings in turn
 can be overridden by an extra configuration file specified via the
 command line. Some configuration options are mandatory, so at least
 one of these files must exist.
+.PP
+In case of errors or other important situations \fBmultispeech\fP
+sends messages to \fBsyslog\fP using facility \fBuser\fP.
 .SH OPTIONS
-\fBmultispeech\fP accepts the following options:
+\fBMultispeech\fP accepts the following options:
 .TP
 .B \-c, \-\-config \fIfile\fP
 .br
 Read configuration from specified file.
+.TP
+.B \-v, \-\-verbose
+.br
+Print diagnostic messages on stderr. All diagnostic is logged via
+syslog and nothing is output on stderr or stdout by default.
+.TP
+.B \-d, \-\-debug
+.br
+Allow some extra diagnostic info to be logged.
 .TP
 .B \-h, \-\-help
 .br
@@ -74,6 +86,7 @@ provides user configuration.
 .BR freephone(1),
 .BR mbrola(1),
 .BR multispeech.conf(5),
-.BR ru_tts(1).
+.BR ru_tts(1),
+.BR syslog.conf(5).
 .SH AUTHOR
 Igor B. Poretsky <poretsky@mlbox.ru>.
