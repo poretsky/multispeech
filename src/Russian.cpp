@@ -38,7 +38,7 @@ using namespace boost::assign;
 // Object construction:
 
 Russian::Russian(void):
-  language_description(lang_id::ru, L"[а-яА-Я]")
+  language_description(lang_id::ru, L"[а-яёА-ЯЁ]")
 {
   // Punctuations pronunciation:
   punctuations = list_of
