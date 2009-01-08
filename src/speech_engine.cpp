@@ -232,6 +232,13 @@ speech_engine::letter_task(wstring s)
   return text_task(s, -1.0, rate, pitch, 0.0, true);
 }
 
+speech_task
+speech_engine::silence(double duration)
+{
+  return speech_task(native_sampling,
+                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(native_sampling) * duration)));
+}
+
 
 // Protected methods:
 

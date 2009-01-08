@@ -112,6 +112,14 @@ polyglot::letter_task(const wstring& s)
   return speech_task();
 }
 
+speech_task
+polyglot::silence(double duration)
+{
+  if (talker[lang].get())
+    return talker[lang]->silence(duration);
+  return speech_task();
+}
+
 void
 polyglot::language(const string& id)
 {

@@ -119,6 +119,10 @@ public:
                         bool use_translation = false);
   speech_task letter_task(std::wstring s);
 
+  // Make up special task to produce silence for the time
+  // duration specified in seconds:
+  speech_task silence(double duration);
+
   // Language specific stuff:
   std::auto_ptr<language_description> language;
 

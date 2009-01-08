@@ -41,6 +41,7 @@ public:
     s8 = SF_FORMAT_RAW | SF_FORMAT_PCM_S8,  // signed 8 bits
     u8 = SF_FORMAT_RAW | SF_FORMAT_PCM_U8,  // unsigned 8 bits
     s16 = SF_FORMAT_RAW | SF_FORMAT_PCM_16, // signed 16 bits
+    silence, // special value to denote silence
     none // unplayable
   };
 

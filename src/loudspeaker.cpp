@@ -36,7 +36,7 @@ float loudspeaker::relative_volume = 1.0;
 
 speech_task::speech_task(void):
   format(soundfile::none),
-  playing(dummy_details()),
+  playing(silence_params(0, 0)),
   volume(0.0),
   accelerate(0.0)
 {
@@ -54,11 +54,21 @@ speech_task::speech_task(const string& txt, const pipeline::script& cmds,
 {
 }
 
-speech_task::details
-speech_task::dummy_details(void)
+speech_task::speech_task(unsigned int sampling, unsigned int silence_length):
+  format(soundfile::silence),
+  playing(silence_params(sampling, silence_length)),
+  volume(0.0),
+  accelerate(0.0)
 {
-  details dummy;
-  return dummy;
+}
+
+speech_task::details
+speech_task::silence_params(unsigned int sampling, unsigned int length)
+{
+  details params;
+  params.silence.sampling = sampling;
+  params.silence.length = length;
+  return params;
 }
 
 
@@ -66,6 +76,7 @@ speech_task::dummy_details(void)
 
 loudspeaker::loudspeaker(const configuration& conf):
   soundfile(conf.option_value[options::speech::device].as<string>()),
+  silence_timer(0),
   need_processing(false)
 {
 }
@@ -80,12 +91,18 @@ loudspeaker::~loudspeaker(void)
 void
 loudspeaker::start(const speech_task& speech)
 {
-  trim = true;
-  if ((speech.format != none) &&
-      !speech.text.empty() &&
-      !speech.commands.empty())
+  if (speech.format == silence)
+    {
+      silence_timer = speech.playing.silence.length;
+      start_playback(0.0, speech.playing.silence.sampling, 1);
+    }
+  else if ((speech.format != none) &&
+           !speech.text.empty() &&
+           !speech.commands.empty())
     {
       unsigned int playing_rate;
+      silence_timer = 0;
+      trim = true;
       SF_INFO::format = speech.format;
       if (speech.format != autodetect)
         {
@@ -132,14 +149,28 @@ loudspeaker::start(const speech_task& speech)
 unsigned int
 loudspeaker::source_read(float* buffer, unsigned int nframes)
 {
-  return need_processing ?
-    read_result(buffer, nframes) :
-    get_source(buffer, nframes);
+  unsigned int result;
+  if (source)
+    result = need_processing ?
+      read_result(buffer, nframes) :
+      get_source(buffer, nframes);
+  else if (silence_timer > nframes)
+    {
+      silence_timer -= nframes;
+      result = nframes;
+    }
+  else
+    {
+      result = silence_timer;
+      silence_timer = 0;
+    }
+  return result;
 }
 
 void
 loudspeaker::source_release(void)
 {
+  silence_timer = 0;
   if (need_processing)
     {
       stop_processing();

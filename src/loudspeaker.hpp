@@ -45,6 +45,11 @@ public:
       unsigned int sampling;
       unsigned int channels;
     } sound;
+    struct
+    {
+      unsigned int sampling;
+      unsigned int length;
+    } silence;
     double deviation;
   };
 
@@ -53,6 +58,7 @@ public:
   speech_task(const std::string& txt, const pipeline::script& cmds,
               soundfile::format fmt, details playing_params,
               float loudness = 1.0, float tempo_acceleration = 0.0);
+  speech_task(unsigned int sampling, unsigned int silence_length);
 
 private:
   // Properties accessible only for actual executor:
@@ -65,7 +71,8 @@ private:
 
   friend class loudspeaker;
 
-  static details dummy_details(void);
+  // Pack silence parameters;
+  static details silence_params(unsigned int sampling, unsigned int length);
 };
 
 class loudspeaker:
@@ -104,6 +111,9 @@ private:
 
   // Attached sound stream fd:
   int sfd;
+
+  // Silence time counter in samples:
+  unsigned int silence_timer;
 
   // Internally used flags:
   bool trim, need_processing;
