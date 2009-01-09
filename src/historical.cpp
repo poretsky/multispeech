@@ -18,6 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <sysconfig.h>
+
 #include <string>
 #include <iostream>
 
@@ -50,7 +52,8 @@ const wregex multispeech_historical::postcleaner(L"\\[[^]]*]");
 
 const wregex multispeech_historical::validate_float(L"^\\d+(\\.\\d*)?$");
 const wregex multispeech_historical::validate_integer(L"^\\d+$");
-const wregex multispeech_historical::beep_parameters(L"^(\\d+)?\\s+(\\d+)?$");
+const wregex multispeech_historical::beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$");
+const wregex multispeech_historical::lang_parameters(L"^(\\S+)(\\s+(\\S+))?$");
 const wregex multispeech_historical::tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)");
 
 const double multispeech_historical::ref_freq = 16000.0;
@@ -220,13 +223,43 @@ multispeech_historical::perform_command(void)
           if (parse_result[1].matched)
             frequency = lexical_cast<unsigned int>(wstring(parse_result[1].first, parse_result[1].second));
           if (parse_result[2].matched)
-            duration = lexical_cast<float>(wstring(parse_result[2].first, parse_result[2].second)) / 1000;
+            duration = lexical_cast<float>(wstring(parse_result[3].first, parse_result[3].second)) / 1000;
         }
-      soundmaster.execute(tone_task(frequency, duration));
+      soundmaster.enqueue(tone_task(frequency, duration));
+    }
+
+  else if (L"sh" == cmd)
+    {
+      double duration = 0.05;
+      if (regex_match(data, validate_float))
+        duration = lexical_cast<double>(data) / 1000.0;
+      soundmaster.enqueue(speechmaster.silence(duration));
     }
 
   else if (L"set_lang" == cmd)
-    speechmaster.language(extern_string(data, locale("")));
+    {
+      if (regex_match(data, parse_result, lang_parameters))
+        {
+          speechmaster.language(extern_string(wstring(parse_result[1].first, parse_result[1].second), locale("")));
+          if (parse_result[2].matched &&
+              (wstring(parse_result[3].first, parse_result[3].second) != L"nil"))
+            soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+        }
+    }
+
+  else if (L"set_next_lang" == cmd)
+    {
+      speechmaster.lang_switch(true);
+      if (!data.empty() && (data != L"nil"))
+        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+    }
+
+  else if (L"set_previous_lang" == cmd)
+    {
+      speechmaster.lang_switch(false);
+      if (!data.empty() && (data != L"nil"))
+        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+    }
 
   else if (L"tts_sync_state" == cmd)
     {
@@ -242,6 +275,10 @@ multispeech_historical::perform_command(void)
                                        / rate_scale);
         }
     }
+
+  else if (L"version" == cmd)
+    soundmaster.execute(speechmaster.text_task(intern_string(PACKAGE_VERSION, locale(""))));
+
   else if (debug)
     {
       string message("Unrecognized command");

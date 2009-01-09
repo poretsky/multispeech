@@ -24,6 +24,18 @@ q text
 a file
   Place specified file into the server queue.
 
+t frequency duration
+  Place tone signal into the server queue. The tone signal is
+  specified by it's frequency in Hz and duration in milliseconds. If
+  duration is omitted then 50 milliseconds is used by default. If no
+  arguments are specified at all then beep of 440 Hz and 50
+  milliseconds will be produced.
+
+sh duration
+  Place silence of specified duration into the server queue. Duration
+  is specified in milliseconds. If no duration is specified then 50
+  milliseconds is used by default.
+
 d
   Proceed the server queue. Do nothing if it is proceeding at the
   moment.
@@ -49,24 +61,31 @@ l text
 p file
   Play specified sound file.
 
-t frequency duration
-  Produce tone signal specified by it's frequency in Hz and duration
-  in milliseconds. If duration is omitted then 50 milliseconds is used
-  by default. If no arguments are specified at all then beep of 440 Hz
-  and 50 milliseconds will be produced.
-
 s
   Immediately stop all current sound activities.
 
 r rate
 tts_set_speech_rate rate
   Set specified speech rate. The value is treated according to
-  Emacspeak conventions.
+  Emacspeak conventions. This command does not affect currently
+  playing or queued speech. New value is applied to the subsequent
+  items.
 
-set_lang language
+set_lang language say_it
   Change speaking language. Allowed values are "en" for English, "ru"
   for Russian and "autodetect" for automatic language detection by the
-  text nature.
+  text nature. The second argument is optional. If it is specified and
+  it's value is not "nil" then new language name will be spoken.
+
+set_next_lang say_it
+  Switch language forward to the next available one. Argument is
+  optional. If it is specified and is not "nil" then new language name
+  will be spoken.
+
+set_previous_lang say_it
+  Switch language backward to the next available one. Argument is
+  optional. If it is specified and is not "nil" then new language name
+  will be spoken.
 
 tts_set_punctuations mode
   Change punctuations speaking mode. Allowed values are "all", "some"
@@ -91,6 +110,9 @@ tts_sync_state punctuation_mode capitalize_mode split_caps_mode speech_rate
 tts_reset
   Stop all current sound activities and reset all general speech
   parameters to the default state.
+
+version
+  Say the Multispeech version.
 
 exit
   Exit Multispeech.

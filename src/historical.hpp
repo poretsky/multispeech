@@ -57,6 +57,7 @@ private:
   static const boost::wregex validate_float;
   static const boost::wregex validate_integer;
   static const boost::wregex beep_parameters;
+  static const boost::wregex lang_parameters;
   static const boost::wregex tts_parameters;
 
   // Parsing result representation:
