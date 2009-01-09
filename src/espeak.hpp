@@ -24,6 +24,8 @@
 #ifndef ESPEAK_HPP
 #define ESPEAK_HPP
 
+#include <string>
+
 #include "language_description.hpp"
 #include "mbrola.hpp"
 
@@ -32,11 +34,11 @@ class espeak: public speech_engine
 {
 public:
   // Object construction:
-  espeak(const configuration& conf, const char* lang);
+  espeak(const configuration& conf, const std::string& lang);
 
 private:
   // Construct new language description object:
-  static language_description* make_language(const char* lang);
+  static language_description* make_language(const std::string& lang);
 
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
@@ -47,11 +49,11 @@ class mbrespeak: public mbrola
 {
 public:
   // Object construction:
-  mbrespeak(const configuration& conf, const char* lang);
+  mbrespeak(const configuration& conf, const std::string& lang);
 
 private:
   // Construct new language description object:
-  static language_description* make_language(const char* lang);
+  static language_description* make_language(const std::string& lang);
 };
 
 #endif

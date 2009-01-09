@@ -19,7 +19,6 @@
 */
 
 #include <cmath>
-#include <string>
 
 #include <boost/lexical_cast.hpp>
 
@@ -35,11 +34,11 @@ using namespace boost;
 // Espeak backend.
 
 // Object construction:
-espeak::espeak(const configuration& conf, const char* lang):
+espeak::espeak(const configuration& conf, const string& lang):
   speech_engine(conf, speaker::espeak, novoice, make_language(lang), soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
-    throw configuration::error(language->id + " voice for " + name + " is not specified");
+    throw configuration::error(string(language->id()) + " voice for " + name + " is not specified");
   if (conf.option_value.count(options::compose(name, option_name::executable)) &&
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
@@ -52,13 +51,13 @@ espeak::espeak(const configuration& conf, const char* lang):
 
 // Language choosing:
 language_description*
-espeak::make_language(const char* lang)
+espeak::make_language(const string& lang)
 {
-  if (lang_id::en == string(lang))
+  if (lang_id::en == lang)
     return new English;
-  else if (lang_id::ru == string(lang))
+  else if (lang_id::ru == lang)
     return new Russian;
-  throw configuration::error(string("unsupported language ") + lang + " specified for " + speaker::espeak);
+  throw configuration::error("unsupported language " + lang + " specified for " + speaker::espeak);
 }
 
 // Making up voice parameters:
@@ -73,7 +72,7 @@ espeak::voicify(double rate, double pitch)
 // Espeak+Mbrola backend.
 
 // Object construction:
-mbrespeak::mbrespeak(const configuration& conf, const char* lang):
+mbrespeak::mbrespeak(const configuration& conf, const string& lang):
   mbrola(conf, options::compose(speaker::espeak, speaker::mbrola),
          novoice, make_language(lang), 16000)
 {
@@ -89,9 +88,9 @@ mbrespeak::mbrespeak(const configuration& conf, const char* lang):
 
 // Language choosing:
 language_description*
-mbrespeak::make_language(const char* lang)
+mbrespeak::make_language(const string& lang)
 {
-  if (lang_id::en == string(lang))
+  if (lang_id::en == lang)
     return new English;
-  throw configuration::error(string("unsupported language ") + lang + " specified for " + options::compose(speaker::espeak, speaker::mbrola));
+  throw configuration::error("unsupported language " + lang + " specified for " + options::compose(speaker::espeak, speaker::mbrola));
 }

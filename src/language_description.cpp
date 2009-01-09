@@ -28,9 +28,9 @@ using namespace boost;
 
 // Construct / destroy:
 
-language_description::language_description(const string& language,
-                                           const wstring& language_detector):
-  id(language),
+language_description::language_description(const char* language_id,
+                                           const wchar_t* language_detector):
+  id_str(language_id),
   detector(language_detector)
 {
   filter_chain.setup()
@@ -43,6 +43,12 @@ language_description::~language_description(void)
 
 
 // General actions:
+
+const char*
+language_description::id(void) const
+{
+  return id_str;
+}
 
 bool
 language_description::recognize(const wstring& s)

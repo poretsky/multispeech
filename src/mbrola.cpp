@@ -40,7 +40,7 @@ mbrola::mbrola(const configuration& conf,
   speech_engine(conf, backend, voice_id, lang, soundfile::s16, sampling, 1, false)
 {
   if (voice.empty())
-    throw configuration::error(language->id + " voice for " + name + " is not specified");
+    throw configuration::error(string(language->id()) + " voice for " + name + " is not specified");
   if (conf.option_value.count(options::compose(speaker::mbrola, option_name::executable)) &&
       !conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
     {

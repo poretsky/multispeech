@@ -64,18 +64,18 @@ speech_engine::speech_engine(const configuration& conf,
                              const char* charset):
   name(backend),
   voice((voice_id == novoice) ?
-        (conf.option_value.count(options::compose(backend, lang->id)) ?
-         conf.option_value[options::compose(backend, lang->id)].as<string>() :
+        (conf.option_value.count(options::compose(backend, lang->id())) ?
+         conf.option_value[options::compose(backend, lang->id())].as<string>() :
          "") :
         voice_id),
   language(lang),
-  volume_factor(conf.option_value[options::compose(lang->id, option_name::volume)].as<double>()),
-  rate_factor(conf.option_value[options::compose(lang->id, option_name::rate)].as<double>()),
-  pitch_factor(conf.option_value[options::compose(lang->id, option_name::pitch)].as<double>()),
-  caps_factor(conf.option_value[options::compose(lang->id, option_name::caps_factor)].as<double>()),
-  char_pitch(conf.option_value[options::compose(lang->id, option_name::char_pitch)].as<double>()),
-  char_rate(conf.option_value[options::compose(lang->id, option_name::char_rate)].as<double>()),
-  acceleration(conf.option_value[options::compose(lang->id, option_name::acceleration)].as<double>()),
+  volume_factor(conf.option_value[options::compose(lang->id(), option_name::volume)].as<double>()),
+  rate_factor(conf.option_value[options::compose(lang->id(), option_name::rate)].as<double>()),
+  pitch_factor(conf.option_value[options::compose(lang->id(), option_name::pitch)].as<double>()),
+  caps_factor(conf.option_value[options::compose(lang->id(), option_name::caps_factor)].as<double>()),
+  char_pitch(conf.option_value[options::compose(lang->id(), option_name::char_pitch)].as<double>()),
+  char_rate(conf.option_value[options::compose(lang->id(), option_name::char_rate)].as<double>()),
+  acceleration(conf.option_value[options::compose(lang->id(), option_name::acceleration)].as<double>()),
   format(fmt),
   native_sampling(sampling),
   sound_channels(channels),
@@ -84,7 +84,7 @@ speech_engine::speech_engine(const configuration& conf,
                   locale(locale(""), new iconv_codecvt(NULL, charset)) :
                   locale(""))
 {
-  format_macros["%lang"] = lang->id;
+  format_macros["%lang"] = lang->id();
 }
 
 speech_engine::~speech_engine(void)

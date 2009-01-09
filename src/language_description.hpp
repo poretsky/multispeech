@@ -39,12 +39,12 @@ class language_description
 {
 public:
   // Construct / destroy:
-  language_description(const std::string& language,
-                       const std::wstring& language_detector);
+  language_description(const char* language_id,
+                       const wchar_t* language_detector);
   virtual ~language_description(void);
 
   // Language id string:
-  const std::string id;
+  const char* id(void) const;
 
   // Native language presence recognition:
   bool recognize(const std::wstring& s);
@@ -76,6 +76,9 @@ protected:
   text_filter filter_chain;
 
 private:
+  // Language id string:
+  const char* id_str;
+
   // Native language detector:
   const boost::wregex detector;
 
