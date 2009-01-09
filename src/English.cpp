@@ -24,6 +24,7 @@
 #include "English.hpp"
 
 #include "config.hpp"
+#include "strcvt.hpp"
 
 using namespace std;
 using namespace boost;
@@ -77,7 +78,10 @@ English::English(void):
     (L"greaterthan", L"greater than")
     (L"leftbracket", L"left bracket")
     (L"rightbracket", L"right bracket")
-    (L"newline", L"new line");
+    (L"newline", L"new line")
+
+    // Language name:
+    (intern_string(id(), locale("")).c_str(), L"English");
 
   // Text filtering chain:
   filter_chain.setup()

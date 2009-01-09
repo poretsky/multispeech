@@ -1,4 +1,4 @@
-// Russian.cpp -- Russian speech backends implementation
+// Russian.cpp -- Russian language implementation
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -29,6 +29,7 @@
 #include "Russian.hpp"
 
 #include "config.hpp"
+#include "strcvt.hpp"
 
 using namespace std;
 using namespace boost;
@@ -131,7 +132,10 @@ Russian::Russian(void):
     (L"space", L"пробел")
     (L"tab", L"табуляция")
     (L"newline", L"перевод строки+")
-    (L"dot", L"точка");
+    (L"dot", L"точка")
+
+    // Language name:
+    (intern_string(id(), locale("")).c_str(), L"русский");
 
   // Transliteration table:
   translit = map_list_of
