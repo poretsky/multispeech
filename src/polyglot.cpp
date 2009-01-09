@@ -18,15 +18,21 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <iostream>
+
+#include <bobcat/syslogstream>
+
 #include <boost/assign.hpp>
 
 #include "polyglot.hpp"
 
+#include "server.hpp"
 #include "freephone.hpp"
 #include "ru_tts.hpp"
 #include "espeak.hpp"
 
 using namespace std;
+using namespace FBB;
 using namespace boost;
 using namespace boost::assign;
 
@@ -131,10 +137,46 @@ polyglot::language(const string& id)
             lang = i;
             autolanguage = false;
           }
+        else if (server::debug)
+          {
+            string message("Language \"" + id + "\" is not configured");
+            server::log << SyslogStream::debug << message << endl;
+            if (server::verbose)
+              cerr << message << endl;
+          }
         return;
       }
   if (id == lang_id::autodetect)
     autolanguage = true;
+  else if (server::debug)
+    {
+      string message("Unknown language \"" + id + '\"');
+      server::log << SyslogStream::debug << message << endl;
+      if (server::verbose)
+        cerr << message << endl;
+    }
+}
+
+const char*
+polyglot::language(void) const
+{
+  if (autolanguage)
+    return lang_id::autodetect;
+  return talker[lang]->language->id();
+}
+
+void
+polyglot::lang_switch(bool direction)
+{
+  int i = autolanguage ? (direction ? -1 : langs.size()) : lang;
+  do i += direction ? 1 : -1;
+  while ((i >= 0) && (i < langs.size()) && !talker[i].get());
+  if ((i >= 0) && (i < langs.size()))
+    {
+      lang = i;
+      autolanguage = false;
+    }
+  else autolanguage = true;
 }
 
 
@@ -163,8 +205,8 @@ polyglot::speech_backend(const string& name,
   else if (speaker::ru_tts == name)
     return new ru_tts(conf);
   else if (speaker::espeak == name)
-    return new espeak(conf, lang.c_str());
+    return new espeak(conf, lang);
   else if (options::compose(speaker::espeak, speaker::mbrola) == name)
-    return new mbrespeak(conf, lang.c_str());
+    return new mbrespeak(conf, lang);
   throw configuration::error("unknown speech backend " + name);
 }

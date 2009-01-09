@@ -55,6 +55,13 @@ public:
   // Choose language:
   void language(const std::string& id);
 
+  // Return current language id string:
+  const char* language(void) const;
+
+  // Switch language in specified direction:
+  // true -- forward, false -- backward.
+  void lang_switch(bool direction);
+
 private:
   // Detect language from text content:
   void detect_language(const std::wstring& s, bool check_translation = false);
