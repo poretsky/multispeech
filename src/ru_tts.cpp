@@ -29,7 +29,6 @@
 
 #include "ru_tts.hpp"
 
-#include "Russian.hpp"
 #include "server.hpp"
 
 using namespace std;
@@ -41,7 +40,7 @@ using namespace FBB;
 // Object construction:
 
 ru_tts::ru_tts(const configuration& conf):
-  speech_engine(conf, speaker::ru_tts, "", new Russian, soundfile::s8, 10000, 1, true, "KOI8-R")
+  speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
   if (conf.option_value.count(options::compose(name, option_name::executable)) &&
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())

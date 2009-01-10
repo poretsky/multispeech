@@ -31,6 +31,8 @@
 #include "iconv_codecvt.hpp"
 #include "strcvt.hpp"
 #include "pipeline.hpp"
+#include "English.hpp"
+#include "Russian.hpp"
 
 using namespace std;
 using namespace boost;
@@ -56,7 +58,7 @@ const string speech_engine::novoice("no voice");
 speech_engine::speech_engine(const configuration& conf,
                              const string& backend,
                              const string& voice_id,
-                             language_description* lang,
+                             const string& lang,
                              soundfile::format fmt,
                              unsigned int sampling,
                              unsigned int channels,
@@ -64,18 +66,17 @@ speech_engine::speech_engine(const configuration& conf,
                              const char* charset):
   name(backend),
   voice((voice_id == novoice) ?
-        (conf.option_value.count(options::compose(backend, lang->id())) ?
-         conf.option_value[options::compose(backend, lang->id())].as<string>() :
+        (conf.option_value.count(options::compose(backend, lang)) ?
+         conf.option_value[options::compose(backend, lang)].as<string>() :
          "") :
         voice_id),
-  language(lang),
-  volume_factor(conf.option_value[options::compose(lang->id(), option_name::volume)].as<double>()),
-  rate_factor(conf.option_value[options::compose(lang->id(), option_name::rate)].as<double>()),
-  pitch_factor(conf.option_value[options::compose(lang->id(), option_name::pitch)].as<double>()),
-  caps_factor(conf.option_value[options::compose(lang->id(), option_name::caps_factor)].as<double>()),
-  char_pitch(conf.option_value[options::compose(lang->id(), option_name::char_pitch)].as<double>()),
-  char_rate(conf.option_value[options::compose(lang->id(), option_name::char_rate)].as<double>()),
-  acceleration(conf.option_value[options::compose(lang->id(), option_name::acceleration)].as<double>()),
+  volume_factor(conf.option_value[options::compose(lang, option_name::volume)].as<double>()),
+  rate_factor(conf.option_value[options::compose(lang, option_name::rate)].as<double>()),
+  pitch_factor(conf.option_value[options::compose(lang, option_name::pitch)].as<double>()),
+  caps_factor(conf.option_value[options::compose(lang, option_name::caps_factor)].as<double>()),
+  char_pitch(conf.option_value[options::compose(lang, option_name::char_pitch)].as<double>()),
+  char_rate(conf.option_value[options::compose(lang, option_name::char_rate)].as<double>()),
+  acceleration(conf.option_value[options::compose(lang, option_name::acceleration)].as<double>()),
   format(fmt),
   native_sampling(sampling),
   sound_channels(channels),
@@ -84,7 +85,12 @@ speech_engine::speech_engine(const configuration& conf,
                   locale(locale(""), new iconv_codecvt(NULL, charset)) :
                   locale(""))
 {
-  format_macros["%lang"] = lang->id();
+  if (lang_id::en == lang)
+    language.reset(new English);
+  else if (lang_id::ru == lang)
+    language.reset(new Russian);
+  else throw configuration::error("unsupported language " + lang + " specified for " + backend);
+  format_macros["%lang"] = lang;
 }
 
 speech_engine::~speech_engine(void)

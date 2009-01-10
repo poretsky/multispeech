@@ -24,9 +24,6 @@
 
 #include "espeak.hpp"
 
-#include "English.hpp"
-#include "Russian.hpp"
-
 using namespace std;
 using namespace boost;
 
@@ -35,10 +32,10 @@ using namespace boost;
 
 // Object construction:
 espeak::espeak(const configuration& conf, const string& lang):
-  speech_engine(conf, speaker::espeak, novoice, make_language(lang), soundfile::autodetect, 22050, 1, true, "UTF-8")
+  speech_engine(conf, speaker::espeak, novoice, lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
-    throw configuration::error(string(language->id()) + " voice for " + name + " is not specified");
+    throw configuration::error(lang + " voice for " + name + " is not specified");
   if (conf.option_value.count(options::compose(name, option_name::executable)) &&
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
@@ -47,17 +44,6 @@ espeak::espeak(const configuration& conf, const string& lang):
       command(cmd);
     }
   else throw configuration::error("no path to " + name);
-}
-
-// Language choosing:
-language_description*
-espeak::make_language(const string& lang)
-{
-  if (lang_id::en == lang)
-    return new English;
-  else if (lang_id::ru == lang)
-    return new Russian;
-  throw configuration::error("unsupported language " + lang + " specified for " + speaker::espeak);
 }
 
 // Making up voice parameters:
@@ -73,9 +59,10 @@ espeak::voicify(double rate, double pitch)
 
 // Object construction:
 mbrespeak::mbrespeak(const configuration& conf, const string& lang):
-  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola),
-         novoice, make_language(lang), 16000)
+  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang, 16000)
 {
+  if (lang_id::en != lang)
+    throw configuration::error("unsupported language " + lang + " specified for " + name);
   if (conf.option_value.count(options::compose(speaker::espeak, option_name::executable)) &&
       !conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
     {
@@ -84,13 +71,4 @@ mbrespeak::mbrespeak(const configuration& conf, const string& lang):
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::espeak);
-}
-
-// Language choosing:
-language_description*
-mbrespeak::make_language(const string& lang)
-{
-  if (lang_id::en == lang)
-    return new English;
-  throw configuration::error("unsupported language " + lang + " specified for " + options::compose(speaker::espeak, speaker::mbrola));
 }

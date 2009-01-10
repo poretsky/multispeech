@@ -54,9 +54,7 @@
 // voice_id -- voice name. Special protected identifier "novoice"
 // is used when actual name should be determined
 // from the configuration data;
-// lang -- pointer to the language description object,
-// that should be dynamically allocated. Anyway,
-// the destructor will try to delete it;
+// lang -- language id;
 // fmt -- generated sound stream format;
 // sampling -- generated sound stream native sampling frequency;
 // channels -- number of channels in the sound stream (1 or 2);
@@ -85,7 +83,7 @@ public:
   speech_engine(const configuration& conf,
                 const std::string& backend,
                 const std::string& voice_id,
-                language_description* lang,
+                const std::string& lang,
                 soundfile::format fmt,
                 unsigned int sampling,
                 unsigned int channels,

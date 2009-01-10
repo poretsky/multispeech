@@ -26,7 +26,6 @@
 
 #include <string>
 
-#include "language_description.hpp"
 #include "mbrola.hpp"
 
 // Espeak backend.
@@ -37,9 +36,6 @@ public:
   espeak(const configuration& conf, const std::string& lang);
 
 private:
-  // Construct new language description object:
-  static language_description* make_language(const std::string& lang);
-
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 };
@@ -50,10 +46,6 @@ class mbrespeak: public mbrola
 public:
   // Object construction:
   mbrespeak(const configuration& conf, const std::string& lang);
-
-private:
-  // Construct new language description object:
-  static language_description* make_language(const std::string& lang);
 };
 
 #endif

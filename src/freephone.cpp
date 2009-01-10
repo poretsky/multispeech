@@ -26,7 +26,6 @@
 
 #include "freephone.hpp"
 
-#include "English.hpp"
 #include "server.hpp"
 
 using namespace std;
@@ -37,7 +36,7 @@ using namespace FBB;
 // Object construction:
 
 freephone::freephone(const configuration& conf):
-  mbrola(conf, speaker::freephone, "en1", new English, 16000)
+  mbrola(conf, speaker::freephone, "en1", lang_id::en, 16000)
 {
   if (conf.option_value.count(options::compose(name, option_name::executable)) &&
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
