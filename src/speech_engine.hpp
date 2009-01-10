@@ -60,7 +60,8 @@
 // channels -- number of channels in the sound stream (1 or 2);
 // deviate -- if it is true, frequency deviation will be done
 // on the playing stage. Otherwise the TTS pipeline
-// should take care of it.
+// should take care of it;
+// charset -- backend native charset specification.
 
 #ifndef SPEECH_ENGINE_HPP
 #define SPEECH_ENGINE_HPP
@@ -88,7 +89,7 @@ public:
                 unsigned int sampling,
                 unsigned int channels,
                 bool deviate,
-                const char* charset = NULL);
+                const std::string& charset = "");
   virtual ~speech_engine(void);
 
   // General attributes:

@@ -30,6 +30,7 @@
 #include "freephone.hpp"
 #include "ru_tts.hpp"
 #include "espeak.hpp"
+#include "user_tts.hpp"
 
 using namespace std;
 using namespace FBB;
@@ -208,5 +209,7 @@ polyglot::speech_backend(const string& name,
     return new espeak(conf, lang);
   else if (options::compose(speaker::espeak, speaker::mbrola) == name)
     return new mbrespeak(conf, lang);
+  else if (speaker::user == name)
+    return new user_tts(conf, lang);
   throw configuration::error("unknown speech backend " + name);
 }

@@ -43,6 +43,7 @@ namespace speaker
   extern const char* const espeak;
   extern const char* const freephone;
   extern const char* const ru_tts;
+  extern const char* const user;
 };
 
 // Various option names used in sections:
@@ -50,7 +51,11 @@ namespace option_name
 {
   extern const char* const engine;
   extern const char* const executable;
+  extern const char* const command;
+  extern const char* const format;
   extern const char* const sampling;
+  extern const char* const stereo;
+  extern const char* const freq_control;
   extern const char* const charset;
   extern const char* const voices;
   extern const char* const lexicon;
@@ -175,6 +180,17 @@ namespace options
     extern const std::string executable;
     extern const std::string lexicon;
     extern const std::string log;
+  };
+
+  // User defined TTS backend options:
+  namespace user
+  {
+    extern const std::string command;
+    extern const std::string format;
+    extern const std::string sampling;
+    extern const std::string stereo;
+    extern const std::string freq_control;
+    extern const std::string charset;
   };
 
   // Dynamic options name composing:

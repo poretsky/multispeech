@@ -63,7 +63,7 @@ speech_engine::speech_engine(const configuration& conf,
                              unsigned int sampling,
                              unsigned int channels,
                              bool deviate,
-                             const char* charset):
+                             const string& charset):
   name(backend),
   voice((voice_id == novoice) ?
         (conf.option_value.count(options::compose(backend, lang)) ?
@@ -81,9 +81,9 @@ speech_engine::speech_engine(const configuration& conf,
   native_sampling(sampling),
   sound_channels(channels),
   playing_deviation(deviate),
-  backend_charset(charset ?
-                  locale(locale(""), new iconv_codecvt(NULL, charset)) :
-                  locale(""))
+  backend_charset(charset.empty() ?
+                  locale("") :
+                  locale(locale(""), new iconv_codecvt(NULL, charset.c_str())))
 {
   if (lang_id::en == lang)
     language.reset(new English);

@@ -66,6 +66,7 @@ namespace speaker
   const char* const espeak = "espeak";
   const char* const freephone = "freephone";
   const char* const ru_tts = "ru_tts";
+  const char* const user = "user";
 };
 
 // Various option names used in sections:
@@ -73,7 +74,11 @@ namespace option_name
 {
   const char* const engine = "engine";
   const char* const executable = "executable";
+  const char* const command = "command";
+  const char* const format = "format";
   const char* const sampling = "sampling";
+  const char* const stereo = "stereo";
+  const char* const freq_control = "freq_control";
   const char* const charset = "charset";
   const char* const voices = "voices";
   const char* const lexicon = "lexicon";
@@ -199,6 +204,17 @@ namespace options
     const string log(compose(speaker::ru_tts, option_name::log));
   };
 
+  // User defined TTS backend options:
+  namespace user
+  {
+    const string command(compose(speaker::user, option_name::command));
+    const string format(compose(speaker::user, option_name::format));
+    const string sampling(compose(speaker::user, option_name::sampling));
+    const string stereo(compose(speaker::user, option_name::stereo));
+    const string freq_control(compose(speaker::user, option_name::freq_control));
+    const string charset(compose(speaker::user, option_name::charset));
+  };
+
   // Dynamic options name composing:
   const string compose(const string& section, const string& option)
   {
@@ -312,7 +328,15 @@ configuration::configuration(int argc, char* argv[])
     // Ru_tts backend options:
     (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
     (ru_tts::lexicon.c_str(), value<string>())
-    (ru_tts::log.c_str(), value<string>());
+    (ru_tts::log.c_str(), value<string>())
+
+    // User defined TTS backend options:
+    (user::command.c_str(), value<string>())
+    (user::format.c_str(), value<string>())
+    (user::sampling.c_str(), value<unsigned int>()->default_value(22050))
+    (user::stereo.c_str(), bool_switch()->default_value(false))
+    (user::freq_control.c_str(), bool_switch()->default_value(false))
+    (user::charset.c_str(), value<string>()->default_value(""));
 
   // Parse config files and store values
   if (cl_opt.count("config"))
