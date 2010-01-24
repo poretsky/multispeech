@@ -73,7 +73,7 @@ wstring
 punctuations::do_filter(const wstring& s)
 {
   wstring result(s);
-  for (int i = verbosity; i < char_list.length(); i++)
+  for (unsigned int i = verbosity; i < char_list.length(); i++)
     replace_all(result, char_list.substr(i, 1), pronunciation[i]);
   return result;
 }

@@ -75,7 +75,7 @@ private:
   std::vector< boost::shared_ptr<speech_engine> > talker;
 
   // Currently used language:
-  int lang;
+  unsigned int lang;
 
   // Language autodetection enabling flag:
   bool autolanguage;

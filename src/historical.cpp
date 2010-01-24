@@ -84,7 +84,7 @@ multispeech_historical::get_command(void)
       data = intern_string(s, input_charset);
       if (count)
         cmd += L' ';
-      for (int i = 0; i < data.length(); i++)
+      for (unsigned int i = 0; i < data.length(); i++)
         switch (data[i])
           {
           case L'{':

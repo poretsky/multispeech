@@ -53,7 +53,7 @@ polyglot::polyglot(const configuration& conf):
   autolanguage(false)
 {
   bool initialized = false;
-  for (int i = 0; i < langs.size(); i++)
+  for (unsigned int i = 0; i < langs.size(); i++)
     if (conf.option_value.count(options::compose(langs[i], option_name::engine)))
       {
         talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(),
@@ -71,7 +71,7 @@ polyglot::polyglot(const configuration& conf):
           (conf.option_value[options::speech::language].as<string>() != lang_id::autodetect))
         throw configuration::error("unsupported language " +
                                   conf.option_value[options::speech::language].as<string>());
-      for (int i = 0; i < langs.size(); i++)
+      for (unsigned int i = 0; i < langs.size(); i++)
         {
           if ((lang < langs.size()) && talker[lang].get())
             break;
@@ -130,7 +130,7 @@ polyglot::silence(double duration)
 void
 polyglot::language(const string& id)
 {
-  for (int i = 0; i < langs.size(); i++)
+  for (unsigned int i = 0; i < langs.size(); i++)
     if (id == langs[i])
       {
         if (talker[i].get())
@@ -171,10 +171,10 @@ polyglot::lang_switch(bool direction)
 {
   int i = autolanguage ? (direction ? -1 : langs.size()) : lang;
   do i += direction ? 1 : -1;
-  while ((i >= 0) && (i < langs.size()) && !talker[i].get());
-  if ((i >= 0) && (i < langs.size()))
+  while ((i >= 0) && (static_cast<unsigned int>(i) < langs.size()) && !talker[i].get());
+  if ((i >= 0) && (static_cast<unsigned int>(i) < langs.size()))
     {
-      lang = i;
+      lang = static_cast<unsigned int>(i);
       autolanguage = false;
     }
   else autolanguage = true;
@@ -188,7 +188,7 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 {
   if (!check_translation || (s.length() == 1) ||
       talker[lang]->language->translate(s).empty())
-    for (int i = 0; i < langs.size(); i++)
+    for (unsigned int i = 0; i < langs.size(); i++)
       if (talker[i].get() && talker[i]->language->recognize(s))
         {
           lang = i;
