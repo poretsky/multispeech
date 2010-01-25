@@ -2,8 +2,8 @@
 
 bin_PROGRAMS = multispeech
 
-AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -pthread \
-	@BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @SNDFILE_CPPFLAGS@ \
+AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
+	-pthread @BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @SNDFILE_CPPFLAGS@ \
 	@PORTAUDIOCPP_CPPFLAGS@ @SOUNDTOUCH_CXXFLAGS@
 AM_CXXFLAGS = -O2 -Wall -Wno-sign-compare
 AM_LDFLAGS = -pthread

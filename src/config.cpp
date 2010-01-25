@@ -36,10 +36,6 @@
 #include "speech_engine.hpp"
 #include "server.hpp"
 
-#ifndef SYSCONF_DIR
-#define SYSCONF_DIR "/etc"
-#endif
-
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
@@ -49,6 +45,13 @@ using namespace boost::program_options;
 
 const path configuration::global_conf(complete("multispeech.conf", SYSCONF_DIR));
 const path configuration::local_conf(complete(".multispeechrc", getenv("HOME")));
+
+
+// Hardcoded default paths:
+
+const path configuration::mbrola_voices_default(complete("mbrola-voices", DATA_DIR));
+const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
+const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
 
 
 // Language id strings:
@@ -309,7 +312,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Mbrola based backends options:
     (mbrola::executable.c_str(), value<string>()->default_value(speaker::mbrola))
-    (mbrola::voices.c_str(), value<string>()->default_value("/usr/local/share/mbrola/voices"))
+    (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.file_string()))
 
     // Espeak based backends options:
     (espeak::executable.c_str(), value<string>()->default_value(speaker::espeak))
@@ -323,11 +326,11 @@ configuration::configuration(int argc, char* argv[])
 
     // Freephone backend options:
     (freephone::executable.c_str(), value<string>()->default_value(speaker::freephone))
-    (freephone::lexicon.c_str(), value<string>())
+    (freephone::lexicon.c_str(), value<string>()->default_value(enlex_default.file_string()))
 
     // Ru_tts backend options:
     (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
-    (ru_tts::lexicon.c_str(), value<string>())
+    (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.file_string()))
     (ru_tts::log.c_str(), value<string>())
 
     // User defined TTS backend options:

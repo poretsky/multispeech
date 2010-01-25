@@ -40,11 +40,11 @@ according to the commands passed by it's client. It utilizes third
 party speech synthesis software to perform actual TTS transformation.
 .PP
 All aspects of \fBmultispeech\fP behaviour are highly customizable via
-configuration files \fI/etc/multispeech.conf\fP and
+configuration files \fI<sysconfdir>/multispeech.conf\fP and
 \fI~/.multispeechrc\fP. See the \fBmultispeech.conf\fP(5) man page for
 syntax information. The user settings provided by
 \fI~/.multispeechrc\fP always take precedence over the system\-wide
-ones from \fI/etc/multispeech.conf\fP. And all these settings in turn
+ones from \fI<sysconfdir>/multispeech.conf\fP. And all these settings in turn
 can be overridden by an extra configuration file specified via the
 command line. Some configuration options are mandatory, so at least
 one of these files must exist.
@@ -76,7 +76,7 @@ Show summary of options and exit.
 Show program version and exit.
 .SH "FILES"
 .TP
-.B /etc/multispeech.conf
+.B <sysconfdir>/multispeech.conf
 provides system\-wide configuration.
 .TP
 .B ~/.multispeechrc

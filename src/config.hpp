@@ -225,6 +225,11 @@ private:
 
   // Configuration files:
   static const boost::filesystem::path global_conf, local_conf;
+
+  // Hardcoded default paths:
+  static const boost::filesystem::path mbrola_voices_default;
+  static const boost::filesystem::path enlex_default;
+  static const boost::filesystem::path rulex_default;
 };
 
 #endif

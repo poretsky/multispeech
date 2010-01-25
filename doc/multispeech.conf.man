@@ -30,10 +30,10 @@
 multispeech.conf \- Multispeech configuration file
 .SH DESCRIPTION
 On startup \fBmultispeech\fP expects to find it's configuration
-in \fI/etc/multispeech.conf\fP and \fI~/.multispeechrc\fP.
+in \fI<sysconfdir>/multispeech.conf\fP and \fI~/.multispeechrc\fP.
 The user settings provided by \fI~/.multispeechrc\fP
 always take precedence over the system\-wide ones
-from \fI/etc/multispeech.conf\fP. And all these settings in turn
+from \fI<sysconfdir>/multispeech.conf\fP. And all these settings in turn
 can be overridden by an extra configuration file specified via the
 command line. Some configuration options are mandatory, so at least
 one of these files must exist.
@@ -231,7 +231,7 @@ will be examined and all paths mentioned there will be searched.
 .B voices
 .br
 Path to the directory where Mbrola voice files are stored.
-By default \(oq/usr/local/share/mbrola/voices\(cq is suggested.
+By default \(oq<datadir>/mbrola-voices\(cq is suggested.
 .SH "FREEPHONE RELATED OPTIONS"
 Section named \(oqfreephone\(cq is devoted to \fBfreephone\fP speech
 backend. Here are the following options:
@@ -244,8 +244,8 @@ will be examined and all paths mentioned there will be searched.
 .TP
 .B lexicon
 .br
-Path to the lexical database. It is not set by default
-so no lexical data will be used and TTS will be done only by rules.
+Path to the lexical database. By default
+\(oq<datadir>/freespeech/enlex.db\(cq is suggested.
 .SH "RU TTS RELATED OPTIONS"
 Section named \(oqru_tts\(cq consists of options that control
 \fBmultispeech\fP interaction with \fBru_tts\fP speech synthesizer:
@@ -258,8 +258,8 @@ will be examined and all paths mentioned there will be searched.
 .TP
 .B lexicon
 .br
-Path to the lexical database. It is not set by default
-so no lexical pronunciation data and stress information will be used.
+Path to the lexical database. By default
+\(oq<datadir>/freespeech/rulex.db\(cq is suggested.
 .TP
 .B log
 .br
