@@ -4,5 +4,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src doc
 doc_DATA = AUTHORS README TODO
-dist_sysconf_DATA = multispeech.conf
-EXTRA_DIST = bootstrap debian
+sysconf_DATA = multispeech.conf
+EXTRA_DIST = bootstrap multispeech.conf.in debian
+CLEANFILES = multispeech.conf
+
+%.conf: %.conf.in
+	sed -e "s|<sysconfdir>|$(sysconfdir)|g" -e "s|<datadir>|$(datadir)|g" $< > $@
