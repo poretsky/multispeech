@@ -40,13 +40,25 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl check for thread support
 		AC_CHECK_HEADERS([boost/thread/thread.hpp boost/thread/mutex.hpp boost/thread/condition.hpp], [
+
+			dnl check for libboost_thread
 			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
-				[[boost::thread::yield();]])], [], [
+				[[boost::thread::yield();]])], [
+				BOOST_LIBTHREAD="-lboost_thread"
+				], [
+
+			dnl check for libboost_thread-mt
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread-mt"
+			AC_LINK_IFELSE([
+				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
+				[[boost::thread::yield();]])], [
+				BOOST_LIBTHREAD="-lboost_thread-mt"
+				], [
 
 				dnl fail to link
-				AC_MSG_FAILURE([broken Boost thread support library])])], [
+				AC_MSG_FAILURE([broken Boost thread support library])]]))], [
 
 			dnl not found
 			AC_MSG_ERROR([no required thread support found in current Boost library installation])])
@@ -105,7 +117,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl libboost found
 		AC_SUBST(BOOST_CPPFLAGS, [-I$boost_prefix/include])
-		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib -lboost_thread -lboost_iostreams-mt -lboost_regex-mt -lboost_program_options-mt -lboost_filesystem-mt"])
+		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_iostreams-mt -lboost_regex-mt -lboost_program_options-mt -lboost_filesystem-mt"])
 	], [
 		AC_MSG_ERROR([incomplete or broken Boost library installation])])
 

@@ -65,7 +65,7 @@ server::run(void)
       {
         get_command();
       }
-    catch (exception& failure)
+    catch (std::exception& failure)
       {
         cmd.erase();
         data.erase();
