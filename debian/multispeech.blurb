@@ -1,0 +1,4 @@
+blurb: Multispeech
+program: multispeech
+tcl: 
+device: Multispeech
