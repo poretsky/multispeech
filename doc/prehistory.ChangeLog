@@ -1,3 +1,9 @@
+This file contains project history before Debian package release.
+
+2010-02-03  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Release 2.2.1
+
 2010-01-28  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* Some tweaks to cope with other versions of the boost library.
@@ -80,10 +86,6 @@
 
 	* Extra configuration file specification via the command line.
 
-2009-01-05  Igor B. Poretsky <poretsky@mlbox.ru>
-
-	* Ignore generated manpages.
-
 2009-01-04  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* Exit on the end of input stream.
@@ -140,9 +142,4 @@
 
 2001-11-03  Igor B. Poretsky <poretsky@mlbox.ru>
 
-	* Imported in CVS.
-
-2001-11-03  Igor B. Poretsky <poretsky@mlbox.ru>
-
 	* Initial revision
-
