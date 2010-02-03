@@ -72,7 +72,7 @@ my ($b, $p, $t, $device, $olddevice,
 my ($ret, $database) = metaget ('shared/emacspeak/database', 'choices');
 foreach (split (/, */, $database)){ # debconf database is comma separated
     ($b, $p, $t, $device)=split(/:/);
-    if ($deleted_devices ne $device){
+    if ($deleted_device ne $device){
 	    $blurb{$device}=$b;
 	    $program{$device}=$p;
 	    $tcl{$device}=$t;
@@ -95,7 +95,7 @@ if (opendir(DIR,$dirname)){
 		if (/^tcl: *(.*)$/) {$t=$1;}
 		if (/^device: *(.*)$/) {$device=$1;}
 	    }
-	    if ($deleted_devices ne $device){
+	    if ($deleted_device ne $device){
 		$blurb{$device}=$b;
 		$program{$device}=$p;
 		$tcl{$device}=$t;
@@ -143,7 +143,7 @@ if (-e $configfile){
     close(CF);
 }
 
-if ($ENV{task} eq "remove" && $deleted_devices eq $device){
+if ($ENV{task} eq "remove" && $deleted_device eq $device){
     # the currently configured device is being removed, 
     # so ask which remaining device to use
     fset('shared/emacspeak/device', 'seen', 'false');
@@ -179,7 +179,7 @@ if ($ENV{task} eq "remove" && $deleted_devices eq $device){
     }
     # we don't check port permissions or ownership, or add or delete
     # users from the port's group
-} # if ($deleted_devices eq $device)
+} # if ($deleted_device eq $device)
 
 __END__         # perl ignores everything after this
 EOF
