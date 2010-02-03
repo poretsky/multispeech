@@ -1,0 +1,148 @@
+2010-01-28  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Some tweaks to cope with other versions of the boost library.
+
+2010-01-26  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Parametric specification for sysconf and data directories
+	  according to the package configuration. Non-empty default for
+	  lexical databases.
+
+2010-01-26  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Generate actual multispeech.conf from template according to the
+	  package configuration settings.
+
+2010-01-25  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Make compiler pretty happy about types matching.
+
+2009-01-10  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Release 2.2
+
+2009-01-10  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Implemented user defined TTS backend support.
+
+2009-01-10  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Specify language in a more simple and general way: pass id string
+	  instead of constructed object pointer.
+
+2009-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* More strict and complete Emacspeak interface implementation. The
+	  most language switching commands are supported now except
+	  aliasing and list languages.
+
+2009-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Added interface methods to switch languages cyclically and to
+	  retreive current language id.
+
+2009-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Minor cosmetic fixes and internal tweaks.
+
+2009-01-09  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Implemented native language name information.
+
+2009-01-08  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Implemented silence producing means.
+
+2009-01-08  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Include letter yo in language detector.
+
+2009-01-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Release 2.1
+
+2009-01-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Plan to debianize.
+
+2009-01-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Revised and fixed diagnostic and logging functionality. If
+	  specified lexical database for Freephone or Ru_tts does not exist
+	  then emit warning and continue, instead of exiting with error
+	  message. Added command line switches for verbosity control.
+
+2009-01-06  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Start package name from capital letter.
+
+2009-01-05  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Extra configuration file specification via the command line.
+
+2009-01-05  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Ignore generated manpages.
+
+2009-01-04  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Exit on the end of input stream.
+
+2009-01-04  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Respect installation prefix for global configuration file
+	  placement.
+
+2009-01-04  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Header file for configure defines.
+
+2009-01-04  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Mentioned PortAudio C++ support as a requirement.
+
+2009-01-02  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Install some text documents.
+
+2008-12-30  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Full reconstruction. Second generation started.
+
+2007-04-25  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Use "pt_br" instead of "br" for Brazilian language designation.
+	  Suggested by Gilles Casse <gcasse@oralux.org>.
+
+2005-12-31  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Put ChangeLog file out of CVS control.
+
+2005-12-28  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Additional languages generously provided by the Oralux team have
+	  been added.
+
+2005-05-19  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Removed obsolete Rawplay. Sox can do all the job quite well.
+
+2005-05-19  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Removed lisp stuff completely. It has gone to Emacspeak now.
+
+2002-02-18  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Applied some patches suggested by Dmitry Paduchih. Some hack in
+	  subprocess.cc to avoid clicks after tones generation. Russian
+	  text filtering has been fixed a bit. Some cleanups in playing
+	  scripts.
+
+2001-11-03  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Imported in CVS.
+
+2001-11-03  Igor B. Poretsky <poretsky@mlbox.ru>
+
+	* Initial revision
+
