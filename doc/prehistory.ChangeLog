@@ -116,10 +116,6 @@ This file contains project history before Debian package release.
 	* Use "pt_br" instead of "br" for Brazilian language designation.
 	  Suggested by Gilles Casse <gcasse@oralux.org>.
 
-2005-12-31  Igor B. Poretsky <poretsky@mlbox.ru>
-
-	* Put ChangeLog file out of CVS control.
-
 2005-12-28  Igor B. Poretsky <poretsky@mlbox.ru>
 
 	* Additional languages generously provided by the Oralux team have
