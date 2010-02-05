@@ -1,4 +1,4 @@
 blurb: Multispeech
 program: multispeech
-tcl: 
+tcl:
 device: Multispeech
