@@ -28,7 +28,7 @@
 [frontend]
 # The frontend options control interactions with client.
 #
-charset = KOI8-R
+#charset = KOI8-R
 # Input charset should be specified by its name. Available names
 # can be found in "/usr/share/i18n/SUPPORTED" or wherever else
 # it is on your system. By default this option is not set
