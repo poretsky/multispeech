@@ -91,7 +91,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl check for iostreams support
 		AC_CHECK_HEADERS([boost/iostreams/code_converter.hpp boost/iostreams/filtering_stream.hpp boost/iostreams/filter/line.hpp boost/iostreams/device/back_inserter.hpp boost/iostreams/device/array.hpp], [
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_iostreams-mt"
+			LIBS="$saved_LIBS $BOOST_LIBS"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/iostreams/filtering_stream.hpp>]],
 				[[boost::iostreams::filtering_wostream filter;]])], [], [
@@ -117,7 +117,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl libboost found
 		AC_SUBST(BOOST_CPPFLAGS, [-I$boost_prefix/include])
-		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_iostreams-mt -lboost_regex-mt -lboost_program_options-mt -lboost_filesystem-mt"])
+		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_regex-mt -lboost_program_options-mt -lboost_filesystem-mt"])
 	], [
 		AC_MSG_ERROR([incomplete or broken Boost library installation])])
 
