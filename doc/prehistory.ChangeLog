@@ -6,6 +6,7 @@ This file contains project history before Debian package release.
 
 2010-01-28  Igor B. Poretsky <poretsky@mlbox.ru>
 
+	* Make bobcat library not careful about X11.
 	* Some tweaks to cope with other versions of the boost library.
 
 2010-01-26  Igor B. Poretsky <poretsky@mlbox.ru>
