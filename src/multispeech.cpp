@@ -37,6 +37,7 @@ using namespace portaudio;
 
 int main(int argc, char* argv[])
 {
+  unsetenv("DISPLAY");
   auto_ptr<server> multispeech;
   AutoSystem audio;
 
