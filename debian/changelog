@@ -1,6 +1,11 @@
+multispeech (2.3) unstable; urgency=low
+
+  * Get rid of X11 related complaints.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 09 Feb 2010 21:48:05 +0300
+
 multispeech (2.2.1) unstable; urgency=low
 
   * Initial Release.
-  * Get rid of X11 related complaints.
 
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 08 Feb 2010 20:14:27 +0300
