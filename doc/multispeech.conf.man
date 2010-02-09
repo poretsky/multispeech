@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH MULTISPEECH.CONF 5 "January 10, 2009"
+.TH MULTISPEECH.CONF 5 "February 10, 2010"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -69,6 +69,13 @@ in quite the same manner as it did in previous versions.
 .SH "GENERAL AUDIO OUTPUT CONTROL OPTIONS"
 Section name is \(oqaudio\(cq. It contains following options:
 .TP
+.B device
+.br
+Default device for all audio output (speech, sounds and tones).
+If it is not specified explicitly, then system default will be used.
+The DSP device specifications (such as \(oq/dev/dsp\(cq)
+are allowed here as well as the ALSA ones.
+.TP
 .B general_volume
 .br
 Volume level applied to all audio output in general.
@@ -87,10 +94,10 @@ affect sound file playing capability:
 .TP
 .B device
 .br
-Sound files playing audio device specification. If it is not
-specified explicitly, then system default will be used.
+Sound files playing device. This setting overwrites general default
+and allows to play sound files on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are allowed here as well as the ALSA ones.
+are accepted here as well as the ALSA ones.
 .TP
 .B volume
 .br
@@ -109,10 +116,10 @@ Section name is \(oqtones\(cq. It consists of the following options:
 .TP
 .B device
 .br
-Tone signals playing audio device specification. If it is not
-specified explicitly, then system default will be used.
+Tones producing device. This setting overwrites general default
+and allows to use a separate device for tone signals.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are allowed here as well as the ALSA ones.
+are accepted here as well as the ALSA ones.
 .TP
 .B volume
 .br
@@ -137,10 +144,10 @@ general:
 .TP
 .B device
 .br
-Speech output audio device specification. If it is not
-specified explicitly, then system default will be used.
+Speech output device. This setting overwrites general default
+and allows to produce speech on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are allowed here as well as the ALSA ones.
+are accepted here as well as the ALSA ones.
 .TP
 .B volume
 .br

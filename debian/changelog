@@ -1,8 +1,9 @@
 multispeech (2.3) unstable; urgency=low
 
   * Get rid of X11 related complaints.
+  * Added general audio device specification in config file.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 09 Feb 2010 21:48:05 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 10 Feb 2010 01:59:34 +0300
 
 multispeech (2.2.1) unstable; urgency=low
 

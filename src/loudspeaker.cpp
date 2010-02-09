@@ -75,7 +75,9 @@ speech_task::silence_params(unsigned int sampling, unsigned int length)
 // Construct / destroy:
 
 loudspeaker::loudspeaker(const configuration& conf):
-  soundfile(conf.option_value[options::speech::device].as<string>()),
+  soundfile(conf.option_value[options::speech::device].as<string>().empty() ?
+            conf.option_value[options::audio::device].as<string>() :
+            conf.option_value[options::speech::device].as<string>()),
   silence_timer(0),
   need_processing(false)
 {

@@ -109,6 +109,7 @@ namespace options
   // General audio output options:
   namespace audio
   {
+    const char* const device = "audio.device";
     const char* const general_volume = "audio.general_volume";
     const char* const latency = "audio.latency";
   };
@@ -271,6 +272,7 @@ configuration::configuration(int argc, char* argv[])
     (frontend::interface, value<string>())
 
     // General audio options:
+    (audio::device, value<string>()->default_value(""))
     (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
     (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.0))
 

@@ -41,7 +41,9 @@ sound_task::sound_task(const path& sound_file, float sound_volume):
 // Construct / destroy:
 
 file_player::file_player(const configuration& conf):
-  soundfile(conf.option_value[options::sounds::device].as<string>())
+  soundfile(conf.option_value[options::sounds::device].as<string>().empty() ?
+            conf.option_value[options::audio::device].as<string>() :
+            conf.option_value[options::sounds::device].as<string>())
 {
 }
 

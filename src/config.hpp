@@ -82,6 +82,7 @@ namespace options
   // General audio output:
   namespace audio
   {
+    extern const char* const device;
     extern const char* const general_volume;
     extern const char* const latency;
   };

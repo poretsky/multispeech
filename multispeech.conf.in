@@ -42,6 +42,12 @@
 [audio]
 # This section contains general audio output control options.
 #
+#device = 
+# Default device for all audio output (speech, sounds and tones).
+# If it is not specified explicitly, then system default will be used.
+# The DSP device specifications (such as "/dev/dsp")
+# are allowed here as well as the ALSA ones.
+#
 #general_volume = 0.8
 # This value is applied to the audio output in general.
 # It should be in the range of (0.0..1.0]. Default value is 0.8.
@@ -56,10 +62,10 @@
 # Sound files playing control options.
 #
 #device = 
-# Sound files playing audio device specification. If it is not
-# specified explicitly, then system default will be used.
+# Sound files playing device. This setting overwrites general default
+# and allows to play sound files on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are allowed here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones.
 #
 #volume = 1.0
 # Relative volume level for sound files playing. It is 1.0
@@ -77,10 +83,10 @@
 # control options.
 #
 #device = 
-# Tone signals playing audio device specification. If it is not
-# specified explicitly, then system default will be used.
+# Tones producing device. This setting overwrites general default
+# and allows to use a separate device for tone signals.
 # The DSP device specifications (such as "/dev/dsp")
-# are allowed here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones.
 #
 #volume = 1.0
 # Relative volume level for tone signals producing. It is 1.0
@@ -101,10 +107,10 @@
 # General speech output control options.
 #
 #device = 
-# Speech output audio device specification. If it is not
-# specified explicitly, then system default will be used.
+# Speech output device. This setting overwrites general default
+# and allows to produce speech on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are allowed here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones.
 #
 #volume = 1.0
 # Relative volume level for speech output. It is 1.0 by default.
