@@ -36,7 +36,8 @@ float audioplayer::general_volume = 0.8;
 audioplayer::audioplayer(const string& device_name):
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
-         0.0, 0, paNoFlag)
+         0.0, 0,
+         paPrimeOutputBuffersUsingStreamCallback)
 {
   System& system = System::instance();
   PaDeviceIndex device = system.defaultOutputDevice().index();
@@ -131,6 +132,8 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
                            const PaStreamCallbackTimeInfo *timeInfo,
                            PaStreamCallbackFlags statusFlags)
 {
+  if (statusFlags & paOutputOverflow)
+    return paContinue;
   float* buffer = reinterpret_cast<float*>(outputBuffer);
   unsigned int obtained = source_read(buffer, numFrames);
   if (obtained)
