@@ -57,8 +57,6 @@
 # that reasonable latency will be chosen automatically.
 # Normally this option should not be set up explicitly.
 # Do it only if you are pretty unsatisfied by the automatic choice.
-#
-#buffer_size = 0
 
 [sounds]
 # Sound files playing control options.
