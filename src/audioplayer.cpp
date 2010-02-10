@@ -29,6 +29,7 @@ using namespace portaudio;
 // Static data:
 PaTime audioplayer::suggested_latency = 20;
 float audioplayer::general_volume = 0.8;
+unsigned int audioplayer::buffer_size = 0;
 
 
 // Construct / destroy:
@@ -62,6 +63,8 @@ audioplayer::audioplayer(const string& device_name):
                                                                2, FLOAT32, true,
                                                                latency, NULL));
   params.setSampleRate(system.deviceByIndex(device).defaultSampleRate());
+  if (buffer_size)
+    params.setFramesPerBuffer(buffer_size);
   if (!params.isSupported())
     throw configuration::error("cannot properly initialize audio device \"" + device_name + "\"");
 }

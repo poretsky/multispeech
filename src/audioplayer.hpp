@@ -57,6 +57,7 @@ public:
   // Configurable parameters:
   static PaTime suggested_latency;
   static float general_volume;
+  static unsigned int buffer_size;
 
 protected:
   // Use in derived classes to start audio stream playing:
