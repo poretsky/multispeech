@@ -144,5 +144,5 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       buffer[i] *= volume_level;
   for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
     buffer[i] = 0.0;
-  return (obtained < numFrames) ? paComplete : paContinue;
+  return (obtained) ? paContinue :  paComplete;
 }
