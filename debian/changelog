@@ -3,8 +3,9 @@ multispeech (2.3) unstable; urgency=low
   * Get rid of X11 related complaints.
   * Added general audio device specification in config file.
   * Adjusting to the ru-tts 2.0 speech rates range.
+  * Use actual device name in error messages. Just a little fix.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 11 Feb 2010 03:28:35 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 12 Feb 2010 01:15:11 +0300
 
 multispeech (2.2.1) unstable; urgency=low
 
