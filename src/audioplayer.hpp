@@ -63,6 +63,9 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
+  // Indicate that playback is scheduled to stop:
+  bool no_playback;
+
   // Audio playing stream:
   portaudio::InterfaceCallbackStream stream;
 
