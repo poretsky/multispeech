@@ -64,7 +64,8 @@ audioplayer::audioplayer(const string& device_name):
   params.setSampleRate(system.deviceByIndex(device).defaultSampleRate());
   if (!params.isSupported())
     throw configuration::error("cannot properly initialize audio device \"" +
-                               system.deviceByIndex(device).name() + "\"");
+                               string(system.deviceByIndex(device).name()) +
+                               "\"");
 }
 
 audioplayer::~audioplayer(void)
