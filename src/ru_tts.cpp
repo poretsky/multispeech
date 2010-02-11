@@ -75,9 +75,14 @@ void
 ru_tts::voicify(double rate, double pitch)
 {
   double p = pitch * pitch;
-  double r = 0.25 / rate - 0.2;
-  if (r < 0.0) r = 0.0;
-  if (r > 1.0) r = 1.0;
+  double r = 0.5;
+  if (rate <= 0.0)
+    r = 1.0;
+  else if (rate >= 2.0)
+    r = 0.0;
+  else if (rate < 1.0)
+    r = 1.0 / (rate + 1.0);
+  else r = 1.0 / rate - 0.5;
   format_macros["%pitch"] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
   format_macros["%rate"] = lexical_cast<string>(r);
 }
