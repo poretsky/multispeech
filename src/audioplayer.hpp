@@ -41,6 +41,8 @@
 #include <string>
 #include <memory>
 
+#include <boost/thread/condition.hpp>
+
 #include <portaudiocpp/PortAudioCpp.hxx>
 
 class audioplayer: private portaudio::CallbackInterface
@@ -53,6 +55,9 @@ public:
   // Playing process control:
   virtual void stop(void);
   virtual bool active(void);
+
+  // Completion notifier:
+  static boost::condition complete;
 
   // Configurable parameters:
   static PaTime suggested_latency;

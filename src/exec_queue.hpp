@@ -37,6 +37,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
+#include "audioplayer.hpp"
+
 template <typename task_description>
 class exec_queue: private std::queue<task_description>
 {
@@ -98,21 +100,16 @@ private:
     {
       while (holder->alive)
         {
-          {
-            boost::mutex::scoped_lock lock(holder->access);
-            while (holder->alive && holder->empty())
-              holder->event.wait(lock);
-          }
+          boost::mutex::scoped_lock lock(holder->access);
+          while (holder->alive && holder->empty())
+            holder->event.wait(lock);
           while (holder->alive && holder->busy())
-            boost::thread::yield();
-          {
-            boost::mutex::scoped_lock lock(holder->access);
-            if (!holder->empty())
-              {
-                holder->execute(holder->front());
-                holder->pop();
-              }
-          }
+            audioplayer::complete.wait(lock);
+          if (!holder->empty())
+            {
+              holder->execute(holder->front());
+              holder->pop();
+            }
         }
     }
 

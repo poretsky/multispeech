@@ -23,10 +23,12 @@
 #include "config.hpp"
 
 using namespace std;
+using namespace boost;
 using namespace portaudio;
 
 
 // Static data:
+condition audioplayer::complete;
 PaTime audioplayer::suggested_latency = 20;
 float audioplayer::general_volume = 0.8;
 
@@ -78,10 +80,11 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
-  no_playback = true;
-  if (stream.isOpen() && stream.isActive())
-    stream.abort();
-  while (audioplayer::active());
+  while (audioplayer::active())
+    {
+      no_playback = true;
+      stream.abort();
+    }
 }
 
 bool
@@ -128,6 +131,7 @@ void
 audioplayer::release(void* handle)
 {
   reinterpret_cast<audioplayer*>(handle)->source_release();
+  complete.notify_all();
 }
 
 int

@@ -22,6 +22,8 @@
 
 #include "sound_manager.hpp"
 
+#include "audioplayer.hpp"
+
 using namespace std;
 using namespace boost;
 
@@ -248,7 +250,6 @@ sound_manager::next_job(void)
 bool
 sound_manager::working(void)
 {
-  mutex::scoped_lock lock(access);
   bool result = false;
   if (state == running)
     {
@@ -301,6 +302,10 @@ sound_manager::agent::operator()(void)
   while (holder->state != dead)
     {
       holder->next_job();
-      while (holder->working());
+      {
+        mutex::scoped_lock lock(holder->access);
+        while (holder->working())
+          audioplayer::complete.wait(lock);
+      }
     }
 }
