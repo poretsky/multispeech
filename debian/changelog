@@ -1,3 +1,11 @@
+multispeech (2.3.1) unstable; urgency=low
+
+  * Fixed race condition in playback control.
+  * Improved interthread relationships so that speech doesn't cause
+    serious processor heating anymore.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 24 Feb 2010 17:09:31 +0300
+
 multispeech (2.3) unstable; urgency=low
 
   * Get rid of X11 related complaints.
