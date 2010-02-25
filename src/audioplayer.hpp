@@ -71,6 +71,9 @@ private:
   // Indicate that playback is scheduled to stop:
   bool no_playback;
 
+  // Indicate that playback is in progress:
+  bool playing;
+
   // Audio playing stream:
   portaudio::InterfaceCallbackStream stream;
 

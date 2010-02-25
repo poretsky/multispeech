@@ -36,6 +36,7 @@ float audioplayer::general_volume = 0.8;
 // Construct / destroy:
 
 audioplayer::audioplayer(const string& device_name):
+  playing(false),
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
          0.0, 0,
@@ -90,17 +91,9 @@ audioplayer::stop(void)
 bool
 audioplayer::active(void)
 {
-  bool state = true;
-  if (stream.isOpen())
-    {
-      if (!stream.isActive())
-        {
-          stream.close();
-          state = false;
-        }
-    }
-  else state = false;
-  return state;
+  if ((!playing) && stream.isOpen())
+    stream.close();
+  return playing;
 }
 
 
@@ -118,6 +111,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
       stream.open(params, *this);
       if (stream.isOpen())
         {
+          playing = true;
           stream.setStreamFinishedCallback(release);
           stream.start();
         }
@@ -131,6 +125,7 @@ void
 audioplayer::release(void* handle)
 {
   reinterpret_cast<audioplayer*>(handle)->source_release();
+  reinterpret_cast<audioplayer*>(handle)->playing = false;
   complete.notify_all();
 }
 

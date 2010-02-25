@@ -202,9 +202,6 @@ sound_manager::die(void)
 void
 sound_manager::next_job(void)
 {
-  mutex::scoped_lock lock(access);
-  while (state == idle)
-    event.wait(lock);
   if ((state == running) && !jobs->empty())
     {
       if (jobs->front().empty())
@@ -301,11 +298,11 @@ sound_manager::agent::operator()(void)
 {
   while (holder->state != dead)
     {
+      mutex::scoped_lock lock(holder->access);
+      while (holder->state == idle)
+        holder->event.wait(lock);
       holder->next_job();
-      {
-        mutex::scoped_lock lock(holder->access);
-        while (holder->working())
-          audioplayer::complete.wait(lock);
-      }
+      while (holder->working())
+        audioplayer::complete.wait(lock);
     }
 }
