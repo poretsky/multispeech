@@ -1,3 +1,10 @@
+multispeech (2.3.2) unstable; urgency=low
+
+  * Try to avoid missing playback finished events that caused program
+    hangup in some circumstances.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 25 Feb 2010 20:46:48 +0300
+
 multispeech (2.3.1) unstable; urgency=low
 
   * Fixed race condition in playback control.
