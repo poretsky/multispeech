@@ -1,4 +1,4 @@
-This file describes historical Multispeech interface
+This file describes Multispeech interface
 as a multilingual speech server for Emacspeak.
 
 To use Multispeech with Emacspeak you should make symlink named
@@ -142,3 +142,39 @@ Multispeech tries to recalculate and apply it properly to achieve
 equivalent deviation in all circumstances. Thus, the embedded speech
 parameters "[_: vo:1.0 pi:1.0 ra:200 fr:16000]" actually result in
 normal speech just as it was configured.
+
+
+DECtalk voice control emulation.
+
+When dtk interface is chosen via configuration, Multispeech recognizes
+following embedded commands:
+
+:np
+:nh
+:nf
+:nd
+:nb
+:nu
+:nw
+:nr
+:nk
+:nv
+:dv
+:ra[te]
+:volu[me] set
+
+When designing voice with :dv command, following options are
+supported:
+
+ap
+hs
+pr
+save
+
+Of course, it is pretty small and simple subset, but it gives us
+several distinguishable voices and some basic control means. In fact,
+the DECtalk voice parameters variations are reflected by the
+corresponding variations of the Multispeech voice parameters. Thus,
+pitch range affects sampling frequency deviation, while average pitch
+and head size influence voice pitch. If both average pitch and head
+size are specified, then average pitch takes precedence.

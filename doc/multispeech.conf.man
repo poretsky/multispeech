@@ -13,7 +13,7 @@
 .\" along with this program; see the file COPYING.  If not, write to
 .\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 .\"
-.TH MULTISPEECH.CONF 5 "February 10, 2010"
+.TH MULTISPEECH.CONF 5 "March 1, 2010"
 .\" Please update the above date whenever this man page is modified.
 .\"
 .\" Some roff macros, for reference:
@@ -64,8 +64,12 @@ so current locale setting is used.
 .B interface
 .br
 This option specifies client interaction conventions.
-The default value \(oqhistorical\(cq means that \fBmultispeech\fP behaves
-in quite the same manner as it did in previous versions.
+Allowed values are \(oqnative\(cq and \(oqdtk\(cq. The default value
+\(oqnative\(cq means that \fBmultispeech\fP behaves just as it used
+to. In general, this mode is intended for communications with
+\fBemacspeak\fP. When \(oqdtk\(cq is specified as interface value,
+\fBmultispeech\fP recognizes DECtalk inline commands and tries to
+emulate some subset of the DECtalk voice control capabilities.
 .SH "GENERAL AUDIO OUTPUT CONTROL OPTIONS"
 Section name is \(oqaudio\(cq. It contains following options:
 .TP

@@ -34,10 +34,14 @@
 # it is on your system. By default this option is not set
 # so current locale setting is used.
 #
-#interface = historical
+#interface = native
 # The "interface" option specifies client interaction conventions.
-# The default value "historical" means that Multispeech behaves
-# in quite the same manner as it did in previous versions.
+# Allowed values are "native" and "dtk". The default value "native"
+# means that Multispeech behaves just as it used to. In general,
+# this mode is intended for communications with Emacspeak.
+# When "dtk" is specified as interface value, Multispeech
+# recognizes DECtalk inline commands and tries to emulate
+# some subset of the DECtalk voice control capabilities.
 
 [audio]
 # This section contains general audio output control options.

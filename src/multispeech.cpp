@@ -31,6 +31,7 @@
 #include "server.hpp"
 #include "historical.hpp"
 #include "multispeech_voices.hpp"
+#include "dtk_voices.hpp"
 
 using namespace std;
 using namespace FBB;
@@ -48,8 +49,11 @@ int main(int argc, char* argv[])
       if (conf.option_value.count(options::frontend::interface))
         {
           if (conf.option_value[options::frontend::interface].as<string>()
-              == "historical")
+              == "native")
             multispeech.reset(new multispeech_historical(conf, new multispeech_voices));
+          else if (conf.option_value[options::frontend::interface].as<string>()
+                   == "dtk")
+            multispeech.reset(new multispeech_historical(conf, new dtk_voices));
           else throw configuration::error("unknown interface type " +
                                          conf.option_value[options::frontend::interface].as<string>());
         }

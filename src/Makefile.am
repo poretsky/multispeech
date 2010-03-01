@@ -30,4 +30,5 @@ multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
 	user_tts.cpp user_tts.hpp \
 	inline_parser.cpp inline_parser.hpp \
-	multispeech_voices.cpp multispeech_voices.hpp
+	multispeech_voices.cpp multispeech_voices.hpp \
+	dtk_voices.cpp dtk_voices.hpp
