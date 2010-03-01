@@ -18,6 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+// This class provides parser for native voice control commands
+// that are traditionally used by Emacspeak.
+
 #ifndef MULTISPEECH_VOICES_HPP
 #define MULTISPEECH_VOICES_HPP
 
