@@ -30,6 +30,7 @@
 #include "config.hpp"
 #include "server.hpp"
 #include "historical.hpp"
+#include "multispeech_voices.hpp"
 
 using namespace std;
 using namespace FBB;
@@ -48,11 +49,11 @@ int main(int argc, char* argv[])
         {
           if (conf.option_value[options::frontend::interface].as<string>()
               == "historical")
-            multispeech.reset(new multispeech_historical(conf));
+            multispeech.reset(new multispeech_historical(conf, new multispeech_voices));
           else throw configuration::error("unknown interface type " +
                                          conf.option_value[options::frontend::interface].as<string>());
         }
-      else multispeech.reset(new multispeech_historical(conf));
+      else multispeech.reset(new multispeech_historical(conf, new multispeech_voices));
     }
   catch (const string& info)
     {

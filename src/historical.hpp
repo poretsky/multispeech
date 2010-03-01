@@ -21,15 +21,19 @@
 #ifndef MULTISPEECH_HISTORICAL_HPP
 #define MULTISPEECH_HISTORICAL_HPP
 
+#include <memory>
+
 #include <boost/regex.hpp>
 
 #include "server.hpp"
+#include "inline_parser.hpp"
 
 class multispeech_historical: public server
 {
 public:
   // Construct the object:
-  multispeech_historical(const configuration& conf);
+  multispeech_historical(const configuration& conf,
+                         inline_parser* voices);
 
 private:
   // Input method and command syntax definition (see base class):
@@ -37,40 +41,20 @@ private:
   bool perform_command(void);
 
   // Additional parser for inline parameters extraction:
-  void extract_parameters(void);
-  double get_value(const boost::wregex& extractor);
+  std::auto_ptr<inline_parser> voice_params;
 
   // Set punctuations mode according to identifying character:
   void set_punctuations_mode(wchar_t mode);
 
-  // Regular expressions for inline parameters parsing:
-  static const boost::wregex command_separator;
-  static const boost::wregex params_detector;
-  static const boost::wregex freq_extractor;
-  static const boost::wregex pitch_extractor;
-  static const boost::wregex rate_extractor;
-  static const boost::wregex volume_extractor;
-  static const boost::wregex precleaner;
-  static const boost::wregex postcleaner;
+  // Regular expressions for commands parsing:
+  const boost::wregex command_separator, validate_float, validate_integer,
+    beep_parameters, lang_parameters, tts_parameters;
 
-  // Regular expressions for commands arguments validation:
-  static const boost::wregex validate_float;
-  static const boost::wregex validate_integer;
-  static const boost::wregex beep_parameters;
-  static const boost::wregex lang_parameters;
-  static const boost::wregex tts_parameters;
-
-  // Parsing result representation:
+  // Working area for regex match result representation:
   boost::wsmatch parse_result;
 
-  // Temporary speech parameters:
-  double volume, rate, pitch, deviation;
-
-  // Reference frequency to calculate deviation:
-  static const double ref_freq;
-
-  // Speech rate scale factor:
-  static const double rate_scale;
+  // Reference value:
+  static const double rate_scale = 200.0;
 };
 
 #endif

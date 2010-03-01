@@ -39,31 +39,18 @@ using namespace boost;
 using namespace FBB;
 
 
-// Static data:
-
-const wregex multispeech_historical::command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$");
-const wregex multispeech_historical::params_detector(L"^\\[_:.*]");
-const wregex multispeech_historical::freq_extractor(L"^\\[_:(.*\\s)?fr:(\\d+).*]");
-const wregex multispeech_historical::pitch_extractor(L"^\\[_:(.*\\s)?pi:(\\d+(\\.\\d*)?).*]");
-const wregex multispeech_historical::rate_extractor(L"^\\[_:(.*\\s)?ra:(\\d+(\\.\\d*)?).*]");
-const wregex multispeech_historical::volume_extractor(L"^\\[_:(.*\\s)?vo:(\\d+(\\.\\d*)?).*]");
-const wregex multispeech_historical::precleaner(L"\\s*\\[(:np\\s*|\\*)]\\s*");
-const wregex multispeech_historical::postcleaner(L"\\[[^]]*]");
-
-const wregex multispeech_historical::validate_float(L"^\\d+(\\.\\d*)?$");
-const wregex multispeech_historical::validate_integer(L"^\\d+$");
-const wregex multispeech_historical::beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$");
-const wregex multispeech_historical::lang_parameters(L"^(\\S+)(\\s+(\\S+))?$");
-const wregex multispeech_historical::tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)");
-
-const double multispeech_historical::ref_freq = 16000.0;
-const double multispeech_historical::rate_scale = 200.0;
-
-
 // Object construction:
 
-multispeech_historical::multispeech_historical(const configuration& conf):
-  server(conf)
+multispeech_historical::multispeech_historical(const configuration& conf,
+                                               inline_parser* voices):
+  server(conf),
+  voice_params(voices),
+  command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$"),
+  validate_float(L"^\\d+(\\.\\d*)?$"),
+  validate_integer(L"^\\d+$"),
+  beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$"),
+  lang_parameters(L"^(\\S+)(\\s+(\\S+))?$"),
+  tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)")
 {
 }
 
@@ -126,19 +113,17 @@ multispeech_historical::perform_command(void)
 
   else if (L"q" == cmd)
     {
-      data = regex_replace(data, precleaner, L"");
-      if (regex_search(data, params_detector, match_default | match_any))
-        {
-          extract_parameters();
-          soundmaster.enqueue(speechmaster.text_task(data, volume,
-                                                     rate, pitch,
-                                                     deviation));
-        }
+      if (voice_params->parse(data))
+        soundmaster.enqueue(speechmaster.text_task(data,
+                                                   voice_params->volume,
+                                                   voice_params->rate,
+                                                   voice_params->pitch,
+                                                   voice_params->deviation));
       else soundmaster.enqueue(speechmaster.text_task(data));
     }
 
   else if (L"l" == cmd)
-    soundmaster.execute(speechmaster.letter_task(regex_replace(data, precleaner, L"")));
+    soundmaster.execute(speechmaster.letter_task(data));
 
   else if (L"a" == cmd)
     soundmaster.enqueue(sound_task(extern_string(data, locale(""))));
@@ -163,14 +148,13 @@ multispeech_historical::perform_command(void)
   else if (L"tts_say" == cmd)
     {
       soundmaster.stop();
-      data = regex_replace(data, precleaner, L"");
-      if (regex_search(data, params_detector, match_default | match_any))
-        {
-          extract_parameters();
-          soundmaster.execute(speechmaster.text_task(data, volume,
-                                                     rate, pitch,
-                                                     deviation, true));
-        }
+      if (voice_params->parse(data))
+        soundmaster.execute(speechmaster.text_task(data,
+                                                   voice_params->volume,
+                                                   voice_params->rate,
+                                                   voice_params->pitch,
+                                                   voice_params->deviation,
+                                                   true));
       else soundmaster.execute(speechmaster.text_task(data, true));
     }
 
@@ -292,31 +276,6 @@ multispeech_historical::perform_command(void)
     }
 
   return true;
-}
-
-
-// Inline parameters parser:
-
-void
-multispeech_historical::extract_parameters(void)
-{
-  volume = get_value(volume_extractor);
-  rate = get_value(rate_extractor) / rate_scale;
-  pitch = get_value(pitch_extractor);
-  deviation = get_value(freq_extractor) / ref_freq;
-  data = regex_replace(data, postcleaner, L"");
-}
-
-
-// Inline parameter extractor:
-
-double
-multispeech_historical::get_value(const wregex& extractor)
-{
-  if (regex_search(data, parse_result, extractor) &&
-      parse_result[2].matched)
-    return lexical_cast<double>(wstring(parse_result[2].first, parse_result[2].second));
-  return -1.0;
 }
 
 void

@@ -28,4 +28,6 @@ multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	English.cpp English.hpp Russian.cpp Russian.hpp \
 	mbrola.cpp mbrola.hpp espeak.cpp espeak.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
-	user_tts.cpp user_tts.hpp
+	user_tts.cpp user_tts.hpp \
+	inline_parser.cpp inline_parser.hpp \
+	multispeech_voices.cpp multispeech_voices.hpp
