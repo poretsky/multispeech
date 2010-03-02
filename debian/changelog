@@ -1,3 +1,17 @@
+multispeech (2.4) unstable; urgency=low
+
+  * Implemented DECtalk compatibility mode.
+  * Removed redundant option for interface specification. It is actually
+    unused since no alternatives are available.
+  * Implemented configuration options to control inline voice parameters
+    parsing mechanism.
+  * Enabled DECtalk voices in supplied configuration.
+  * Provided sample Orca customizations for use in conjunction with
+    Multispeech.
+  * Added notes about using Multispeech in conjunction with Orca.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 02 Mar 2010 22:39:24 +0300
+
 multispeech (2.3.2) unstable; urgency=low
 
   * Try to avoid missing playback finished events that caused program
