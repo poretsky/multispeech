@@ -147,10 +147,12 @@ equivalent deviation in all circumstances. Thus, the embedded speech
 parameters "[_: vo:1.0 pi:1.0 ra:200 fr:16000]" actually result in
 normal speech just as it was configured.
 
-When dtk voices are enabled, Multispeech recognizes embedded
+When DECtalk voices are enabled, Multispeech recognizes embedded
 parameters in the DECtalk notation and tries to emulate some subset of
-DECtalk voice control capabilities. In this case following embedded
-commands are accepted:
+DECtalk voice control capabilities. see Fonix Corporation web site at
+http://www.fonix.com for detailed information about DECtalk speech
+synthesizer and it's API. Multispeech supports following DECtalk
+commands:
 
 :np
 :nh
