@@ -53,9 +53,9 @@ bool
 inline_parser::parse(wstring& data)
 {
   bool result = false;
-  clean(data, trash);
   if (regex_search(data, params_detector, match_default | match_any))
     {
+      clean(data, trash);
       extract_parameters(data);
       clean(data, garbage);
       result = true;
