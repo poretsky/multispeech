@@ -50,7 +50,8 @@ frontend::frontend(const configuration& conf):
   validate_integer(L"^\\d+$"),
   beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$"),
   lang_parameters(L"^(\\S+)(\\s+(\\S+))?$"),
-  tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)")
+  tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)"),
+  garbage(L"\\[\\*]")
 {
   if (conf.option_value[options::frontend::native_voices].as<bool>())
     native_params.reset(new multispeech_voices);
@@ -130,7 +131,7 @@ frontend::perform_command(void)
     }
 
   else if (L"l" == cmd)
-    soundmaster.execute(speechmaster.letter_task(data));
+    soundmaster.execute(speechmaster.letter_task(regex_replace(data, garbage, L" ")));
 
   else if (L"a" == cmd)
     soundmaster.enqueue(sound_task(extern_string(data, locale(""))));

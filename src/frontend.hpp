@@ -50,7 +50,7 @@ private:
 
   // Regular expressions for commands parsing:
   const boost::wregex command_separator, validate_float, validate_integer,
-    beep_parameters, lang_parameters, tts_parameters;
+    beep_parameters, lang_parameters, tts_parameters, garbage;
 
   // Working area for regex match result representation:
   boost::wsmatch parse_result;
