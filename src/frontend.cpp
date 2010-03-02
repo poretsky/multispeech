@@ -28,7 +28,7 @@
 
 #include <bobcat/syslogstream>
 
-#include "historical.hpp"
+#include "frontend.hpp"
 
 #include "strcvt.hpp"
 #include "text_filter.hpp"
