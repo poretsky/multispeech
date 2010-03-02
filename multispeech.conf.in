@@ -35,7 +35,7 @@
 # so current locale setting is used.
 #
 #native_voices = on
-#dtk_voices = off
+dtk_voices = on
 # These two options control inline parameters parsing.
 # In the default state only native voices are enabled,
 # so Multispeech behaves as it used to and accepts only
