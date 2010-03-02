@@ -55,7 +55,7 @@ frontend::frontend(const configuration& conf):
   if (conf.option_value[options::frontend::native_voices].as<bool>())
     native_params.reset(new multispeech_voices);
   if (conf.option_value[options::frontend::dtk_voices].as<bool>())
-    native_params.reset(new dtk_voices);
+    dtk_params.reset(new dtk_voices);
 }
 
 
