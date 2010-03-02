@@ -103,7 +103,8 @@ namespace options
   namespace frontend
   {
     const char* const charset = "frontend.charset";
-    const char* const interface = "frontend.interface";
+    const char* const native_voices = "frontend.native_voices";
+    const char* const dtk_voices = "frontend.dtk_voices";
   };
 
   // General audio output options:
@@ -269,7 +270,8 @@ configuration::configuration(int argc, char* argv[])
 
     // Frontend related options:
     (frontend::charset, value<string>())
-    (frontend::interface, value<string>())
+    (frontend::native_voices, bool_switch()->default_value(true))
+    (frontend::dtk_voices, bool_switch()->default_value(false))
 
     // General audio options:
     (audio::device, value<string>()->default_value(""))

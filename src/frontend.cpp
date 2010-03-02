@@ -1,4 +1,4 @@
-// historical.cpp -- Historical Multispeech interface implementation
+// frontend.cpp -- Multispeech frontend interface implementation
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -33,6 +33,8 @@
 #include "strcvt.hpp"
 #include "text_filter.hpp"
 #include "speech_engine.hpp"
+#include "multispeech_voices.hpp"
+#include "dtk_voices.hpp"
 
 using namespace std;
 using namespace boost;
@@ -41,10 +43,8 @@ using namespace FBB;
 
 // Object construction:
 
-multispeech_historical::multispeech_historical(const configuration& conf,
-                                               inline_parser* voices):
+frontend::frontend(const configuration& conf):
   server(conf),
-  voice_params(voices),
   command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$"),
   validate_float(L"^\\d+(\\.\\d*)?$"),
   validate_integer(L"^\\d+$"),
@@ -52,13 +52,17 @@ multispeech_historical::multispeech_historical(const configuration& conf,
   lang_parameters(L"^(\\S+)(\\s+(\\S+))?$"),
   tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)")
 {
+  if (conf.option_value[options::frontend::native_voices].as<bool>())
+    native_params.reset(new multispeech_voices);
+  if (conf.option_value[options::frontend::dtk_voices].as<bool>())
+    native_params.reset(new dtk_voices);
 }
 
 
 // Input method:
 
 void
-multispeech_historical::get_command(void)
+frontend::get_command(void)
 {
   string s;
   int count = 0;
@@ -100,8 +104,10 @@ multispeech_historical::get_command(void)
 // Command set and syntax implementation:
 
 bool
-multispeech_historical::perform_command(void)
+frontend::perform_command(void)
 {
+  inline_parser* voice_params;
+
   if (cmd.empty())
     return true;
 
@@ -113,7 +119,8 @@ multispeech_historical::perform_command(void)
 
   else if (L"q" == cmd)
     {
-      if (voice_params->parse(data))
+      voice_params = extract_parameters();
+      if (voice_params)
         soundmaster.enqueue(speechmaster.text_task(data,
                                                    voice_params->volume,
                                                    voice_params->rate,
@@ -148,7 +155,8 @@ multispeech_historical::perform_command(void)
   else if (L"tts_say" == cmd)
     {
       soundmaster.stop();
-      if (voice_params->parse(data))
+      voice_params = extract_parameters();
+      if (voice_params)
         soundmaster.execute(speechmaster.text_task(data,
                                                    voice_params->volume,
                                                    voice_params->rate,
@@ -278,8 +286,19 @@ multispeech_historical::perform_command(void)
   return true;
 }
 
+inline_parser*
+frontend::extract_parameters(void)
+{
+  inline_parser* voice_params = 0;
+  if (native_params.get() && native_params->parse(data))
+    voice_params = native_params.get();
+  else if (dtk_params.get() && dtk_params->parse(data))
+    voice_params = dtk_params.get();
+  return voice_params;
+}
+
 void
-multispeech_historical::set_punctuations_mode(wchar_t mode)
+frontend::set_punctuations_mode(wchar_t mode)
 {
   switch (mode)
     {

@@ -34,14 +34,20 @@
 # it is on your system. By default this option is not set
 # so current locale setting is used.
 #
-#interface = native
-# The "interface" option specifies client interaction conventions.
-# Allowed values are "native" and "dtk". The default value "native"
-# means that Multispeech behaves just as it used to. In general,
-# this mode is intended for communications with Emacspeak.
-# When "dtk" is specified as interface value, Multispeech
-# recognizes DECtalk inline commands and tries to emulate
-# some subset of the DECtalk voice control capabilities.
+#native_voices = on
+#dtk_voices = off
+# These two options control inline parameters parsing.
+# In the default state only native voices are enabled,
+# so Multispeech behaves as it used to and accepts only
+# special inline commands formed by Emacspeak. When dtk voices
+# are enabled, Multispeech recognizes DECtalk inline commands and tries
+# to emulate some subset of the DECtalk voice control capabilities.
+# Use the word "yes" or "on" to enable and the word
+# "no" or "off" to disable the option. Nothing prevents to keep
+# both options enabled simultaneously. In this case DECtalk
+# inline commands will be accepted as well as the native ones.
+# If both options are disabled, then inline commands detection
+# and parsing will not be performed at all.
 
 [audio]
 # This section contains general audio output control options.

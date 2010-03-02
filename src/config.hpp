@@ -76,7 +76,8 @@ namespace options
   namespace frontend
   {
     extern const char* const charset;
-    extern const char* const interface;
+    extern const char* const native_voices;
+    extern const char* const dtk_voices;
   };
 
   // General audio output:

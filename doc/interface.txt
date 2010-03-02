@@ -121,10 +121,14 @@ exit
 Embedded speech parameters.
 
 The text passed as an argument for the "q" and "tts_say" commands may
-include a special sequence of the form "[_: key:value ...]". This
-sequence should be placed at the very beginning of the text. It allows
-to alter some speech parameters for that text chunk locally leaving
-global settings untouched. Each "key:value" pair represents local
+include a special sequence That allows to alter some speech parameters
+for that text chunk locally leaving global settings untouched. This
+sequence should be placed at the very beginning of the text.
+
+When native voices are enabled in the Multispeech configuration, the
+embedded sequences of the form "[_: key:value ...]" are recognized.
+
+Each "key:value" pair represents local
 value for the corresponding parameter. The recognized keys are as
 follows:
 
@@ -143,11 +147,10 @@ equivalent deviation in all circumstances. Thus, the embedded speech
 parameters "[_: vo:1.0 pi:1.0 ra:200 fr:16000]" actually result in
 normal speech just as it was configured.
 
-
-DECtalk voice control emulation.
-
-When dtk interface is chosen via configuration, Multispeech recognizes
-following embedded commands:
+When dtk voices are enabled, Multispeech recognizes embedded
+parameters in the DECtalk notation and tries to emulate some subset of
+DECtalk voice control capabilities. In this case following embedded
+commands are accepted:
 
 :np
 :nh
