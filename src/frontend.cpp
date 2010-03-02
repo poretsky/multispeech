@@ -291,6 +291,7 @@ inline_parser*
 frontend::extract_parameters(void)
 {
   inline_parser* voice_params = 0;
+  data = regex_replace(data, garbage, L" ");
   if (native_params.get() && native_params->parse(data))
     voice_params = native_params.get();
   else if (dtk_params.get() && dtk_params->parse(data))

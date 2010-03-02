@@ -33,7 +33,7 @@ using namespace boost;
 // Object construction:
 
 dtk_voices::dtk_voices(void):
-  inline_parser(L"^\\[\\s*:.*]", L"\\s*\\[(\\s*:np\\s*|\\*)]\\s*", L"\\[[^]]*]"),
+  inline_parser(L"^\\[\\s*:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
   person_extractor(L"^\\[\\s*:n([phfdbuwrkv]).*]"),
   pitch_range_extractor(L"^\\[.*:dv\\s(.*\\s)?pr\\s+(\\d+(\\.\\d*)?).*]"),
   average_pitch_extractor(L"^\\[.*:dv\\s(.*\\s)?ap\\s+(\\d+(\\.\\d*)?).*]"),

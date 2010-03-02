@@ -33,7 +33,7 @@ using namespace boost;
 // Object construction:
 
 multispeech_voices::multispeech_voices(void):
-  inline_parser(L"^\\[_:.*]", L"\\s*\\[(:np\\s*|\\*)]\\s*", L"\\[[^]]*]"),
+  inline_parser(L"^\\[_:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
   freq_extractor(L"^\\[_:(.*\\s)?fr:(\\d+).*]"),
   pitch_extractor(L"^\\[_:(.*\\s)?pi:(\\d+(\\.\\d*)?).*]"),
   rate_extractor(L"^\\[_:(.*\\s)?ra:(\\d+(\\.\\d*)?).*]"),
