@@ -41,7 +41,7 @@ English::English(void):
   punctuations = list_of
     (L" exclamation ")
     (L" apostrophe ")
-    (L" questionmark ")
+    (L" question mark ")
     (L" comma ")
     (L" period ")
     (L" semicolon ")
@@ -74,10 +74,6 @@ English::English(void):
 
   // Letters dictionary:
   dictionary = map_list_of
-    (L"lessthan", L"less than")
-    (L"greaterthan", L"greater than")
-    (L"leftbracket", L"left bracket")
-    (L"rightbracket", L"right bracket")
     (L"newline", L"new line")
 
     // Language name:

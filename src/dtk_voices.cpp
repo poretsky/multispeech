@@ -33,14 +33,14 @@ using namespace boost;
 // Object construction:
 
 dtk_voices::dtk_voices(void):
-  inline_parser(L"^\\[\\s*:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
-  person_extractor(L"^\\[\\s*:n([phfdbuwrkv]).*]"),
-  pitch_range_extractor(L"^\\[.*:dv\\s(.*\\s)?pr\\s+(\\d+(\\.\\d*)?).*]"),
-  average_pitch_extractor(L"^\\[.*:dv\\s(.*\\s)?ap\\s+(\\d+(\\.\\d*)?).*]"),
-  head_size_extractor(L"^\\[.*:dv\\s(.*\\s)?hs\\s+(\\d+(\\.\\d*)?).*]"),
-  rate_extractor(L"^\\[.*:ra(te)?\\s+(\\d+(\\.\\d*)?).*]"),
-  volume_extractor(L"^\\[.*:volu(me)?\\s+set\\s+(\\d+(\\.\\d*)?).*]"),
-  save_cmd_detector(L"^\\[.*:dv\\s(.*\\s)?save(\\s.*)?]"),
+  inline_parser(L"^\\s*\\[\\s*:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
+  person_extractor(L"^\\s*\\[\\s*:n([phfdbuwrkv]).*]"),
+  pitch_range_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?pr\\s+(\\d+(\\.\\d*)?).*]"),
+  average_pitch_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?ap\\s+(\\d+(\\.\\d*)?).*]"),
+  head_size_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?hs\\s+(\\d+(\\.\\d*)?).*]"),
+  rate_extractor(L"^\\s*\\[.*:ra(te)?\\s+(\\d+(\\.\\d*)?).*]"),
+  volume_extractor(L"^\\s*\\[.*:volu(me)?\\s+set\\s+(\\d+(\\.\\d*)?).*]"),
+  save_cmd_detector(L"^\\s*\\[.*:dv\\s(.*\\s)?save(\\s.*)?]"),
   val_pitch(1.0),
   val_deviation(1.0)
 {

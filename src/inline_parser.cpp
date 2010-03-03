@@ -38,8 +38,7 @@ inline_parser::inline_parser(const wstring& detector,
                              const wstring& postcleaner):
   params_detector(detector),
   trash(precleaner),
-  garbage(postcleaner),
-  margin(L"^\\s+")
+  garbage(postcleaner)
 {
 }
 
@@ -56,10 +55,9 @@ inline_parser::parse(wstring& data)
   bool result = false;
   if (regex_search(data, params_detector, match_default | match_any))
     {
-      clean(data, trash);
-      clean(data, margin);
+      data = regex_replace(data, trash, L"");
       extract_parameters(data);
-      clean(data, garbage);
+      data = regex_replace(data, garbage, L"");
       result = true;
     }
   return result;
@@ -77,13 +75,4 @@ inline_parser::get_value(std::wstring& data, const boost::wregex& extractor)
       parse_result[2].matched)
     result_value = lexical_cast<double>(wstring(parse_result[2].first, parse_result[2].second));
   return result_value;
-}
-
-
-// private methods:
-
-void
-inline_parser::clean(wstring& data, const wregex& pattern)
-{
-  data = regex_replace(data, pattern, L"");
 }

@@ -51,7 +51,7 @@ frontend::frontend(const configuration& conf):
   beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$"),
   lang_parameters(L"^(\\S+)(\\s+(\\S+))?$"),
   tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)"),
-  garbage(L"\\[\\*]")
+  garbage(L"\\s*\\[\\*]\\s*")
 {
   if (conf.option_value[options::frontend::native_voices].as<bool>())
     native_params.reset(new multispeech_voices);
