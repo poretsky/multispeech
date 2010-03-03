@@ -81,6 +81,9 @@ private:
   portaudio::StreamParameters params;
   float volume_level;
 
+  // Find device by it's name:
+  PaDeviceIndex find_device(const std::string& device_name);
+
   // Audio playing callback function:
   int paCallbackFun(const void *inputBuffer, void *outputBuffer,
                     unsigned long numFrames, 

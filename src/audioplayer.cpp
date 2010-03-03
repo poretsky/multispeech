@@ -42,23 +42,18 @@ audioplayer::audioplayer(const string& device_name):
          0.0, 0,
          paPrimeOutputBuffersUsingStreamCallback)
 {
+  string devname(device_name);
   System& system = System::instance();
   PaDeviceIndex device = system.defaultOutputDevice().index();
   PaTime latency = suggested_latency;
-  if (!device_name.empty())
+  if (devname.empty())
     {
-      System::DeviceIterator found;
-      for (found = system.devicesBegin(); found != system.devicesEnd(); found++)
-        if (found->name() == device_name)
-          {
-            device = found->index();
-            break;
-          }
-      if (found == system.devicesEnd())
-        throw configuration::error("audio device \"" + device_name + "\" is not found");
-      if (found->isInputOnlyDevice())
-        throw configuration::error("audio device \"" + device_name + "\" is not valid");
+      devname = system.deviceByIndex(device).name();
+      if (devname.empty())
+        devname = "default";
+      device = find_device(devname);
     }
+  else device = find_device(devname);
   if (latency <= 0.0)
     latency = system.deviceByIndex(device).defaultLowOutputLatency();
   params.setOutputParameters(DirectionSpecificStreamParameters(system.deviceByIndex(device),
@@ -66,9 +61,7 @@ audioplayer::audioplayer(const string& device_name):
                                                                latency, NULL));
   params.setSampleRate(system.deviceByIndex(device).defaultSampleRate());
   if (!params.isSupported())
-    throw configuration::error("cannot properly initialize audio device \"" +
-                               string(system.deviceByIndex(device).name()) +
-                               "\"");
+    throw configuration::error("cannot properly initialize audio device \"" + devname + "\"");
 }
 
 audioplayer::~audioplayer(void)
@@ -121,12 +114,19 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
 
 // Private methods:
 
-void
-audioplayer::release(void* handle)
+PaDeviceIndex
+audioplayer::find_device(const string& device_name)
 {
-  reinterpret_cast<audioplayer*>(handle)->source_release();
-  reinterpret_cast<audioplayer*>(handle)->playing = false;
-  complete.notify_all();
+  System& system = System::instance();
+  System::DeviceIterator found;
+  for (found = system.devicesBegin(); found != system.devicesEnd(); found++)
+    if (found->name() == device_name)
+      break;
+  if (found == system.devicesEnd())
+    throw configuration::error("audio device \"" + device_name + "\" is not found");
+  if (found->isInputOnlyDevice())
+    throw configuration::error("audio device \"" + device_name + "\" is not valid");
+  return found->index();
 }
 
 int
@@ -147,4 +147,12 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
   for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
     buffer[i] = 0.0;
   return (obtained < numFrames) ? paComplete : paContinue;
+}
+
+void
+audioplayer::release(void* handle)
+{
+  reinterpret_cast<audioplayer*>(handle)->source_release();
+  reinterpret_cast<audioplayer*>(handle)->playing = false;
+  complete.notify_all();
 }
