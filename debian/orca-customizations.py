@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Place this file into ~/.orca and edit according your preferences.
+# Place this file into ~/.orca and edit according to your preferences.
 
 # At first allow Multispeech as one of speech backends.
 import orca.espeechfactory
