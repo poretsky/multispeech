@@ -1,3 +1,14 @@
+multispeech (2.4.1) unstable; urgency=low
+
+  * Guess "default" as a device name when it is not specified explicitly
+    and no system default is detected.
+  * Fixed some character translations that were broken in previous
+    release.
+  * Suggest user to restart running multispeech instances at the end of
+    installation process.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 03 Mar 2010 21:02:17 +0300
+
 multispeech (2.4) unstable; urgency=low
 
   * Implemented DECtalk compatibility mode.
