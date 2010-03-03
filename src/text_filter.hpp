@@ -21,7 +21,7 @@
 // Text filter chain construction is as simple as follows:
 //
 // text_filter filter;
-// filter.setup_chain()
+// filter.setup()
 //   (expression_1)
 //   ...
 //   (expression_n);
