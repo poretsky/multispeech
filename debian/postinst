@@ -40,6 +40,10 @@ esac
 
 #DEBHELPER#
 
+
+if pidof multispeech >/dev/null; then
+    echo "Please restart all running multispeech instances"
+    echo "for changes to take effect."
+fi
+
 exit 0
-
-
