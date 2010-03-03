@@ -48,7 +48,7 @@ protected:
 
 private:
   // Patterns for parsing:
-  const boost::wregex params_detector, trash, garbage;
+  const boost::wregex params_detector, trash, garbage, margin;
 
   // Clean specified pattern out of the string:
   void clean(std::wstring& data, const boost::wregex& pattern);

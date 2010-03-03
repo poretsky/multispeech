@@ -38,7 +38,8 @@ inline_parser::inline_parser(const wstring& detector,
                              const wstring& postcleaner):
   params_detector(detector),
   trash(precleaner),
-  garbage(postcleaner)
+  garbage(postcleaner),
+  margin(L"^\\s+")
 {
 }
 
@@ -56,6 +57,7 @@ inline_parser::parse(wstring& data)
   if (regex_search(data, params_detector, match_default | match_any))
     {
       clean(data, trash);
+      clean(data, margin);
       extract_parameters(data);
       clean(data, garbage);
       result = true;
