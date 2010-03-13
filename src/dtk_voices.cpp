@@ -40,6 +40,7 @@ dtk_voices::dtk_voices(void):
   head_size_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?hs\\s+(\\d+(\\.\\d*)?).*]"),
   rate_extractor(L"^\\s*\\[.*:ra(te)?\\s+(\\d+(\\.\\d*)?).*]"),
   volume_extractor(L"^\\s*\\[.*:volu(me)?\\s+set\\s+(\\d+(\\.\\d*)?).*]"),
+  mode_extractor(L"^\\s*\\[.*:pu(nct?)?\\s+(\\S).*]"),
   save_cmd_detector(L"^\\s*\\[.*:dv\\s(.*\\s)?save(\\s.*)?]"),
   val_pitch(1.0),
   val_deviation(1.0)
@@ -104,6 +105,7 @@ dtk_voices::get_person(wstring& data)
 void
 dtk_voices::extract_parameters(wstring& data)
 {
+  wsmatch parse_result;
   double pitch_range = get_value(data, pitch_range_extractor),
     average_pitch = get_value(data, average_pitch_extractor),
     head_size = get_value(data, head_size_extractor);
@@ -124,4 +126,8 @@ dtk_voices::extract_parameters(wstring& data)
       val_pitch = pitch;
       val_deviation = deviation;
     }
+  punctuations_mode = (regex_search(data, parse_result, mode_extractor) &&
+                       parse_result[2].matched) ?
+    parse_result[2].first[0] :
+    L' ';
 }

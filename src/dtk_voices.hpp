@@ -50,7 +50,7 @@ private:
   // Patterns for parameters extraction:
   const boost::wregex person_extractor, pitch_range_extractor,
     average_pitch_extractor, head_size_extractor, rate_extractor,
-    volume_extractor, save_cmd_detector;
+    volume_extractor, mode_extractor, save_cmd_detector;
 
   // Saved voice parameters:
   double val_pitch, val_deviation;

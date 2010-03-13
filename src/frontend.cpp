@@ -122,11 +122,16 @@ frontend::perform_command(void)
     {
       voice_params = extract_parameters();
       if (voice_params)
-        soundmaster.enqueue(speechmaster.text_task(data,
-                                                   voice_params->volume,
-                                                   voice_params->rate,
-                                                   voice_params->pitch,
-                                                   voice_params->deviation));
+        {
+          punctuations::mode preserve = punctuations::verbosity;
+          set_punctuations_mode(voice_params->punctuations_mode);
+          soundmaster.enqueue(speechmaster.text_task(data,
+                                                     voice_params->volume,
+                                                     voice_params->rate,
+                                                     voice_params->pitch,
+                                                     voice_params->deviation));
+          punctuations::verbosity = preserve;
+        }
       else soundmaster.enqueue(speechmaster.text_task(data));
     }
 
@@ -158,12 +163,17 @@ frontend::perform_command(void)
       soundmaster.stop();
       voice_params = extract_parameters();
       if (voice_params)
-        soundmaster.execute(speechmaster.text_task(data,
-                                                   voice_params->volume,
-                                                   voice_params->rate,
-                                                   voice_params->pitch,
-                                                   voice_params->deviation,
-                                                   true));
+        {
+          punctuations::mode preserve = punctuations::verbosity;
+          set_punctuations_mode(voice_params->punctuations_mode);
+          soundmaster.execute(speechmaster.text_task(data,
+                                                     voice_params->volume,
+                                                     voice_params->rate,
+                                                     voice_params->pitch,
+                                                     voice_params->deviation,
+                                                     true));
+          punctuations::verbosity = preserve;
+        }
       else soundmaster.execute(speechmaster.text_task(data, true));
     }
 

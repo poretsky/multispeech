@@ -40,6 +40,7 @@ public:
 
   // Extracted values:
   double volume, rate, pitch, deviation;
+  wchar_t punctuations_mode;
 
 protected:
   // Value extraction helper to ease actual parser design

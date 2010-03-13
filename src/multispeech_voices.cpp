@@ -37,7 +37,8 @@ multispeech_voices::multispeech_voices(void):
   freq_extractor(L"^\\s*\\[_:(.*\\s)?fr:(\\d+).*]"),
   pitch_extractor(L"^\\s*\\[_:(.*\\s)?pi:(\\d+(\\.\\d*)?).*]"),
   rate_extractor(L"^\\s*\\[_:(.*\\s)?ra:(\\d+(\\.\\d*)?).*]"),
-  volume_extractor(L"^\\s*\\[_:(.*\\s)?vo:(\\d+(\\.\\d*)?).*]")
+  volume_extractor(L"^\\s*\\[_:(.*\\s)?vo:(\\d+(\\.\\d*)?).*]"),
+  mode_extractor(L"^\\s*\\[_:(.*\\s)?pu:(.+)]")
 {
 }
 
@@ -47,8 +48,13 @@ multispeech_voices::multispeech_voices(void):
 void
 multispeech_voices::extract_parameters(wstring& data)
 {
+  wsmatch parse_result;
   volume = get_value(data, volume_extractor);
   rate = get_value(data, rate_extractor) / rate_scale;
   pitch = get_value(data, pitch_extractor);
   deviation = get_value(data, freq_extractor) / ref_freq;
+  punctuations_mode = (regex_search(data, parse_result, mode_extractor) &&
+                       parse_result[2].matched) ?
+    parse_result[2].first[0] :
+    L' ';
 }

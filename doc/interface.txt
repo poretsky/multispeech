@@ -135,7 +135,8 @@ follows:
 vo -- speech volume;
 pi -- voice pitch;
 ra -- speech rate;
-fr -- sampling frequency.
+fr -- sampling frequency;
+pu -- punctuations verbosity mode.
 
 Volume, pitch and rate are specified relatively to the corresponding
 parameters obtained from the Multispeech configuration, but rate is
@@ -146,6 +147,9 @@ Multispeech tries to recalculate and apply it properly to achieve
 equivalent deviation in all circumstances. Thus, the embedded speech
 parameters "[_: vo:1.0 pi:1.0 ra:200 fr:16000]" actually result in
 normal speech just as it was configured.
+
+For punctuations verbosity mode three values are recognized: all, some
+and none.
 
 When DECtalk voices are enabled, Multispeech recognizes embedded
 parameters in the DECtalk notation and tries to emulate some subset of
@@ -167,6 +171,9 @@ commands:
 :dv
 :ra[te]
 :volu[me] set
+:pu[nc[t]]
+
+Here optional parts are enclosed in brackets as usual.
 
 When designing voice with :dv command, following options are
 supported:
@@ -175,6 +182,8 @@ ap
 hs
 pr
 save
+
+For punctuations mode three values are recognized: all, some and none.
 
 Of course, it is pretty small and simple subset, but it gives us
 several distinguishable voices and some basic control means. In fact,
