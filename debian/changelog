@@ -1,3 +1,15 @@
+multispeech (2.4.2) unstable; urgency=low
+
+  * Included freephone and mbrola-en1 into the list of suggested
+    packages.
+  * Don't use punctuations mode when pronouncing letters.
+  * Respect embedded commands for punctuations mode specification.
+  * Added comment about suggested packages.
+  * Extended sample Orca customizations for proper support of
+    punctuations verbosity modes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 13 Mar 2010 19:43:46 +0300
+
 multispeech (2.4.1) unstable; urgency=low
 
   * Guess "default" as a device name when it is not specified explicitly
