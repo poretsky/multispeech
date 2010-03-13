@@ -9,7 +9,7 @@ Package: multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: emacspeak, espeak
-Suggests: mbrola, ru-tts
+Suggests: mbrola, mbrola-en1, freephone, ru-tts
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
