@@ -115,7 +115,8 @@ public:
   speech_task text_task(const std::wstring& s,
                         double volume, double rate,
                         double pitch, double deviation,
-                        bool use_translation = false);
+                        bool use_translation = false,
+                        bool allpuncts = false);
   speech_task letter_task(std::wstring s);
 
   // Make up special task to produce silence for the time

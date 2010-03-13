@@ -30,6 +30,7 @@
 
 #include "iconv_codecvt.hpp"
 #include "strcvt.hpp"
+#include "text_filter.hpp"
 #include "pipeline.hpp"
 #include "English.hpp"
 #include "Russian.hpp"
@@ -167,7 +168,8 @@ speech_task
 speech_engine::text_task(const wstring& s,
                          double volume, double rate,
                          double pitch, double deviation,
-                         bool use_translation)
+                         bool use_translation,
+                         bool allpuncts)
 {
   pipeline::script commands;
   pair<string, string> fmt;
@@ -208,6 +210,9 @@ speech_engine::text_task(const wstring& s,
   // Prepare the text.
   if (!s.empty())
     {
+      punctuations::mode preserve = punctuations::verbosity;
+      if (allpuncts)
+        punctuations::verbosity = punctuations::all;
       if (use_translation)
         {
           prepared = language->translate(s);
@@ -215,6 +220,7 @@ speech_engine::text_task(const wstring& s,
             prepared = language->filter(s);
         }
       else prepared = language->filter(s);
+      punctuations::verbosity = preserve;
     }
 
   // Make up and return complete task description.
@@ -235,7 +241,7 @@ speech_engine::letter_task(wstring s)
         pitch *= caps_factor;
       else s[0] = toupper(s[0], locale(""));
     }
-  return text_task(s, -1.0, rate, pitch, 0.0, true);
+  return text_task(s, -1.0, rate, pitch, 0.0, true, true);
 }
 
 speech_task
