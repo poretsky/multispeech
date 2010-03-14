@@ -6,7 +6,7 @@ does not automatically claim itself as the default speech server for
 emacspeak. To make emacspeak working with multispeech as it's default
 speech server run command:
 
-dpkg reconfigure emacspeak
+dpkg-reconfigure emacspeak
 
 and choose multispeech when asked. Or manually edit
 /etc/emacspeak.conf.
