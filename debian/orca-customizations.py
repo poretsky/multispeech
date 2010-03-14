@@ -40,6 +40,8 @@ orca.espeechfactory._codeTable = {'multispeech' : 'dectalk'}
 # Note that all known speech servers will be launched, but we
 # should do it here because otherwise the stuff below will not work.
 # So check carefully the previous stanza and make the right choice.
+# Another alternative is to comment out unneeded speech servers
+# in /usr/share/emacs/site-lisp/emacspeak/servers/.servers.
 if orca.settings.speechServerFactory == 'orca.espeechfactory':
     orca.espeechfactory.SpeechServer.getSpeechServers()
 
