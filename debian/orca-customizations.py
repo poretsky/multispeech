@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Place this file into ~/.orca and edit according to your preferences.
 
-# At first allow Multispeech as one of speech backends.
+# At first import Emacspeak speech services bridge.
 import orca.espeechfactory
-orca.espeechfactory._codeTable['multispeech'] = 'dectalk'
 
 # Set default speech rate. It is actual while voice is not tuned.
 orca.espeechfactory.SpeechServer.config["rate"] = 20
@@ -25,6 +24,25 @@ elif orca.settings.verbalizePunctuationStyle == orca.settings.PUNCTUATION_STYLE_
 #orca.settings.speechServerFactory = 'orca.espeechfactory'
 #orca.settings.speechServerInfo = ['multispeech', 'multispeech']
 
+# Now inform Orca about the Multispeech speech server.
+#
+# Here wi have two choices: we can add Multispeech to the list
+# of known speech servers or make it the only Emacspeak speech server
+# to use. Uncomment one of the alternatives below.
+#
+# Add Multispeech to the list of known speech servers.
+#orca.espeechfactory._codeTable['multispeech'] = 'dectalk'
+#
+# Make Multispeech the only Emacspeak speech server to use.
+orca.espeechfactory._codeTable = {'multispeech' : 'dectalk'}
+
+# Create list of active Emacspeak speech servers for reference.
+# Note that all known speech servers will be launched, but we
+# should do it here because otherwise the stuff below will not work.
+# So check carefully the previous stanza and make the right choice.
+if orca.settings.speechServerFactory == 'orca.espeechfactory':
+    orca.espeechfactory.SpeechServer.getSpeechServers()
+
 
 # Setup custom key bindings.
 #
@@ -44,10 +62,6 @@ import orca.input_event
 import orca.keybindings
 import orca.speech
 import orca.orca_state
-
-# Create list of active Emacspeak speech servers for reference.
-if orca.settings.speechServerFactory == 'orca.espeechfactory':
-    orca.espeechfactory.SpeechServer.getSpeechServers()
 
 # Define functions for punctuations verbosity switching.
 def setPunctAll(script, inputEvent=None):
