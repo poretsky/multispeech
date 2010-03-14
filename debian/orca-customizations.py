@@ -33,11 +33,11 @@ elif orca.settings.verbalizePunctuationStyle == orca.settings.PUNCTUATION_STYLE_
 # Add Multispeech to the list of known speech servers.
 #orca.espeechfactory._codeTable['multispeech'] = 'dectalk'
 #
-# Make Multispeech the only Emacspeak speech server to use.
+# Make Multispeech the only available Emacspeak speech server.
 orca.espeechfactory._codeTable = {'multispeech' : 'dectalk'}
 
 # Create list of active Emacspeak speech servers for reference.
-# Note that all known speech servers will be launched, but we
+# Note that all available speech servers will be launched, but we
 # should do it here because otherwise the stuff below will not work.
 # So check carefully the previous stanza and make the right choice.
 # Another alternative is to comment out unneeded speech servers
