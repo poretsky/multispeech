@@ -1,3 +1,10 @@
+multispeech (2.4.3) unstable; urgency=low
+
+  * Corrected command suggested for reconfiguring Emacspeak.
+  * More accurate Orca customization sample.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 14 Mar 2010 11:31:42 +0300
+
 multispeech (2.4.2) unstable; urgency=low
 
   * Included freephone and mbrola-en1 into the list of suggested
