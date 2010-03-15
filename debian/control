@@ -13,6 +13,14 @@ Suggests: mbrola, mbrola-en1, freephone, ru-tts
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
+ At the moment English and Russian languages are supported.
  .
- Multispeech now support English and Russian languages and allows
- to switch between them automatically.
+ The most prominent features are as follows:
+ - flexible configuration;
+ - easy adaptation to various speech engines;
+ - language autodetection capability;
+ - online voice control means.
+ .
+ Though Multispeech was primarily designed for use in conjunction
+ with Emacspeak, now it can easily be employed as a full featured
+ speech service for Orca screenreader as well.
