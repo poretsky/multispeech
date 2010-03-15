@@ -69,7 +69,7 @@ protected:
 
 private:
   // Indicate that playback is scheduled to stop:
-  bool no_playback;
+  bool playback_cancelled;
 
   // Indicate that playback is in progress:
   bool playing;

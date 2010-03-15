@@ -74,18 +74,19 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
-  while (audioplayer::active())
+  if (stream.isOpen())
     {
-      no_playback = true;
-      stream.abort();
+      if (stream.isActive())
+        playback_cancelled = true;
+      stream.close();
     }
+  while (playing)
+    continue;
 }
 
 bool
 audioplayer::active(void)
 {
-  if ((!playing) && stream.isOpen())
-    stream.close();
   return playing;
 }
 
@@ -100,10 +101,10 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())
     {
-      no_playback = false;
       stream.open(params, *this);
       if (stream.isOpen())
         {
+          playback_cancelled = false;
           playing = true;
           stream.setStreamFinishedCallback(release);
           stream.start();
@@ -135,7 +136,7 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
                            const PaStreamCallbackTimeInfo *timeInfo,
                            PaStreamCallbackFlags statusFlags)
 {
-  if (no_playback)
+  if (playback_cancelled)
     return paAbort;
   if (statusFlags & paOutputOverflow)
     return paContinue;
