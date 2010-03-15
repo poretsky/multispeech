@@ -16,10 +16,10 @@ Description: Multilingual speech server for emacspeak
  At the moment English and Russian languages are supported.
  .
  The most prominent features are as follows:
- - flexible configuration;
- - easy adaptation to various speech engines;
- - language autodetection capability;
- - online voice control means.
+  - flexible configuration;
+  - easy adaptation to various speech engines;
+  - language autodetection capability;
+  - online voice control means.
  .
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, now it can easily be employed as a full featured
