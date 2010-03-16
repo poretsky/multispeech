@@ -1,3 +1,9 @@
+multispeech (2.4.5) unstable; urgency=low
+
+  * Improved robustness of sound stream control mechanism.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 17 Mar 2010 01:25:51 +0300
+
 multispeech (2.4.4) unstable; urgency=low
 
   * Some improvements in the sense of overall robustness and stability.
