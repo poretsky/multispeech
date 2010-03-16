@@ -75,11 +75,7 @@ void
 audioplayer::stop(void)
 {
   if (stream.isOpen())
-    {
-      if (stream.isActive())
-        playback_cancelled = true;
-      stream.close();
-    }
+    stream.close();
   while (playing)
     continue;
 }
@@ -87,6 +83,8 @@ audioplayer::stop(void)
 bool
 audioplayer::active(void)
 {
+  if ((!playing) && stream.isOpen())
+    stream.close();
   return playing;
 }
 
@@ -104,7 +102,6 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
       stream.open(params, *this);
       if (stream.isOpen())
         {
-          playback_cancelled = false;
           playing = true;
           stream.setStreamFinishedCallback(release);
           stream.start();
@@ -136,18 +133,20 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
                            const PaStreamCallbackTimeInfo *timeInfo,
                            PaStreamCallbackFlags statusFlags)
 {
-  if (playback_cancelled)
-    return paAbort;
-  if (statusFlags & paOutputOverflow)
-    return paContinue;
-  float* buffer = reinterpret_cast<float*>(outputBuffer);
-  unsigned int obtained = source_read(buffer, numFrames);
-  if (obtained)
-    for (unsigned int i = 0; i < (obtained * params.outputParameters().numChannels()); i++)
-      buffer[i] *= volume_level;
-  for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
-    buffer[i] = 0.0;
-  return (obtained < numFrames) ? paComplete : paContinue;
+  int result = paContinue;
+  if (!(statusFlags & paOutputOverflow))
+    {
+      float* buffer = reinterpret_cast<float*>(outputBuffer);
+      unsigned int obtained = source_read(buffer, numFrames);
+      if (obtained)
+        for (unsigned int i = 0; i < (obtained * params.outputParameters().numChannels()); i++)
+          buffer[i] *= volume_level;
+      for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
+        buffer[i] = 0.0;
+      if (obtained < numFrames)
+        result = paComplete;
+    }
+  return result;
 }
 
 void

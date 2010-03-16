@@ -68,9 +68,6 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
-  // Indicate that playback is scheduled to stop:
-  bool playback_cancelled;
-
   // Indicate that playback is in progress:
   bool playing;
 
