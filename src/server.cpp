@@ -37,8 +37,8 @@ bool server::debug = false;
 
 // Construct / destroy:
 
-server::server(int argc, char* argv[]):
-  configuration(argc, argv),
+server::server(int argc, char* argv[], const char* conf_file):
+  configuration(argc, argv, conf_file),
   sound_manager(dynamic_cast<configuration*>(this)),
   polyglot(dynamic_cast<configuration*>(this)),
   input_charset((option_value.count(options::frontend::charset) &&

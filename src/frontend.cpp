@@ -45,7 +45,7 @@ using namespace FBB;
 // Object construction:
 
 frontend::frontend(int argc, char* argv[]):
-  server(argc, argv),
+  server(argc, argv, ".multispeechrc"),
   command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$"),
   validate_float(L"^\\d+(\\.\\d*)?$"),
   validate_integer(L"^\\d+$"),

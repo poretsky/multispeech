@@ -45,12 +45,6 @@ using namespace boost::program_options;
 bool configuration::initialized = false;
 
 
-// Configuration files:
-
-const path configuration::global_conf(complete("multispeech.conf", SYSCONF_DIR));
-const path configuration::local_conf(complete(".multispeechrc", getenv("HOME")));
-
-
 // Hardcoded default paths:
 
 const path configuration::mbrola_voices_default(complete("mbrola-voices", DATA_DIR));
@@ -236,7 +230,9 @@ namespace options
 
 string configuration::stage;
 
-configuration::configuration(int argc, char* argv[])
+configuration::configuration(int argc, char* argv[], const char* conf_file):
+  global_conf(complete("multispeech.conf", SYSCONF_DIR)),
+  local_conf(complete(conf_file, (conf_file[0] == '.') ? getenv("HOME") : SYSCONF_DIR))
 {
   options_description conf, cl_desc("Available options");
   variables_map cl_opt;

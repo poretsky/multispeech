@@ -20,8 +20,9 @@
 
 // The class server is designed as common ancestor for all speech server
 // interfaces. It comprises core functionality. Actual execution loop
-// must be defined in the derived classes by implementing
-// virtual method run().
+// must be defined in the derived classes by providing
+// actual implementation for pure virtual method run().
+// See ancestors definition for details about available capabilities.
 //
 // Only one instance of this class is allowed for a program.
 
@@ -44,7 +45,7 @@ class server:
 {
 protected:
   // Construct / destroy:
-  server(int argc, char* argv[]);
+  server(int argc, char* argv[], const char* conf_file);
   virtual ~server(void);
 
 public:
