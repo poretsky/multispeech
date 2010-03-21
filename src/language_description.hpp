@@ -23,8 +23,8 @@
 // It comprises some basic methods and data structures that must be
 // actually set up by descendants in a particular language specific way.
 
-#ifndef LANGUAGE_DESCRIPTION_HPP
-#define LANGUAGE_DESCRIPTION_HPP
+#ifndef MULTISPEECH_LANGUAGE_DESCRIPTION_HPP
+#define MULTISPEECH_LANGUAGE_DESCRIPTION_HPP
 
 #include <string>
 #include <vector>
@@ -37,10 +37,13 @@
 
 class language_description
 {
-public:
-  // Construct / destroy:
+protected:
+  // Object constructor:
   language_description(const char* language_id,
                        const wchar_t* language_detector);
+
+public:
+  // Destructor is made public to accommodate smart pointers:
   virtual ~language_description(void);
 
   // Language id string:

@@ -35,8 +35,8 @@
 //
 // All these methods are declared as private.
 
-#ifndef AUDIOPLAYER_HPP
-#define AUDIOPLAYER_HPP
+#ifndef MULTISPEECH_AUDIOPLAYER_HPP
+#define MULTISPEECH_AUDIOPLAYER_HPP
 
 #include <string>
 #include <memory>
@@ -47,11 +47,12 @@
 
 class audioplayer: private portaudio::CallbackInterface
 {
-public:
+protected:
   // Construct / destroy:
   audioplayer(const std::string& device_name);
   virtual ~audioplayer(void);
 
+public:
   // Playing process control:
   virtual void stop(void);
   virtual bool active(void);

@@ -41,6 +41,10 @@ using namespace boost::filesystem;
 using namespace boost::program_options;
 
 
+// Initialize duplication protector:
+bool configuration::initialized = false;
+
+
 // Configuration files:
 
 const path configuration::global_conf(complete("multispeech.conf", SYSCONF_DIR));
@@ -237,6 +241,14 @@ configuration::configuration(int argc, char* argv[])
   options_description conf, cl_desc("Available options");
   variables_map cl_opt;
   bool noconf = true;
+
+  // Check if configured already:
+  if (initialized)
+    throw std::logic_error("Duplicated server initialization");
+  initialized = true;
+
+  // Prevent searching for X:
+  unsetenv("DISPLAY");
 
   // Declare command line options:
   cl_desc.add_options()

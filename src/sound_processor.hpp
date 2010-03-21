@@ -23,8 +23,8 @@
 // To retrieve source data this process uses private virtual method
 // get_source() that must be defined in the derived classes.
 
-#ifndef SOUND_PROCESSOR_HPP
-#define SOUND_PROCESSOR_HPP
+#ifndef MULTISPEECH_SOUND_PROCESSOR_HPP
+#define MULTISPEECH_SOUND_PROCESSOR_HPP
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -34,11 +34,12 @@
 
 class sound_processor: public soundtouch::SoundTouch
 {
-public:
+protected:
   // Construct / destroy:
   sound_processor(void);
   ~sound_processor(void);
 
+public:
   // Background processing control:
   void start_processing(void);
   void stop_processing(void);

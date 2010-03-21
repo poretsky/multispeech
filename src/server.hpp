@@ -19,14 +19,16 @@
 */
 
 // The class server is designed as common ancestor for all speech server
-// interfaces. It comprises common functionality. The derived classes
-// should define actual command set and input method by implementing
-// virtual methods declared in private section.
+// interfaces. It comprises core functionality. Actual execution loop
+// must be defined in the derived classes by implementing
+// virtual method run().
+//
+// Only one instance of this class is allowed for a program.
 
-#ifndef SPEECH_SERVER_HPP
-#define SPEECH_SERVER_HPP
 
-#include <string>
+#ifndef MULTISPEECH_SERVER_HPP
+#define MULTISPEECH_SERVER_HPP
+
 #include <locale>
 
 #include <bobcat/syslogstream>
@@ -35,15 +37,19 @@
 #include "polyglot.hpp"
 #include "sound_manager.hpp"
 
-class server
+class server:
+  protected configuration,
+  protected sound_manager,
+  protected polyglot
 {
-public:
+protected:
   // Construct / destroy:
-  server(const configuration& conf);
+  server(int argc, char* argv[]);
   virtual ~server(void);
 
+public:
   // General execution loop:
-  void run(void);
+  virtual void run(void) = 0;
 
   // Logging stream:
   static FBB::SyslogStream log;
@@ -55,24 +61,8 @@ public:
   static bool debug;
 
 protected:
-  // Data read from input:
-  std::wstring cmd, data;
-
   // Input charset holder:
   const std::locale input_charset;
-
-  // Speech and sounds:
-  polyglot speechmaster;
-  sound_manager soundmaster;
-
-private:
-  // Get command from the source and parse it placing the command itself
-  // and accompanying data into the cmd and data fields respectively.
-  virtual void get_command(void) = 0;
-
-  // Perform a command placed in the cmd and data fields.
-  // Return false if execution should be finished.
-  virtual bool perform_command(void) = 0;
 };
 
 #endif

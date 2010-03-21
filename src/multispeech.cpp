@@ -17,15 +17,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <cstdlib>
-#include <memory>
 #include <exception>
 #include <string>
 #include <iostream>
 
 #include <bobcat/syslogstream>
-
-#include <portaudiocpp/PortAudioCpp.hxx>
 
 #include "config.hpp"
 #include "server.hpp"
@@ -33,40 +29,32 @@
 
 using namespace std;
 using namespace FBB;
-using namespace portaudio;
 
 int main(int argc, char* argv[])
+try
 {
-  unsetenv("DISPLAY");
-  auto_ptr<server> multispeech;
-  AutoSystem audio;
+  frontend multispeech(argc, argv);
 
-  try
-    {
-      configuration conf(argc, argv);
-      multispeech.reset(new frontend(conf));
-    }
-  catch (const string& info)
-    {
-      cout << info << endl;
-      return EXIT_SUCCESS;
-    }
-  catch (const configuration::error& error)
-    {
-      server::log << SyslogStream::err << error.what() << endl;
-      if (server::verbose)
-        cerr << "Configuration error: " << error.what() << endl;
-      return EXIT_FAILURE;
-    }
-  catch (const exception& error)
-    {
-      server::log << SyslogStream::err << error.what() << configuration::stage << endl;
-      if (server::verbose)
-        cerr << "Error" << configuration::stage << ": " << error.what() << endl;
-      return EXIT_FAILURE;
-    }
-
-  multispeech->run();
+  multispeech.run();
 
   return EXIT_SUCCESS;
 }
+catch (const string& info)
+  {
+    cout << info << endl;
+    return EXIT_SUCCESS;
+  }
+catch (const configuration::error& error)
+  {
+    server::log << SyslogStream::err << error.what() << endl;
+    if (server::verbose)
+      cerr << "Configuration error: " << error.what() << endl;
+    return EXIT_FAILURE;
+  }
+catch (const exception& error)
+  {
+    server::log << SyslogStream::err << error.what() << configuration::stage << endl;
+    if (server::verbose)
+      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
+    return EXIT_FAILURE;
+  }

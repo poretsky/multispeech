@@ -21,8 +21,8 @@
 // These backends are multilingual by nature. Language is specified
 // as the second constructor argument.
 
-#ifndef ESPEAK_HPP
-#define ESPEAK_HPP
+#ifndef MULTISPEECH_ESPEAK_HPP
+#define MULTISPEECH_ESPEAK_HPP
 
 #include <string>
 
@@ -33,7 +33,7 @@ class espeak: public speech_engine
 {
 public:
   // Object construction:
-  espeak(const configuration& conf, const std::string& lang);
+  espeak(const configuration* conf, const std::string& lang);
 
 private:
   // Make up voice parameters for backend:
@@ -45,7 +45,7 @@ class mbrespeak: public mbrola
 {
 public:
   // Object construction:
-  mbrespeak(const configuration& conf, const std::string& lang);
+  mbrespeak(const configuration* conf, const std::string& lang);
 };
 
 #endif

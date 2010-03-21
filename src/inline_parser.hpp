@@ -18,8 +18,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef INLINE_PARSER_HPP
-#define INLINE_PARSER_HPP
+// This class provides general embedded parameters parsing means.
+// It is not for direct use, but rather for deriving real parsers.
+
+#ifndef MULTISPEECH_INLINE_PARSER_HPP
+#define MULTISPEECH_INLINE_PARSER_HPP
 
 #include <string>
 
@@ -27,11 +30,14 @@
 
 class inline_parser
 {
-public:
-  // Construct / destroy:
+protected:
+  // Object constructor:
   inline_parser(const std::wstring& detector,
                 const std::wstring& precleaner,
                 const std::wstring& postcleaner);
+
+public:
+  // Destructor is made public to accommodate smart pointers:
   virtual ~inline_parser(void);
 
   // Test given string for embedded voice parameters and extract them.

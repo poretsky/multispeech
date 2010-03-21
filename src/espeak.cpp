@@ -31,15 +31,15 @@ using namespace boost;
 // Espeak backend.
 
 // Object construction:
-espeak::espeak(const configuration& conf, const string& lang):
+espeak::espeak(const configuration* conf, const string& lang):
   speech_engine(conf, speaker::espeak, novoice, lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf.option_value.count(options::compose(name, option_name::executable)) &&
-      !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  if (conf->option_value.count(options::compose(name, option_name::executable)) &&
+      !conf->option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(name, option_name::executable)].as<string>());
+      string cmd(conf->option_value[options::compose(name, option_name::executable)].as<string>());
       cmd += " --stdin --stdout -z -s %rate -p %pitch -v " + voice;
       command(cmd);
     }
@@ -58,15 +58,15 @@ espeak::voicify(double rate, double pitch)
 // Espeak+Mbrola backend.
 
 // Object construction:
-mbrespeak::mbrespeak(const configuration& conf, const string& lang):
+mbrespeak::mbrespeak(const configuration* conf, const string& lang):
   mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang, 16000)
 {
   if (lang_id::en != lang)
     throw configuration::error("unsupported language " + lang + " specified for " + name);
-  if (conf.option_value.count(options::compose(speaker::espeak, option_name::executable)) &&
-      !conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
+  if (conf->option_value.count(options::compose(speaker::espeak, option_name::executable)) &&
+      !conf->option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>());
+      string cmd(conf->option_value[options::compose(speaker::espeak, option_name::executable)].as<string>());
       cmd += " --stdin -q -z -v mb-" + voice;
       command(cmd);
     }

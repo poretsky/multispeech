@@ -56,7 +56,7 @@ const string speech_engine::novoice("no voice");
 
 // Constructing and destroying:
 
-speech_engine::speech_engine(const configuration& conf,
+speech_engine::speech_engine(const configuration* conf,
                              const string& backend,
                              const string& voice_id,
                              const string& lang,
@@ -67,17 +67,17 @@ speech_engine::speech_engine(const configuration& conf,
                              const string& charset):
   name(backend),
   voice((voice_id == novoice) ?
-        (conf.option_value.count(options::compose(backend, lang)) ?
-         conf.option_value[options::compose(backend, lang)].as<string>() :
+        (conf->option_value.count(options::compose(backend, lang)) ?
+         conf->option_value[options::compose(backend, lang)].as<string>() :
          "") :
         voice_id),
-  volume_factor(conf.option_value[options::compose(lang, option_name::volume)].as<double>()),
-  rate_factor(conf.option_value[options::compose(lang, option_name::rate)].as<double>()),
-  pitch_factor(conf.option_value[options::compose(lang, option_name::pitch)].as<double>()),
-  caps_factor(conf.option_value[options::compose(lang, option_name::caps_factor)].as<double>()),
-  char_pitch(conf.option_value[options::compose(lang, option_name::char_pitch)].as<double>()),
-  char_rate(conf.option_value[options::compose(lang, option_name::char_rate)].as<double>()),
-  acceleration(conf.option_value[options::compose(lang, option_name::acceleration)].as<double>()),
+  volume_factor(conf->option_value[options::compose(lang, option_name::volume)].as<double>()),
+  rate_factor(conf->option_value[options::compose(lang, option_name::rate)].as<double>()),
+  pitch_factor(conf->option_value[options::compose(lang, option_name::pitch)].as<double>()),
+  caps_factor(conf->option_value[options::compose(lang, option_name::caps_factor)].as<double>()),
+  char_pitch(conf->option_value[options::compose(lang, option_name::char_pitch)].as<double>()),
+  char_rate(conf->option_value[options::compose(lang, option_name::char_rate)].as<double>()),
+  acceleration(conf->option_value[options::compose(lang, option_name::acceleration)].as<double>()),
   format(fmt),
   native_sampling(sampling),
   sound_channels(channels),

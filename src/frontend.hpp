@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef FRONTEND_HPP
-#define FRONTEND_HPP
+#ifndef MULTISPEECH_FRONTEND_HPP
+#define MULTISPEECH_FRONTEND_HPP
 
 #include <memory>
 
@@ -32,11 +32,21 @@ class frontend: public server
 {
 public:
   // Construct the object:
-  frontend(const configuration& conf);
+  frontend(int argc, char* argv[]);
+
+  // General execution loop:
+  void run(void);
 
 private:
-  // Input method and command syntax definition (see base class):
+  // Data read from input:
+  std::wstring cmd, data;
+
+  // Get command from the source and parse it placing the command itself
+  // and accompanying data into the cmd and data fields respectively.
   void get_command(void);
+
+  // Perform a command placed in the cmd and data fields.
+  // Return false if execution should be finished.
   bool perform_command(void);
 
   // Additional parsers for inline parameters extraction:

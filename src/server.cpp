@@ -20,9 +20,6 @@
 
 #include <sysconfig.h>
 
-#include <iostream>
-#include <exception>
-
 #include "server.hpp"
 
 #include "iconv_codecvt.hpp"
@@ -40,39 +37,18 @@ bool server::debug = false;
 
 // Construct / destroy:
 
-server::server(const configuration& conf):
-  input_charset((conf.option_value.count(options::frontend::charset) &&
-                 !conf.option_value[options::frontend::charset].as<string>().empty()) ?
-                locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
-                locale("")),
-  speechmaster(conf),
-  soundmaster(conf)
+server::server(int argc, char* argv[]):
+  configuration(argc, argv),
+  sound_manager(dynamic_cast<configuration*>(this)),
+  polyglot(dynamic_cast<configuration*>(this)),
+  input_charset((option_value.count(options::frontend::charset) &&
+                 !option_value[options::frontend::charset].as<string>().empty()) ?
+                locale(locale(""), new iconv_codecvt(option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
+                locale(""))
 {
 }
 
 server::~server(void)
 {
-}
-
-
-// Public methods:
-
-void
-server::run(void)
-{
-  do
-    try
-      {
-        get_command();
-      }
-    catch (std::exception& failure)
-      {
-        cmd.erase();
-        data.erase();
-        log << failure.what() << endl;
-        if (verbose)
-          cerr << failure.what() << endl;
-      }
-  while (perform_command());
-  soundmaster.stop();
+  stop();
 }

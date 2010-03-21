@@ -23,12 +23,16 @@
 // dispatching and provides all necessary control means to maintain
 // and manage sound producing tasks queue as well as the ones
 // to execute such tasks immediately.
+// This class is aimed to be one of the server ancestors.
+// It should not be instanced multiple times.
 
-#ifndef SOUND_MANAGER_HPP
-#define SOUND_MANAGER_HPP
+#ifndef MULTISPEECH_SOUND_MANAGER_HPP
+#define MULTISPEECH_SOUND_MANAGER_HPP
 
 #include <memory>
 #include <queue>
+
+#include <portaudiocpp/PortAudioCpp.hxx>
 
 #include <boost/any.hpp>
 #include <boost/thread/thread.hpp>
@@ -40,13 +44,15 @@
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 
-class sound_manager
+class sound_manager:
+  private portaudio::AutoSystem
 {
-public:
+protected:
   // Constructing / destroying.
-  sound_manager(const configuration& conf);
+  sound_manager(const configuration* conf);
   ~sound_manager(void);
 
+public:
   // Submit a job to the queue. If some job is executing already
   // at the time of submission, this one will be added
   // to the running queue and so will be executed automatically

@@ -7,6 +7,9 @@ AC_CONFIG_SRCDIR([src/multispeech.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
                             AM_INIT_AUTOMAKE([foreign])
 
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
+
 AC_SUBST(VERSION)
 
 AC_REQUIRE_AUX_FILE([INSTALL])

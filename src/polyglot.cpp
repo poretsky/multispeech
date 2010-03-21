@@ -47,30 +47,30 @@ const vector<string> polyglot::langs = list_of
 
 // Construct the object:
 
-polyglot::polyglot(const configuration& conf):
+polyglot::polyglot(const configuration* conf):
   talker(langs.size()),
   lang(langs.size()),
   autolanguage(false)
 {
   bool initialized = false;
   for (unsigned int i = 0; i < langs.size(); i++)
-    if (conf.option_value.count(options::compose(langs[i], option_name::engine)))
+    if (conf->option_value.count(options::compose(langs[i], option_name::engine)))
       {
-        talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(),
+        talker[i].reset(speech_backend(conf->option_value[options::compose(langs[i], option_name::engine)].as<string>(),
                                        langs[i], conf));
         initialized = true;
       }
   if (!initialized)
     throw configuration::error("no speech backends are defined");
-  if (conf.option_value.count(options::speech::language))
-    language(conf.option_value[options::speech::language].as<string>());
+  if (conf->option_value.count(options::speech::language))
+    language(conf->option_value[options::speech::language].as<string>());
   else language(lang_id::autodetect);
   if (autolanguage)
     {
-      if (conf.option_value.count(options::speech::language) &&
-          (conf.option_value[options::speech::language].as<string>() != lang_id::autodetect))
+      if (conf->option_value.count(options::speech::language) &&
+          (conf->option_value[options::speech::language].as<string>() != lang_id::autodetect))
         throw configuration::error("unsupported language " +
-                                  conf.option_value[options::speech::language].as<string>());
+                                  conf->option_value[options::speech::language].as<string>());
       for (unsigned int i = 0; i < langs.size(); i++)
         {
           if ((lang < langs.size()) && talker[lang].get())
@@ -199,7 +199,7 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 speech_engine*
 polyglot::speech_backend(const string& name,
                          const string& lang,
-                         const configuration& conf)
+                         const configuration* conf)
 {
   if (speaker::freephone == name)
     return new freephone(conf);

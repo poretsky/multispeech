@@ -22,8 +22,8 @@
 // and provides general playing capability. It serves as a base
 // class to derive actual sound file o stream players.
 
-#ifndef SOUNDFILE_HPP
-#define SOUNDFILE_HPP
+#ifndef MULTISPEECH_SOUNDFILE_HPP
+#define MULTISPEECH_SOUNDFILE_HPP
 
 #include <sndfile.h>
 
@@ -45,11 +45,11 @@ public:
     none // unplayable
   };
 
+protected:
   // Construct / destroy:
   soundfile(const std::string& device_name);
   ~soundfile(void);
 
-protected:
   // Source file description data:
   SNDFILE* source;
 

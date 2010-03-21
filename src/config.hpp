@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef CONFIG_HPP
-#define CONFIG_HPP
+#ifndef MULTISPEECH_CONFIG_HPP
+#define MULTISPEECH_CONFIG_HPP
 
 #include <string>
 #include <stdexcept>
@@ -200,13 +200,16 @@ namespace options
                                    const std::string& option);
 };
 
-// Configuration parser and options value storage
+// This class is for deriving by the main server class.
+// It provides configuration parser and options value storage
+// and protects from duplicated server initialization.
 class configuration
 {
-public:
+protected:
   // The constructor reads and parses configuration by the way
   configuration(int argc, char* argv[]);
 
+public:
   // Options value container:
   boost::program_options::variables_map option_value;
 
@@ -224,6 +227,9 @@ private:
   // Read configuration file:
   void read(const boost::filesystem::path& config_file,
             const boost::program_options::options_description& conf);
+
+  // Duplication protector:
+  static bool initialized;
 
   // Configuration files:
   static const boost::filesystem::path global_conf, local_conf;

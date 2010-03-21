@@ -32,7 +32,7 @@ using namespace boost::filesystem;
 
 // Object construction:
 
-mbrola::mbrola(const configuration& conf,
+mbrola::mbrola(const configuration* conf,
                const string& backend,
                const string& voice_id,
                const string& lang,
@@ -41,15 +41,15 @@ mbrola::mbrola(const configuration& conf,
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf.option_value.count(options::compose(speaker::mbrola, option_name::executable)) &&
-      !conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
+  if (conf->option_value.count(options::compose(speaker::mbrola, option_name::executable)) &&
+      !conf->option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>());
+      string cmd(conf->option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>());
       cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e ";
-      if (conf.option_value.count(options::compose(speaker::mbrola, option_name::voices)))
+      if (conf->option_value.count(options::compose(speaker::mbrola, option_name::voices)))
         {
           path voice_file(complete(voice,
-                                   conf.option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
+                                   conf->option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
           if (exists(voice_file))
             cmd += voice_file.file_string();
           else throw configuration::error(voice_file.file_string() + " does not exist");

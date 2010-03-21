@@ -39,18 +39,18 @@ using namespace FBB;
 
 // Object construction:
 
-ru_tts::ru_tts(const configuration& conf):
+ru_tts::ru_tts(const configuration* conf):
   speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
-  if (conf.option_value.count(options::compose(name, option_name::executable)) &&
-      !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  if (conf->option_value.count(options::compose(name, option_name::executable)) &&
+      !conf->option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(name, option_name::executable)].as<string>());
+      string cmd(conf->option_value[options::compose(name, option_name::executable)].as<string>());
       cmd += " -r %rate -p %pitch";
-      if (conf.option_value.count(options::compose(name, option_name::lexicon)) &&
-          !conf.option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
+      if (conf->option_value.count(options::compose(name, option_name::lexicon)) &&
+          !conf->option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
         {
-          path lexicon(conf.option_value[options::compose(name, option_name::lexicon)].as<string>());
+          path lexicon(conf->option_value[options::compose(name, option_name::lexicon)].as<string>());
           if (exists(lexicon))
             cmd += " -s " + lexicon.file_string();
           else
@@ -60,9 +60,9 @@ ru_tts::ru_tts(const configuration& conf):
                 cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
             }
         }
-      if (conf.option_value.count(options::compose(name, option_name::log)) &&
-          !conf.option_value[options::compose(name, option_name::log)].as<string>().empty())
-        cmd += " -l " + conf.option_value[options::compose(name, option_name::log)].as<string>();
+      if (conf->option_value.count(options::compose(name, option_name::log)) &&
+          !conf->option_value[options::compose(name, option_name::log)].as<string>().empty())
+        cmd += " -l " + conf->option_value[options::compose(name, option_name::log)].as<string>();
       command(cmd);
     }
   else throw configuration::error("no path to " + name);

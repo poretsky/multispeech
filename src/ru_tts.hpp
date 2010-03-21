@@ -20,8 +20,8 @@
 
 // Russian speech backend.
 
-#ifndef RU_TTS_ENGINE_HPP
-#define RU_TTS_ENGINE_HPP
+#ifndef MULTISPEECH_RU_TTS_ENGINE_HPP
+#define MULTISPEECH_RU_TTS_ENGINE_HPP
 
 #include "speech_engine.hpp"
 
@@ -29,7 +29,7 @@ class ru_tts: public speech_engine
 {
 public:
   // Object construction:
-  ru_tts(const configuration& conf);
+  ru_tts(const configuration* conf);
 
 private:
   // Make up voice parameters for backend:

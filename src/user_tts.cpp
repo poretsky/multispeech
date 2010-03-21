@@ -28,16 +28,16 @@ using namespace boost;
 
 // Object construction:
 
-user_tts::user_tts(const configuration& conf, const string& lang):
+user_tts::user_tts(const configuration* conf, const string& lang):
   speech_engine(conf, speaker::user, "", lang, sound_format(conf),
-                conf.option_value[options::compose(speaker::user, option_name::sampling)].as<unsigned int>(),
-                conf.option_value[options::compose(speaker::user, option_name::stereo)].as<bool>() ? 2 : 1,
-                !conf.option_value[options::compose(speaker::user, option_name::freq_control)].as<bool>(),
-                conf.option_value[options::compose(speaker::user, option_name::charset)].as<string>())
+                conf->option_value[options::compose(speaker::user, option_name::sampling)].as<unsigned int>(),
+                conf->option_value[options::compose(speaker::user, option_name::stereo)].as<bool>() ? 2 : 1,
+                !conf->option_value[options::compose(speaker::user, option_name::freq_control)].as<bool>(),
+                conf->option_value[options::compose(speaker::user, option_name::charset)].as<string>())
 {
-  if (conf.option_value.count(options::compose(name, option_name::command)) &&
-      !conf.option_value[options::compose(name, option_name::command)].as<string>().empty())
-    command(conf.option_value[options::compose(name, option_name::command)].as<string>());
+  if (conf->option_value.count(options::compose(name, option_name::command)) &&
+      !conf->option_value[options::compose(name, option_name::command)].as<string>().empty())
+    command(conf->option_value[options::compose(name, option_name::command)].as<string>());
   else throw configuration::error("no command is specified for user defined backend");
 }
 
@@ -52,12 +52,12 @@ user_tts::voicify(double rate, double pitch)
 }
 
 soundfile::format
-user_tts::sound_format(const configuration& conf)
+user_tts::sound_format(const configuration* conf)
 {
   soundfile::format result = soundfile::autodetect;
-  if (conf.option_value.count(options::compose(speaker::user, option_name::format)))
+  if (conf->option_value.count(options::compose(speaker::user, option_name::format)))
     {
-      string fmt(conf.option_value[options::compose(speaker::user, option_name::format)].as<string>());
+      string fmt(conf->option_value[options::compose(speaker::user, option_name::format)].as<string>());
       if (!fmt.empty())
         {
           if ("s8" == fmt)

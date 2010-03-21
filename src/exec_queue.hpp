@@ -28,8 +28,8 @@
 // void abort(void) -- to stop currently executed task;
 // bool busy(void) -- to indicate execution state.
 
-#ifndef EXEC_QUEUE_HPP
-#define EXEC_QUEUE_HPP
+#ifndef MULTISPEECH_EXEC_QUEUE_HPP
+#define MULTISPEECH_EXEC_QUEUE_HPP
 
 #include <queue>
 
@@ -42,7 +42,7 @@
 template <typename task_description>
 class exec_queue: private std::queue<task_description>
 {
-public:
+protected:
   // construct / destroy:
   exec_queue(void):
     alive(true),
@@ -60,6 +60,7 @@ public:
     service.join();
   }
 
+public:
   // Run or queue a new task:
   void submit(const task_description& task)
   {

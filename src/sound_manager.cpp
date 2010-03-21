@@ -30,7 +30,7 @@ using namespace boost;
 
 // Constructing / destroying:
 
-sound_manager::sound_manager(const configuration& conf):
+sound_manager::sound_manager(const configuration* conf):
   state(idle),
   business(nothing),
   jobs(new jobs_queue),

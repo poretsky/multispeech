@@ -18,11 +18,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// Main purpose of the polyglot class is to provide general interface
-// to the multilingual speech synthesis functionality.
+// The main purpose of the polyglot class is to provide multilingual
+// speech synthesis functionality to the derived server class.
 
-#ifndef POLYGLOT_HPP
-#define POLYGLOT_HPP
+#ifndef MULTISPEECH_POLYGLOT_HPP
+#define MULTISPEECH_POLYGLOT_HPP
 
 #include <string>
 #include <vector>
@@ -35,10 +35,11 @@
 
 class polyglot
 {
-public:
+protected:
   // Construct the object:
-  polyglot(const configuration& conf);
+  polyglot(const configuration* conf);
 
+public:
   // Prepare speech task:
   speech_task text_task(const std::wstring& s,
                         bool use_translation = false);
@@ -69,7 +70,7 @@ private:
   // Construct speech backend by name:
   speech_engine* speech_backend(const std::string& name,
                                 const std::string& lang,
-                                const configuration& conf);
+                                const configuration* conf);
 
   // Multilingual speech engine:
   std::vector< boost::shared_ptr<speech_engine> > talker;

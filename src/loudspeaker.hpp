@@ -21,8 +21,8 @@
 // The loudspeaker class takes care about external TTS pipeline
 // execution and provides generated sound stream playing capability.
 
-#ifndef LOUDSPEAKER_HPP
-#define LOUDSPEAKER_HPP
+#ifndef MULTISPEECH_LOUDSPEAKER_HPP
+#define MULTISPEECH_LOUDSPEAKER_HPP
 
 #include <string>
 
@@ -82,7 +82,7 @@ class loudspeaker:
 {
 public:
   // Construct / destroy:
-  loudspeaker(const configuration& conf);
+  loudspeaker(const configuration* conf);
   ~loudspeaker(void);
 
   // Start task execution:

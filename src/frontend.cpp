@@ -22,6 +22,7 @@
 
 #include <string>
 #include <iostream>
+#include <exception>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -43,8 +44,8 @@ using namespace FBB;
 
 // Object construction:
 
-frontend::frontend(const configuration& conf):
-  server(conf),
+frontend::frontend(int argc, char* argv[]):
+  server(argc, argv),
   command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$"),
   validate_float(L"^\\d+(\\.\\d*)?$"),
   validate_integer(L"^\\d+$"),
@@ -53,10 +54,32 @@ frontend::frontend(const configuration& conf):
   tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)"),
   garbage(L"\\s*\\[\\*]\\s*")
 {
-  if (conf.option_value[options::frontend::native_voices].as<bool>())
+  if (option_value[options::frontend::native_voices].as<bool>())
     native_params.reset(new multispeech_voices);
-  if (conf.option_value[options::frontend::dtk_voices].as<bool>())
+  if (option_value[options::frontend::dtk_voices].as<bool>())
     dtk_params.reset(new dtk_voices);
+}
+
+
+// Server execution loop implementation:
+
+void
+frontend::run(void)
+{
+  do
+    try
+      {
+        get_command();
+      }
+    catch (std::exception& failure)
+      {
+        cmd.erase();
+        data.erase();
+        log << failure.what() << endl;
+        if (verbose)
+          cerr << failure.what() << endl;
+      }
+  while (perform_command());
 }
 
 
@@ -116,7 +139,7 @@ frontend::perform_command(void)
     return false;
 
   else if (L"d" == cmd)
-    soundmaster.proceed();
+    proceed();
 
   else if (L"q" == cmd)
     {
@@ -125,28 +148,28 @@ frontend::perform_command(void)
         {
           punctuations::mode preserve = punctuations::verbosity;
           set_punctuations_mode(voice_params->punctuations_mode);
-          soundmaster.enqueue(speechmaster.text_task(data,
-                                                     voice_params->volume,
-                                                     voice_params->rate,
-                                                     voice_params->pitch,
-                                                     voice_params->deviation));
+          enqueue(text_task(data,
+                            voice_params->volume,
+                            voice_params->rate,
+                            voice_params->pitch,
+                            voice_params->deviation));
           punctuations::verbosity = preserve;
         }
-      else soundmaster.enqueue(speechmaster.text_task(data));
+      else enqueue(text_task(data));
     }
 
   else if (L"l" == cmd)
-    soundmaster.execute(speechmaster.letter_task(regex_replace(data, garbage, L" ")));
+    execute(letter_task(regex_replace(data, garbage, L" ")));
 
   else if (L"a" == cmd)
-    soundmaster.enqueue(sound_task(extern_string(data, locale(""))));
+    enqueue(sound_task(extern_string(data, locale(""))));
 
   else if (L"p" == cmd)
-    soundmaster.execute(sound_task(extern_string(data, locale(""))));
+    execute(sound_task(extern_string(data, locale(""))));
 
   else if (L"tts_reset" == cmd)
     {
-      soundmaster.stop();
+      stop();
       speech_engine::voice_pitch();
       speech_engine::speech_rate();
       speech_engine::sampling_deviation();
@@ -160,21 +183,21 @@ frontend::perform_command(void)
 
   else if (L"tts_say" == cmd)
     {
-      soundmaster.stop();
+      stop();
       voice_params = extract_parameters();
       if (voice_params)
         {
           punctuations::mode preserve = punctuations::verbosity;
           set_punctuations_mode(voice_params->punctuations_mode);
-          soundmaster.execute(speechmaster.text_task(data,
-                                                     voice_params->volume,
-                                                     voice_params->rate,
-                                                     voice_params->pitch,
-                                                     voice_params->deviation,
-                                                     true));
+          execute(text_task(data,
+                            voice_params->volume,
+                            voice_params->rate,
+                            voice_params->pitch,
+                            voice_params->deviation,
+                            true));
           punctuations::verbosity = preserve;
         }
-      else soundmaster.execute(speechmaster.text_task(data, true));
+      else execute(text_task(data, true));
     }
 
   else if (L"tts_set_character_scale" == cmd)
@@ -209,13 +232,13 @@ frontend::perform_command(void)
     }
 
   else if (L"s" == cmd)
-    soundmaster.stop();
+    stop();
 
   else if (L"tts_pause" == cmd)
-    soundmaster.suspend();
+    suspend();
 
   else if (L"tts_resume" == cmd)
-    soundmaster.resume();
+    resume();
 
   else if (L"t" == cmd)
     {
@@ -228,7 +251,7 @@ frontend::perform_command(void)
           if (parse_result[2].matched)
             duration = lexical_cast<float>(wstring(parse_result[3].first, parse_result[3].second)) / 1000;
         }
-      soundmaster.enqueue(tone_task(frequency, duration));
+      enqueue(tone_task(frequency, duration));
     }
 
   else if (L"sh" == cmd)
@@ -236,32 +259,32 @@ frontend::perform_command(void)
       double duration = 0.05;
       if (regex_match(data, validate_float))
         duration = lexical_cast<double>(data) / 1000.0;
-      soundmaster.enqueue(speechmaster.silence(duration));
+      enqueue(silence(duration));
     }
 
   else if (L"set_lang" == cmd)
     {
       if (regex_match(data, parse_result, lang_parameters))
         {
-          speechmaster.language(extern_string(wstring(parse_result[1].first, parse_result[1].second), locale("")));
+          language(extern_string(wstring(parse_result[1].first, parse_result[1].second), locale("")));
           if (parse_result[2].matched &&
               (wstring(parse_result[3].first, parse_result[3].second) != L"nil"))
-            soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+            execute(text_task(intern_string(language(), locale("")), true));
         }
     }
 
   else if (L"set_next_lang" == cmd)
     {
-      speechmaster.lang_switch(true);
+      lang_switch(true);
       if (!data.empty() && (data != L"nil"))
-        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+        execute(text_task(intern_string(language(), locale("")), true));
     }
 
   else if (L"set_previous_lang" == cmd)
     {
-      speechmaster.lang_switch(false);
+      lang_switch(false);
       if (!data.empty() && (data != L"nil"))
-        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+        execute(text_task(intern_string(language(), locale("")), true));
     }
 
   else if (L"tts_sync_state" == cmd)
@@ -280,7 +303,7 @@ frontend::perform_command(void)
     }
 
   else if (L"version" == cmd)
-    soundmaster.execute(speechmaster.text_task(intern_string(PACKAGE_VERSION, locale(""))));
+    execute(text_task(intern_string(PACKAGE_VERSION, locale(""))));
 
   else if (debug)
     {

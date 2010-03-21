@@ -63,8 +63,8 @@
 // should take care of it;
 // charset -- backend native charset specification.
 
-#ifndef SPEECH_ENGINE_HPP
-#define SPEECH_ENGINE_HPP
+#ifndef MULTISPEECH_SPEECH_ENGINE_HPP
+#define MULTISPEECH_SPEECH_ENGINE_HPP
 
 #include <memory>
 #include <string>
@@ -79,9 +79,9 @@
 
 class speech_engine
 {
-public:
-  // Constructing and destroying:
-  speech_engine(const configuration& conf,
+protected:
+  // Object constructor:
+  speech_engine(const configuration* conf,
                 const std::string& backend,
                 const std::string& voice_id,
                 const std::string& lang,
@@ -90,6 +90,9 @@ public:
                 unsigned int channels,
                 bool deviate,
                 const std::string& charset = "");
+
+public:
+  // Destructor should be public to accommodate smart pointers:
   virtual ~speech_engine(void);
 
   // General attributes:

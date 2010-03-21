@@ -22,8 +22,8 @@
 // description and provides basic playing control means along with
 // pending tasks queue maintenance.
 
-#ifndef FILE_PLAYER_HPP
-#define FILE_PLAYER_HPP
+#ifndef MULTISPEECH_FILE_PLAYER_HPP
+#define MULTISPEECH_FILE_PLAYER_HPP
 
 #include <boost/filesystem.hpp>
 
@@ -54,7 +54,7 @@ class file_player:
 {
 public:
   // Construct / destroy:
-  file_player(const configuration& conf);
+  file_player(const configuration* conf);
   ~file_player(void);
 
   // Start task execution. If there is a task executing already

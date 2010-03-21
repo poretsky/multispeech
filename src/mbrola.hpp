@@ -21,16 +21,16 @@
 // The mbrola class is not a complete speech backend class,
 // but all Mbrola based backend classes should be derived from it.
 
-#ifndef MBROLA_ENGINE_HPP
-#define MBROLA_ENGINE_HPP
+#ifndef MULTISPEECH_MBROLA_ENGINE_HPP
+#define MULTISPEECH_MBROLA_ENGINE_HPP
 
 #include "speech_engine.hpp"
 
 class mbrola: public speech_engine
 {
-public:
+protected:
   // Constructing the object:
-  mbrola(const configuration& conf,
+  mbrola(const configuration* conf,
          const std::string& backend,
          const std::string& voice_id,
          const std::string& lang,

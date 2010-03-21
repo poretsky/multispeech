@@ -21,8 +21,8 @@
 // This backend is assumed to be multilingual. Language is specified
 // as the second constructor argument.
 
-#ifndef USER_TTS_HPP
-#define USER_TTS_HPP
+#ifndef MULTISPEECH_USER_TTS_HPP
+#define MULTISPEECH_USER_TTS_HPP
 
 #include <string>
 
@@ -32,14 +32,14 @@ class user_tts: public speech_engine
 {
 public:
   // Object construction:
-  user_tts(const configuration& conf, const std::string& lang);
+  user_tts(const configuration* conf, const std::string& lang);
 
 private:
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 
   // Extract sound format specification from the configuration:
-  static soundfile::format sound_format(const configuration& conf);
+  static soundfile::format sound_format(const configuration* conf);
 };
 
 #endif

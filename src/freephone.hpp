@@ -20,8 +20,8 @@
 
 // English speech backend. Uses Mbrola voice en1.
 
-#ifndef FREEPHONE_HPP
-#define FREEPHONE_HPP
+#ifndef MULTISPEECH_FREEPHONE_HPP
+#define MULTISPEECH_FREEPHONE_HPP
 
 #include "mbrola.hpp"
 
@@ -29,7 +29,7 @@ class freephone: public mbrola
 {
 public:
   // Object construction:
-  freephone(const configuration& conf);
+  freephone(const configuration* conf);
 };
 
 #endif
