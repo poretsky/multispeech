@@ -8,9 +8,9 @@ AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
 	@PORTAUDIOCPP_CPPFLAGS@ @SOUNDTOUCH_CXXFLAGS@
 AM_CXXFLAGS = -O2 -Wall -Wno-sign-compare
 AM_LDFLAGS = -pthread
-LDADD = @BOOST_LIBS@ @BOBCAT_LIBS@ @SNDFILE_LIBS@ \
+libmultispeech_la_LIBADD = @BOOST_LIBS@ @BOBCAT_LIBS@ @SNDFILE_LIBS@ \
 	@PORTAUDIOCPP_LIBS@ @SOUNDTOUCH_LIBS@ -lm
-multispeech_LDADD = libmultispeech.la $(LDADD)
+multispeech_LDADD = libmultispeech.la @BOOST_LIBS@ @BOBCAT_LIBS@ -lm
 
 libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	iconv_codecvt.cpp iconv_codecvt.hpp strcvt.cpp strcvt.hpp \
