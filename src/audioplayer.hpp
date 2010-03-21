@@ -49,7 +49,7 @@ class audioplayer: private portaudio::CallbackInterface
 {
 protected:
   // Construct / destroy:
-  audioplayer(const std::string& device_name);
+  explicit audioplayer(const std::string& device_name);
   virtual ~audioplayer(void);
 
 public:

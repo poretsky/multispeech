@@ -54,7 +54,7 @@ class file_player:
 {
 public:
   // Construct / destroy:
-  file_player(const configuration* conf);
+  explicit file_player(const configuration* conf);
   ~file_player(void);
 
   // Start task execution. If there is a task executing already

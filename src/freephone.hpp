@@ -29,7 +29,7 @@ class freephone: public mbrola
 {
 public:
   // Object construction:
-  freephone(const configuration* conf);
+  explicit freephone(const configuration* conf);
 };
 
 #endif

@@ -37,7 +37,7 @@ class polyglot
 {
 protected:
   // Construct the object:
-  polyglot(const configuration* conf);
+  explicit polyglot(const configuration* conf);
 
 public:
   // Prepare speech task:

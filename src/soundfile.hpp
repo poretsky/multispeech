@@ -47,7 +47,7 @@ public:
 
 protected:
   // Construct / destroy:
-  soundfile(const std::string& device_name);
+  explicit soundfile(const std::string& device_name);
   ~soundfile(void);
 
   // Source file description data:

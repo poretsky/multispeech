@@ -49,7 +49,7 @@ class sound_manager:
 {
 protected:
   // Constructing / destroying.
-  sound_manager(const configuration* conf);
+  explicit sound_manager(const configuration* conf);
   ~sound_manager(void);
 
 public:
@@ -118,7 +118,7 @@ private:
   {
   public:
     // Object constructor.
-    agent(sound_manager* job_holder);
+    explicit agent(sound_manager* job_holder);
 
     // The thread execution loop.
     void operator()(void);
