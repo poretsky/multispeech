@@ -17,44 +17,10 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <exception>
-#include <string>
-#include <iostream>
-
-#include <bobcat/syslogstream>
-
-#include "config.hpp"
-#include "server.hpp"
 #include "frontend.hpp"
 
-using namespace std;
-using namespace FBB;
-
-int main(int argc, char* argv[])
-try
+void multispeech_start(int argc, char* argv[])
 {
   frontend multispeech(argc, argv);
-
   multispeech.run();
-
-  return EXIT_SUCCESS;
 }
-catch (const string& info)
-  {
-    cout << info << endl;
-    return EXIT_SUCCESS;
-  }
-catch (const configuration::error& error)
-  {
-    server::log << SyslogStream::err << error.what() << endl;
-    if (server::verbose)
-      cerr << "Configuration error: " << error.what() << endl;
-    return EXIT_FAILURE;
-  }
-catch (const exception& error)
-  {
-    server::log << SyslogStream::err << error.what() << configuration::stage << endl;
-    if (server::verbose)
-      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
-    return EXIT_FAILURE;
-  }

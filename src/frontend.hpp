@@ -28,7 +28,7 @@
 #include "server.hpp"
 #include "inline_parser.hpp"
 
-class frontend: public server
+class frontend: private server
 {
 public:
   // Construct the object:
@@ -38,9 +38,6 @@ public:
   void run(void);
 
 private:
-  // Data read from input:
-  std::wstring cmd, data;
-
   // Get command from the source and parse it placing the command itself
   // and accompanying data into the cmd and data fields respectively.
   void get_command(void);
@@ -49,14 +46,17 @@ private:
   // Return false if execution should be finished.
   bool perform_command(void);
 
-  // Additional parsers for inline parameters extraction:
-  std::auto_ptr<inline_parser> native_params, dtk_params;
-
   // Extract embedded parameters:
   inline_parser* extract_parameters(void);
 
   // Set punctuations mode according to identifying character:
   void set_punctuations_mode(wchar_t mode);
+
+  // Data read from input:
+  std::wstring cmd, data;
+
+  // Additional parsers for inline parameters extraction:
+  std::auto_ptr<inline_parser> native_params, dtk_params;
 
   // Regular expressions for commands parsing:
   const boost::wregex command_separator, validate_float, validate_integer,

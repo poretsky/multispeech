@@ -29,7 +29,7 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	English.cpp English.hpp Russian.cpp Russian.hpp \
 	mbrola.cpp mbrola.hpp espeak.cpp espeak.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
-	user_tts.cpp user_tts.hpp
+	user_tts.cpp user_tts.hpp startup.cpp
 
 multispeech_SOURCES = multispeech.cpp frontend.cpp frontend.hpp \
 	inline_parser.cpp inline_parser.hpp \

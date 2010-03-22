@@ -18,10 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// The class server is designed as common ancestor for all speech server
-// interfaces. It comprises core functionality. Actual execution loop
-// must be defined in the derived classes by providing
-// actual implementation for pure virtual method run().
+// The server class comprises core multilingual speech server functionality.
 // See ancestors definition for details about available capabilities.
 //
 // Only one instance of this class is allowed for a program.
@@ -39,18 +36,14 @@
 #include "sound_manager.hpp"
 
 class server:
-  protected configuration,
-  protected sound_manager,
-  protected polyglot
+  public configuration,
+  public sound_manager,
+  public polyglot
 {
-protected:
+public:
   // Construct / destroy:
   server(int argc, char* argv[], const char* conf_file);
   virtual ~server(void);
-
-public:
-  // General execution loop:
-  virtual void run(void) = 0;
 
   // Logging stream:
   static FBB::SyslogStream log;
@@ -61,7 +54,6 @@ public:
   // Whether to log debug information.
   static bool debug;
 
-protected:
   // Input charset holder:
   const std::locale input_charset;
 };

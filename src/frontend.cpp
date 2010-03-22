@@ -61,7 +61,7 @@ frontend::frontend(int argc, char* argv[]):
 }
 
 
-// Server execution loop implementation:
+// Server execution loop:
 
 void
 frontend::run(void)
