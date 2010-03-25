@@ -27,6 +27,8 @@
 #include "polyglot.hpp"
 
 #include "server.hpp"
+#include "iconv_codecvt.hpp"
+#include "strcvt.hpp"
 #include "freephone.hpp"
 #include "ru_tts.hpp"
 #include "espeak.hpp"
@@ -50,7 +52,11 @@ const vector<string> polyglot::langs = list_of
 polyglot::polyglot(const configuration* conf):
   talker(langs.size()),
   lang(langs.size()),
-  autolanguage(false)
+  autolanguage(false),
+  input_charset((conf->option_value.count(options::frontend::charset) &&
+                 !conf->option_value[options::frontend::charset].as<string>().empty()) ?
+                locale(locale(""), new iconv_codecvt(conf->option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
+                locale(""))
 {
   bool initialized = false;
   for (unsigned int i = 0; i < langs.size(); i++)
@@ -86,36 +92,39 @@ polyglot::polyglot(const configuration* conf):
 // Public methods:
 
 speech_task
-polyglot::text_task(const wstring& s, bool use_translation)
+polyglot::text_task(const string& s, bool use_translation)
 {
+  intern_string t(s, input_charset);
   if (autolanguage)
-    detect_language(s, use_translation);
+    detect_language(t, use_translation);
   if (talker[lang].get())
-    return talker[lang]->text_task(s, use_translation);
+    return talker[lang]->text_task(t, use_translation);
   return speech_task();
 }
 
 speech_task
-polyglot::text_task(const wstring& s,
+polyglot::text_task(const string& s,
                 double volume, double rate,
                 double pitch, double deviation,
                 bool use_translation)
 {
+  intern_string t(s, input_charset);
   if (autolanguage)
-    detect_language(s, use_translation);
+    detect_language(t, use_translation);
   if (talker[lang].get())
-    return talker[lang]->text_task(s, volume, rate, pitch, deviation,
+    return talker[lang]->text_task(t, volume, rate, pitch, deviation,
                                    use_translation);
   return speech_task();
 }
 
 speech_task
-polyglot::letter_task(const wstring& s)
+polyglot::letter_task(const string& s)
 {
+  intern_string t(s, input_charset);
   if (autolanguage)
-    detect_language(s, true);
+    detect_language(t, true);
   if (talker[lang].get())
-    return talker[lang]->letter_task(s);
+    return talker[lang]->letter_task(t);
   return speech_task();
 }
 
@@ -178,6 +187,12 @@ polyglot::lang_switch(bool direction)
       autolanguage = false;
     }
   else autolanguage = true;
+}
+
+void
+polyglot::charset(const char* name)
+{
+  input_charset = locale(locale(""), new iconv_codecvt(name, NULL));
 }
 
 

@@ -22,8 +22,6 @@
 
 #include "server.hpp"
 
-#include "iconv_codecvt.hpp"
-
 using namespace std;
 using namespace boost;
 using namespace FBB;
@@ -37,18 +35,38 @@ bool server::debug = false;
 
 // Construct / destroy:
 
-server::server(int argc, char* argv[], const char* conf_file):
+server::server(int argc, char* argv[], const char* conf_file,
+               const char* eos_command):
   configuration(argc, argv, conf_file),
   sound_manager(dynamic_cast<configuration*>(this)),
   polyglot(dynamic_cast<configuration*>(this)),
-  input_charset((option_value.count(options::frontend::charset) &&
-                 !option_value[options::frontend::charset].as<string>().empty()) ?
-                locale(locale(""), new iconv_codecvt(option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
-                locale(""))
+  eos_cmd(eos_command)
 {
 }
 
 server::~server(void)
 {
-  stop();
+}
+
+
+// Session loop:
+
+void
+server::run_session(istream& source)
+{
+  while (perform(request(source)))
+    continue;
+}
+
+
+// Simple source reading method:
+
+string
+server::request(istream& source)
+{
+  string s;
+  getline(source, s);
+  if (source.eof() || source.fail())
+    s = eos_cmd;
+  return s;
 }

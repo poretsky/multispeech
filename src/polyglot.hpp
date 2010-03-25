@@ -26,6 +26,7 @@
 
 #include <string>
 #include <vector>
+#include <locale>
 
 #include <boost/regex.hpp>
 #include <boost/shared_ptr.hpp>
@@ -41,13 +42,13 @@ protected:
 
 public:
   // Prepare speech task:
-  speech_task text_task(const std::wstring& s,
+  speech_task text_task(const std::string& s,
                         bool use_translation = false);
-  speech_task text_task(const std::wstring& s,
+  speech_task text_task(const std::string& s,
                         double volume, double rate,
                         double pitch, double deviation,
                         bool use_translation = false);
-  speech_task letter_task(const std::wstring& s);
+  speech_task letter_task(const std::string& s);
 
   // Make up special task to produce silence for the time
   // duration specified in seconds:
@@ -62,6 +63,9 @@ public:
   // Switch language in specified direction:
   // true -- forward, false -- backward.
   void lang_switch(bool direction);
+
+  // Set up input charset by name:
+  void charset(const char* name);
 
 private:
   // Detect language from text content:
@@ -83,6 +87,9 @@ private:
 
   // Supported languages:
   static const std::vector<std::string> langs;
+
+  // Input charset holder:
+  std::locale input_charset;
 };
 
 #endif

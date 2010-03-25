@@ -33,15 +33,15 @@ using namespace boost;
 // Object construction:
 
 dtk_voices::dtk_voices(void):
-  inline_parser(L"^\\s*\\[\\s*:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
-  person_extractor(L"^\\s*\\[\\s*:n([phfdbuwrkv]).*]"),
-  pitch_range_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?pr\\s+(\\d+(\\.\\d*)?).*]"),
-  average_pitch_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?ap\\s+(\\d+(\\.\\d*)?).*]"),
-  head_size_extractor(L"^\\s*\\[.*:dv\\s(.*\\s)?hs\\s+(\\d+(\\.\\d*)?).*]"),
-  rate_extractor(L"^\\s*\\[.*:ra(te)?\\s+(\\d+(\\.\\d*)?).*]"),
-  volume_extractor(L"^\\s*\\[.*:volu(me)?\\s+set\\s+(\\d+(\\.\\d*)?).*]"),
-  mode_extractor(L"^\\s*\\[.*:pu(nct?)?\\s+(\\S).*]"),
-  save_cmd_detector(L"^\\s*\\[.*:dv\\s(.*\\s)?save(\\s.*)?]"),
+  inline_parser("^\\s*\\[\\s*:.*]", "\\[\\s*:np\\s*]", "\\[[^]]*]"),
+  person_extractor("^\\s*\\[\\s*:n([phfdbuwrkv]).*]"),
+  pitch_range_extractor("^\\s*\\[.*:dv\\s(.*\\s)?pr\\s+(\\d+(\\.\\d*)?).*]"),
+  average_pitch_extractor("^\\s*\\[.*:dv\\s(.*\\s)?ap\\s+(\\d+(\\.\\d*)?).*]"),
+  head_size_extractor("^\\s*\\[.*:dv\\s(.*\\s)?hs\\s+(\\d+(\\.\\d*)?).*]"),
+  rate_extractor("^\\s*\\[.*:ra(te)?\\s+(\\d+(\\.\\d*)?).*]"),
+  volume_extractor("^\\s*\\[.*:volu(me)?\\s+set\\s+(\\d+(\\.\\d*)?).*]"),
+  mode_extractor("^\\s*\\[.*:pu(nct?)?\\s+(\\S).*]"),
+  save_cmd_detector("^\\s*\\[.*:dv\\s(.*\\s)?save(\\s.*)?]"),
   val_pitch(1.0),
   val_deviation(1.0)
 {
@@ -51,50 +51,50 @@ dtk_voices::dtk_voices(void):
 // Actual parameters extraction methods:
 
 void
-dtk_voices::get_person(wstring& data)
+dtk_voices::get_person(string& data)
 {
-  wsmatch parse_result;
+  smatch parse_result;
   if (regex_search(data, parse_result, person_extractor) &&
       parse_result[1].matched)
     switch (parse_result[1].first[0])
       {
-      case L'p': // Paul
+      case 'p': // Paul
         pitch = 1.0;
         deviation = 1.0;
         break;
-      case L'h': // Harry
+      case 'h': // Harry
         pitch = 0.5;
         deviation = 1.0;
         break;
-      case L'd': // Dennis
+      case 'd': // Dennis
         pitch = 0.7;
         deviation = 0.875;
         break;
-      case L'f': // Frank
+      case 'f': // Frank
         pitch = 0.7;
         deviation = 0.75;
         break;
-      case L'b': // Betty
+      case 'b': // Betty
         pitch = 1.4;
         deviation = 1.0625;
         break;
-      case L'u': // Ursula
+      case 'u': // Ursula
         pitch = 1.3;
         deviation = 1.0;
         break;
-      case L'r': // Rita
+      case 'r': // Rita
         pitch = 1.4;
         deviation = 1.125;
         break;
-      case L'w': // Wendy
+      case 'w': // Wendy
         pitch = 1.5;
         deviation = 1.0625;
         break;
-      case L'k': // Kit
+      case 'k': // Kit
         pitch = 2.0;
         deviation = 1.25;
         break;
-      case L'v': // Val
+      case 'v': // Val
         pitch = val_pitch;
         deviation = val_deviation;
       default:
@@ -103,9 +103,9 @@ dtk_voices::get_person(wstring& data)
 }
 
 void
-dtk_voices::extract_parameters(wstring& data)
+dtk_voices::extract_parameters(string& data)
 {
-  wsmatch parse_result;
+  smatch parse_result;
   double pitch_range = get_value(data, pitch_range_extractor),
     average_pitch = get_value(data, average_pitch_extractor),
     head_size = get_value(data, head_size_extractor);
@@ -129,5 +129,5 @@ dtk_voices::extract_parameters(wstring& data)
   punctuations_mode = (regex_search(data, parse_result, mode_extractor) &&
                        parse_result[2].matched) ?
     parse_result[2].first[0] :
-    L' ';
+    ' ';
 }

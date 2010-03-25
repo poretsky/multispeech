@@ -17,10 +17,12 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <iostream>
+
 #include "frontend.hpp"
 
 void multispeech_start(int argc, char* argv[])
 {
   frontend multispeech(argc, argv);
-  multispeech.run();
+  multispeech.run_session(std::cin);
 }

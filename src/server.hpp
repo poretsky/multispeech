@@ -27,7 +27,8 @@
 #ifndef MULTISPEECH_SERVER_HPP
 #define MULTISPEECH_SERVER_HPP
 
-#include <locale>
+#include <string>
+#include <istream>
 
 #include <bobcat/syslogstream>
 
@@ -36,14 +37,20 @@
 #include "sound_manager.hpp"
 
 class server:
-  public configuration,
-  public sound_manager,
-  public polyglot
+  protected configuration,
+  protected sound_manager,
+  protected polyglot
 {
-public:
+protected:
   // Construct / destroy:
-  server(int argc, char* argv[], const char* conf_file);
+  server(int argc, char* argv[], const char* conf_file,
+         const char* eos_command);
   virtual ~server(void);
+
+public:
+  // Run session on specified input stream.
+  // The stream must be already opened.
+  void run_session(std::istream& source);
 
   // Logging stream:
   static FBB::SyslogStream log;
@@ -54,8 +61,19 @@ public:
   // Whether to log debug information.
   static bool debug;
 
-  // Input charset holder:
-  const std::locale input_charset;
+protected:
+  // Pseudo-command that should be generated when the source
+  // stream is exhausted.
+  const std::string eos_cmd;
+
+  // Generally, commands are retrieved as simple text lines,
+  // but derived classes can provide some more elaborate method
+  // if it is necessary.
+  virtual std::string request(std::istream& source);
+
+  // Actual command parser must be implemented in derived class.
+  // Return true to continue the session or false otherwise.
+  virtual bool perform(std::string command) = 0;
 };
 
 #endif

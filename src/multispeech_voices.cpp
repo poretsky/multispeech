@@ -33,12 +33,12 @@ using namespace boost;
 // Object construction:
 
 multispeech_voices::multispeech_voices(void):
-  inline_parser(L"^\\s*\\[_:.*]", L"\\[\\s*:np\\s*]", L"\\[[^]]*]"),
-  freq_extractor(L"^\\s*\\[_:(.*\\s)?fr:(\\d+).*]"),
-  pitch_extractor(L"^\\s*\\[_:(.*\\s)?pi:(\\d+(\\.\\d*)?).*]"),
-  rate_extractor(L"^\\s*\\[_:(.*\\s)?ra:(\\d+(\\.\\d*)?).*]"),
-  volume_extractor(L"^\\s*\\[_:(.*\\s)?vo:(\\d+(\\.\\d*)?).*]"),
-  mode_extractor(L"^\\s*\\[_:(.*\\s)?pu:(.+)]")
+  inline_parser("^\\s*\\[_:.*]", "\\[\\s*:np\\s*]", "\\[[^]]*]"),
+  freq_extractor("^\\s*\\[_:(.*\\s)?fr:(\\d+).*]"),
+  pitch_extractor("^\\s*\\[_:(.*\\s)?pi:(\\d+(\\.\\d*)?).*]"),
+  rate_extractor("^\\s*\\[_:(.*\\s)?ra:(\\d+(\\.\\d*)?).*]"),
+  volume_extractor("^\\s*\\[_:(.*\\s)?vo:(\\d+(\\.\\d*)?).*]"),
+  mode_extractor("^\\s*\\[_:(.*\\s)?pu:(.+)]")
 {
 }
 
@@ -46,9 +46,9 @@ multispeech_voices::multispeech_voices(void):
 // Actual parameters extractor:
 
 void
-multispeech_voices::extract_parameters(wstring& data)
+multispeech_voices::extract_parameters(string& data)
 {
-  wsmatch parse_result;
+  smatch parse_result;
   volume = get_value(data, volume_extractor);
   rate = get_value(data, rate_extractor) / rate_scale;
   pitch = get_value(data, pitch_extractor);
@@ -56,5 +56,5 @@ multispeech_voices::extract_parameters(wstring& data)
   punctuations_mode = (regex_search(data, parse_result, mode_extractor) &&
                        parse_result[2].matched) ?
     parse_result[2].first[0] :
-    L' ';
+    ' ';
 }

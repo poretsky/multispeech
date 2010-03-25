@@ -33,9 +33,9 @@ using namespace boost;
 
 // Object construction / destruction:
 
-inline_parser::inline_parser(const wstring& detector,
-                             const wstring& precleaner,
-                             const wstring& postcleaner):
+inline_parser::inline_parser(const string& detector,
+                             const string& precleaner,
+                             const string& postcleaner):
   params_detector(detector),
   trash(precleaner),
   garbage(postcleaner)
@@ -50,14 +50,14 @@ inline_parser::~inline_parser(void)
 // Public methods:
 
 bool
-inline_parser::parse(wstring& data)
+inline_parser::parse(string& data)
 {
   bool result = false;
   if (regex_search(data, params_detector, match_default | match_any))
     {
-      data = regex_replace(data, trash, L"");
+      data = regex_replace(data, trash, "");
       extract_parameters(data);
-      data = regex_replace(data, garbage, L"");
+      data = regex_replace(data, garbage, "");
       result = true;
     }
   return result;
@@ -67,12 +67,12 @@ inline_parser::parse(wstring& data)
 // Protected methods:
 
 double
-inline_parser::get_value(std::wstring& data, const boost::wregex& extractor)
+inline_parser::get_value(std::string& data, const boost::regex& extractor)
 {
-  wsmatch parse_result;
+  smatch parse_result;
   double result_value = -1.0;
   if (regex_search(data, parse_result, extractor) &&
       parse_result[2].matched)
-    result_value = lexical_cast<double>(wstring(parse_result[2].first, parse_result[2].second));
+    result_value = lexical_cast<double>(string(parse_result[2].first, parse_result[2].second));
   return result_value;
 }

@@ -32,9 +32,9 @@ class inline_parser
 {
 protected:
   // Object constructor:
-  inline_parser(const std::wstring& detector,
-                const std::wstring& precleaner,
-                const std::wstring& postcleaner);
+  inline_parser(const std::string& detector,
+                const std::string& precleaner,
+                const std::string& postcleaner);
 
 public:
   // Destructor is made public to accommodate smart pointers:
@@ -42,7 +42,7 @@ public:
 
   // Test given string for embedded voice parameters and extract them.
   // Return true if parameters were detected and extracted.
-  bool parse(std::wstring& data);
+  bool parse(std::string& data);
 
   // Extracted values:
   double volume, rate, pitch, deviation;
@@ -51,14 +51,14 @@ public:
 protected:
   // Value extraction helper to ease actual parser design
   // in derived classes:
-  double get_value(std::wstring& data, const boost::wregex& extractor);
+  double get_value(std::string& data, const boost::regex& extractor);
 
 private:
   // Patterns for parsing:
-  const boost::wregex params_detector, trash, garbage;
+  const boost::regex params_detector, trash, garbage;
 
   // Actual parameters extractor must be implemented in derived classes:
-  virtual void extract_parameters(std::wstring& data) = 0;
+  virtual void extract_parameters(std::string& data) = 0;
 };
 
 #endif

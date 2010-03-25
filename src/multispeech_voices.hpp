@@ -41,11 +41,11 @@ private:
   static const double ref_freq = 16000.0, rate_scale = 200.0;
 
   // Patterns for parameters extraction:
-  const boost::wregex freq_extractor, pitch_extractor, rate_extractor, volume_extractor,
+  const boost::regex freq_extractor, pitch_extractor, rate_extractor, volume_extractor,
     mode_extractor;
 
   // Actual parameters extraction method:
-  void extract_parameters(std::wstring& data);
+  void extract_parameters(std::string& data);
 };
 
 #endif

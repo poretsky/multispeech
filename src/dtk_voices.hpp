@@ -48,7 +48,7 @@ private:
   static const double rate_scale = 200.0, volume_scale = 50.0;
 
   // Patterns for parameters extraction:
-  const boost::wregex person_extractor, pitch_range_extractor,
+  const boost::regex person_extractor, pitch_range_extractor,
     average_pitch_extractor, head_size_extractor, rate_extractor,
     volume_extractor, mode_extractor, save_cmd_detector;
 
@@ -56,8 +56,8 @@ private:
   double val_pitch, val_deviation;
 
   // Actual parameters extraction methods:
-  void get_person(std::wstring& data);
-  void extract_parameters(std::wstring& data);
+  void get_person(std::string& data);
+  void extract_parameters(std::string& data);
 };
 
 #endif
