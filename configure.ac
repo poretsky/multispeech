@@ -3,7 +3,7 @@
 AC_PREREQ(2.61)
 
 AC_INIT([Multispeech], [2.4.5])
-AC_CONFIG_SRCDIR([src/multispeech.cpp])
+AC_CONFIG_SRCDIR([src/espeech/multispeech.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
                             AM_INIT_AUTOMAKE([foreign])
 
