@@ -4,8 +4,10 @@ ChangeLog
 config.log
 config.status
 configure
+libtool
 Makefile
 Makefile.in
 stamp-h1
 sysconfig.h
 sysconfig.h.in
+multispeech.conf
