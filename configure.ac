@@ -41,5 +41,5 @@ AM_PATH_BOBCAT
 AM_PATH_BOOST
 
 # Output results.
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/mscore/Makefile src/espeech/Makefile doc/Makefile])
 AC_OUTPUT
