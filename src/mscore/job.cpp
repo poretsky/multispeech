@@ -29,7 +29,7 @@ namespace multispeech
 using namespace boost;
 
 // General job counter initialization:
-unsigned long long job::count = 0;
+job::id_type job::count = 0;
 
 
 // Default constructor:

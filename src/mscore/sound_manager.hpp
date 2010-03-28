@@ -66,6 +66,14 @@ public:
   // By default running job is not affected by new insertions.
   void enqueue(const job& unit, bool dominate = false);
 
+  // Cancel job by it's id. It is absolutely no harm to specify
+  // non-existent id here. There will nothing be done in that case.
+  void cancel(job::id_type id);
+
+  // Jobs selection by urgency. All jobs with urgency attribute
+  // less than specified value will be deleted from the queue.
+  void select(int urgency);
+
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
   void execute(const sound_task& task);

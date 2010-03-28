@@ -34,6 +34,9 @@ namespace multispeech
 class job: public boost::any
 {
 public:
+  // Type used for job id:
+  typedef unsigned long long id_type;
+
   // Default constructor:
   job(void);
 
@@ -63,8 +66,8 @@ public:
 
 private:
   // Unit identification:
-  static unsigned long long count;
-  unsigned long long unit_id;
+  static id_type count;
+  id_type unit_id;
 };
 
 } // namespace multispeech

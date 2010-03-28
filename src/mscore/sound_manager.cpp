@@ -79,6 +79,36 @@ sound_manager::enqueue(const job&unit, bool dominate)
 }
 
 void
+sound_manager::cancel(job::id_type id)
+{
+  mutex::scoped_lock lock(access);
+  list<job>::iterator position;
+  for (position = jobs->begin(); position != jobs->end(); ++position)
+    if (position->id() == id)
+      break;
+  if (position != jobs->end())
+    {
+      if (position->active)
+        mute();
+      else jobs->erase(position);
+    }
+}
+
+void
+sound_manager::select(int urgency)
+{
+  mutex::scoped_lock lock(access);
+  list<job>::iterator position;
+  for (position = jobs->begin(); position != jobs->end(); ++position)
+    if (position->urgency < urgency)
+      {
+        if (position->active)
+          mute();
+        else position = --(jobs->erase(position));
+      }
+}
+
+void
 sound_manager::execute(const sound_task& task)
 {
   mutex::scoped_lock lock(access);
