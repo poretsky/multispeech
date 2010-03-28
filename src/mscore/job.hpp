@@ -56,7 +56,9 @@ public:
   // Id accessor:
   bool id(void) const;
 
-  // Priority ordering operator:
+  // Priority ordering operator. It is assumed that empty job
+  // always has greater priority than non-empty one.
+  // Otherwise urgency attribute comes into account.
   bool operator<(const job& other) const;
 
 private:

@@ -58,14 +58,24 @@ sound_manager::~sound_manager(void)
 // Public methods:
 
 void
-sound_manager::enqueue(const job&unit)
+sound_manager::enqueue(const job&unit, bool dominate)
 {
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
   for (position = jobs->begin(); position != jobs->end(); ++position)
     if ((*position) < unit)
       break;
-  jobs->insert(position, unit);
+  if ((position != jobs->end()) && (position->active))
+    {
+      if (dominate)
+        {
+          mute();
+          position->active = false;
+          position = jobs->insert(position, job());
+        }
+      ++position;
+    }
+  jobs->insert(position, unit)->active = false;
 }
 
 void
@@ -138,7 +148,10 @@ sound_manager::suspend(void)
   backup = jobs;
   jobs.reset(new jobs_queue);
   if ((state == running) && !backup->empty())
-    jobs->push_back(job());
+    {
+      backup->front().active = false;
+      jobs->push_front(job());
+    }
 }
 
 void
@@ -156,7 +169,7 @@ sound_manager::resume(void)
           event.notify_one();
           break;
         case running:
-          jobs->push_back(job());
+          jobs->push_front(job());
         default:
           break;
         }
@@ -172,7 +185,7 @@ sound_manager::stop(void)
   mute();
   jobs->clear();
   if (state == running)
-    jobs->push_back(job());
+    jobs->push_front(job());
 }
 
 unsigned int

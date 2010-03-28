@@ -55,11 +55,9 @@ job::id(void) const
 bool
 job::operator<(const job& other) const
 {
-  return (this->empty() && !other.empty()) ? true
-    : ((other.empty() && !this->empty()) ? false
-       : ((this->active && !other.active) ? false
-          : ((other.active && !this->active) ? true
-             : (this->urgency < other.urgency))));
+  return (this->empty() && !other.empty()) ? false
+    : ((other.empty() && !this->empty()) ? true
+       : (this->urgency < other.urgency));
 }
 
 } // namespace multispeech

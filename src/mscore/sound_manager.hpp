@@ -61,7 +61,10 @@ public:
   // this one will be added to the running queue and so will be
   // executed automatically when the time come.
   // Otherwise actual execution should be started explicitly.
-  void enqueue(const job& unit);
+  // When the dominate flag is specified and new job has enough
+  // priority, it can interrupt and postpone currently running one.
+  // By default running job is not affected by new insertions.
+  void enqueue(const job& unit, bool dominate = false);
 
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
