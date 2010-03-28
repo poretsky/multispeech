@@ -30,11 +30,10 @@
 #define MULTISPEECH_SOUND_MANAGER_HPP
 
 #include <memory>
-#include <queue>
+#include <list>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
-#include <boost/any.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
@@ -43,6 +42,7 @@
 #include "file_player.hpp"
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
+#include "job.hpp"
 
 namespace multispeech
 {
@@ -56,17 +56,12 @@ protected:
   ~sound_manager(void);
 
 public:
-  // Submit a job to the queue. If some job is executing already
-  // at the time of submission, this one will be added
-  // to the running queue and so will be executed automatically
-  // when the time will come. Otherwise actual execution
-  // should be started explicitly.
-  template <typename task_description>
-  void enqueue(const task_description& task)
-  {
-    boost::mutex::scoped_lock lock(access);
-    jobs->push(boost::any(task));
-  }
+  // Submit a job to the queue according to it's priority.
+  // If some job is executing already at the time of submission,
+  // this one will be added to the running queue and so will be
+  // executed automatically when the time come.
+  // Otherwise actual execution should be started explicitly.
+  void enqueue(const job& unit);
 
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
@@ -97,7 +92,7 @@ public:
 
 private:
   // Jobs queue container.
-  typedef std::queue<boost::any> jobs_queue;
+  typedef std::list<job> jobs_queue;
 
   // Thread states:
   enum status

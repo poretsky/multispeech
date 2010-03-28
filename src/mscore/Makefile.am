@@ -23,7 +23,7 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	sound_manager.cpp sound_manager.hpp \
 	pipeline.cpp pipeline.hpp server.cpp server.hpp \
 	speech_engine.cpp speech_engine.hpp \
-	polyglot.cpp polyglot.hpp \
+	job.cpp job.hpp polyglot.cpp polyglot.hpp \
 	English.cpp English.hpp Russian.cpp Russian.hpp \
 	mbrola.cpp mbrola.hpp espeak.cpp espeak.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \

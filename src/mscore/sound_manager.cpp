@@ -58,6 +58,17 @@ sound_manager::~sound_manager(void)
 // Public methods:
 
 void
+sound_manager::enqueue(const job&unit)
+{
+  mutex::scoped_lock lock(access);
+  list<job>::iterator position;
+  for (position = jobs->begin(); position != jobs->end(); ++position)
+    if ((*position) < unit)
+      break;
+  jobs->insert(position, unit);
+}
+
+void
 sound_manager::execute(const sound_task& task)
 {
   mutex::scoped_lock lock(access);
@@ -127,7 +138,7 @@ sound_manager::suspend(void)
   backup = jobs;
   jobs.reset(new jobs_queue);
   if ((state == running) && !backup->empty())
-    jobs->push(any());
+    jobs->push_back(job());
 }
 
 void
@@ -145,7 +156,7 @@ sound_manager::resume(void)
           event.notify_one();
           break;
         case running:
-          jobs->push(any());
+          jobs->push_back(job());
         default:
           break;
         }
@@ -159,17 +170,9 @@ sound_manager::stop(void)
 {
   mutex::scoped_lock lock(access);
   mute();
-  switch (state)
-    {
-    case running:
-      while (jobs->size() > 1)
-        jobs->pop();
-      break;
-    default:
-      while (!jobs->empty())
-        jobs->pop();
-      break;
-    }
+  jobs->clear();
+  if (state == running)
+    jobs->push_back(job());
 }
 
 unsigned int
@@ -220,6 +223,7 @@ sound_manager::next_job(void)
                 tones.stop();
               speech.stop();
             }
+          jobs->front().active = true;
           sounds.start(any_cast<sound_task>(jobs->front()),
                        !file_player::asynchronous || (business != playing));
           business = playing;
@@ -232,6 +236,7 @@ sound_manager::next_job(void)
                 sounds.stop();
               speech.stop();
             }
+          jobs->front().active = true;
           tones.start(any_cast<tone_task>(jobs->front()),
                       !tone_generator::asynchronous || (business != beeping));
           business = beeping;
@@ -243,6 +248,7 @@ sound_manager::next_job(void)
           if (!tone_generator::asynchronous)
             tones.stop();
           speech.stop();
+          jobs->front().active = true;
           speech.start(any_cast<speech_task>(jobs->front()));
           business = speaking;
         }
@@ -265,21 +271,21 @@ sound_manager::working(void)
         {
         case playing:
           if (file_player::asynchronous || !sounds.active())
-            jobs->pop();
+            jobs->pop_front();
           else result = true;
           break;
         case beeping:
           if (tone_generator::asynchronous || !tones.active())
-            jobs->pop();
+            jobs->pop_front();
           else result = true;
           break;
         case speaking:
           if (!speech.active())
-            jobs->pop();
+            jobs->pop_front();
           else result = true;
           break;
         default:
-          jobs->pop();
+          jobs->pop_front();
           break;
         }
       if (jobs->empty())

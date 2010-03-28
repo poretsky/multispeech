@@ -158,14 +158,14 @@ frontend::do_enqueue_speech(void)
     {
       punctuations::mode preserve = punctuations::verbosity;
       set_punctuations_mode(voice_params->punctuations_mode);
-      enqueue(text_task(text,
-                        voice_params->volume,
-                        voice_params->rate,
-                        voice_params->pitch,
-                        voice_params->deviation));
+      enqueue(job(text_task(text,
+                            voice_params->volume,
+                            voice_params->rate,
+                            voice_params->pitch,
+                            voice_params->deviation)));
       punctuations::verbosity = preserve;
     }
-  else enqueue(text_task(text));
+  else enqueue(job(text_task(text)));
   return true;
 }
 
@@ -180,7 +180,7 @@ frontend::do_say_letter(void)
 bool
 frontend::do_enqueue_sound(void)
 {
-  enqueue(sound_task(beyond()));
+  enqueue(job(sound_task(beyond())));
   return true;
 }
 
@@ -308,7 +308,7 @@ frontend::do_enqueue_tone(void)
       if (parse_result[2].matched)
         duration = lexical_cast<float>(string(parse_result[3].first, parse_result[3].second)) / 1000;
     }
-  enqueue(tone_task(frequency, duration));
+  enqueue(job(tone_task(frequency, duration)));
   return true;
 }
 
@@ -319,7 +319,7 @@ frontend::do_enqueue_silence(void)
   double duration = 0.05;
   if (regex_match(value, validate_float))
     duration = lexical_cast<double>(value) / 1000.0;
-  enqueue(silence(duration));
+  enqueue(job(silence(duration)));
   return true;
 }
 
