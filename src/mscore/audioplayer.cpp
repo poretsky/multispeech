@@ -123,7 +123,7 @@ audioplayer::find_device(const string& device_name)
 {
   System& system = System::instance();
   System::DeviceIterator found;
-  for (found = system.devicesBegin(); found != system.devicesEnd(); found++)
+  for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
     if (found->name() == device_name)
       break;
   if (found == system.devicesEnd())
