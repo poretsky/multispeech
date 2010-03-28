@@ -108,6 +108,19 @@ sound_manager::select(int urgency)
       }
 }
 
+job::state
+sound_manager::query(job::id_type id)
+{
+  mutex::scoped_lock lock(access);
+  list<job>::iterator position;
+  for (position = jobs->begin(); position != jobs->end(); ++position)
+    if (position->id() == id)
+      break;
+  return (position != jobs->end()) ?
+    (position->active ? job::progressing : job::waiting)
+    : job::unknown;
+}
+
 void
 sound_manager::execute(const sound_task& task)
 {

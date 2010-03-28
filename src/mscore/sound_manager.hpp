@@ -74,6 +74,9 @@ public:
   // less than specified value will be deleted from the queue.
   void select(int urgency);
 
+  // Return current job state for specified id.
+  job::state query(job::id_type id);
+
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
   void execute(const sound_task& task);
