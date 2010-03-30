@@ -41,6 +41,7 @@ notification::notification(sound_manager* master, unsigned int mode):
   access(master->access),
   service(agent(this))
 {
+  mutex::scoped_lock lock(access);
   link = this;
 }
 
