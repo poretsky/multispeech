@@ -210,12 +210,8 @@ class configuration
 {
 protected:
   // The constructor reads and parses configuration by the way.
-  // The first two argument are usually transferred from the main()
-  // and the last argument specifies additional configuration file
-  // that supersedes the default one. This file is searched
-  // in the user home directory if it's name starts from "."
-  // or in the system configuration directory otherwise.
-  configuration(int argc, char* argv[], const char* conf_file);
+  // it's argument are usually transferred from the main().
+  configuration(int argc, char* argv[]);
 
 public:
   // Options value container:
@@ -235,9 +231,6 @@ private:
   // Read configuration file:
   void read(const boost::filesystem::path& config_file,
             const boost::program_options::options_description& conf);
-
-  // Configuration files:
-  const boost::filesystem::path global_conf, local_conf;
 
   // Duplication protector:
   static bool initialized;

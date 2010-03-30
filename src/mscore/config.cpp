@@ -234,10 +234,11 @@ namespace options
 
 string configuration::stage;
 
-configuration::configuration(int argc, char* argv[], const char* conf_file):
-  global_conf(complete("multispeech.conf", SYSCONF_DIR)),
-  local_conf(complete(conf_file, (conf_file[0] == '.') ? getenv("HOME") : SYSCONF_DIR))
+configuration::configuration(int argc, char* argv[])
 {
+  path global_conf(complete(string(PACKAGE) + ".conf", SYSCONF_DIR));
+  path alternate_conf(complete(path(argv[0]).leaf() + ".conf", SYSCONF_DIR));
+  path local_conf(complete("." + string(PACKAGE) + "rc", getenv("HOME")));
   options_description conf, cl_desc("Available options");
   variables_map cl_opt;
   bool noconf = true;
@@ -370,6 +371,11 @@ configuration::configuration(int argc, char* argv[], const char* conf_file):
   if (exists(local_conf))
     {
       read(local_conf, conf);
+      noconf = false;
+    }
+  if (exists(alternate_conf))
+    {
+      read(alternate_conf, conf);
       noconf = false;
     }
   if (exists(global_conf))

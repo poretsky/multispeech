@@ -39,12 +39,11 @@ bool server::debug = false;
 
 // Construct / destroy:
 
-server::server(int argc, char* argv[], const char* conf_file,
-               const char* eos_command):
-  configuration(argc, argv, conf_file),
+server::server(int argc, char* argv[], const char* session_break_command):
+  configuration(argc, argv),
   sound_manager(dynamic_cast<configuration*>(this)),
   polyglot(dynamic_cast<configuration*>(this)),
-  eos_cmd(eos_command)
+  eos_cmd(session_break_command)
 {
 }
 

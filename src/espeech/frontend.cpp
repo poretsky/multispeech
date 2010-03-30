@@ -76,7 +76,7 @@ frontend::Entry frontend::command_table[] =
 // Object construction:
 
 frontend::frontend(int argc, char* argv[]):
-  server(argc, argv, ".multispeechrc", "exit"),
+  server(argc, argv, "exit"),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
