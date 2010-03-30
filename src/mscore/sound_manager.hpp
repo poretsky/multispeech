@@ -43,6 +43,7 @@
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 #include "job.hpp"
+#include "notification.hpp"
 
 namespace multispeech
 {
@@ -50,6 +51,15 @@ namespace multispeech
 class sound_manager:
   private portaudio::AutoSystem
 {
+public:
+  // Job states in the queue.
+  enum job_state
+  {
+    unknown,
+    waiting,
+    progressing
+  };
+
 protected:
   // Constructing / destroying.
   explicit sound_manager(const configuration* conf);
@@ -75,7 +85,7 @@ public:
   void select(int urgency);
 
   // Return current job state for specified id.
-  job::state query(job::id_type id);
+  job_state query(job::id_type id);
 
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
@@ -141,6 +151,7 @@ private:
   };
 
   friend class agent;
+  friend class notification;
 
   // Child thread state.
   status state;
@@ -156,6 +167,9 @@ private:
   tone_generator tones;
   loudspeaker speech;
 
+  // Notification service pointer.
+  notification* feedback;
+
   // Critical data access control means.
   boost::mutex access;
   boost::condition event;
@@ -164,6 +178,7 @@ private:
   boost::thread service;
 
   // Internal routines:
+  void notify(notification::job_event status, job::id_type id, unsigned int owner);
   void mute(void); // Mute all playing sounds if any.
   void die(void); // Make thread to break execution loop.
   void next_job(void); // Get and start the next job from the queue.

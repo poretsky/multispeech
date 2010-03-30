@@ -40,8 +40,8 @@ namespace multispeech
 
 class server:
   protected configuration,
-  protected sound_manager,
-  protected polyglot
+  public sound_manager,
+  public polyglot
 {
 protected:
   // Construct / destroy:

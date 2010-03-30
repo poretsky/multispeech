@@ -37,14 +37,6 @@ public:
   // Type used for job id:
   typedef unsigned long long id_type;
 
-  // Job states in the queue:
-  enum state
-  {
-    unknown,
-    waiting,
-    progressing
-  };
-
   // Default constructor:
   job(void);
 
