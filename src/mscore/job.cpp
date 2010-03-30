@@ -46,7 +46,7 @@ job::job(void):
 
 // Public methods:
 
-bool
+job::id_type
 job::id(void) const
 {
   return unit_id;

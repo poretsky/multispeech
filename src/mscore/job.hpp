@@ -57,7 +57,7 @@ public:
   int urgency;
 
   // Id accessor:
-  bool id(void) const;
+  id_type id(void) const;
 
   // Priority ordering operator. It is assumed that empty job
   // always has greater priority than non-empty one.
