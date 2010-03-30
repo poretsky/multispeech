@@ -19,9 +19,11 @@
 */
 
 // Class notification represents general framework for sound_manager
-// notification service. Derived class must provide actual implementation
-// for pure virtual method consume() that will be called for each
-// event of interest coming from the sound_manager.
+// notification service. Being constructed, it connects to the supplied
+// instance of sound_manager and runs separate thread of execution
+// to take care about notifications queue. Derived class must provide
+// actual implementation for pure virtual method consume() that will
+// be called for each event of interest coming from the sound_manager.
 
 #ifndef MULTISPEECH_NOTIFICATION_HPP
 #define MULTISPEECH_NOTIFICATION_HPP
