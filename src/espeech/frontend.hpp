@@ -28,11 +28,13 @@
 #include <bobcat/cmdfinder>
 
 #include <server.hpp>
+#include <session.hpp>
 
 #include "inline_parser.hpp"
 
 class frontend:
-  public multispeech::server,
+  private multispeech::server,
+  public multispeech::session,
   private FBB::CmdFinder<bool (frontend::*)(void)>
 {
 public:

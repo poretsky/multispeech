@@ -1,4 +1,4 @@
-// server.cpp -- General speech server functionality implementation
+// session.cpp -- General Multispeech session framework implementation
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -20,29 +20,44 @@
 
 #include <sysconfig.h>
 
-#include "server.hpp"
+#include "session.hpp"
 
 
 namespace multispeech
 {
 
 using namespace std;
-using namespace FBB;
-
-
-// Open logging stream:
-SyslogStream server::log(PACKAGE_NAME, NOTICE, USER, LOG_PID);
-bool server::verbose = false;
-bool server::debug = false;
 
 
 // Object constructor:
 
-server::server(int argc, char* argv[]):
-  configuration(argc, argv),
-  sound_manager(dynamic_cast<configuration*>(this)),
-  polyglot(dynamic_cast<configuration*>(this))
+session::session(istream& client, const char* break_command):
+  eos_cmd(break_command),
+  input(client)
 {
+}
+
+
+// Session loop:
+
+void
+session::operator()(void)
+{
+  while (perform(request(input)))
+    continue;
+}
+
+
+// Simple source reading method:
+
+string
+session::request(istream& source)
+{
+  string s;
+  getline(source, s);
+  if (source.eof() || source.fail())
+    s = eos_cmd;
+  return s;
 }
 
 } // namespace multispeech

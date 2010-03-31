@@ -76,7 +76,8 @@ frontend::Entry frontend::command_table[] =
 // Object construction:
 
 frontend::frontend(int argc, char* argv[]):
-  server(argc, argv, "exit"),
+  server(argc, argv),
+  session(cin, "exit"),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
@@ -104,7 +105,11 @@ frontend::request(istream& source)
   while (s.empty() || disbalance)
     {
       unsigned int position = s.length();
-      s += server::request(source);
+      string line;
+      getline(source, line);
+      if (source.eof() || source.fail())
+        return eos_cmd;
+      else s += line;
       for (unsigned int i = position; i < s.length(); i++)
         switch (s[i])
           {
@@ -159,10 +164,10 @@ frontend::do_enqueue_speech(void)
       punctuations::mode preserve = punctuations::verbosity;
       set_punctuations_mode(voice_params->punctuations_mode);
       enqueue(job(text_task(text,
-                            voice_params->volume,
-                            voice_params->rate,
-                            voice_params->pitch,
-                            voice_params->deviation)));
+                                          voice_params->volume,
+                                          voice_params->rate,
+                                          voice_params->pitch,
+                                          voice_params->deviation)));
       punctuations::verbosity = preserve;
     }
   else enqueue(job(text_task(text)));
@@ -217,11 +222,11 @@ frontend::do_say_message(void)
       punctuations::mode preserve = punctuations::verbosity;
       set_punctuations_mode(voice_params->punctuations_mode);
       execute(text_task(msg,
-                        voice_params->volume,
-                        voice_params->rate,
-                        voice_params->pitch,
-                        voice_params->deviation,
-                        true));
+                                      voice_params->volume,
+                                      voice_params->rate,
+                                      voice_params->pitch,
+                                      voice_params->deviation,
+                                      true));
       punctuations::verbosity = preserve;
     }
   else execute(text_task(msg, true));

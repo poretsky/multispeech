@@ -19,12 +19,10 @@
 
 #include <sysconfig.h>
 
-#include <iostream>
-
 #include "frontend.hpp"
 
 void multispeech_start(int argc, char* argv[])
 {
   frontend multispeech(argc, argv);
-  multispeech.run_session(std::cin);
+  multispeech();
 }
