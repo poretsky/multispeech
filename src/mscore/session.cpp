@@ -31,9 +31,8 @@ using namespace std;
 
 // Object constructor:
 
-session::session(istream& client, const char* break_command):
-  eos_cmd(break_command),
-  input(client)
+session::session(istream& client):
+  source(client)
 {
 }
 
@@ -43,21 +42,19 @@ session::session(istream& client, const char* break_command):
 void
 session::operator()(void)
 {
-  while (perform(request(input)))
+  string request;
+  while(input(request) && perform(request))
     continue;
 }
 
 
 // Simple source reading method:
 
-string
-session::request(istream& source)
+bool
+session::input(string& request)
 {
-  string s;
-  getline(source, s);
-  if (source.eof() || source.fail())
-    s = eos_cmd;
-  return s;
+  getline(source, request);
+  return !(source.eof() || source.fail());
 }
 
 } // namespace multispeech

@@ -34,19 +34,16 @@
 
 class frontend:
   private multispeech::server,
-  public multispeech::session,
-  private FBB::CmdFinder<bool (frontend::*)(void)>
+  private FBB::CmdFinder<bool (frontend::*)(void)>,
+  public multispeech::session
 {
 public:
   // Construct the object:
   frontend(int argc, char* argv[]);
 
 private:
-  // Get command from the source.
-  std::string request(std::istream& source);
-
-  // Perform a command.
-  bool perform(std::string command);
+  // Perform a client request.
+  bool perform(std::string& request);
 
   // Recognized command performers:
   bool do_exit(void);
@@ -82,6 +79,12 @@ private:
 
   // Recognized commands table:
   static Entry command_table[];
+
+  // Multiline request accumulator.
+  std::string accumulator;
+
+  // Braces disbalance used for multiline requests completeness detection.
+  int disbalance;
 
   // Additional parsers for inline parameters extraction:
   std::auto_ptr<inline_parser> native_params, dtk_params;

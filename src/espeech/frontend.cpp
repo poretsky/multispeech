@@ -77,10 +77,11 @@ frontend::Entry frontend::command_table[] =
 
 frontend::frontend(int argc, char* argv[]):
   server(argc, argv),
-  session(cin, "exit"),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
+  session(cin),
+  disbalance(0),
   validate_float("^\\d+(\\.\\d*)?$"),
   validate_integer("^\\d+$"),
   beep_parameters("^(\\d+)?(\\s+(\\d+))?$"),
@@ -95,50 +96,37 @@ frontend::frontend(int argc, char* argv[]):
 }
 
 
-// Input method:
-
-string
-frontend::request(istream& source)
-{
-  string s;
-  int disbalance = 0;
-  while (s.empty() || disbalance)
-    {
-      unsigned int position = s.length();
-      string line;
-      getline(source, line);
-      if (source.eof() || source.fail())
-        return eos_cmd;
-      else s += line;
-      for (unsigned int i = position; i < s.length(); i++)
-        switch (s[i])
-          {
-          case '{':
-            disbalance++;
-            s[i] = ' ';
-            break;
-          case '}':
-            disbalance--;
-            s[i] = ' ';
-          default:
-            break;
-          }
-      if (disbalance)
-        s += ' ';
-    }
-  return s;
-}
-
-
 // Command set and syntax implementation:
 
 bool
-frontend::perform(string command)
+frontend::perform(string& request)
 {
-  FunctionPtr done = findCmd(command);
-  if (cmd().empty())
-    return true;
-  return (this->*done)();
+  bool result = true;
+  if (!disbalance)
+    accumulator.erase();
+  else accumulator += ' ';
+  for (unsigned int i = 0; i < request.length(); i++)
+    switch (request[i])
+      {
+      case '{':
+        disbalance++;
+        accumulator += ' ';
+        break;
+      case '}':
+        disbalance--;
+        accumulator += ' ';
+        break;
+      default:
+        accumulator += request[i];
+        break;
+      }
+  if (!disbalance)
+    {
+      FunctionPtr done = findCmd(accumulator);
+      if (!cmd().empty())
+        result = (this->*done)();
+    }
+  return result;
 }
 
 bool
