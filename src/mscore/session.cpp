@@ -40,7 +40,7 @@ session::session(istream& client):
 // Session loop:
 
 void
-session::operator()(void)
+session::run(void)
 {
   string request;
   while(input(request) && perform(request))

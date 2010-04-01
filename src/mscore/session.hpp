@@ -42,7 +42,7 @@ protected:
 
 public:
   // Run the session loop:
-  void operator()(void);
+  void run(void);
 
 private:
   // Input source:

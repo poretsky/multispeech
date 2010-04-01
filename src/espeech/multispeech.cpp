@@ -24,5 +24,5 @@
 void multispeech_start(int argc, char* argv[])
 {
   frontend multispeech(argc, argv);
-  multispeech();
+  multispeech.run();
 }
