@@ -48,10 +48,6 @@ private:
   // Input source:
   std::istream& source;
 
-  // Get a request string from client. Return true if success
-  // or false if input source is exhausted.
-  bool input(std::string& request);
-
   // Actual command parser must be implemented in derived class.
   // Return true to continue the session or false otherwise.
   virtual bool perform(std::string& request) = 0;

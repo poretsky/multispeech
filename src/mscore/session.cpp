@@ -43,18 +43,8 @@ void
 session::run(void)
 {
   string request;
-  while(input(request) && perform(request))
+  while (!getline(source, request).fail() && perform(request))
     continue;
-}
-
-
-// Simple source reading method:
-
-bool
-session::input(string& request)
-{
-  getline(source, request);
-  return !(source.eof() || source.fail());
 }
 
 } // namespace multispeech
