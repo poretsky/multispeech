@@ -27,20 +27,20 @@
 
 #include "connection.hpp"
 #include "message.hpp"
-#include "server.hpp"
+#include "proxy.hpp"
 
 namespace SSIP
 {
 
 class session:
   private FBB::CmdFinder<bool (session::*)(void)>,
-  private SSIP::connection,
+  private connection,
   private multispeech::session,
-  public SSIP::message
+  public message
 {
 public:
   // Object constructor:
-  session(class SSIP::server* origin, int socket_fd);
+  session(proxy* origin, int socket_fd);
 
   // Session loop execution functor:
   void operator()(void);
@@ -54,7 +54,7 @@ private:
   bool perform(std::string& request);
 
   // Host server reference:
-  class SSIP::server& host;
+  proxy& host;
 
   // Unique session id:
   unsigned long id;

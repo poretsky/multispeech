@@ -25,31 +25,24 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
 #include <bobcat/serversocket>
 #include <bobcat/fork>
 
-#include <mscore/server.hpp>
+#include "proxy.hpp"
 
 namespace SSIP
 {
 
-// Forward declarations:
-class session;
-
 class server:
-  public multispeech::server,
-  public FBB::Fork,
-  private FBB::ServerSocket
+  private proxy,
+  private FBB::ServerSocket,
+  public FBB::Fork
 {
 public:
   // Main constructor:
   server(int argc, char* argv[]);
-
-  friend class session;
-
 private:
   // Container for running thread handler:
   typedef boost::shared_ptr<boost::thread> process;
@@ -63,18 +56,15 @@ private:
   // Incoming session thread:
   process competitor;
 
-  // Synchronization means:
-  boost::mutex server_access;
+  // Session initiation complete:
   boost::condition session_started;
-
-  // Session uses this method to register itself on the server.
-  void hello(unsigned long id, session* client);
-
-  // Session uses this method to indicate it's termination.
-  void bye(unsigned long id);
 
   // Initiate a new session for specified socket:
   void connect(int fd);
+
+  // Methods required by proxy:
+  void hello(unsigned long id, session* client);
+  void bye(unsigned long id);
 
   // Methods required by Fork:
   void parentProcess(void);

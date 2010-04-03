@@ -37,7 +37,7 @@ using namespace FBB;
 // Object construction:
 
 server::server(int argc, char* argv[]):
-  multispeech::server(argc, argv),
+  proxy(argc, argv),
   ServerSocket(option_value[multispeech::options::ssip::port].as<unsigned int>())
 {
   charset("UTF-8");
@@ -50,7 +50,7 @@ server::server(int argc, char* argv[]):
 void
 server::hello(unsigned long id, session* client)
 {
-  mutex::scoped_lock lock(server_access);
+  mutex::scoped_lock lock(proxy::access);
   clients[id] = client;
   threads[id] = competitor;
   session_started.notify_one();
@@ -59,7 +59,7 @@ server::hello(unsigned long id, session* client)
 void
 server::bye(unsigned long id)
 {
-  mutex::scoped_lock lock(server_access);
+  mutex::scoped_lock lock(proxy::access);
   clients.erase(id);
   threads.erase(id);
 }
@@ -67,7 +67,7 @@ server::bye(unsigned long id)
 void
 server::connect(int fd)
 {
-  mutex::scoped_lock lock(server_access);
+  mutex::scoped_lock lock(proxy::access);
   competitor.reset(new thread(session(this, fd)));
   while (competitor.unique())
     session_started.wait(lock);

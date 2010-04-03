@@ -11,4 +11,4 @@ multispeechd_LDADD = $(top_srcdir)/src/mscore/libmultispeech.la @BOOST_LIBS@ @BO
 
 multispeechd_SOURCES = multispeechd.cpp server.cpp server.hpp \
 	session.cpp session.hpp message.cpp message.hpp \
-	connection.cpp connection.hpp
+	connection.cpp connection.hpp proxy.hpp

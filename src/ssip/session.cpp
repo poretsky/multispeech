@@ -43,7 +43,7 @@ unsigned long session::count = 0;
 
 // Object construction:
 
-session::session(server* origin, int socket_fd):
+session::session(proxy* origin, int socket_fd):
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE),

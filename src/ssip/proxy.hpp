@@ -1,0 +1,63 @@
+// proxy.hpp -- Server interface for sessions
+/*
+   Copyright (C) 2010 Igor B. Poretsky <poretsky@mlbox.ru>
+   This file is part of Multispeech.
+
+   Multispeech is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   Multispeech is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Multispeech; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+*/
+
+// The main purpose of this class is to define clearly the subset
+// of server functionality available in sessions and to provide
+// common synchronization means for concurrent access to the server
+// resources. The server class should be derived from it privately
+// to effectively hide this subset from external access.
+//
+// All server operations except of hello() and bye() are not assumed
+// to be thread safe, so sessions must lock server access itself
+// whenever it is appropriate.
+
+#ifndef MULTISPEECH_SSIP_PROXY_HPP
+#define MULTISPEECH_SSIP_PROXY_HPP
+
+#include <boost/thread/mutex.hpp>
+
+#include <mscore/server.hpp>
+
+namespace SSIP
+{
+
+class proxy: public multispeech::server
+{
+protected:
+  // Main constructor:
+  proxy(int argc, char* argv[]):
+    multispeech::server(argc, argv)
+  {
+  }
+
+public:
+  // Shared access synchronization means:
+  boost::mutex access;
+
+  // Register new session when starting up:
+  virtual void hello(unsigned long id, class session* client) = 0;
+
+  // Clean up terminated session when finishing:
+  virtual void bye(unsigned long id) = 0;
+};
+
+} // namespace SSIP
+
+#endif
