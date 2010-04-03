@@ -81,7 +81,7 @@ sound_manager::enqueue(const job&unit, bool dominate)
 }
 
 void
-sound_manager::cancel(job::id_type id)
+sound_manager::cancel(unsigned long id)
 {
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
@@ -125,7 +125,7 @@ sound_manager::select(int urgency)
 }
 
 sound_manager::job_state
-sound_manager::query(job::id_type id)
+sound_manager::query(unsigned long id)
 {
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
@@ -264,7 +264,7 @@ sound_manager::active(void)
 // Private methods:
 
 void
-sound_manager::notify(notification::job_event status, job::id_type id, unsigned int owner)
+sound_manager::notify(notification::job_event status, unsigned long id, unsigned long owner)
 {
   if (feedback)
     feedback->submit(status, id, owner);

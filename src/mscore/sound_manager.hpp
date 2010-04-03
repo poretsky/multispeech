@@ -78,14 +78,14 @@ public:
 
   // Cancel job by it's id. It is absolutely no harm to specify
   // non-existent id here. There will nothing be done in that case.
-  void cancel(job::id_type id);
+  void cancel(unsigned long id);
 
   // Jobs selection by urgency. All jobs with urgency attribute
   // less than specified value will be deleted from the queue.
   void select(int urgency);
 
   // Return current job state for specified id.
-  job_state query(job::id_type id);
+  job_state query(unsigned long id);
 
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
@@ -178,7 +178,7 @@ private:
   boost::thread service;
 
   // Internal routines:
-  void notify(notification::job_event status, job::id_type id, unsigned int owner);
+  void notify(notification::job_event status, unsigned long id, unsigned long owner);
   void mute(void); // Mute all playing sounds if any.
   void die(void); // Make thread to break execution loop.
   void next_job(void); // Get and start the next job from the queue.

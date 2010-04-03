@@ -43,7 +43,7 @@ void
 session::run(void)
 {
   string request;
-  while (!getline(source, request).fail() && perform(request))
+  while (getline(source, request) && perform(request))
     continue;
 }
 

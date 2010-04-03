@@ -55,7 +55,7 @@ notification::~notification(void)
 // Private methods:
 
 void
-notification::submit(job_event status, job::id_type id, unsigned int owner)
+notification::submit(job_event status, unsigned long id, unsigned long owner)
 {
   if (event_mask & status)
     {

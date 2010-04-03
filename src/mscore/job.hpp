@@ -34,9 +34,6 @@ namespace multispeech
 class job: public boost::any
 {
 public:
-  // Type used for job id:
-  typedef unsigned long long id_type;
-
   // Default constructor:
   job(void);
 
@@ -53,11 +50,11 @@ public:
 
   // Public attributes:
   bool active;
-  unsigned int owner;
+  unsigned long owner;
   int urgency;
 
   // Id accessor:
-  id_type id(void) const;
+  unsigned long id(void) const;
 
   // Priority ordering operator. It is assumed that empty job
   // always has greater priority than non-empty one.
@@ -66,8 +63,8 @@ public:
 
 private:
   // Unit identification:
-  static id_type count;
-  id_type unit_id;
+  static unsigned long count;
+  unsigned long unit_id;
 };
 
 } // namespace multispeech

@@ -57,8 +57,8 @@ public:
   struct message
   {
     job_event status;
-    job::id_type id;
-    unsigned int owner;
+    unsigned long id;
+    unsigned long owner;
   };
 
 protected:
@@ -110,7 +110,7 @@ private:
   virtual void consume(const message& report) = 0;
 
   // Submit an event. It is only for use by master.
-  void submit(job_event status, job::id_type id, unsigned int owner);
+  void submit(job_event status, unsigned long id, unsigned long owner);
 
   // Stop notification thread.
   void die(void);
