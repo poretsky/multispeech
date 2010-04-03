@@ -83,6 +83,12 @@ namespace options
     extern const char* const dtk_voices;
   };
 
+  // SSIP related options:
+  namespace ssip
+  {
+    extern const char* const port;
+  };
+
   // General audio output:
   namespace audio
   {

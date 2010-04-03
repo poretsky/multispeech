@@ -26,7 +26,8 @@
 
 
 [frontend]
-# The frontend options control interactions with client.
+# The frontend options control interactions with client
+# when Multispeech is used as Emacspeak speech server.
 #
 #charset = KOI8-R
 # Input charset should be specified by its name. Available names
@@ -48,6 +49,12 @@ dtk_voices = on
 # inline commands will be accepted as well as the native ones.
 # If both options are disabled, then inline commands detection
 # and parsing will not be performed at all.
+
+[ssip]
+# This section affects Multispeech behaviour as an SSIP server.
+#
+#port = 6560
+# TCP port on which SSIP client connections will be accepted.
 
 [audio]
 # This section contains general audio output control options.

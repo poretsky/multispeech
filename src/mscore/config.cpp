@@ -109,6 +109,12 @@ namespace options
     const char* const dtk_voices = "frontend.dtk_voices";
   };
 
+  // SSIP related options:
+  namespace ssip
+  {
+    const char* const port = "ssip.port";
+  };
+
   // General audio output options:
   namespace audio
   {
@@ -285,6 +291,9 @@ configuration::configuration(int argc, char* argv[])
     (frontend::charset, value<string>())
     (frontend::native_voices, bool_switch()->default_value(true))
     (frontend::dtk_voices, bool_switch()->default_value(false))
+
+    // SSIP related options:
+    (ssip::port, value<unsigned int>()->default_value(6560))
 
     // General audio options:
     (audio::device, value<string>()->default_value(""))

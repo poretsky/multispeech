@@ -50,7 +50,7 @@ Case is significant.
 All options are logically grouped by sections.
 Each section is started by its name in square brackets on a separate
 line.
-.SH "CLIENT INTERACTION CONTROL OPTIONS"
+.SH "EMACSPEAK INTERACTION CONTROL OPTIONS"
 These options are grouped in the section named \(oqfrontend\(cq. These
 options are as follows:
 .TP
@@ -80,6 +80,14 @@ the option. Nothing prevents to keep both options enabled
 simultaneously. In this case DECtalk inline commands will be accepted
 as well as the native ones. If both options are disabled, then inline
 commands detection and parsing will not be performed at all.
+.SH "SSIP RELATED OPTIONS"
+Section \(oqssip\(cq contains options that affect \fBmultispeech\fP
+behaviour as an SSIP server.
+.TP
+.B port
+.br
+TCP port on which SSIP client connections will be accepted. By default
+port 6560 is used.
 .SH "GENERAL AUDIO OUTPUT CONTROL OPTIONS"
 Section name is \(oqaudio\(cq. It contains following options:
 .TP

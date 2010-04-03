@@ -22,7 +22,7 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 		LIBS="$LIBS -L$bobcat_prefix/lib -lbobcat"
 
 	dnl make sure all necessary header files exist
-	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream bobcat/cmdfinder], [
+	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream bobcat/cmdfinder bobcat/ifdstream bobcat/ofdstream bobcat/serversocket], [
 
 		dnl make sure libbobcat is linkable
 		AC_LINK_IFELSE([
