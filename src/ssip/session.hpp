@@ -28,12 +28,14 @@
 #include "connection.hpp"
 #include "message.hpp"
 #include "proxy.hpp"
+#include "parser.hpp"
 
 namespace SSIP
 {
 
 class session:
-  private FBB::CmdFinder<bool (session::*)(void)>,
+  private commands,
+  private settings,
   private connection,
   private multispeech::session,
   public message
@@ -46,9 +48,13 @@ public:
   void operator()(void);
 
 private:
-  // Serving requests:
-  bool do_quit(void);
-  bool do_unknown(void);
+  // General commands dispatcher:
+  bool cmd_set(void);
+  bool cmd_quit(void);
+  bool cmd_unknown(void);
+
+  // Parameter settings:
+  unsigned int set_client_name(void);
 
   // Client requests parsing and execution:
   bool perform(std::string& request);
@@ -58,9 +64,6 @@ private:
 
   // Unique session id:
   unsigned long id;
-
-  // Recognized client requests:
-  static Entry command_table[];
 
   // Session counter for id generation:
   static unsigned long count;

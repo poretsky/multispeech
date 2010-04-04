@@ -27,15 +27,9 @@ namespace SSIP
 {
 
 using namespace std;
+using namespace boost;
 using namespace FBB;
 
-
-// Recognized client requests:
-session::Entry session::command_table[] =
-  {
-    Entry("quit", &session::do_quit),
-    Entry("", &session::do_unknown)
-  };
 
 // Counter for session id generation:
 unsigned long session::count = 0;
@@ -44,9 +38,6 @@ unsigned long session::count = 0;
 // Object construction:
 
 session::session(proxy* origin, int socket_fd):
-  CmdFinder<FunctionPtr>(command_table, command_table +
-                         (sizeof(command_table) / sizeof(Entry)),
-                         USE_FIRST | INSENSITIVE),
   connection(socket_fd),
   multispeech::session(*input),
   message(*output),
@@ -70,17 +61,33 @@ session::operator()(void)
 // Serving client requests:
 
 bool
-session::do_quit(void)
+session::cmd_set(void)
+{
+  emit((this->*settings::findCmd(commands::beyond()))());
+  return true;
+}
+
+bool
+session::cmd_quit(void)
 {
   emit(231);
   return false;
 }
 
 bool
-session::do_unknown(void)
+session::cmd_unknown(void)
 {
   emit(500);
   return true;
+}
+
+
+// Parameter settings:
+
+unsigned int
+session::set_client_name(void)
+{
+  return 208;
 }
 
 
@@ -89,9 +96,10 @@ session::do_unknown(void)
 bool
 session::perform(string& request)
 {
+  mutex::scoped_lock lock(host.access);
   bool result = true;
-  FunctionPtr done = findCmd(request);
-  if (!cmd().empty())
+  commands::FunctionPtr done = commands::findCmd(request);
+  if (!commands::cmd().empty())
     result = (this->*done)();
   return result;
 }
