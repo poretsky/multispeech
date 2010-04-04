@@ -43,7 +43,7 @@ using namespace multispeech;
 
 
 // Recognized commands table:
-frontend::Entry frontend::command_table[] =
+const frontend::Entry frontend::command_table[] =
   {
     Entry("exit", &frontend::do_exit),
     Entry("d", &frontend::do_proceed_queue),

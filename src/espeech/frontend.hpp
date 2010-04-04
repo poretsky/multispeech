@@ -78,7 +78,7 @@ private:
   void set_punctuations_mode(char mode);
 
   // Recognized commands table:
-  static Entry command_table[];
+  static const Entry command_table[];
 
   // Multiline request accumulator.
   std::string accumulator;
