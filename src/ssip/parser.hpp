@@ -36,12 +36,25 @@ protected:
   commands(void);
 
 private:
-  // These method are to be the session class. Return true
-  // if the session should be continued or false otherwise.
-  virtual bool cmd_set(void) = 0;
-  virtual bool cmd_quit(void) = 0;
-  virtual bool cmd_help(void) = 0;
-  virtual bool cmd_unknown(void) = 0;
+  // These method are to be implemented in the session class.
+  // Return true if the session should be continued
+  // or false otherwise.
+  virtual bool cmd_speak(void);
+  virtual bool cmd_char(void);
+  virtual bool cmd_key(void);
+  virtual bool cmd_sound_icon(void);
+  virtual bool cmd_stop(void);
+  virtual bool cmd_cancel(void);
+  virtual bool cmd_pause(void);
+  virtual bool cmd_resume(void);
+  virtual bool cmd_block(void);
+  virtual bool cmd_list(void);
+  virtual bool cmd_set(void);
+  virtual bool cmd_history(void);
+  virtual bool cmd_quit(void);
+  virtual bool cmd_help(void);
+  virtual bool cmd_unknown(void);
+  virtual bool cmd_unimplemented(void);
 
   // commands table.
   static const Entry table[];

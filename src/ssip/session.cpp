@@ -88,6 +88,13 @@ session::cmd_unknown(void)
   return true;
 }
 
+bool
+session::cmd_unimplemented(void)
+{
+  emit(message::ERR_NOT_IMPLEMENTED);
+  return true;
+}
+
 
 // Parameter settings:
 

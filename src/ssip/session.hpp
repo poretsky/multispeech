@@ -53,6 +53,7 @@ private:
   bool cmd_quit(void);
   bool cmd_help(void);
   bool cmd_unknown(void);
+  bool cmd_unimplemented(void);
 
   // Parameter settings:
   message::code set_client_name(void);
