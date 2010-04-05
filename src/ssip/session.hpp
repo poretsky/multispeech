@@ -51,10 +51,11 @@ private:
   // General commands dispatcher:
   bool cmd_set(void);
   bool cmd_quit(void);
+  bool cmd_help(void);
   bool cmd_unknown(void);
 
   // Parameter settings:
-  unsigned int set_client_name(void);
+  message::code set_client_name(void);
 
   // Client requests parsing and execution:
   bool perform(std::string& request);

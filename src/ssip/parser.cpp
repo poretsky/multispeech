@@ -33,6 +33,7 @@ const commands::Entry commands::table[] =
   {
     Entry("set", &commands::cmd_set),
     Entry("quit", &commands::cmd_quit),
+    Entry("help", &commands::cmd_help),
     Entry("", &commands::cmd_unknown)
   };
 
@@ -63,10 +64,10 @@ settings::settings(void):
 {
 }
 
-unsigned int
+  message::code
 settings::set_unknown(void)
 {
-  return 514;
+  return message::ERR_PARAMETER_INVALID;
 }
 
 } // namespace SSIP

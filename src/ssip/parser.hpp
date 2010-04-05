@@ -23,6 +23,8 @@
 
 #include <bobcat/cmdfinder>
 
+#include "message.hpp"
+
 namespace SSIP
 {
 
@@ -38,6 +40,7 @@ private:
   // if the session should be continued or false otherwise.
   virtual bool cmd_set(void) = 0;
   virtual bool cmd_quit(void) = 0;
+  virtual bool cmd_help(void) = 0;
   virtual bool cmd_unknown(void) = 0;
 
   // commands table.
@@ -45,7 +48,7 @@ private:
 };
 
 // Parameter setting subcommands.
-class settings: protected FBB::CmdFinder<unsigned int (settings::*)(void)>
+class settings: protected FBB::CmdFinder<message::code (settings::*)(void)>
 {
 protected:
   // Main constractor.
@@ -54,8 +57,8 @@ protected:
 private:
   // These methods are to be implemented in the derived class.
   // Return result code for client.
-  virtual unsigned int set_client_name(void) = 0;
-  unsigned int set_unknown(void);
+  virtual message::code set_client_name(void) = 0;
+  message::code set_unknown(void);
 
   // Settings table.
   static const Entry table[];

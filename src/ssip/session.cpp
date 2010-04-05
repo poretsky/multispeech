@@ -70,24 +70,31 @@ session::cmd_set(void)
 bool
 session::cmd_quit(void)
 {
-  emit(231);
+  emit(message::OK_BYE);
   return false;
+}
+
+bool
+session::cmd_help(void)
+{
+  emit_help();
+  return true;
 }
 
 bool
 session::cmd_unknown(void)
 {
-  emit(500);
+  emit(message::ERR_INVALID_COMMAND);
   return true;
 }
 
 
 // Parameter settings:
 
-unsigned int
+message::code
 session::set_client_name(void)
 {
-  return 208;
+  return message::OK_CLIENT_NAME_SET;
 }
 
 
