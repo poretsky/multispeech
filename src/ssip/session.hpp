@@ -48,6 +48,9 @@ public:
   void operator()(void);
 
 private:
+  // Client requests parsing and execution:
+  bool perform(std::string& request);
+
   // General commands dispatcher:
   bool cmd_set(void);
   bool cmd_quit(void);
@@ -58,8 +61,8 @@ private:
   // Parameter settings:
   message::code set_client_name(void);
 
-  // Client requests parsing and execution:
-  bool perform(std::string& request);
+  // Request destination parser:
+  destination target;
 
   // Host server reference:
   proxy& host;

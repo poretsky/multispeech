@@ -21,6 +21,10 @@
 #ifndef MULTISPEECH_SSIP_COMMANDS_HPP
 #define MULTISPEECH_SSIP_COMMANDS_HPP
 
+#include <string>
+
+#include <boost/regex.hpp>
+
 #include <bobcat/cmdfinder>
 
 #include "message.hpp"
@@ -60,12 +64,16 @@ private:
   static const Entry table[];
 };
 
-// Parameter setting subcommands.
+// Session parameters holder and parameter setting subcommands parser.
 class settings: protected FBB::CmdFinder<message::code (settings::*)(void)>
 {
 protected:
   // Main constractor.
   settings(void);
+
+  // Set up and access client name information.
+  message::code client_name(const std::string& name);
+  std::string client_name(void);
 
 private:
   // These methods are to be implemented in the derived class.
@@ -90,8 +98,66 @@ private:
   // This method is properly provided here.
   message::code set_unknown(void);
 
-  // Settings table.
+  // Client name information:
+  struct
+  {
+    std::string user;
+    std::string application;
+    std::string component;
+    bool unknown;
+  } client;
+
+  // Subcommands table.
   static const Entry table[];
+
+  // Client name string pattern.
+  static const boost::regex client_name_pattern;
+};
+
+// Request destination parser.
+class destination: private FBB::CmdFinder<void (destination::*)(void)>
+{
+public:
+  // Available choices:
+  enum choice
+  {
+    self,
+    another,
+    all,
+    invalid
+  };
+
+  // Main constructor.
+  destination(void);
+
+  // Parse the request destination field. Usually it is used after
+  // general command dispatching. Being provided by the request
+  // tail as an argument it checks the first field as a destination
+  // parameter and returns reference to following part of request.
+  const std::string& parse(const std::string& request);
+
+  // Return destination choice after parsing.
+  choice selection(void) const;
+
+  // Return destination id after parsing.
+  // Meaningful only when selection is another.
+  unsigned long id(void) const;
+
+private:
+  // Internal checkers.
+  void check_self(void);
+  void check_all(void);
+  void check_another(void);
+
+  // Parsing results:
+  choice state;
+  unsigned long value;
+
+  // Parsing table.
+  static const Entry table[];
+
+  // Id validator.
+  static const boost::regex validator;
 };
 
 } // namespace SSIP

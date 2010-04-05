@@ -20,13 +20,17 @@
 
 #include <sysconfig.h>
 
+#include <boost/lexical_cast.hpp>
+
 #include "parser.hpp"
 
 
 namespace SSIP
 {
 
-  using namespace FBB;
+using namespace std;
+using namespace boost;
+using namespace FBB;
 
 // General commands table:
 const commands::Entry commands::table[] =
@@ -48,7 +52,7 @@ const commands::Entry commands::table[] =
     Entry("", &commands::cmd_unknown)
   };
 
-// Settings table:
+// Parameter setting subcommands table:
 const settings::Entry settings::table[] =
   {
     Entry("client_name", &settings::set_client_name),
@@ -69,6 +73,20 @@ const settings::Entry settings::table[] =
     Entry("notification", &settings::set_notification),
     Entry("", &settings::set_unknown)
   };
+
+// Client name string pattern:
+const regex settings::client_name_pattern("^([[:word:]-]+):([[:word:]-]+):([[:word:]-]+)$");
+
+// Destination checkers table:
+const destination::Entry destination::table[] =
+  {
+    Entry("self", &destination::check_self),
+    Entry("all", &destination::check_all),
+    Entry("", &destination::check_another)
+  };
+
+// Destination id validator:
+const regex destination::validator("^\\d+$");
 
 
 // General commands dispatcher:
@@ -186,6 +204,35 @@ settings::settings(void):
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE)
 {
+  client.unknown = true;
+}
+
+message::code
+settings::client_name(const string& name)
+{
+  message::code rc = message::OK_CLIENT_NAME_SET;
+  if (client.unknown)
+    {
+      smatch split;
+      if (regex_match(name, split, client_name_pattern))
+        {
+          client.user = string(split[1].first, split[1].second);
+          client.application = string(split[2].first, split[2].second);
+          client.component = string(split[3].first, split[3].second);
+          client.unknown = false;
+        }
+      else rc = message::ERR_PARAMETER_INVALID;
+    }
+  else rc = message::ERR_COULDNT_SET_CLIENT_NAME;
+  return rc;
+}
+
+string
+settings::client_name(void)
+{
+  return client.unknown ?
+    "unknown:unknown:unknown" :
+    client.user + ':' + client.application + ':' + client.component;
 }
 
 // Dummy implementations:
@@ -292,6 +339,62 @@ message::code
 settings::set_unknown(void)
 {
   return message::ERR_PARAMETER_INVALID;
+}
+
+
+// Request destination parser:
+
+destination::destination(void):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE)
+{
+}
+
+// Public methods:
+
+const string&
+destination::parse(const string& request)
+{
+  (this->*findCmd(request))();
+  return beyond();
+}
+
+destination::choice
+destination::selection(void) const
+{
+  return state;
+}
+
+unsigned long
+destination::id(void) const
+{
+  return value;
+}
+
+// Private methods:
+
+void
+destination::check_self(void)
+{
+  state = self;
+}
+
+void
+destination::check_all(void)
+{
+  state = all;
+}
+
+void
+destination::check_another(void)
+{
+  if (regex_match(cmd(), validator))
+    {
+      state = another;
+      value = lexical_cast<unsigned long>(cmd());
+    }
+  else state = invalid;
 }
 
 } // namespace SSIP

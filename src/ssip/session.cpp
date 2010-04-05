@@ -58,12 +58,26 @@ session::operator()(void)
 }
 
 
+// Parsing client requests:
+
+bool
+session::perform(string& request)
+{
+  mutex::scoped_lock lock(host.access);
+  bool result = true;
+  commands::FunctionPtr done = commands::findCmd(request);
+  if (!commands::cmd().empty())
+    result = (this->*done)();
+  return result;
+}
+
+
 // Serving client requests:
 
 bool
 session::cmd_set(void)
 {
-  emit((this->*settings::findCmd(commands::beyond()))());
+  emit((this->*settings::findCmd(target.parse(commands::beyond())))());
   return true;
 }
 
@@ -101,21 +115,10 @@ session::cmd_unimplemented(void)
 message::code
 session::set_client_name(void)
 {
-  return message::OK_CLIENT_NAME_SET;
-}
-
-
-// Parsing client requests:
-
-bool
-session::perform(string& request)
-{
-  mutex::scoped_lock lock(host.access);
-  bool result = true;
-  commands::FunctionPtr done = commands::findCmd(request);
-  if (!commands::cmd().empty())
-    result = (this->*done)();
-  return result;
+  message::code rc = ERR_PARAMETER_INVALID;
+  if (target.selection() == destination::self)
+    rc = client_name(settings::beyond());
+  return rc;
 }
 
 } // namespace SSIP
