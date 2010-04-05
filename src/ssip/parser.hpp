@@ -70,7 +70,24 @@ protected:
 private:
   // These methods are to be implemented in the derived class.
   // Return result code for client.
-  virtual message::code set_client_name(void) = 0;
+  virtual message::code set_client_name(void);
+  virtual message::code set_priority(void);
+  virtual message::code set_output_module(void);
+  virtual message::code set_language(void);
+  virtual message::code set_ssml_mode(void);
+  virtual message::code set_punctuation(void);
+  virtual message::code set_spelling(void);
+  virtual message::code set_cap_let_recogn(void);
+  virtual message::code set_voice(void);
+  virtual message::code set_synthesis_voice(void);
+  virtual message::code set_rate(void);
+  virtual message::code set_pitch(void);
+  virtual message::code set_volume(void);
+  virtual message::code set_pause_context(void);
+  virtual message::code set_history(void);
+  virtual message::code set_notification(void);
+
+  // This method is properly provided here.
   message::code set_unknown(void);
 
   // Settings table.
