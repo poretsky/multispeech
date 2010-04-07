@@ -64,16 +64,12 @@ private:
   static const Entry table[];
 };
 
-// Session parameters holder and parameter setting subcommands parser.
+// Parameter setting subcommands parser.
 class settings: protected FBB::CmdFinder<message::code (settings::*)(void)>
 {
 protected:
   // Main constractor.
   settings(void);
-
-  // Set up and access client name information.
-  message::code client_name(const std::string& name);
-  std::string client_name(void);
 
 private:
   // These methods are to be implemented in the derived class.
@@ -98,20 +94,8 @@ private:
   // This method is properly provided here.
   message::code set_unknown(void);
 
-  // Client name information:
-  struct
-  {
-    std::string user;
-    std::string application;
-    std::string component;
-    bool unknown;
-  } client;
-
   // Subcommands table.
   static const Entry table[];
-
-  // Client name string pattern.
-  static const boost::regex client_name_pattern;
 };
 
 // Request destination parser.

@@ -74,9 +74,6 @@ const settings::Entry settings::table[] =
     Entry("", &settings::set_unknown)
   };
 
-// Client name string pattern:
-const regex settings::client_name_pattern("^([[:word:]-]+):([[:word:]-]+):([[:word:]-]+)$");
-
 // Destination checkers table:
 const destination::Entry destination::table[] =
   {
@@ -204,35 +201,6 @@ settings::settings(void):
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE)
 {
-  client.unknown = true;
-}
-
-message::code
-settings::client_name(const string& name)
-{
-  message::code rc = message::OK_CLIENT_NAME_SET;
-  if (client.unknown)
-    {
-      smatch split;
-      if (regex_match(name, split, client_name_pattern))
-        {
-          client.user = string(split[1].first, split[1].second);
-          client.application = string(split[2].first, split[2].second);
-          client.component = string(split[3].first, split[3].second);
-          client.unknown = false;
-        }
-      else rc = message::ERR_PARAMETER_INVALID;
-    }
-  else rc = message::ERR_COULDNT_SET_CLIENT_NAME;
-  return rc;
-}
-
-string
-settings::client_name(void)
-{
-  return client.unknown ?
-    "unknown:unknown:unknown" :
-    client.user + ':' + client.application + ':' + client.component;
 }
 
 // Dummy implementations:

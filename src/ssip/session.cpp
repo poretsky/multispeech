@@ -31,11 +31,74 @@ using namespace boost;
 using namespace FBB;
 
 
+// Static data.
+
+// Client name string pattern:
+const regex client_info::name_pattern("^([[:word:]-]+):([[:word:]-]+):([[:word:]-]+)$");
+
 // Counter for session id generation:
 unsigned long session::count = 0;
 
 
-// Object construction:
+// Client info access:
+
+client_info::client_info(void):
+  user_name("unknown"),
+  application_name("unknown"),
+  component_name("unknown"),
+  unknown(true)
+{
+}
+
+message::code
+client_info::name(const string& full_name)
+{
+  message::code rc = message::OK_CLIENT_NAME_SET;
+  if (unknown)
+    {
+      smatch split;
+      if (regex_match(full_name, split, name_pattern))
+        {
+          if (split[1].matched)
+            user_name = string(split[1].first, split[1].second);
+          if (split[2].matched)
+            application_name = string(split[2].first, split[2].second);
+          if (split[3].matched)
+            component_name = string(split[3].first, split[3].second);
+          unknown = false;
+        }
+      else rc = message::ERR_PARAMETER_INVALID;
+    }
+  else rc = message::ERR_COULDNT_SET_CLIENT_NAME;
+  return rc;
+}
+
+string
+client_info::name(void) const
+{
+  return user_name + ':' + application_name + ':' + component_name;
+}
+
+const string&
+client_info::user(void) const
+{
+  return user_name;
+}
+
+const string&
+client_info::application(void) const
+{
+  return application_name;
+}
+
+const string&
+client_info::component(void) const
+{
+  return component_name;
+}
+
+
+// Session object construction:
 
 session::session(proxy* origin, int socket_fd):
   connection(socket_fd),
@@ -117,7 +180,7 @@ session::set_client_name(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
   if (target.selection() == destination::self)
-    rc = client_name(settings::beyond());
+    rc = client.name(settings::beyond());
   return rc;
 }
 
