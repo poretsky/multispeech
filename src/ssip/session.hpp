@@ -50,6 +50,7 @@ private:
   bool perform(std::string& request);
 
   // General commands dispatcher:
+  bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
   bool cmd_help(void);
@@ -66,6 +67,7 @@ private:
   // Session local data:
   client_info client;
   notification_mode notification;
+  block_mode block;
 
   // Host server reference:
   proxy& host;

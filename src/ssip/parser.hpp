@@ -251,6 +251,32 @@ private:
   unsigned int value;
 };
 
+// Block mode control.
+class block_mode: private FBB::CmdFinder<message::code (block_mode::*)(void)>
+{
+public:
+  // Main constructor.
+  block_mode(void);
+
+  // Current state accessor.
+  bool inside(void) const;
+
+  // Parse toggle request.
+  message::code toggle(const std::string& request);
+
+private:
+  // Request performers.
+  message::code block_begin(void);
+  message::code block_end(void);
+  message::code block_unknown(void);
+
+  // Current state holder.
+  bool state;
+
+  // Request parser table.
+  static const Entry table[];
+};
+
 } // namespace SSIP
 
 #endif

@@ -115,6 +115,14 @@ const notification_setup::Entry notification_setup::table[] =
     Entry("", &notification_setup::notify_unknown)
   };
 
+// Block command parser table:
+const block_mode::Entry block_mode::table[] =
+  {
+    Entry("begin", &block_mode::block_begin),
+    Entry("end", &block_mode::block_end),
+    Entry("", &block_mode::block_unknown)
+  };
+
 
 // General commands dispatcher:
 
@@ -589,6 +597,59 @@ notification_mode::flag_off(void)
 {
   value &= ~mask;
   return message::OK_NOTIFICATION_SET;
+}
+
+
+// Block mode support:
+
+block_mode::block_mode(void):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE),
+  state(false)
+{
+}
+
+bool
+block_mode::inside(void) const
+{
+  return state;
+}
+
+message::code
+block_mode::toggle(const string& request)
+{
+  return (this->*findCmd(request))();
+}
+
+message::code
+block_mode::block_begin(void)
+{
+  message::code rc = message::ERR_ALREADY_INSIDE_BLOCK;
+  if (!state)
+    {
+      state = true;
+      rc = message::OK_INSIDE_BLOCK;
+    }
+  return rc;
+}
+
+message::code
+block_mode::block_end(void)
+{
+  message::code rc = message::ERR_ALREADY_OUTSIDE_BLOCK;
+  if (state)
+    {
+      state = false;
+      rc = message::OK_OUTSIDE_BLOCK;
+    }
+  return rc;
+}
+
+message::code
+block_mode::block_unknown(void)
+{
+  return message::ERR_PARAMETER_INVALID;
 }
 
 } // namespace SSIP

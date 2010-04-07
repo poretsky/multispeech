@@ -75,6 +75,13 @@ session::perform(string& request)
 // Serving client requests:
 
 bool
+session::cmd_block(void)
+{
+  emit(block.toggle(commands::beyond()));
+  return true;
+}
+
+bool
 session::cmd_set(void)
 {
   emit((this->*settings::findCmd(target.parse(commands::beyond())))());
@@ -116,7 +123,9 @@ message::code
 session::set_client_name(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (target.selection() == destination::self)
+  if (block.inside())
+    rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  else if (target.selection() == destination::self)
     rc = client.name(settings::beyond());
   return rc;
 }
@@ -125,7 +134,9 @@ message::code
 session::set_notification(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (target.selection() == destination::self)
+  if (block.inside())
+    rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  else if (target.selection() == destination::self)
     rc = notification.setup(settings::beyond());
   return rc;
 }
