@@ -48,6 +48,16 @@ server::server(int argc, char* argv[]):
 // Private methods:
 
 void
+server::connect(int fd)
+{
+  mutex::scoped_lock lock(proxy::access);
+  competitor.reset(new thread(session(this, fd)));
+  while (competitor.unique())
+    session_started.wait(lock);
+  competitor.reset();
+}
+
+void
 server::hello(unsigned long id, session* client)
 {
   mutex::scoped_lock lock(proxy::access);
@@ -64,14 +74,18 @@ server::bye(unsigned long id)
   threads.erase(id);
 }
 
-void
-server::connect(int fd)
+session*
+server::client(unsigned long id)
 {
-  mutex::scoped_lock lock(proxy::access);
-  competitor.reset(new thread(session(this, fd)));
-  while (competitor.unique())
-    session_started.wait(lock);
-  competitor.reset();
+  if (clients.count(id))
+    return clients[id];
+  return NULL;
+}
+
+server::clients_list_boundary
+server::all_clients(void)
+{
+  return clients_list_boundary(clients.begin(), clients.end());
 }
 
 void

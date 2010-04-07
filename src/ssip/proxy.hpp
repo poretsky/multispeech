@@ -31,6 +31,9 @@
 #ifndef MULTISPEECH_SSIP_PROXY_HPP
 #define MULTISPEECH_SSIP_PROXY_HPP
 
+#include <utility>
+#include <map>
+
 #include <boost/thread/mutex.hpp>
 
 #include <mscore/server.hpp>
@@ -48,6 +51,15 @@ protected:
   }
 
 public:
+  // Clients list representation:
+  typedef std::map<unsigned long, class session*> clients_list;
+
+  // Clients list iterator:
+  typedef clients_list::iterator clients_iterator;
+
+  // Clients list boundaries for iteration:
+  typedef std::pair<clients_iterator, clients_iterator> clients_list_boundary;
+
   // Shared access synchronization means:
   boost::mutex access;
 
@@ -56,6 +68,13 @@ public:
 
   // Clean up terminated session when finishing:
   virtual void bye(unsigned long id) = 0;
+
+  // Return active session object pointer by id
+  // or NULL when no one is found:
+  virtual session* client(unsigned long id) = 0;
+
+  // Retrieve active clients list boundaries for iteration:
+  virtual clients_list_boundary all_clients(void) = 0;
 };
 
 } // namespace SSIP

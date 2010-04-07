@@ -43,12 +43,13 @@ class server:
 public:
   // Main constructor:
   server(int argc, char* argv[]);
+
 private:
   // Container for running thread handler:
   typedef boost::shared_ptr<boost::thread> process;
 
   // Active sessions:
-  std::map<unsigned long, session*> clients;
+  clients_list clients;
 
   // Active session thread handlers:
   std::map<unsigned long, process> threads;
@@ -65,6 +66,8 @@ private:
   // Methods required by proxy:
   void hello(unsigned long id, session* client);
   void bye(unsigned long id);
+  session* client(unsigned long id);
+  clients_list_boundary all_clients(void);
 
   // Methods required by Fork:
   void parentProcess(void);
