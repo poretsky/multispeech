@@ -144,6 +144,113 @@ private:
   static const boost::regex validator;
 };
 
+// Boolean parameters parser.
+class boolean_flag: protected FBB::CmdFinder<message::code (boolean_flag::*)(void)>
+{
+protected:
+  // Main constructor.
+  boolean_flag(void);
+
+private:
+  // Valid flag state reactions should be implemented in derived classes.
+  virtual message::code flag_on(void);
+  virtual message::code flag_off(void);
+
+  // Invalid parameter reaction is properly provided here.
+  message::code flag_invalid(void);
+
+  // Parsing table.
+  static const Entry table[];
+};
+
+// Client info parsing and representation.
+class client_info
+{
+public:
+  // Construct and initialize:
+  client_info(void);
+
+  // Setup client name information. It can be done only once
+  // after instantiation. Return response code for the requester.
+  message::code name(const std::string& full_name);
+
+  // Retrieve client full name and it's components.
+  std::string name(void) const;
+  const std::string& user(void) const;
+  const std::string& application(void) const;
+  const std::string& component(void) const;
+
+private:
+  // Client name information:
+  std::string user_name, application_name, component_name;
+
+  // Indicate that it is not set up yet.
+  bool unknown;
+
+  // Client name string pattern.
+  static const boost::regex name_pattern;
+};
+
+// Notification setup request parser framework.
+class notification_setup: protected FBB::CmdFinder<message::code (notification_setup::*)(void)>
+{
+protected:
+  // Main constructor.
+  notification_setup(void);
+
+private:
+  // Placeholders:
+  virtual message::code notify_all(void) = 0;
+  virtual message::code notify_begin(void) = 0;
+  virtual message::code notify_end(void) = 0;
+    virtual message::code notify_cancel(void) = 0;
+  virtual message::code notify_pause(void) = 0;
+  virtual message::code notify_resume(void) = 0;
+  virtual message::code notify_index_marks(void) = 0;
+
+  // Error request reaction.
+  message::code notify_unknown(void);
+
+  // Parameter parsing table:
+  static const Entry table[];
+};
+
+// Notification mode parsing and representation.
+class notification_mode:
+  private notification_setup,
+  private boolean_flag
+{
+public:
+  // Main constructor.
+  notification_mode(void);
+
+  // Current value accessor.
+  unsigned int event_mask(void) const;
+
+  // Request parser.
+  message::code setup(const std::string& request);
+
+private:
+  // Parameter parsing methods.
+  message::code notify_all(void);
+  message::code notify_begin(void);
+  message::code notify_end(void);
+  message::code notify_cancel(void);
+  message::code notify_pause(void);
+  message::code notify_resume(void);
+  message::code notify_index_marks(void);
+
+  // Methods required by boolean_flag.
+  message::code flag_on(void);
+  message::code flag_off(void);
+
+  // Requested mask.
+  unsigned int mask;
+
+  // Current value holder.
+  unsigned int value;
+};
+
 } // namespace SSIP
 
 #endif

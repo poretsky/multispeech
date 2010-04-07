@@ -21,8 +21,6 @@
 #ifndef MULTISPEECH_SSIP_SESSION_HPP
 #define MULTISPEECH_SSIP_SESSION_HPP
 
-#include <boost/regex.hpp>
-
 #include <mscore/session.hpp>
 
 #include "connection.hpp"
@@ -33,35 +31,6 @@
 namespace SSIP
 {
 
-// Client info representation.
-class client_info
-{
-public:
-  // Construct and initialize:
-  client_info(void);
-
-  // Setup client name information. It can be done only once
-  // after instantiation. Return response code for the requester.
-  message::code name(const std::string& full_name);
-
-  // Retrieve client full name and it's components.
-  std::string name(void) const;
-  const std::string& user(void) const;
-  const std::string& application(void) const;
-  const std::string& component(void) const;
-
-private:
-  // Client name information:
-  std::string user_name, application_name, component_name;
-
-  // Indicate that it is not set up yet.
-  bool unknown;
-
-  // Client name string pattern.
-  static const boost::regex name_pattern;
-};
-
-// Driving a session.
 class session:
   private commands,
   private settings,
@@ -89,12 +58,14 @@ private:
 
   // Parameter settings:
   message::code set_client_name(void);
+  message::code set_notification(void);
 
   // Request destination parser:
   destination target;
 
   // Session local data:
   client_info client;
+  notification_mode notification;
 
   // Host server reference:
   proxy& host;
