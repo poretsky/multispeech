@@ -34,8 +34,7 @@ using namespace boost;
 
 // Constructing / destroying:
 
-notification::notification(sound_manager* master, unsigned int mode):
-  event_mask(mode),
+notification::notification(sound_manager* master):
   alive(true),
   link(master->feedback),
   access(master->access),
@@ -57,7 +56,7 @@ notification::~notification(void)
 void
 notification::submit(job_event status, unsigned long id, unsigned long owner)
 {
-  if (event_mask & status)
+  if (status)
     {
       message report;
       report.status = status;

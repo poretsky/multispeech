@@ -66,18 +66,19 @@ sound_manager::enqueue(const job&unit, bool dominate)
   for (position = jobs->begin(); position != jobs->end(); ++position)
     if ((*position) < unit)
       break;
-  if ((position != jobs->end()) && (position->active))
+  if ((position != jobs->end()) &&
+      (position->state() == job::active))
     {
       if (dominate)
         {
           mute();
-          position->active = false;
-          notify(notification::job_postpone, position->id(), position->owner);
+          position->postpone();
+          notify(notification::job_pause, *position);
           position = jobs->insert(position, job());
         }
       ++position;
     }
-  jobs->insert(position, unit)->active = false;
+  jobs->insert(position, unit)->activate();
 }
 
 void
@@ -90,14 +91,14 @@ sound_manager::cancel(unsigned long id)
       break;
   if (position != jobs->end())
     {
-      if (position->active)
+      if (position->state() == job::active)
         {
           mute();
-          position->active = false;
+          position->kill();
         }
       else
         {
-          notify(notification::job_cancel, position->id(), position->owner);
+          notify(notification::job_cancel, *position);
           jobs->erase(position);
         }
     }
@@ -109,22 +110,22 @@ sound_manager::select(int urgency)
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
   for (position = jobs->begin(); position != jobs->end(); ++position)
-    if (position->urgency < urgency)
+    if (position->urgency() < urgency)
       {
-        if (position->active)
+        if (position->state() == job::active)
           {
             mute();
-            position->active = false;
+            position->kill();
           }
         else
           {
-            notify(notification::job_cancel, position->id(), position->owner);
+            notify(notification::job_cancel, *position);
             position = --(jobs->erase(position));
           }
       }
 }
 
-sound_manager::job_state
+job::status
 sound_manager::query(unsigned long id)
 {
   mutex::scoped_lock lock(access);
@@ -132,9 +133,7 @@ sound_manager::query(unsigned long id)
   for (position = jobs->begin(); position != jobs->end(); ++position)
     if (position->id() == id)
       break;
-  return (position != jobs->end()) ?
-    (position->active ? progressing : waiting)
-    : unknown;
+  return (position != jobs->end()) ? position->state() : job::unknown;
 }
 
 void
@@ -208,7 +207,8 @@ sound_manager::suspend(void)
   jobs.reset(new jobs_queue);
   if ((state == running) && !backup->empty())
     {
-      backup->front().active = false;
+      backup->front().postpone();
+      notify(notification::job_pause, backup->front());
       jobs->push_front(job());
     }
 }
@@ -264,10 +264,10 @@ sound_manager::active(void)
 // Private methods:
 
 void
-sound_manager::notify(notification::job_event status, unsigned long id, unsigned long owner)
+sound_manager::notify(notification::job_event status, const job& unit)
 {
-  if (feedback)
-    feedback->submit(status, id, owner);
+  if (feedback && (status & unit.notification_mode()))
+    feedback->submit(status, unit.id(), unit.owner());
 }
 
 void
@@ -302,8 +302,11 @@ sound_manager::next_job(void)
                 tones.stop();
               speech.stop();
             }
-          jobs->front().active = true;
-          notify(notification::job_start, jobs->front().id(), jobs->front().owner);
+          notify((jobs->front().state() != job::postponed) ?
+                 notification::job_start :
+                 notification::job_resume,
+                 jobs->front());
+          jobs->front().activate();
           sounds.start(any_cast<sound_task>(jobs->front()),
                        !file_player::asynchronous || (business != playing));
           business = playing;
@@ -316,8 +319,11 @@ sound_manager::next_job(void)
                 sounds.stop();
               speech.stop();
             }
-          jobs->front().active = true;
-          notify(notification::job_start, jobs->front().id(), jobs->front().owner);
+          notify((jobs->front().state() != job::postponed) ?
+                 notification::job_start :
+                 notification::job_resume,
+                 jobs->front());
+          jobs->front().activate();
           tones.start(any_cast<tone_task>(jobs->front()),
                       !tone_generator::asynchronous || (business != beeping));
           business = beeping;
@@ -329,8 +335,11 @@ sound_manager::next_job(void)
           if (!tone_generator::asynchronous)
             tones.stop();
           speech.stop();
-          jobs->front().active = true;
-          notify(notification::job_start, jobs->front().id(), jobs->front().owner);
+          notify((jobs->front().state() != job::postponed) ?
+                 notification::job_start :
+                 notification::job_resume,
+                 jobs->front());
+          jobs->front().activate();
           speech.start(any_cast<speech_task>(jobs->front()));
           business = speaking;
         }
@@ -354,10 +363,10 @@ sound_manager::working(void)
         case playing:
           if (file_player::asynchronous || !sounds.active())
             {
-              if (jobs->front().active)
-                notify(notification::job_complete, jobs->front().id(), jobs->front().owner);
-              else if (jobs->front().id() && !jobs->front().active)
-                notify(notification::job_cancel, jobs->front().id(), jobs->front().owner);
+              if (jobs->front().state() == job::active)
+                notify(notification::job_complete, jobs->front());
+              else if (jobs->front().id() && (jobs->front().state() == job::idle))
+                notify(notification::job_cancel, jobs->front());
               jobs->pop_front();
             }
           else result = true;
@@ -365,10 +374,10 @@ sound_manager::working(void)
         case beeping:
           if (tone_generator::asynchronous || !tones.active())
             {
-              if (jobs->front().active)
-                notify(notification::job_complete, jobs->front().id(), jobs->front().owner);
-              else if (jobs->front().id() && !jobs->front().active)
-                notify(notification::job_cancel, jobs->front().id(), jobs->front().owner);
+              if (jobs->front().state() == job::active)
+                notify(notification::job_complete, jobs->front());
+              else if (jobs->front().id() && (jobs->front().state() == job::idle))
+                notify(notification::job_cancel, jobs->front());
               jobs->pop_front();
             }
           else result = true;
@@ -376,19 +385,19 @@ sound_manager::working(void)
         case speaking:
           if (!speech.active())
             {
-              if (jobs->front().active)
-                notify(notification::job_complete, jobs->front().id(), jobs->front().owner);
-              else if (jobs->front().id() && !jobs->front().active)
-                notify(notification::job_cancel, jobs->front().id(), jobs->front().owner);
+              if (jobs->front().state() == job::active)
+                notify(notification::job_complete, jobs->front());
+              else if (jobs->front().id() && (jobs->front().state() == job::idle))
+                notify(notification::job_cancel, jobs->front());
               jobs->pop_front();
             }
           else result = true;
           break;
         default:
-          if (jobs->front().active)
-            notify(notification::job_complete, jobs->front().id(), jobs->front().owner);
-          else if (jobs->front().id() && !jobs->front().active)
-            notify(notification::job_cancel, jobs->front().id(), jobs->front().owner);
+          if (jobs->front().state() == job::active)
+            notify(notification::job_complete, jobs->front());
+          else if (jobs->front().id() && (jobs->front().state() == job::idle))
+            notify(notification::job_cancel, jobs->front());
           jobs->pop_front();
           break;
         }

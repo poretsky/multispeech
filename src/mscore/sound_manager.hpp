@@ -51,15 +51,6 @@ namespace multispeech
 class sound_manager:
   private portaudio::AutoSystem
 {
-public:
-  // Job states in the queue.
-  enum job_state
-  {
-    unknown,
-    waiting,
-    progressing
-  };
-
 protected:
   // Constructing / destroying.
   explicit sound_manager(const configuration* conf);
@@ -85,7 +76,7 @@ public:
   void select(int urgency);
 
   // Return current job state for specified id.
-  job_state query(unsigned long id);
+  job::status query(unsigned long id);
 
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
@@ -178,7 +169,7 @@ private:
   boost::thread service;
 
   // Internal routines:
-  void notify(notification::job_event status, unsigned long id, unsigned long owner);
+  void notify(notification::job_event status, const job& unit);
   void mute(void); // Mute all playing sounds if any.
   void die(void); // Make thread to break execution loop.
   void next_job(void); // Get and start the next job from the queue.

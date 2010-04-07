@@ -36,10 +36,11 @@ unsigned long job::count = 0;
 
 job::job(void):
   any(),
-  active(false),
-  owner(0),
-  urgency(0),
-  unit_id(0)
+  unit_id(0),
+  owner_id(0),
+  urgency_level(0),
+  event_mask(0),
+  current_state(idle)
 {
 }
 
@@ -52,12 +53,54 @@ job::id(void) const
   return unit_id;
 }
 
+unsigned long
+job::owner(void) const
+{
+  return owner_id;
+}
+
+int
+job::urgency(void) const
+{
+  return urgency_level;
+}
+
+unsigned int
+job::notification_mode(void) const
+{
+  return event_mask;
+}
+
+job::status
+job::state(void) const
+{
+  return current_state;
+}
+
+void
+job::activate(void)
+{
+  current_state = active;
+}
+
+void
+job::postpone(void)
+{
+  current_state = postponed;
+}
+
+void
+job::kill(void)
+{
+  current_state = idle;
+}
+
 bool
 job::operator<(const job& other) const
 {
   return (this->empty() && !other.empty()) ? false
     : ((other.empty() && !this->empty()) ? true
-       : (this->urgency < other.urgency));
+       : (this->urgency_level < other.urgency_level));
 }
 
 } // namespace multispeech

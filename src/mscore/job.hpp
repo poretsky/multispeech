@@ -34,27 +34,42 @@ namespace multispeech
 class job: public boost::any
 {
 public:
+  // Job life cycle states:
+  enum status
+  {
+    idle,
+    active,
+    postponed,
+    unknown
+  };
+
   // Default constructor:
   job(void);
 
   // Construct job for specified task description:
   template <typename task_description>
-  explicit job(const task_description& task):
+  job(const task_description& task, unsigned long owner = 0,
+      int urgency = 0, unsigned int notification_mode = 0):
     boost::any(task),
-    active(false),
-    owner(0),
-    urgency(0),
-    unit_id(++count)
+    unit_id(++count),
+    owner_id(owner),
+    urgency_level(urgency),
+    event_mask(notification_mode),
+    current_state(idle)
   {
   }
 
-  // Public attributes:
-  bool active;
-  unsigned long owner;
-  int urgency;
-
-  // Id accessor:
+  // Attribute accessors:
   unsigned long id(void) const;
+  unsigned long owner(void) const;
+  int urgency(void) const;
+  unsigned int notification_mode(void) const;
+  status state(void) const;
+
+  // Life cycle control:
+  void activate(void);
+  void postpone(void);
+  void kill(void);
 
   // Priority ordering operator. It is assumed that empty job
   // always has greater priority than non-empty one.
@@ -62,9 +77,16 @@ public:
   bool operator<(const job& other) const;
 
 private:
-  // Unit identification:
+  // Job attributes:
+  unsigned long unit_id, owner_id;
+  int urgency_level;
+  unsigned int event_mask;
+
+  // Job state:
+  status current_state;
+
+  // Unit identification generator:
   static unsigned long count;
-  unsigned long unit_id;
 };
 
 } // namespace multispeech

@@ -47,10 +47,11 @@ public:
   // in the constructor.
   enum job_event
   {
-    job_start = 1,
-    job_complete =2,
-    job_cancel = 4,
-    job_postpone = 8
+    job_start = 0x01,
+    job_complete = 0x02,
+    job_cancel = 0x04,
+    job_pause = 0x08,
+    job_resume = 0x10
   };
 
   // Job event notification message structure.
@@ -63,7 +64,7 @@ public:
 
 protected:
   // Construct / destroy.
-  notification(class sound_manager* master, unsigned int mode);
+  explicit notification(class sound_manager* master);
   virtual ~notification(void);
 
 private:
@@ -87,9 +88,6 @@ private:
 
   // Notifications queue.
   std::queue<message> reports;
-
-  // Events of interest.
-  unsigned int event_mask;
 
   // Life indicator.
   bool alive;
