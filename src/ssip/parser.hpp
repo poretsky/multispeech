@@ -27,6 +27,8 @@
 
 #include <bobcat/cmdfinder>
 
+#include <mscore/text_filter.hpp>
+
 #include "message.hpp"
 
 namespace SSIP
@@ -64,6 +66,7 @@ private:
   static const Entry table[];
 };
 
+
 // Parameter setting subcommands parser.
 class settings: protected FBB::CmdFinder<message::code (settings::*)(void)>
 {
@@ -97,6 +100,7 @@ private:
   // Subcommands table.
   static const Entry table[];
 };
+
 
 // Request destination parser.
 class destination: private FBB::CmdFinder<void (destination::*)(void)>
@@ -144,6 +148,7 @@ private:
   static const boost::regex validator;
 };
 
+
 // Boolean parameters parser.
 class boolean_flag: protected FBB::CmdFinder<message::code (boolean_flag::*)(void)>
 {
@@ -162,6 +167,7 @@ private:
   // Parsing table.
   static const Entry table[];
 };
+
 
 // Client info parsing and representation.
 class client_info
@@ -191,6 +197,7 @@ private:
   static const boost::regex name_pattern;
 };
 
+
 // Notification setup request parser framework.
 class notification_setup: protected FBB::CmdFinder<message::code (notification_setup::*)(void)>
 {
@@ -214,6 +221,7 @@ private:
   // Parameter parsing table:
   static const Entry table[];
 };
+
 
 // Notification mode parsing and representation.
 class notification_mode:
@@ -251,6 +259,7 @@ private:
   unsigned int value;
 };
 
+
 // Block mode control.
 class block_mode: private FBB::CmdFinder<message::code (block_mode::*)(void)>
 {
@@ -266,14 +275,46 @@ public:
 
 private:
   // Request performers.
-  message::code block_begin(void);
-  message::code block_end(void);
-  message::code block_unknown(void);
+  message::code begin(void);
+  message::code end(void);
+  message::code unknown(void);
 
   // Current state holder.
   bool state;
 
   // Request parser table.
+  static const Entry table[];
+};
+
+
+// Punctuation verbosity mode parsing and holding.
+class punctuation_mode:
+  private FBB::CmdFinder<multispeech::punctuations::mode (punctuation_mode::*)(void)>
+{
+public:
+  // Main constructor.
+  punctuation_mode(void);
+
+  // Parse request.
+  multispeech::punctuations::mode parse(const std::string& request);
+
+  // Current state accessor.
+  multispeech::punctuations::mode verbosity(void) const;
+
+  // Change current mode.
+  void verbosity(multispeech::punctuations::mode mode);
+
+private:
+  // Mode detectors.
+  multispeech::punctuations::mode all(void);
+  multispeech::punctuations::mode some(void);
+  multispeech::punctuations::mode none(void);
+  multispeech::punctuations::mode unknown(void);
+
+  // Current value holder.
+  multispeech::punctuations::mode value;
+
+  // Parsing table.
   static const Entry table[];
 };
 

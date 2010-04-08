@@ -20,6 +20,8 @@
 
 #include <sysconfig.h>
 
+#include <boost/foreach.hpp>
+
 #include "session.hpp"
 
 
@@ -29,6 +31,7 @@ namespace SSIP
 using namespace std;
 using namespace boost;
 using namespace FBB;
+using namespace multispeech;
 
 
 // Counter for session id generation:
@@ -138,6 +141,41 @@ session::set_notification(void)
     rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = notification.setup(settings::beyond());
+  return rc;
+}
+
+message::code
+session::set_punctuation(void)
+{
+  message::code rc = message::OK_PUNCT_MODE_SET;
+  if (!block.inside())
+    {
+      punctuations::mode mode = punctuation.parse(settings::beyond());
+      if (mode != punctuations::unknown)
+        switch (target.selection())
+          {
+          case destination::self:
+            punctuation.verbosity(mode);
+            break;
+          case destination::all:
+            BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+              client.second->punctuation.verbosity(mode);
+            break;
+          case destination::another:
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->punctuation.verbosity(mode);
+              else rc = message::ERR_NO_SUCH_CLIENT;
+            }
+            break;
+          default:
+            rc = message::ERR_PARAMETER_INVALID;
+            break;
+          }
+      else rc = message::ERR_PARAMETER_INVALID;
+    }
+  else rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
   return rc;
 }
 

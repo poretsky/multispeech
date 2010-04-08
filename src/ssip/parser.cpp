@@ -118,9 +118,18 @@ const notification_setup::Entry notification_setup::table[] =
 // Block command parser table:
 const block_mode::Entry block_mode::table[] =
   {
-    Entry("begin", &block_mode::block_begin),
-    Entry("end", &block_mode::block_end),
-    Entry("", &block_mode::block_unknown)
+    Entry("begin", &block_mode::begin),
+    Entry("end", &block_mode::end),
+    Entry("", &block_mode::unknown)
+  };
+
+// Punctuation mode setup request parser table:
+const punctuation_mode::Entry punctuation_mode::table[] =
+  {
+    Entry("all", &punctuation_mode::all),
+    Entry("some", &punctuation_mode::some),
+    Entry("none", &punctuation_mode::none),
+    Entry("", &punctuation_mode::unknown)
   };
 
 
@@ -610,6 +619,8 @@ block_mode::block_mode(void):
 {
 }
 
+// Public methods:
+
 bool
 block_mode::inside(void) const
 {
@@ -622,8 +633,10 @@ block_mode::toggle(const string& request)
   return (this->*findCmd(request))();
 }
 
+// Private methods:
+
 message::code
-block_mode::block_begin(void)
+block_mode::begin(void)
 {
   message::code rc = message::ERR_ALREADY_INSIDE_BLOCK;
   if (!state)
@@ -635,7 +648,7 @@ block_mode::block_begin(void)
 }
 
 message::code
-block_mode::block_end(void)
+block_mode::end(void)
 {
   message::code rc = message::ERR_ALREADY_OUTSIDE_BLOCK;
   if (state)
@@ -647,9 +660,66 @@ block_mode::block_end(void)
 }
 
 message::code
-block_mode::block_unknown(void)
+block_mode::unknown(void)
 {
   return message::ERR_PARAMETER_INVALID;
+}
+
+
+// Punctuation mode control means:
+
+punctuation_mode::punctuation_mode(void):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE),
+  value(punctuations::unknown)
+{
+}
+
+// Public methods:
+
+punctuations::mode
+punctuation_mode::parse(const string& request)
+{
+  return (this->*findCmd(request))();
+}
+
+punctuations::mode
+punctuation_mode::verbosity(void) const
+{
+  return value;
+}
+
+void
+punctuation_mode::verbosity(punctuations::mode mode)
+{
+  value = mode;
+}
+
+  // Private methods:
+
+punctuations::mode
+punctuation_mode::all(void)
+{
+  return punctuations::all;
+}
+
+punctuations::mode
+punctuation_mode::some(void)
+{
+  return punctuations::some;
+}
+
+punctuations::mode
+punctuation_mode::none(void)
+{
+  return punctuations::none;
+}
+
+punctuations::mode
+punctuation_mode::unknown(void)
+{
+  return punctuations::unknown;
 }
 
 } // namespace SSIP

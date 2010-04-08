@@ -60,6 +60,7 @@ private:
   // Parameter settings:
   message::code set_client_name(void);
   message::code set_notification(void);
+  message::code set_punctuation(void);
 
   // Request destination parser:
   destination target;
@@ -68,6 +69,7 @@ private:
   client_info client;
   notification_mode notification;
   block_mode block;
+  punctuation_mode punctuation;
 
   // Host server reference:
   proxy& host;
