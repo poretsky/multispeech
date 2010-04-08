@@ -132,6 +132,17 @@ const punctuation_mode::Entry punctuation_mode::table[] =
     Entry("", &punctuation_mode::unknown)
   };
 
+// Priority setup requests parser table:
+const urgency_mode::Entry urgency_mode::table[] =
+  {
+    Entry("important", &urgency_mode::set_important),
+    Entry("message", &urgency_mode::set_message),
+    Entry("text", &urgency_mode::set_text),
+    Entry("notification", &urgency_mode::set_notification),
+    Entry("progress", &urgency_mode::set_progress),
+    Entry("", &urgency_mode::set_unknown)
+  };
+
 
 // General commands dispatcher:
 
@@ -717,6 +728,73 @@ punctuations::mode
 punctuation_mode::unknown(void)
 {
   return punctuations::unknown;
+}
+
+
+// Priority control:
+
+urgency_mode::urgency_mode(void):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE),
+  value(text)
+{
+}
+
+// Public methods:
+
+message::code
+urgency_mode::setup(const string& request)
+{
+  return (this->*findCmd(request))();
+}
+
+urgency_mode::operator category(void) const
+{
+  return value;
+}
+
+// Private methods:
+
+message::code
+urgency_mode::set_important(void)
+{
+  value = important;
+  return message::OK_PRIORITY_SET;
+}
+
+message::code
+urgency_mode::set_message(void)
+{
+  value = message;
+  return message::OK_PRIORITY_SET;
+}
+
+message::code
+urgency_mode::set_text(void)
+{
+  value = text;
+  return message::OK_PRIORITY_SET;
+}
+
+message::code
+urgency_mode::set_notification(void)
+{
+  value = notification;
+  return message::OK_PRIORITY_SET;
+}
+
+message::code
+urgency_mode::set_progress(void)
+{
+  value = progress;
+  return message::OK_PRIORITY_SET;
+}
+
+message::code
+urgency_mode::set_unknown(void)
+{
+  return message::ERR_UNKNOWN_PRIORITY;
 }
 
 } // namespace SSIP

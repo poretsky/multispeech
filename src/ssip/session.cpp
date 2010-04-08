@@ -94,7 +94,7 @@ session::cmd_set(void)
 bool
 session::cmd_quit(void)
 {
-  emit(message::OK_BYE);
+  emit(OK_BYE);
   return false;
 }
 
@@ -108,14 +108,14 @@ session::cmd_help(void)
 bool
 session::cmd_unknown(void)
 {
-  emit(message::ERR_INVALID_COMMAND);
+  emit(ERR_INVALID_COMMAND);
   return true;
 }
 
 bool
 session::cmd_unimplemented(void)
 {
-  emit(message::ERR_NOT_IMPLEMENTED);
+  emit(ERR_NOT_IMPLEMENTED);
   return true;
 }
 
@@ -127,7 +127,7 @@ session::set_client_name(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
   if (block)
-    rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
+    rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = client.name(settings::beyond());
   return rc;
@@ -138,7 +138,7 @@ session::set_notification(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
   if (block)
-    rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
+    rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = notification.setup(settings::beyond());
   return rc;
@@ -166,16 +166,27 @@ session::set_punctuation(void)
               session* client = host.client(target.id());
               if (client)
                 client->punctuation(mode);
-              else rc = message::ERR_NO_SUCH_CLIENT;
+              else rc = ERR_NO_SUCH_CLIENT;
             }
             break;
           default:
-            rc = message::ERR_PARAMETER_INVALID;
+            rc = ERR_PARAMETER_INVALID;
             break;
           }
-      else rc = message::ERR_PARAMETER_INVALID;
+      else rc = ERR_PARAMETER_INVALID;
     }
-  else rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  return rc;
+}
+
+message::code
+session::set_priority(void)
+{
+  message::code rc = ERR_PARAMETER_INVALID;
+  if (block)
+    rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  else if (target.selection() == destination::self)
+    rc = priority.setup(settings::beyond());
   return rc;
 }
 

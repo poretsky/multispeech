@@ -318,6 +318,45 @@ private:
   static const Entry table[];
 };
 
+// Urgency mode parsing and storing.
+class urgency_mode: FBB::CmdFinder<message::code (urgency_mode::*)(void)>
+{
+public:
+  // Recognized categories:
+  enum category
+  {
+    important,
+    message,
+    text,
+    notification,
+    progress
+  };
+
+  // Main constructor.
+  urgency_mode(void);
+
+  // Parse request and setup value.
+  message::code setup(const std::string& request);
+
+  // Current value access.
+  operator category(void) const;
+
+private:
+  // Set value according to the request.
+  message::code set_important(void);
+  message::code set_message(void);
+  message::code set_text(void);
+  message::code set_notification(void);
+  message::code set_progress(void);
+  message::code set_unknown(void);
+
+  // Current value holder.
+  category value;
+
+  // Parsing table.
+  static const Entry table[];
+};
+
 } // namespace SSIP
 
 #endif

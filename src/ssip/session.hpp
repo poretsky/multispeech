@@ -61,6 +61,7 @@ private:
   message::code set_client_name(void);
   message::code set_notification(void);
   message::code set_punctuation(void);
+  message::code set_priority(void);
 
   // Request destination parser:
   destination target;
@@ -70,6 +71,7 @@ private:
   notification_mode notification;
   block_mode block;
   punctuation_mode punctuation;
+  urgency_mode priority;
 
   // Host server reference:
   proxy& host;
