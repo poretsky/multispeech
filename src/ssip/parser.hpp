@@ -233,7 +233,7 @@ public:
   notification_mode(void);
 
   // Current value accessor.
-  unsigned int event_mask(void) const;
+  operator unsigned int(void) const;
 
   // Request parser.
   message::code setup(const std::string& request);
@@ -267,8 +267,8 @@ public:
   // Main constructor.
   block_mode(void);
 
-  // Current state accessor.
-  bool inside(void) const;
+  // Inside block state indicator.
+  operator bool(void) const;
 
   // Parse toggle request.
   message::code toggle(const std::string& request);
@@ -299,10 +299,10 @@ public:
   multispeech::punctuations::mode parse(const std::string& request);
 
   // Current state accessor.
-  multispeech::punctuations::mode verbosity(void) const;
+  operator multispeech::punctuations::mode(void) const;
 
   // Change current mode.
-  void verbosity(multispeech::punctuations::mode mode);
+  void operator()(multispeech::punctuations::mode mode);
 
 private:
   // Mode detectors.

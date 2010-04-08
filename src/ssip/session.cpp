@@ -126,7 +126,7 @@ message::code
 session::set_client_name(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (block.inside())
+  if (block)
     rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = client.name(settings::beyond());
@@ -137,7 +137,7 @@ message::code
 session::set_notification(void)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (block.inside())
+  if (block)
     rc = message::ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = notification.setup(settings::beyond());
@@ -148,24 +148,24 @@ message::code
 session::set_punctuation(void)
 {
   message::code rc = message::OK_PUNCT_MODE_SET;
-  if (!block.inside())
+  if (!block)
     {
       punctuations::mode mode = punctuation.parse(settings::beyond());
       if (mode != punctuations::unknown)
         switch (target.selection())
           {
           case destination::self:
-            punctuation.verbosity(mode);
+            punctuation(mode);
             break;
           case destination::all:
             BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-              client.second->punctuation.verbosity(mode);
+              client.second->punctuation(mode);
             break;
           case destination::another:
             {
               session* client = host.client(target.id());
               if (client)
-                client->punctuation.verbosity(mode);
+                client->punctuation(mode);
               else rc = message::ERR_NO_SUCH_CLIENT;
             }
             break;

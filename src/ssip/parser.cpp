@@ -528,8 +528,7 @@ notification_mode::notification_mode(void):
 
 // Public methods:
 
-unsigned int
-notification_mode::event_mask(void) const
+notification_mode::operator unsigned int(void) const
 {
   return value;
 }
@@ -621,8 +620,7 @@ block_mode::block_mode(void):
 
 // Public methods:
 
-bool
-block_mode::inside(void) const
+block_mode::operator bool(void) const
 {
   return state;
 }
@@ -684,19 +682,18 @@ punctuation_mode::parse(const string& request)
   return (this->*findCmd(request))();
 }
 
-punctuations::mode
-punctuation_mode::verbosity(void) const
+punctuation_mode::operator punctuations::mode(void) const
 {
   return value;
 }
 
 void
-punctuation_mode::verbosity(punctuations::mode mode)
+punctuation_mode::operator()(punctuations::mode mode)
 {
   value = mode;
 }
 
-  // Private methods:
+// Private methods:
 
 punctuations::mode
 punctuation_mode::all(void)
