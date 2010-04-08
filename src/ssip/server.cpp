@@ -82,10 +82,10 @@ server::client(unsigned long id)
   return NULL;
 }
 
-server::clients_list_boundary
+server::clients_list&
 server::all_clients(void)
 {
-  return clients_list_boundary(clients.begin(), clients.end());
+  return clients;
 }
 
 void

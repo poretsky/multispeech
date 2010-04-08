@@ -67,7 +67,7 @@ private:
   void hello(unsigned long id, session* client);
   void bye(unsigned long id);
   session* client(unsigned long id);
-  clients_list_boundary all_clients(void);
+  clients_list& all_clients(void);
 
   // Methods required by Fork:
   void parentProcess(void);
