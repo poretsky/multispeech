@@ -47,6 +47,10 @@ session::session(proxy* origin, int socket_fd):
   host(*origin),
   id(++count)
 {
+  punctuation(host.punctuation);
+  rate_factor(host.rate_factor);
+  pitch_factor(host.pitch_factor);
+  volume_factor(host.volume_factor);
 }
 
 
@@ -160,6 +164,7 @@ session::set_punctuation(void)
           case destination::all:
             BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
               client.second->punctuation(mode);
+            host.punctuation = mode;
             break;
           case destination::another:
             {
@@ -217,6 +222,7 @@ session::set_rate(void)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
                 client.second->rate_factor(value);
+              host.rate_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;
@@ -266,6 +272,7 @@ session::set_pitch(void)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
                 client.second->pitch_factor(value);
+              host.pitch_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;
@@ -315,6 +322,7 @@ session::set_volume(void)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
                 client.second->volume_factor(value);
+              host.volume_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;

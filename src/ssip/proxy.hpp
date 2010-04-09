@@ -36,6 +36,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include <mscore/server.hpp>
+#include <mscore/text_filter.hpp>
 
 namespace SSIP
 {
@@ -45,13 +46,21 @@ class proxy: public multispeech::server
 protected:
   // Main constructor:
   proxy(int argc, char* argv[]):
-    multispeech::server(argc, argv)
+    multispeech::server(argc, argv),
+    punctuation(multispeech::punctuations::some),
+    rate_factor(0),
+    pitch_factor(0),
+    volume_factor(0)
   {
   }
 
 public:
   // Clients list representation:
   typedef std::map<unsigned long, class session*> clients_list;
+
+  // Initial defaults for starting a session:
+  multispeech::punctuations::mode punctuation;
+  int rate_factor, pitch_factor, volume_factor;
 
   // Shared access synchronization means:
   boost::mutex access;
