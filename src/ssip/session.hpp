@@ -62,6 +62,9 @@ private:
   message::code set_notification(void);
   message::code set_punctuation(void);
   message::code set_priority(void);
+  message::code set_rate(void);
+  message::code set_pitch(void);
+  message::code set_volume(void);
 
   // Request destination parser:
   destination target;
@@ -72,6 +75,9 @@ private:
   block_mode block;
   punctuation_mode punctuation;
   urgency_mode priority;
+  digital_value rate_factor;
+  digital_value pitch_factor;
+  digital_value volume_factor;
 
   // Host server reference:
   proxy& host;

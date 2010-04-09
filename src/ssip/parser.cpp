@@ -143,6 +143,9 @@ const urgency_mode::Entry urgency_mode::table[] =
     Entry("", &urgency_mode::set_unknown)
   };
 
+// Digital parameter value pattern:
+const boost::regex digital_value::pattern("^([+-]?\\d+)\\s*$");
+
 
 // General commands dispatcher:
 
@@ -795,6 +798,48 @@ message::code
 urgency_mode::set_unknown(void)
 {
   return message::ERR_UNKNOWN_PRIORITY;
+}
+
+
+// Dealing with digital parameters:
+
+digital_value::digital_value(void):
+  factor(1.0)
+{
+}
+
+// Public methods:
+
+int
+digital_value::extract(const string& request)
+{
+  smatch extractor;
+  int value = invalid;
+  if (regex_match(request, extractor, pattern))
+    {
+      value = lexical_cast<int>(string(extractor[1].first, extractor[1].second));
+      if (value < bottom)
+        value = too_low;
+      else if (value > top)
+        value = too_high;
+    }
+  return value;
+}
+
+void
+digital_value::operator()(int value)
+{
+  factor = static_cast<double>(value);
+  factor -= (top + bottom) / 2;
+  factor /= (top - bottom) / 2;
+  factor += 1.0;
+  if (factor <= 0.0)
+    factor = epsilon;
+}
+
+digital_value::operator double(void) const
+{
+  return factor;
 }
 
 } // namespace SSIP

@@ -190,4 +190,151 @@ session::set_priority(void)
   return rc;
 }
 
+message::code
+session::set_rate(void)
+{
+  message::code rc = OK_RATE_SET;
+  int value = digital_value::extract(settings::beyond());
+  switch (value)
+    {
+    case digital_value::invalid:
+      rc = ERR_PARAMETER_INVALID;
+      break;
+    case digital_value::too_low:
+      rc = ERR_RATE_TOO_LOW;
+      break;
+    case digital_value::too_high:
+      rc = ERR_RATE_TOO_HIGH;
+      break;
+    default:
+      switch (target.selection())
+        {
+        case destination::self:
+          rate_factor(value);
+          break;
+        case destination::all:
+          if (!block)
+            {
+              BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+                client.second->rate_factor(value);
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        case destination::another:
+          if (!block)
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->rate_factor(value);
+              else rc = ERR_NO_SUCH_CLIENT;
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+      break;
+    }
+  return rc;
+}
+
+message::code
+session::set_pitch(void)
+{
+  message::code rc = OK_PITCH_SET;
+  int value = digital_value::extract(settings::beyond());
+  switch (value)
+    {
+    case digital_value::invalid:
+      rc = ERR_PARAMETER_INVALID;
+      break;
+    case digital_value::too_low:
+      rc = ERR_PITCH_TOO_LOW;
+      break;
+    case digital_value::too_high:
+      rc = ERR_PITCH_TOO_HIGH;
+      break;
+    default:
+      switch (target.selection())
+        {
+        case destination::self:
+          pitch_factor(value);
+          break;
+        case destination::all:
+          if (!block)
+            {
+              BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+                client.second->pitch_factor(value);
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        case destination::another:
+          if (!block)
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->pitch_factor(value);
+              else rc = ERR_NO_SUCH_CLIENT;
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+      break;
+    }
+  return rc;
+}
+
+message::code
+session::set_volume(void)
+{
+  message::code rc = OK_VOLUME_SET;
+  int value = digital_value::extract(settings::beyond());
+  switch (value)
+    {
+    case digital_value::invalid:
+      rc = ERR_PARAMETER_INVALID;
+      break;
+    case digital_value::too_low:
+      rc = ERR_VOLUME_TOO_LOW;
+      break;
+    case digital_value::too_high:
+      rc = ERR_VOLUME_TOO_HIGH;
+      break;
+    default:
+      switch (target.selection())
+        {
+        case destination::self:
+          volume_factor(value);
+          break;
+        case destination::all:
+          if (!block)
+            {
+              BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+                client.second->volume_factor(value);
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        case destination::another:
+          if (!block)
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->volume_factor(value);
+              else rc = ERR_NO_SUCH_CLIENT;
+            }
+          else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+      break;
+    }
+  return rc;
+}
+
 } // namespace SSIP

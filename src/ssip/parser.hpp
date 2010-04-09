@@ -318,6 +318,7 @@ private:
   static const Entry table[];
 };
 
+
 // Urgency mode parsing and storing.
 class urgency_mode: FBB::CmdFinder<message::code (urgency_mode::*)(void)>
 {
@@ -355,6 +356,47 @@ private:
 
   // Parsing table.
   static const Entry table[];
+};
+
+
+// Dealing with digital parameters.
+class digital_value
+{
+public:
+  // Special values:
+  enum
+  {
+    too_low = -200,
+    too_high = 200,
+    invalid = 1000
+  };
+
+  // Main constructor.
+  digital_value(void);
+
+  // Validate and parse request.
+  static int extract(const std::string& request);
+
+  // Set up the value. The only valid one should be used here.
+  void operator()(int value);
+
+  // Retrieve stored factor.
+  operator double(void) const;
+
+private:
+  // Here we store the factor that will be applied to the configured
+  // parameter value. It should never be zero or negative.
+  double factor;
+
+  // Allowed value boundaries.
+  static const int bottom = -100;
+  static const int top = 100;
+
+  // Factor value used instead of zero.
+  static const double epsilon = 0.0001;
+
+  // Pattern for validation.
+  static const boost::regex pattern;
 };
 
 } // namespace SSIP
