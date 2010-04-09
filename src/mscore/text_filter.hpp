@@ -95,7 +95,8 @@ public:
   {
     all = 0,
     some = 8,
-    none = 1000 // Beyond the list
+    none = 1000, // Beyond the list
+    unknown = 2000
   };
 
   explicit punctuations(const std::vector<const wchar_t*>& pronunciations_list);
