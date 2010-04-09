@@ -172,8 +172,10 @@ private:
   void notify(notification::job_event status, const job& unit);
   void mute(void); // Mute all playing sounds if any.
   void die(void); // Make thread to break execution loop.
-  void next_job(void); // Get and start the next job from the queue.
-  bool working(void); // Return true if a job is in progress.
+  void next(void); // Get and start the next job item from the queue.
+  bool working(void); // Return true if a job item is in progress.
+  void shift(void); // Shift to the next job or item if any.
+  void initiate(void); // Initiate job or item for execution.
 };
 
 } // namespace multispeech

@@ -20,27 +20,41 @@
 
 #include <sysconfig.h>
 
+#include <typeinfo>
+
 #include "job.hpp"
 
 
 namespace multispeech
 {
 
+using namespace std;
 using namespace boost;
 
 // General job counter initialization:
 unsigned long job::count = 0;
 
 
-// Default constructor:
+// Constructors:
 
 job::job(void):
-  any(),
   unit_id(0),
   owner_id(0),
   urgency_level(0),
   event_mask(0),
-  current_state(idle)
+  current_state(idle),
+  index(0)
+{
+}
+
+job::job(unsigned long owner, int urgency,
+         unsigned int notification_mode):
+  unit_id(++count),
+  owner_id(owner),
+  urgency_level(urgency),
+  event_mask(notification_mode),
+  current_state(idle),
+  index(0)
 {
 }
 
@@ -77,6 +91,18 @@ job::state(void) const
   return current_state;
 }
 
+size_t
+job::size(void) const
+{
+  return prescription.size();
+}
+
+bool
+job::empty(void) const
+{
+  return prescription.empty();
+}
+
 void
 job::activate(void)
 {
@@ -93,6 +119,20 @@ void
 job::kill(void)
 {
   current_state = idle;
+}
+
+bool
+job::shift(void)
+{
+  return (++index) >= prescription.size();
+}
+
+const type_info&
+job::item_type(void) const
+{
+  return (index < prescription.size()) ?
+    prescription[index].type() :
+    typeid(void);
 }
 
 bool

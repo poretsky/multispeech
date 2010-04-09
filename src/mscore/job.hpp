@@ -22,16 +22,19 @@
 // for use in prioritised queue container. It serves as a wrapper
 // around such classes as speech_task, sound_task and tone_task
 // providing some common properties by the way.
+// It also allows to pack several tasks in one job.
 
 #ifndef MULTISPEECH_TASK_HPP
 #define MULTISPEECH_TASK_HPP
+
+#include <vector>
 
 #include <boost/any.hpp>
 
 namespace multispeech
 {
 
-class job: public boost::any
+class job
 {
 public:
   // Job life cycle states:
@@ -46,17 +49,22 @@ public:
   // Default constructor:
   job(void);
 
-  // Construct job for specified task description:
+  // Construct empty job for the sake of specified owner:
+  explicit job(unsigned long owner, int urgency = 0,
+               unsigned int notification_mode = 0);
+
+  // Construct anonymous job for a single task:
   template <typename task_description>
-  job(const task_description& task, unsigned long owner = 0,
-      int urgency = 0, unsigned int notification_mode = 0):
-    boost::any(task),
+  explicit job(const task_description& task, int urgency = 0,
+               unsigned int notification_mode = 0):
     unit_id(++count),
-    owner_id(owner),
+    owner_id(0),
     urgency_level(urgency),
     event_mask(notification_mode),
-    current_state(idle)
+    current_state(idle),
+    index(0)
   {
+    prescription.push_back(boost::any(task));
   }
 
   // Attribute accessors:
@@ -65,11 +73,35 @@ public:
   int urgency(void) const;
   unsigned int notification_mode(void) const;
   status state(void) const;
+  size_t size(void) const;
+  bool empty(void) const;
 
   // Life cycle control:
   void activate(void);
   void postpone(void);
   void kill(void);
+
+  // Step forward through prescriptions list and indicate
+  // the end of list by returning true:
+  bool shift(void);
+
+  // Add a task to the prescriptions list:
+  template <typename task_description>
+  job& operator<<(const task_description& task)
+  {
+    prescription.push_back(boost::any(task));
+    return *this;
+  }
+
+  // Get reference to the current item from the prescriptions:
+  template <typename task_description>
+  task_description item(void) const
+  {
+    return boost::any_cast<task_description>(prescription[index]);
+  }
+
+  // Get type of current prescription item:
+  const std::type_info& item_type(void) const;
 
   // Priority ordering operator. It is assumed that empty job
   // always has greater priority than non-empty one.
@@ -84,6 +116,10 @@ private:
 
   // Job state:
   status current_state;
+
+  // Tasks package:
+  std::vector<boost::any> prescription;
+  size_t index;
 
   // Unit identification generator:
   static unsigned long count;

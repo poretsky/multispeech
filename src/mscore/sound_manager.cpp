@@ -288,13 +288,13 @@ sound_manager::die(void)
 }
 
 void
-sound_manager::next_job(void)
+sound_manager::next(void)
 {
   if ((state == running) && !jobs->empty())
     {
       if (jobs->front().empty())
         business = nothing;
-      else if (jobs->front().type() == typeid(sound_task))
+      else if (jobs->front().item_type() == typeid(sound_task))
         {
           if (!file_player::asynchronous)
             {
@@ -302,16 +302,12 @@ sound_manager::next_job(void)
                 tones.stop();
               speech.stop();
             }
-          notify((jobs->front().state() != job::postponed) ?
-                 notification::job_start :
-                 notification::job_resume,
-                 jobs->front());
-          jobs->front().activate();
-          sounds.start(any_cast<sound_task>(jobs->front()),
+          initiate();
+          sounds.start(jobs->front().item<sound_task>(),
                        !file_player::asynchronous || (business != playing));
           business = playing;
         }
-      else if (jobs->front().type() == typeid(tone_task))
+      else if (jobs->front().item_type() == typeid(tone_task))
         {
           if (!tone_generator::asynchronous)
             {
@@ -319,28 +315,20 @@ sound_manager::next_job(void)
                 sounds.stop();
               speech.stop();
             }
-          notify((jobs->front().state() != job::postponed) ?
-                 notification::job_start :
-                 notification::job_resume,
-                 jobs->front());
-          jobs->front().activate();
-          tones.start(any_cast<tone_task>(jobs->front()),
+          initiate();
+          tones.start(jobs->front().item<tone_task>(),
                       !tone_generator::asynchronous || (business != beeping));
           business = beeping;
         }
-      else if (jobs->front().type() == typeid(speech_task))
+      else if (jobs->front().item_type() == typeid(speech_task))
         {
           if (!file_player::asynchronous)
             sounds.stop();
           if (!tone_generator::asynchronous)
             tones.stop();
           speech.stop();
-          notify((jobs->front().state() != job::postponed) ?
-                 notification::job_start :
-                 notification::job_resume,
-                 jobs->front());
-          jobs->front().activate();
-          speech.start(any_cast<speech_task>(jobs->front()));
+          initiate();
+          speech.start(jobs->front().item<speech_task>());
           business = speaking;
         }
       else business = nothing;
@@ -362,43 +350,21 @@ sound_manager::working(void)
         {
         case playing:
           if (file_player::asynchronous || !sounds.active())
-            {
-              if (jobs->front().state() == job::active)
-                notify(notification::job_complete, jobs->front());
-              else if (jobs->front().id() && (jobs->front().state() == job::idle))
-                notify(notification::job_cancel, jobs->front());
-              jobs->pop_front();
-            }
+            shift();
           else result = true;
           break;
         case beeping:
           if (tone_generator::asynchronous || !tones.active())
-            {
-              if (jobs->front().state() == job::active)
-                notify(notification::job_complete, jobs->front());
-              else if (jobs->front().id() && (jobs->front().state() == job::idle))
-                notify(notification::job_cancel, jobs->front());
-              jobs->pop_front();
-            }
+            shift();
           else result = true;
           break;
         case speaking:
           if (!speech.active())
-            {
-              if (jobs->front().state() == job::active)
-                notify(notification::job_complete, jobs->front());
-              else if (jobs->front().id() && (jobs->front().state() == job::idle))
-                notify(notification::job_cancel, jobs->front());
-              jobs->pop_front();
-            }
+            shift();
           else result = true;
           break;
         default:
-          if (jobs->front().state() == job::active)
-            notify(notification::job_complete, jobs->front());
-          else if (jobs->front().id() && (jobs->front().state() == job::idle))
-            notify(notification::job_cancel, jobs->front());
-          jobs->pop_front();
+          shift();
           break;
         }
       if (jobs->empty())
@@ -408,6 +374,38 @@ sound_manager::working(void)
         }
     }
   return result;
+}
+
+void
+sound_manager::shift(void)
+{
+  if (jobs->front().state() == job::active)
+    {
+      if (jobs->front().shift())
+        {
+          notify(notification::job_complete, jobs->front());
+          jobs->pop_front();
+        }
+    }
+  else
+    {
+      if (jobs->front().id() && (jobs->front().state() == job::idle))
+        notify(notification::job_cancel, jobs->front());
+      jobs->pop_front();
+    }
+}
+
+void
+sound_manager::initiate(void)
+{
+  if (jobs->front().state() != job::active)
+    {
+      notify((jobs->front().state() != job::postponed) ?
+             notification::job_start :
+             notification::job_resume,
+             jobs->front());
+      jobs->front().activate();
+    }
 }
 
 
@@ -426,7 +424,7 @@ sound_manager::agent::operator()(void)
       mutex::scoped_lock lock(holder->access);
       while (holder->state == idle)
         holder->event.wait(lock);
-      holder->next_job();
+      holder->next();
       while (holder->working())
         audioplayer::complete.wait(lock);
     }
