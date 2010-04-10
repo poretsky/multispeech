@@ -121,6 +121,12 @@ job::kill(void)
   current_state = idle;
 }
 
+void
+job::obsolete(void)
+{
+  urgency_level = 0;
+}
+
 bool
 job::shift(void)
 {

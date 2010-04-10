@@ -65,15 +65,20 @@ public:
   // When the dominate flag is specified and new job has enough
   // priority, it can interrupt and postpone currently running one.
   // By default running job is not affected by new insertions.
-  void enqueue(const job& unit, bool dominate = false);
+  // If update flag is true and newly submitted job has the same
+  // priority as the currently running one, then currently running job
+  // is obsoleted though not cancelled.
+  void enqueue(const job& unit, bool dominate = false, bool update = false);
 
   // Cancel job by it's id. It is absolutely no harm to specify
   // non-existent id here. There will nothing be done in that case.
   void cancel(unsigned long id);
 
-  // Jobs selection by urgency. All jobs with urgency attribute
-  // less than specified value will be deleted from the queue.
-  void select(int urgency);
+  // Jobs rejection by urgency. All jobs with urgency attribute
+  // less than or equal to specified value will be cancelled
+  // and deleted from the queue. If exact flag is true, then
+  // only jobs with specified urgency will be affected.
+  void reject(int urgency, bool exact = false);
 
   // Return current job state for specified id.
   job::status query(unsigned long id);

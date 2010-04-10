@@ -81,6 +81,9 @@ public:
   void postpone(void);
   void kill(void);
 
+  // Reset urgency to 0 to indicate that the job has no importance anymore:
+  void obsolete(void);
+
   // Step forward through prescriptions list and indicate
   // the end of list by returning true:
   bool shift(void);

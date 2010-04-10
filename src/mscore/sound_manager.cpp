@@ -59,7 +59,7 @@ sound_manager::~sound_manager(void)
 // Public methods:
 
 void
-sound_manager::enqueue(const job&unit, bool dominate)
+sound_manager::enqueue(const job&unit, bool dominate, bool update)
 {
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
@@ -78,7 +78,9 @@ sound_manager::enqueue(const job&unit, bool dominate)
         }
       ++position;
     }
-  jobs->insert(position, unit)->activate();
+  if (update && (unit.urgency() == jobs->front().urgency()))
+    jobs->front().obsolete();
+  jobs->insert(position, unit);
 }
 
 void
@@ -105,12 +107,13 @@ sound_manager::cancel(unsigned long id)
 }
 
 void
-sound_manager::select(int urgency)
+sound_manager::reject(int urgency, bool exact)
 {
   mutex::scoped_lock lock(access);
   list<job>::iterator position;
   for (position = jobs->begin(); position != jobs->end(); ++position)
-    if (position->urgency() < urgency)
+    if ((position->urgency() == urgency) ||
+        (!exact && (position->urgency() < urgency)))
       {
         if (position->state() == job::active)
           {
