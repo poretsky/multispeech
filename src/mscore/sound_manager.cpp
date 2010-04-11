@@ -22,6 +22,8 @@
 
 #include <typeinfo>
 
+#include <boost/thread/thread.hpp>
+
 #include "sound_manager.hpp"
 
 #include "audioplayer.hpp"
