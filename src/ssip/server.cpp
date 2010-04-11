@@ -21,6 +21,7 @@
 #include <sysconfig.h>
 
 #include <boost/assign.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <mscore/config.hpp>
 
@@ -52,7 +53,8 @@ map<job::event, message::code> server::notification = map_list_of
 
 server::server(int argc, char* argv[]):
   proxy(argc, argv),
-  ServerSocket(option_value[multispeech::options::ssip::port].as<unsigned int>())
+  ServerSocket(option_value[multispeech::options::ssip::port].as<unsigned int>()),
+  connecting(false)
 {
   charset("UTF-8");
   listen();
@@ -65,10 +67,10 @@ void
 server::connect(int fd)
 {
   mutex::scoped_lock lock(proxy::access);
-  competitor.reset(new thread(session(this, fd)));
-  while (competitor.unique())
-    session_started.wait(lock);
-  competitor.reset();
+  connecting = true;
+  thread(session(this, fd));
+  while (connecting)
+    connected.wait(lock);
 }
 
 void
@@ -89,8 +91,8 @@ server::hello(unsigned long id, session* client)
 {
   mutex::scoped_lock lock(proxy::access);
   clients[id] = client;
-  threads[id] = competitor;
-  session_started.notify_one();
+  connecting = false;
+  connected.notify_one();
 }
 
 void
@@ -98,7 +100,6 @@ server::bye(unsigned long id)
 {
   mutex::scoped_lock lock(proxy::access);
   clients.erase(id);
-  threads.erase(id);
 }
 
 session*

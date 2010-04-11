@@ -23,8 +23,6 @@
 
 #include <map>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 
 #include <bobcat/serversocket>
@@ -48,20 +46,12 @@ public:
   server(int argc, char* argv[]);
 
 private:
-  // Container for running thread handler:
-  typedef boost::shared_ptr<boost::thread> process;
-
   // Active sessions:
   clients_list clients;
 
-  // Active session thread handlers:
-  std::map<unsigned long, process> threads;
-
-  // Incoming session thread:
-  process competitor;
-
-  // Session initiation complete:
-  boost::condition session_started;
+  // Session startup synchronization means:
+  boost::condition connected;
+  bool connecting;
 
   // Map of SSIP event codes:
   static std::map<multispeech::job::event, message::code> notification;
