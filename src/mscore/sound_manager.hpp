@@ -119,7 +119,8 @@ private:
   {
     idle, // No job is executing quite now.
     running, // Actually executing jobs from the queue.
-    dead // Shutting down the thread.
+    dead, // Shutting down the thread.
+    none // Doesn't exist.
   };
 
   // Activity types:
@@ -168,10 +169,7 @@ private:
 
   // Critical data access control means.
   boost::mutex access;
-  boost::condition event;
-
-  // Thread handler.
-  boost::thread service;
+  boost::condition event, complete;
 
   // Internal routines:
   void notify(notification::job_event status, const job& unit);

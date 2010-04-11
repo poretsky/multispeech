@@ -37,14 +37,13 @@ using namespace boost;
 // Constructing / destroying:
 
 sound_manager::sound_manager(const configuration* conf):
-  state(idle),
+  state(none),
   business(nothing),
   jobs(new jobs_queue),
   sounds(conf),
   tones(conf),
   speech(conf),
-  feedback(NULL),
-  service(agent(this))
+  feedback(NULL)
 {
 }
 
@@ -52,7 +51,6 @@ sound_manager::~sound_manager(void)
 {
   stop();
   die();
-  service.join();
 }
 
 
@@ -192,6 +190,11 @@ sound_manager::proceed(void)
 {
   {
     mutex::scoped_lock lock(access);
+    if (state == none)
+      {
+        state = idle;
+        thread(agent(this));
+      }
     if ((state == idle) && !jobs->empty())
       {
         state = running;
@@ -232,6 +235,10 @@ sound_manager::resume(void)
           break;
         case running:
           jobs->push_front(job());
+          break;
+        case none:
+          state = running;
+          thread(agent(this));
         default:
           break;
         }
@@ -284,10 +291,15 @@ sound_manager::mute(void)
 void
 sound_manager::die(void)
 {
-  mutex::scoped_lock lock(access);
   mute();
-  state = dead;
-  event.notify_one();
+  if (state != none)
+    {
+      mutex::scoped_lock lock(access);
+      state = dead;
+      event.notify_one();
+      while (state != none)
+        complete.wait(lock);
+    }
 }
 
 void
@@ -422,14 +434,24 @@ sound_manager::agent::agent(sound_manager* job_holder):
 void
 sound_manager::agent::operator()(void)
 {
-  while (holder->state != dead)
+  while (holder->state != none)
     {
       mutex::scoped_lock lock(holder->access);
       while (holder->state == idle)
         holder->event.wait(lock);
-      holder->next();
-      while (holder->working())
-        audioplayer::complete.wait(lock);
+      switch (holder->state)
+        {
+        case running:
+          holder->next();
+          while (holder->working())
+            audioplayer::complete.wait(lock);
+          break;
+        case dead:
+          holder->state = none;
+          holder->complete.notify_one();
+        default:
+          break;
+        }
     }
 }
 
