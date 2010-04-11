@@ -30,7 +30,10 @@
 #include <bobcat/serversocket>
 #include <bobcat/fork>
 
+#include <mscore/job.hpp>
+
 #include "proxy.hpp"
+#include "message.hpp"
 
 namespace SSIP
 {
@@ -60,8 +63,15 @@ private:
   // Session initiation complete:
   boost::condition session_started;
 
+  // Map of SSIP event codes:
+  static std::map<multispeech::job::event, message::code> notification;
+
   // Initiate a new session for specified socket:
   void connect(int fd);
+
+  // Event notification callback:
+  void consume_report(multispeech::job::event event,
+                      unsigned long id, unsigned long owner);
 
   // Methods required by proxy:
   void hello(unsigned long id, session* client);

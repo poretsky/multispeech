@@ -20,6 +20,8 @@
 
 #include <sysconfig.h>
 
+#include <boost/assign.hpp>
+
 #include <mscore/config.hpp>
 
 #include "server.hpp"
@@ -30,8 +32,20 @@
 namespace SSIP
 {
 
+using namespace std;
 using namespace boost;
+using namespace boost::assign;
 using namespace FBB;
+using namespace multispeech;
+
+
+// Static data:
+map<job::event, message::code> server::notification = map_list_of
+  (job::started, message::EVENT_BEGIN)
+  (job::complete, message::EVENT_END)
+  (job::cancelled, message::EVENT_CANCELLED)
+  (job::paused, message::EVENT_PAUSED)
+  (job::resumed, message::EVENT_RESUMED);
 
 
 // Object construction:
@@ -55,6 +69,19 @@ server::connect(int fd)
   while (competitor.unique())
     session_started.wait(lock);
   competitor.reset();
+}
+
+void
+server::consume_report(job::event event,
+                       unsigned long id, unsigned long owner)
+{
+  message* customer = dynamic_cast<message*>(client(owner));
+  if (customer && notification.count(event))
+    {
+      customer->emit(notification[event], id);
+      customer->emit(notification[event], owner);
+      customer->emit(notification[event]);
+    }
 }
 
 void

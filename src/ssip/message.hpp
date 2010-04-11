@@ -145,6 +145,7 @@ public:
   // Send message along with it's result code. If text is empty or
   // not specified, it will be searched in dictionary for that code.
   void emit(code rc, const std::string& text = "");
+  void emit(code rc, unsigned int id);
 
   // Send help message.
   void emit_help(void);

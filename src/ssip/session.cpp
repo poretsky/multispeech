@@ -45,6 +45,7 @@ session::session(proxy* origin, int socket_fd):
   multispeech::session(*input),
   message(*output),
   host(*origin),
+  receiving(false),
   id(++count)
 {
   punctuation(host.punctuation);
@@ -72,14 +73,75 @@ session::perform(string& request)
 {
   mutex::scoped_lock lock(host.access);
   bool result = true;
-  commands::FunctionPtr done = commands::findCmd(request);
-  if (!commands::cmd().empty())
-    result = (this->*done)();
+  if (!receiving)
+    {
+      commands::FunctionPtr done = commands::findCmd(request);
+      if (!commands::cmd().empty())
+        result = (this->*done)();
+    }
+  else if (request == ".")
+    {
+      commit();
+      emit(OK_MESSAGE_QUEUED, errand.id());
+      emit(OK_MESSAGE_QUEUED);
+      receiving = false;
+    }
+  else prepare(request);
   return result;
+}
+
+void
+session::accumulate(const string& text)
+{
+  if (text[0] == '.')
+    accumulator.push_back(text.substr(1, text.length() - 1));
+  else accumulator.push_back(text);
+}
+
+void
+session::prepare(const string& text)
+{
+  string s = (text[0] == '.') ? text.substr(1, text.length() - 1) : text;
+  punctuations::verbosity = punctuation;
+  errand << host.text_task(s, volume_factor, rate_factor, pitch_factor, 1.0);
+}
+
+void
+session::commit(void)
+{
+  bool dominate = false, update = false;
+  switch (errand.urgency())
+    {
+    case urgency_mode::important:
+      dominate = true;
+    case urgency_mode::notification:
+      host.reject(urgency_mode::notification);
+      break;
+    case urgency_mode::message:
+    case urgency_mode::text:
+      host.reject(urgency_mode::text);
+      break;
+    case urgency_mode::progress:
+      update = true;
+    default:
+      break;
+    }
+  host.enqueue(errand, dominate, update);
+  host.proceed();
 }
 
 
 // Serving client requests:
+
+bool
+session::cmd_speak(void)
+{
+  accumulator.clear();
+  errand = multispeech::job(id, priority, notification);
+  receiving = true;
+  emit(OK_RECEIVE_DATA);
+  return true;
+}
 
 bool
 session::cmd_block(void)

@@ -326,11 +326,11 @@ public:
   // Recognized categories:
   enum category
   {
-    important,
-    message,
-    text,
-    notification,
-    progress
+    important = 5,
+    message = 4,
+    text = 2,
+    notification = 1,
+    progress = 3
   };
 
   // Main constructor.

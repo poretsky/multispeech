@@ -172,6 +172,12 @@ message::emit(code rc, const string& text)
 }
 
 void
+message::emit(code rc, unsigned int id)
+{
+  sink << rc << '-' << id << "\r\n";
+}
+
+void
 message::emit_help(void)
 {
   for (int i = 0; i < (sizeof(help) / sizeof(char*)); i++)

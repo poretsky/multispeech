@@ -22,7 +22,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <mscore/notification.hpp>
+#include <mscore/job.hpp>
 
 #include "parser.hpp"
 
@@ -558,46 +558,42 @@ notification_mode::setup(const string& request)
 message::code
 notification_mode::notify_all(void)
 {
-  mask = notification::job_start |
-    notification::job_complete |
-    notification::job_cancel |
-    notification::job_pause |
-    notification::job_resume;
+  mask = job::all_events;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 
 message::code
 notification_mode::notify_begin(void)
 {
-  mask = notification::job_start;
+  mask = job::started;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 
 message::code
 notification_mode::notify_end(void)
 {
-  mask = notification::job_complete;
+  mask = job::complete;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 
 message::code
 notification_mode::notify_cancel(void)
 {
-  mask = notification::job_cancel;
+  mask = job::cancelled;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 
 message::code
 notification_mode::notify_pause(void)
 {
-  mask = notification::job_pause;
+  mask = job::paused;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 
 message::code
 notification_mode::notify_resume(void)
 {
-  mask = notification::job_resume;
+  mask = job::resumed;
   return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
 }
 

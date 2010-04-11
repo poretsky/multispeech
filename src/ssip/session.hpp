@@ -21,7 +21,11 @@
 #ifndef MULTISPEECH_SSIP_SESSION_HPP
 #define MULTISPEECH_SSIP_SESSION_HPP
 
+#include <string>
+#include <vector>
+
 #include <mscore/session.hpp>
+#include <mscore/job.hpp>
 
 #include "connection.hpp"
 #include "message.hpp"
@@ -49,7 +53,17 @@ private:
   // Client requests parsing and execution:
   bool perform(std::string& request);
 
+  // Accumulate incoming text line by line:
+  void accumulate(const std::string& text);
+
+  // Prepare speech task from text string and put it into the job container:
+  void prepare(const std::string& text);
+
+  // Submit a job:
+  void commit(void);
+
   // General commands dispatcher:
+  bool cmd_speak(void);
   bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
@@ -79,8 +93,17 @@ private:
   digital_value pitch_factor;
   digital_value volume_factor;
 
+  // Text accumulator for multiline messages:
+  std::vector<std::string> accumulator;
+
+  // Job accumulator:
+  multispeech::job errand;
+
   // Host server reference:
   proxy& host;
+
+  // Text receiving mode indicator:
+  bool receiving;
 
   // Unique session id:
   unsigned long id;
