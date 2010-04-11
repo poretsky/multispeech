@@ -277,7 +277,7 @@ sound_manager::active(void)
 // Private methods:
 
 void
-sound_manager::consume_report(job::event event, unsigned long id, unsigned long owner)
+sound_manager::feedback(job::event event, unsigned long id, unsigned long owner)
 {
 }
 
@@ -290,7 +290,7 @@ sound_manager::notify(job::event event, const job& unit)
       if (!notifying)
         {
           notifications = true;
-          thread(feedback(this));
+          thread(reporter(this));
         }
       message.event = event;
       message.id = unit.id();
@@ -478,15 +478,15 @@ sound_manager::agent::operator()(void)
 }
 
 
-// Feedback subclass members:
+// Reporter subclass members:
 
-sound_manager::feedback::feedback(sound_manager* master):
+sound_manager::reporter::reporter(sound_manager* master):
   host(master)
 {
 }
 
 void
-sound_manager::feedback::operator()(void)
+sound_manager::reporter::operator()(void)
 {
   host->notifying = true;
   while (host->notifying)
@@ -508,7 +508,7 @@ sound_manager::feedback::operator()(void)
           }
       }
       if (host->notifying)
-        host->consume_report(message.event, message.id, message.owner);
+        host->feedback(message.event, message.id, message.owner);
     }
 }
 

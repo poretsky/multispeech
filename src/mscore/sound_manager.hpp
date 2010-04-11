@@ -47,8 +47,7 @@
 namespace multispeech
 {
 
-class sound_manager:
-  private portaudio::AutoSystem
+class sound_manager: private portaudio::AutoSystem
 {
 protected:
   // Constructing / destroying.
@@ -150,17 +149,17 @@ private:
   };
 
   // Events notification thread.
-  class feedback
+  class reporter
   {
   public:
-    explicit feedback(sound_manager* master);
+    explicit reporter(sound_manager* master);
     void operator()(void);
   private:
     sound_manager* host;
   };
 
   friend class agent;
-  friend class feedback;
+  friend class reporter;
 
   // Child thread state.
   status state;
@@ -189,8 +188,9 @@ private:
   boost::mutex access;
   boost::condition event, report, complete;
 
-  // Event consumer callback. Must be provided by derived class.
-  virtual void consume_report(job::event event, unsigned long id, unsigned long owner);
+  // Event consumer callback. Just a dummy here. Actual implementation
+  // should be provided by derived classes if necessary.
+  virtual void feedback(job::event event, unsigned long id, unsigned long owner);
 
   // Internal routines:
   void notify(job::event event, const job& unit);

@@ -60,8 +60,8 @@ private:
   void connect(int fd);
 
   // Event notification callback:
-  void consume_report(multispeech::job::event event,
-                      unsigned long id, unsigned long owner);
+  void feedback(multispeech::job::event event,
+                unsigned long id, unsigned long owner);
 
   // Methods required by proxy:
   void hello(unsigned long id, session* client);

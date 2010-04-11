@@ -74,8 +74,8 @@ server::connect(int fd)
 }
 
 void
-server::consume_report(job::event event,
-                       unsigned long id, unsigned long owner)
+server::feedback(job::event event,
+                 unsigned long id, unsigned long owner)
 {
   message* customer = dynamic_cast<message*>(client(owner));
   if (customer && notification.count(event))
