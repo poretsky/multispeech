@@ -111,45 +111,37 @@ sound_processor::soundmaster::operator()(void)
 {
   float buffer[chunk_size * holder->channels];
   unsigned int obtained;
-  bool active = true;
 
-  while (holder->state != quit)
+  while (holder->state != inactive)
     {
-      {
-        mutex::scoped_lock lock(holder->access);
+      mutex::scoped_lock lock(holder->access);
       while (holder->state == replete)
         holder->event.wait(lock);
-      }
-
-      {
-        mutex::scoped_lock lock(holder->access);
-        if (holder->state == hungry)
-          {
-            obtained = holder->get_source(buffer, chunk_size);
-            if (obtained)
-              holder->putSamples(buffer, obtained);
-            if (obtained < chunk_size)
-              {
-                holder->flush();
-                holder->state = quit;
-              }
-            else if ((!holder->chunk_size && !holder->isEmpty()) ||
-                     (holder->chunk_size && (holder->numSamples() >= holder->chunk_size)))
-              {
-                holder->state = replete;
-                holder->event.notify_all();
-              }
-          }
-        if (holder->state == quit)
-          active = false;
-      }
+      switch (holder->state)
+        {
+        case hungry:
+          obtained = holder->get_source(buffer, chunk_size);
+          if (obtained)
+            holder->putSamples(buffer, obtained);
+          if (obtained < chunk_size)
+            {
+              holder->flush();
+              holder->state = quit;
+            }
+          else if ((!holder->chunk_size && !holder->isEmpty()) ||
+                   (holder->chunk_size && (holder->numSamples() >= holder->chunk_size)))
+            {
+              holder->state = replete;
+              holder->event.notify_all();
+            }
+          break;
+        case quit:
+          holder->state = inactive;
+          holder->event.notify_all();
+        default:
+          break;
+        }
     }
-
-  {
-    mutex::scoped_lock lock(holder->access);
-    holder->state = inactive;
-    holder->event.notify_all();
-  }
 }
 
 } // namespace multispeech
