@@ -77,7 +77,7 @@ void
 server::feedback(job::event event,
                  unsigned long id, unsigned long owner)
 {
-  message* customer = dynamic_cast<message*>(client(owner));
+  message* customer = client(owner);
   if (customer && notification.count(event))
     {
       customer->emit(notification[event], id);
