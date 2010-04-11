@@ -31,6 +31,7 @@
 
 #include <memory>
 #include <list>
+#include <queue>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
@@ -43,7 +44,6 @@
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 #include "job.hpp"
-#include "notification.hpp"
 
 namespace multispeech
 {
@@ -114,6 +114,14 @@ private:
   // Jobs queue container.
   typedef std::list<job> jobs_queue;
 
+  // Job event info representation.
+  struct event_info
+  {
+    job::event event;
+    unsigned long id;
+    unsigned long owner;
+  };
+
   // Thread states:
   enum status
   {
@@ -132,23 +140,28 @@ private:
     speaking
   };
 
-  // The functor to be executed in a separate thread.
+  // Jobs queue execution thread.
   class agent
   {
   public:
-    // Object constructor.
-    explicit agent(sound_manager* job_holder);
-
-    // The thread execution loop.
+    explicit agent(sound_manager* master);
     void operator()(void);
-
   private:
-    // the parent class pointer.
-    sound_manager* holder;
+    sound_manager* host;
+  };
+
+  // Events notification thread.
+  class feedback
+  {
+  public:
+    explicit feedback(sound_manager* master);
+    void operator()(void);
+  private:
+    sound_manager* host;
   };
 
   friend class agent;
-  friend class notification;
+  friend class feedback;
 
   // Child thread state.
   status state;
@@ -159,22 +172,31 @@ private:
   // Job queues.
   std::auto_ptr<jobs_queue> jobs, backup;
 
+  // Notifications queue.
+  std::queue<event_info> reports;
+
+  // Notification thread life indicator.
+  bool notifying;
+
+  // Notification service activity flag.
+  unsigned int notifications;
+
   // Sound streams.
   file_player sounds;
   tone_generator tones;
   loudspeaker speech;
 
-  // Notification service pointer.
-  notification* feedback;
-
   // Critical data access control means.
   boost::mutex access;
-  boost::condition event, complete;
+  boost::condition event, report, complete;
+
+  // Event consumer callback. Must be provided by derived class.
+  virtual void consume_report(job::event event, unsigned long id, unsigned long owner);
 
   // Internal routines:
-  void notify(notification::job_event status, const job& unit);
+  void notify(job::event event, const job& unit);
   void mute(void); // Mute all playing sounds if any.
-  void die(void); // Make thread to break execution loop.
+  void die(void); // Make threads to break execution loop.
   void next(void); // Get and start the next job item from the queue.
   bool working(void); // Return true if a job item is in progress.
   void shift(void); // Shift to the next job or item if any.

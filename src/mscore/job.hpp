@@ -37,6 +37,18 @@ namespace multispeech
 class job
 {
 public:
+  // These values represent various events that can be reported.
+  // It may be combined by "or" to form desired notification mode.
+  enum event
+  {
+    started = 0x01,
+    complete = 0x02,
+    cancelled = 0x04,
+    paused = 0x08,
+    resumed = 0x10,
+    all_events = 0x1F
+  };
+
   // Job life cycle states:
   enum status
   {

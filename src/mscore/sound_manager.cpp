@@ -40,10 +40,11 @@ sound_manager::sound_manager(const configuration* conf):
   state(none),
   business(nothing),
   jobs(new jobs_queue),
+  notifying(false),
+  notifications(false),
   sounds(conf),
   tones(conf),
-  speech(conf),
-  feedback(NULL)
+  speech(conf)
 {
 }
 
@@ -71,7 +72,7 @@ sound_manager::enqueue(const job&unit, bool dominate, bool update)
         {
           mute();
           position->postpone();
-          notify(notification::job_pause, *position);
+          notify(job::paused, *position);
           position = jobs->insert(position, job());
         }
       ++position;
@@ -98,7 +99,7 @@ sound_manager::cancel(unsigned long id)
         }
       else
         {
-          notify(notification::job_cancel, *position);
+          notify(job::cancelled, *position);
           jobs->erase(position);
         }
     }
@@ -120,7 +121,7 @@ sound_manager::reject(int urgency, bool exact)
           }
         else
           {
-            notify(notification::job_cancel, *position);
+            notify(job::cancelled, *position);
             position = --(jobs->erase(position));
           }
       }
@@ -214,7 +215,7 @@ sound_manager::suspend(void)
   if ((state == running) && !backup->empty())
     {
       backup->front().postpone();
-      notify(notification::job_pause, backup->front());
+      notify(job::paused, backup->front());
       jobs->push_front(job());
     }
 }
@@ -274,10 +275,27 @@ sound_manager::active(void)
 // Private methods:
 
 void
-sound_manager::notify(notification::job_event status, const job& unit)
+sound_manager::consume_report(job::event event, unsigned long id, unsigned long owner)
 {
-  if (feedback && (status & unit.notification_mode()))
-    feedback->submit(status, unit.id(), unit.owner());
+}
+
+void
+sound_manager::notify(job::event event, const job& unit)
+{
+  if (event & unit.notification_mode())
+    {
+      event_info message;
+      if (!notifying)
+        {
+          notifications = true;
+          thread(feedback(this));
+        }
+      message.event = event;
+      message.id = unit.id();
+      message.owner = unit.owner();
+      reports.push(message);
+      report.notify_one();
+    }
 }
 
 void
@@ -292,12 +310,14 @@ void
 sound_manager::die(void)
 {
   mute();
-  if (state != none)
+  if (notifying || (state != none))
     {
       mutex::scoped_lock lock(access);
       state = dead;
+      notifications = false;
       event.notify_one();
-      while (state != none)
+      report.notify_one();
+      while (notifying || (state != none))
         complete.wait(lock);
     }
 }
@@ -398,14 +418,14 @@ sound_manager::shift(void)
     {
       if (jobs->front().shift())
         {
-          notify(notification::job_complete, jobs->front());
+          notify(job::complete, jobs->front());
           jobs->pop_front();
         }
     }
   else
     {
       if (jobs->front().id() && (jobs->front().state() == job::idle))
-        notify(notification::job_cancel, jobs->front());
+        notify(job::cancelled, jobs->front());
       jobs->pop_front();
     }
 }
@@ -416,8 +436,8 @@ sound_manager::initiate(void)
   if (jobs->front().state() != job::active)
     {
       notify((jobs->front().state() != job::postponed) ?
-             notification::job_start :
-             notification::job_resume,
+             job::started :
+             job::resumed,
              jobs->front());
       jobs->front().activate();
     }
@@ -426,32 +446,67 @@ sound_manager::initiate(void)
 
 // Agent subclass members:
 
-sound_manager::agent::agent(sound_manager* job_holder):
-  holder(job_holder)
+sound_manager::agent::agent(sound_manager* master):
+  host(master)
 {
 }
 
 void
 sound_manager::agent::operator()(void)
 {
-  while (holder->state != none)
+  while (host->state != none)
     {
-      mutex::scoped_lock lock(holder->access);
-      while (holder->state == idle)
-        holder->event.wait(lock);
-      switch (holder->state)
+      mutex::scoped_lock lock(host->access);
+      while (host->state == idle)
+        host->event.wait(lock);
+      switch (host->state)
         {
         case running:
-          holder->next();
-          while (holder->working())
+          host->next();
+          while (host->working())
             audioplayer::complete.wait(lock);
           break;
         case dead:
-          holder->state = none;
-          holder->complete.notify_one();
+          host->state = none;
+          host->complete.notify_one();
         default:
           break;
         }
+    }
+}
+
+
+// Feedback subclass members:
+
+sound_manager::feedback::feedback(sound_manager* master):
+  host(master)
+{
+}
+
+void
+sound_manager::feedback::operator()(void)
+{
+  host->notifying = true;
+  while (host->notifying)
+    {
+      event_info message = { job::all_events, 0, 0 };
+      {
+        mutex::scoped_lock lock(host->access);
+        while (host->notifications && host->reports.empty())
+          host->report.wait(lock);
+        if (host->notifications)
+          {
+            message = host->reports.front();
+            host->reports.pop();
+          }
+        else
+          {
+            host->notifying = false;
+            host->complete.notify_one();
+          }
+      }
+      if (host->notifying)
+        host->consume_report(message.event, message.id, message.owner);
     }
 }
 
