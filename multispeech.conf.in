@@ -55,6 +55,15 @@ dtk_voices = on
 #
 #port = 6560
 # TCP port on which SSIP client connections will be accepted.
+#
+#split_multiline_messages = off
+# When this option is set, multiline messages sent by command
+# "speak" are processed and synthisized line by line, that provides
+# more flexibility in the sense of language detection and resuming
+# context control, but may cause some additional speech articulation.
+# Of course, message itself remains atomic in the protocol terms.
+# By default all lines of the multiline message are concatenated
+# and processed as one continuous text chunk.
 
 [audio]
 # This section contains general audio output control options.

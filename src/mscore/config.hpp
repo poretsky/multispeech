@@ -87,6 +87,7 @@ namespace options
   namespace ssip
   {
     extern const char* const port;
+    extern const char* const split_multiline_messages;
   };
 
   // General audio output:

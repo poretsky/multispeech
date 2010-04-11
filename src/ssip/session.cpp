@@ -20,6 +20,8 @@
 
 #include <sysconfig.h>
 
+#include <sstream>
+
 #include <boost/foreach.hpp>
 
 #include "session.hpp"
@@ -86,30 +88,34 @@ session::perform(string& request)
       emit(OK_MESSAGE_QUEUED);
       receiving = false;
     }
-  else prepare(request);
+  else
+    {
+      string s = (request[0] == '.') ? request.substr(1, request.length() - 1) : request;
+      accumulator.push_back(s);
+      if (host.split_multiline_messages)
+        prepare(request);
+    }
   return result;
-}
-
-void
-session::accumulate(const string& text)
-{
-  if (text[0] == '.')
-    accumulator.push_back(text.substr(1, text.length() - 1));
-  else accumulator.push_back(text);
 }
 
 void
 session::prepare(const string& text)
 {
-  string s = (text[0] == '.') ? text.substr(1, text.length() - 1) : text;
   punctuations::verbosity = punctuation;
-  errand << host.text_task(s, volume_factor, rate_factor, pitch_factor, 1.0);
+  errand << host.text_task(text, volume_factor, rate_factor, pitch_factor, 1.0);
 }
 
 void
 session::commit(void)
 {
   bool dominate = false, update = false;
+  if (!host.split_multiline_messages)
+    {
+      ostringstream text;
+      BOOST_FOREACH (const string& line, accumulator)
+        text << line << ' ';
+      prepare(text.str());
+    }
   switch (errand.urgency())
     {
     case urgency_mode::important:

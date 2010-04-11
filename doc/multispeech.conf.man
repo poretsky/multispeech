@@ -88,6 +88,16 @@ behaviour as an SSIP server.
 .br
 TCP port on which SSIP client connections will be accepted. By default
 port 6560 is used.
+.TP
+.B split_multiline_messages
+.br
+When this option is set, multiline messages sent by command
+\(oqspeak\(cq are processed and synthisized line by line, that
+provides more flexibility in the sense of language detection and
+resuming context control, but may cause some additional speech
+articulation. Of course, message itself remains atomic in the protocol
+terms. By default all lines of the multiline message are concatenated
+and processed as one continuous text chunk.
 .SH "GENERAL AUDIO OUTPUT CONTROL OPTIONS"
 Section name is \(oqaudio\(cq. It contains following options:
 .TP

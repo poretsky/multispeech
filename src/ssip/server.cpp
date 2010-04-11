@@ -53,7 +53,7 @@ map<job::event, message::code> server::notification = map_list_of
 
 server::server(int argc, char* argv[]):
   proxy(argc, argv),
-  ServerSocket(option_value[multispeech::options::ssip::port].as<unsigned int>()),
+  ServerSocket(option_value[options::ssip::port].as<unsigned int>()),
   connecting(false)
 {
   charset("UTF-8");

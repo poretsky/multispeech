@@ -53,9 +53,6 @@ private:
   // Client requests parsing and execution:
   bool perform(std::string& request);
 
-  // Accumulate incoming text line by line:
-  void accumulate(const std::string& text);
-
   // Prepare speech task from text string and put it into the job container:
   void prepare(const std::string& text);
 
