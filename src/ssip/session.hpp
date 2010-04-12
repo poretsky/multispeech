@@ -56,11 +56,12 @@ private:
   // Prepare speech task from text string and put it into the job container:
   void prepare(const std::string& text);
 
-  // Submit a job:
+  // Submit prepared job and reply to the client:
   void commit(void);
 
-  // General commands dispatcher:
+  // General commands dispatcher methods:
   bool cmd_speak(void);
+  bool cmd_char(void);
   bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
@@ -68,7 +69,7 @@ private:
   bool cmd_unknown(void);
   bool cmd_unimplemented(void);
 
-  // Parameter settings:
+  // Parameter setting methods:
   message::code set_client_name(void);
   message::code set_notification(void);
   message::code set_punctuation(void);

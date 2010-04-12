@@ -83,9 +83,14 @@ session::perform(string& request)
     }
   else if (request == ".")
     {
+      if (!host.split_multiline_messages)
+        {
+          ostringstream text;
+          BOOST_FOREACH (const string& line, accumulator)
+            text << line << ' ';
+          prepare(text.str());
+        }
       commit();
-      emit(OK_MESSAGE_QUEUED, errand.id());
-      emit(OK_MESSAGE_QUEUED);
       receiving = false;
     }
   else
@@ -102,20 +107,16 @@ void
 session::prepare(const string& text)
 {
   punctuations::verbosity = punctuation;
-  errand << host.text_task(text, volume_factor, rate_factor, pitch_factor, 1.0);
+  speech_engine::volume(volume_factor);
+  speech_engine::voice_pitch(pitch_factor);
+  speech_engine::speech_rate(rate_factor);
+  errand << host.text_task(text);
 }
 
 void
 session::commit(void)
 {
   bool dominate = false, update = false;
-  if (!host.split_multiline_messages)
-    {
-      ostringstream text;
-      BOOST_FOREACH (const string& line, accumulator)
-        text << line << ' ';
-      prepare(text.str());
-    }
   switch (errand.urgency())
     {
     case urgency_mode::important:
@@ -134,6 +135,10 @@ session::commit(void)
     }
   host.enqueue(errand, dominate, update);
   host.proceed();
+  emit(OK_MESSAGE_QUEUED, errand.id());
+  emit(OK_MESSAGE_QUEUED);
+  accumulator.clear();
+  errand.clear();
 }
 
 
@@ -143,9 +148,21 @@ bool
 session::cmd_speak(void)
 {
   accumulator.clear();
-  errand = multispeech::job(id, priority, notification);
+  errand = job(id, priority, notification);
   receiving = true;
   emit(OK_RECEIVE_DATA);
+  return true;
+}
+
+bool
+session::cmd_char(void)
+{
+  speech_engine::volume(volume_factor);
+  speech_engine::char_voice_pitch(pitch_factor);
+  speech_engine::char_speech_rate(rate_factor);
+  errand = job(id, priority, notification);
+  errand << host.letter_task(commands::beyond());
+  commit();
   return true;
 }
 
