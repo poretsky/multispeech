@@ -118,6 +118,9 @@ public:
   // Get type of current prescription item:
   const std::type_info& item_type(void) const;
 
+  // Clear prescription container:
+  void clear(void);
+
   // Priority ordering operator. It is assumed that empty job
   // always has greater priority than non-empty one.
   // Otherwise urgency attribute comes into account.

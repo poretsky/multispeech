@@ -141,6 +141,13 @@ job::item_type(void) const
     typeid(void);
 }
 
+void
+job::clear(void)
+{
+  prescription.clear();
+  index = 0;
+}
+
 bool
 job::operator<(const job& other) const
 {
