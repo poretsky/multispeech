@@ -167,7 +167,7 @@ void
 message::emit(code rc, const string& text)
 {
   if (text.empty())
-    sink << rc << ' ' << dictionary[rc] << "\r\n";
+    sink << rc << ' ' << dictionary[rc] << "\r\n" << flush;
   else sink << rc << '-' << text << "\r\n";
 }
 
