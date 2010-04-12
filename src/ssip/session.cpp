@@ -75,6 +75,8 @@ session::perform(string& request)
 {
   mutex::scoped_lock lock(host.access);
   bool result = true;
+  if (*request.rbegin() == '\r')
+    request.resize(request.length() - 1);
   if (!receiving)
     {
       commands::FunctionPtr done = commands::findCmd(request);
@@ -95,8 +97,9 @@ session::perform(string& request)
     }
   else
     {
-      string s = (request[0] == '.') ? request.substr(1, request.length() - 1) : request;
-      accumulator.push_back(s);
+      if (request == "..")
+        request.resize(1);
+      accumulator.push_back(request);
       if (host.split_multiline_messages)
         prepare(request);
     }
