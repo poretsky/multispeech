@@ -100,7 +100,7 @@ const boolean_flag::Entry boolean_flag::table[] =
   };
 
 // Client name string pattern:
-const regex client_info::name_pattern("^([[:word:]-]+):([[:word:]-]+):([[:word:]-]+)$");
+const regex client_info::name_pattern("^\"?([[:word:]-]+):([[:word:]-]+):([[:word:]-]+)\"?\\s*$");
 
 // Notification mode parsing table:
 const notification_setup::Entry notification_setup::table[] =
