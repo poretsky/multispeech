@@ -1,6 +1,6 @@
 // multispeechd.cpp -- SSIP Multilingual speech server
 /*
-   Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
+   Copyright (C) 2010 Igor B. Poretsky <poretsky@mlbox.ru>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
