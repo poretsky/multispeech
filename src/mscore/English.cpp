@@ -82,6 +82,27 @@ English::English(void):
   dictionary = map_list_of
     (L"newline", L"new line")
 
+    // Special key names:
+    (L"double-quote", L"quote")
+    (L"kp-*", L"keypad star")
+    (L"kp-+", L"keypad plus")
+    (L"kp--", L"keypad minus")
+    (L"kp-.", L"keypad period")
+    (L"kp-/", L"keypad slash")
+    (L"kp-0", L"keypad 0")
+    (L"kp-1", L"keypad 1")
+    (L"kp-2", L"keypad 2")
+    (L"kp-3", L"keypad 3")
+    (L"kp-4", L"keypad 4")
+    (L"kp-5", L"keypad 5")
+    (L"kp-6", L"keypad 6")
+    (L"kp-7", L"keypad 7")
+    (L"kp-8", L"keypad 8")
+    (L"kp-9", L"keypad 9")
+    (L"kp-enter", L"keypad enter")
+    (L"num-lock", L"numlock")
+    (L"scroll-lock", L"scroll lock")
+
     // Language name:
     (intern_string(id(), locale("")).c_str(), L"English");
 
