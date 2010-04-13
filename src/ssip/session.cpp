@@ -170,6 +170,21 @@ session::cmd_char(void)
 }
 
 bool
+session::cmd_key(void)
+{
+  istringstream keyname(commands::beyond());
+  string token;
+  speech_engine::volume(volume_factor);
+  speech_engine::char_voice_pitch(pitch_factor);
+  speech_engine::char_speech_rate(rate_factor);
+  errand = job(id, priority, notification);
+  while (getline(keyname, token, '_'))
+    errand << host.letter_task(token);
+  commit();
+  return true;
+}
+
+bool
 session::cmd_block(void)
 {
   emit(block.toggle(commands::beyond()));

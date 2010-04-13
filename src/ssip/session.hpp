@@ -62,6 +62,7 @@ private:
   // General commands dispatcher methods:
   bool cmd_speak(void);
   bool cmd_char(void);
+  bool cmd_key(void);
   bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
