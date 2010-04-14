@@ -24,6 +24,8 @@
 
 #include <boost/foreach.hpp>
 
+#include <unicode/utf8.h>
+
 #include "session.hpp"
 
 
@@ -46,14 +48,18 @@ session::session(proxy* origin, int socket_fd):
   connection(socket_fd),
   multispeech::session(*input),
   message(*output),
+  notified_events(0),
+  inside_block(false),
+  priority(urgency_mode::text),
   host(*origin),
   receiving(false),
   id(++count)
 {
-  punctuation(host.punctuation);
-  rate_factor(host.rate_factor);
-  pitch_factor(host.pitch_factor);
-  volume_factor(host.volume_factor);
+  punctuation = host.punctuation;
+  rate_factor = host.rate_factor;
+  pitch_factor = host.pitch_factor;
+  volume_factor = host.volume_factor;
+  spelling = host.spelling;
 }
 
 
@@ -111,9 +117,26 @@ session::prepare(const string& text)
 {
   punctuations::verbosity = punctuation;
   speech_engine::volume(volume_factor);
-  speech_engine::voice_pitch(pitch_factor);
-  speech_engine::speech_rate(rate_factor);
-  errand << host.text_task(text);
+  if (spelling)
+    {
+      const char* s = text.c_str();
+      size_t len = text.length();
+      int i = 0;
+      speech_engine::char_voice_pitch(pitch_factor);
+      speech_engine::char_speech_rate(rate_factor);
+      while (i < len)
+        {
+          const char* mark = s + i;
+          U8_FWD_1(s, i, len);
+          errand << host.letter_task(string(mark, s + i));
+        }
+    }
+  else
+    {
+      speech_engine::voice_pitch(pitch_factor);
+      speech_engine::speech_rate(rate_factor);
+      errand << host.text_task(text);
+    }
 }
 
 void
@@ -151,7 +174,7 @@ bool
 session::cmd_speak(void)
 {
   accumulator.clear();
-  errand = job(id, priority, notification);
+  errand = job(id, priority, notified_events);
   receiving = true;
   emit(OK_RECEIVE_DATA);
   return true;
@@ -163,7 +186,7 @@ session::cmd_char(void)
   speech_engine::volume(volume_factor);
   speech_engine::char_voice_pitch(pitch_factor);
   speech_engine::char_speech_rate(rate_factor);
-  errand = job(id, priority, notification);
+  errand = job(id, priority, notified_events);
   errand << host.letter_task(commands::beyond());
   commit();
   return true;
@@ -177,7 +200,7 @@ session::cmd_key(void)
   speech_engine::volume(volume_factor);
   speech_engine::char_voice_pitch(pitch_factor);
   speech_engine::char_speech_rate(rate_factor);
-  errand = job(id, priority, notification);
+  errand = job(id, priority, notified_events);
   while (getline(keyname, token, '_'))
     errand << host.letter_task(token);
   commit();
@@ -187,6 +210,7 @@ session::cmd_key(void)
 bool
 session::cmd_block(void)
 {
+  block_mode block(inside_block);
   emit(block.toggle(commands::beyond()));
   return true;
 }
@@ -194,7 +218,8 @@ session::cmd_block(void)
 bool
 session::cmd_set(void)
 {
-  emit((this->*settings::findCmd(target.parse(commands::beyond())))());
+  destination target;
+  emit((this->*settings::findCmd(target.parse(commands::beyond())))(target));
   return true;
 }
 
@@ -230,10 +255,10 @@ session::cmd_unimplemented(void)
 // Parameter settings:
 
 message::code
-session::set_client_name(void)
+session::set_client_name(destination& target)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (block)
+  if (inside_block)
     rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     rc = client.name(settings::beyond());
@@ -241,39 +266,43 @@ session::set_client_name(void)
 }
 
 message::code
-session::set_notification(void)
+session::set_notification(destination& target)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (block)
+  if (inside_block)
     rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
-    rc = notification.setup(settings::beyond());
+    {
+      notification_mode notification(notified_events);
+      rc = notification.setup(settings::beyond());
+    }
   return rc;
 }
 
 message::code
-session::set_punctuation(void)
+session::set_punctuation(destination& target)
 {
   message::code rc = message::OK_PUNCT_MODE_SET;
-  if (!block)
+  if (!inside_block)
     {
-      punctuations::mode mode = punctuation.parse(settings::beyond());
-      if (mode != punctuations::unknown)
+      punctuations::mode customized;
+      punctuation_mode mode(customized);
+      if (mode.parse(settings::beyond()))
         switch (target.selection())
           {
           case destination::self:
-            punctuation(mode);
+            punctuation = customized;
             break;
           case destination::all:
             BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-              client.second->punctuation(mode);
-            host.punctuation = mode;
+              client.second->punctuation = customized;
+            host.punctuation = customized;
             break;
           case destination::another:
             {
               session* client = host.client(target.id());
               if (client)
-                client->punctuation(mode);
+                client->punctuation = customized;
               else rc = ERR_NO_SUCH_CLIENT;
             }
             break;
@@ -288,22 +317,27 @@ session::set_punctuation(void)
 }
 
 message::code
-session::set_priority(void)
+session::set_priority(destination& target)
 {
   message::code rc = ERR_PARAMETER_INVALID;
-  if (block)
+  if (inside_block)
     rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
-    rc = priority.setup(settings::beyond());
+    {
+      urgency_mode mode(priority);
+      rc = mode.setup(settings::beyond());
+    }
   return rc;
 }
 
 message::code
-session::set_rate(void)
+session::set_rate(destination& target)
 {
   message::code rc = OK_RATE_SET;
-  int value = digital_value::extract(settings::beyond());
-  switch (value)
+  double value;
+  digital_value rate(value);
+  digital_value::status result = rate.parse(settings::beyond());
+  switch (result)
     {
     case digital_value::invalid:
       rc = ERR_PARAMETER_INVALID;
@@ -318,23 +352,23 @@ session::set_rate(void)
       switch (target.selection())
         {
         case destination::self:
-          rate_factor(value);
+          rate_factor = value;
           break;
         case destination::all:
-          if (!block)
+          if (!inside_block)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-                client.second->rate_factor(value);
+                client.second->rate_factor = value;
               host.rate_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;
         case destination::another:
-          if (!block)
+          if (!inside_block)
             {
               session* client = host.client(target.id());
               if (client)
-                client->rate_factor(value);
+                client->rate_factor = value;
               else rc = ERR_NO_SUCH_CLIENT;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
@@ -349,11 +383,13 @@ session::set_rate(void)
 }
 
 message::code
-session::set_pitch(void)
+session::set_pitch(destination& target)
 {
   message::code rc = OK_PITCH_SET;
-  int value = digital_value::extract(settings::beyond());
-  switch (value)
+  double value;
+  digital_value pitch(value);
+  digital_value::status result = pitch.parse(settings::beyond());
+  switch (result)
     {
     case digital_value::invalid:
       rc = ERR_PARAMETER_INVALID;
@@ -368,23 +404,23 @@ session::set_pitch(void)
       switch (target.selection())
         {
         case destination::self:
-          pitch_factor(value);
+          pitch_factor = value;
           break;
         case destination::all:
-          if (!block)
+          if (!inside_block)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-                client.second->pitch_factor(value);
+                client.second->pitch_factor = value;
               host.pitch_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;
         case destination::another:
-          if (!block)
+          if (!inside_block)
             {
               session* client = host.client(target.id());
               if (client)
-                client->pitch_factor(value);
+                client->pitch_factor = value;
               else rc = ERR_NO_SUCH_CLIENT;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
@@ -399,11 +435,13 @@ session::set_pitch(void)
 }
 
 message::code
-session::set_volume(void)
+session::set_volume(destination& target)
 {
   message::code rc = OK_VOLUME_SET;
-  int value = digital_value::extract(settings::beyond());
-  switch (value)
+  double value;
+  digital_value volume(value);
+  digital_value::status result = volume.parse(settings::beyond());
+  switch (result)
     {
     case digital_value::invalid:
       rc = ERR_PARAMETER_INVALID;
@@ -418,23 +456,23 @@ session::set_volume(void)
       switch (target.selection())
         {
         case destination::self:
-          volume_factor(value);
+          volume_factor = value;
           break;
         case destination::all:
-          if (!block)
+          if (!inside_block)
             {
               BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-                client.second->volume_factor(value);
+                client.second->volume_factor = value;
               host.volume_factor = value;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
           break;
         case destination::another:
-          if (!block)
+          if (!inside_block)
             {
               session* client = host.client(target.id());
               if (client)
-                client->volume_factor(value);
+                client->volume_factor = value;
               else rc = ERR_NO_SUCH_CLIENT;
             }
           else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
@@ -445,6 +483,43 @@ session::set_volume(void)
         }
       break;
     }
+  return rc;
+}
+
+message::code
+session::set_spelling(destination& target)
+{
+  message::code rc = OK_SPELLING_SET;
+  if (!inside_block)
+    {
+      bool value;
+      boolean_flag mode(value);
+      if (mode.parse(settings::beyond()))
+        switch (target.selection())
+          {
+          case destination::self:
+            spelling = value;
+            break;
+          case destination::all:
+            BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+              client.second->spelling = value;
+            host.spelling = value;
+            break;
+          case destination::another:
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->spelling = value;
+              else rc = ERR_NO_SUCH_CLIENT;
+            }
+            break;
+          default:
+            rc = ERR_PARAMETER_INVALID;
+            break;
+          }
+      else rc = ERR_PARAMETER_NOT_ON_OFF;
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   return rc;
 }
 

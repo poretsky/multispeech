@@ -71,26 +71,25 @@ private:
   bool cmd_unimplemented(void);
 
   // Parameter setting methods:
-  message::code set_client_name(void);
-  message::code set_notification(void);
-  message::code set_punctuation(void);
-  message::code set_priority(void);
-  message::code set_rate(void);
-  message::code set_pitch(void);
-  message::code set_volume(void);
+  message::code set_client_name(destination& target);
+  message::code set_notification(destination& target);
+  message::code set_punctuation(destination& target);
+  message::code set_priority(destination& target);
+  message::code set_rate(destination& target);
+  message::code set_pitch(destination& target);
+  message::code set_volume(destination& target);
+  message::code set_spelling(destination& target);
 
-  // Request destination parser:
-  destination target;
-
-  // Session local data:
+  // Local environment:
   client_info client;
-  notification_mode notification;
-  block_mode block;
-  punctuation_mode punctuation;
-  urgency_mode priority;
-  digital_value rate_factor;
-  digital_value pitch_factor;
-  digital_value volume_factor;
+  unsigned int notified_events;
+  bool inside_block;
+  urgency_mode::category priority;
+  multispeech::punctuations::mode punctuation;
+  double rate_factor;
+  double pitch_factor;
+  double volume_factor;
+  bool spelling;
 
   // Text accumulator for multiline messages:
   std::vector<std::string> accumulator;

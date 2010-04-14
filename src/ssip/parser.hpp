@@ -67,41 +67,6 @@ private:
 };
 
 
-// Parameter setting subcommands parser.
-class settings: protected FBB::CmdFinder<message::code (settings::*)(void)>
-{
-protected:
-  // Main constractor.
-  settings(void);
-
-private:
-  // These methods are to be implemented in the derived class.
-  // Return result code for client.
-  virtual message::code set_client_name(void);
-  virtual message::code set_priority(void);
-  virtual message::code set_output_module(void);
-  virtual message::code set_language(void);
-  virtual message::code set_ssml_mode(void);
-  virtual message::code set_punctuation(void);
-  virtual message::code set_spelling(void);
-  virtual message::code set_cap_let_recogn(void);
-  virtual message::code set_voice(void);
-  virtual message::code set_synthesis_voice(void);
-  virtual message::code set_rate(void);
-  virtual message::code set_pitch(void);
-  virtual message::code set_volume(void);
-  virtual message::code set_pause_context(void);
-  virtual message::code set_history(void);
-  virtual message::code set_notification(void);
-
-  // This method is properly provided here.
-  message::code set_unknown(void);
-
-  // Subcommands table.
-  static const Entry table[];
-};
-
-
 // Request destination parser.
 class destination: private FBB::CmdFinder<void (destination::*)(void)>
 {
@@ -149,20 +114,61 @@ private:
 };
 
 
-// Boolean parameters parser.
-class boolean_flag: protected FBB::CmdFinder<message::code (boolean_flag::*)(void)>
+// Parameter setting subcommands parser.
+class settings: protected FBB::CmdFinder<message::code (settings::*)(destination&)>
 {
 protected:
-  // Main constructor.
-  boolean_flag(void);
+  // Main constractor.
+  settings(void);
 
 private:
-  // Valid flag state reactions should be implemented in derived classes.
-  virtual message::code flag_on(void);
-  virtual message::code flag_off(void);
+  // These methods are to be implemented in the derived class.
+  // Return result code for client.
+  virtual message::code set_client_name(destination& target);
+  virtual message::code set_priority(destination& target);
+  virtual message::code set_output_module(destination& target);
+  virtual message::code set_language(destination& target);
+  virtual message::code set_ssml_mode(destination& target);
+  virtual message::code set_punctuation(destination& target);
+  virtual message::code set_spelling(destination& target);
+  virtual message::code set_cap_let_recogn(destination& target);
+  virtual message::code set_voice(destination& target);
+  virtual message::code set_synthesis_voice(destination& target);
+  virtual message::code set_rate(destination& target);
+  virtual message::code set_pitch(destination& target);
+  virtual message::code set_volume(destination& target);
+  virtual message::code set_pause_context(destination& target);
+  virtual message::code set_history(destination& target);
+  virtual message::code set_notification(destination& target);
 
-  // Invalid parameter reaction is properly provided here.
-  message::code flag_invalid(void);
+  // This method is properly provided here.
+  message::code set_unknown(destination& target);
+
+  // Subcommands table.
+  static const Entry table[];
+};
+
+
+// Boolean parameters parser.
+class boolean_flag: private FBB::CmdFinder<bool (boolean_flag::*)(void)>
+{
+public:
+  // Main constructor.
+  explicit boolean_flag(bool& holder);
+
+  // Request parser. Returns true if the request is valid.
+  bool parse(const std::string& request);
+
+private:
+  // These methods are used in valid cases, so return true.
+  bool flag_on(void);
+  bool flag_off(void);
+
+  // This method returns false as a reaction on invalid request.
+  bool flag_invalid(void);
+
+  // Target value holder reference.
+  bool& value;
 
   // Parsing table.
   static const Entry table[];
@@ -223,17 +229,14 @@ private:
 };
 
 
-// Notification mode parsing and representation.
+// Notification mode parsing.
 class notification_mode:
   private notification_setup,
   private boolean_flag
 {
 public:
   // Main constructor.
-  notification_mode(void);
-
-  // Current value accessor.
-  operator unsigned int(void) const;
+  explicit notification_mode(unsigned int& holder);
 
   // Request parser.
   message::code setup(const std::string& request);
@@ -248,15 +251,14 @@ private:
   message::code notify_resume(void);
   message::code notify_index_marks(void);
 
-  // Methods required by boolean_flag.
-  message::code flag_on(void);
-  message::code flag_off(void);
+  // Parse and setup requested mode.
+  message::code set_mode(unsigned int mask);
 
-  // Requested mask.
-  unsigned int mask;
+  // Boolean flag parse result.
+  bool flag;
 
-  // Current value holder.
-  unsigned int value;
+  // Value holder reference.
+  unsigned int& value;
 };
 
 
@@ -265,10 +267,7 @@ class block_mode: private FBB::CmdFinder<message::code (block_mode::*)(void)>
 {
 public:
   // Main constructor.
-  block_mode(void);
-
-  // Inside block state indicator.
-  operator bool(void) const;
+  explicit block_mode(bool& holder);
 
   // Parse toggle request.
   message::code toggle(const std::string& request);
@@ -279,47 +278,40 @@ private:
   message::code end(void);
   message::code unknown(void);
 
-  // Current state holder.
-  bool state;
+  // Current state holder reference.
+  bool& state;
 
   // Request parser table.
   static const Entry table[];
 };
 
 
-// Punctuation verbosity mode parsing and holding.
-class punctuation_mode:
-  private FBB::CmdFinder<multispeech::punctuations::mode (punctuation_mode::*)(void)>
+// Punctuation verbosity mode parsing.
+class punctuation_mode: private FBB::CmdFinder<bool (punctuation_mode::*)(void)>
 {
 public:
   // Main constructor.
-  punctuation_mode(void);
+  explicit punctuation_mode(multispeech::punctuations::mode& holder);
 
   // Parse request.
-  multispeech::punctuations::mode parse(const std::string& request);
-
-  // Current state accessor.
-  operator multispeech::punctuations::mode(void) const;
-
-  // Change current mode.
-  void operator()(multispeech::punctuations::mode mode);
+  bool parse(const std::string& request);
 
 private:
   // Mode detectors.
-  multispeech::punctuations::mode all(void);
-  multispeech::punctuations::mode some(void);
-  multispeech::punctuations::mode none(void);
-  multispeech::punctuations::mode unknown(void);
+  bool all(void);
+  bool some(void);
+  bool none(void);
+  bool unknown(void);
 
-  // Current value holder.
-  multispeech::punctuations::mode value;
+  // Current value holder reference.
+  multispeech::punctuations::mode& value;
 
   // Parsing table.
   static const Entry table[];
 };
 
 
-// Urgency mode parsing and storing.
+// Urgency mode parsing.
 class urgency_mode: FBB::CmdFinder<message::code (urgency_mode::*)(void)>
 {
 public:
@@ -334,13 +326,10 @@ public:
   };
 
   // Main constructor.
-  urgency_mode(void);
+  explicit urgency_mode(category& holder);
 
   // Parse request and setup value.
   message::code setup(const std::string& request);
-
-  // Current value access.
-  operator category(void) const;
 
 private:
   // Set value according to the request.
@@ -351,8 +340,8 @@ private:
   message::code set_progress(void);
   message::code set_unknown(void);
 
-  // Current value holder.
-  category value;
+  // Current value holder reference.
+  category& value;
 
   // Parsing table.
   static const Entry table[];
@@ -363,30 +352,25 @@ private:
 class digital_value
 {
 public:
-  // Special values:
-  enum
+  // Special cases:
+  enum status
   {
-    too_low = -200,
-    too_high = 200,
-    invalid = 1000
+    acceptable,
+    too_low,
+    too_high,
+    invalid
   };
 
   // Main constructor.
-  digital_value(void);
+  explicit digital_value(double& holder);
 
   // Validate and parse request.
-  static int extract(const std::string& request);
-
-  // Set up the value. The only valid one should be used here.
-  void operator()(int value);
-
-  // Retrieve stored factor.
-  operator double(void) const;
+  status parse(const std::string& request);
 
 private:
   // Here we store the factor that will be applied to the configured
   // parameter value. It should never be zero or negative.
-  double factor;
+  double& factor;
 
   // Allowed value boundaries.
   static const int bottom = -100;

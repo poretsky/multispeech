@@ -49,9 +49,10 @@ protected:
     multispeech::server(argc, argv),
     split_multiline_messages(option_value[multispeech::options::ssip::split_multiline_messages].as<bool>()),
     punctuation(multispeech::punctuations::some),
-    rate_factor(0),
-    pitch_factor(0),
-    volume_factor(0)
+    rate_factor(1.0),
+    pitch_factor(1.0),
+    volume_factor(1.0),
+    spelling(false)
   {
   }
 
@@ -62,9 +63,10 @@ public:
   // Taken from configuration:
   const bool split_multiline_messages;
 
-  // Initial defaults for starting sessions:
+  // Initial defaults for session environment:
   multispeech::punctuations::mode punctuation;
-  int rate_factor, pitch_factor, volume_factor;
+  double rate_factor, pitch_factor, volume_factor;
+  bool spelling;
 
   // Shared access synchronization means:
   boost::mutex access;

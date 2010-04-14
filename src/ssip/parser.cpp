@@ -58,6 +58,17 @@ const commands::Entry commands::table[] =
     Entry("", &commands::cmd_unknown)
   };
 
+// Destination checkers table:
+const destination::Entry destination::table[] =
+  {
+    Entry("self", &destination::check_self),
+    Entry("all", &destination::check_all),
+    Entry("", &destination::check_another)
+  };
+
+// Destination id validator:
+const regex destination::validator("^\\d+$");
+
 // Parameter setting subcommands table:
 const settings::Entry settings::table[] =
   {
@@ -79,17 +90,6 @@ const settings::Entry settings::table[] =
     Entry("notification", &settings::set_notification),
     Entry("", &settings::set_unknown)
   };
-
-// Destination checkers table:
-const destination::Entry destination::table[] =
-  {
-    Entry("self", &destination::check_self),
-    Entry("all", &destination::check_all),
-    Entry("", &destination::check_another)
-  };
-
-// Destination id validator:
-const regex destination::validator("^\\d+$");
 
 // Boolean flag parser table:
 const boolean_flag::Entry boolean_flag::table[] =
@@ -255,122 +255,6 @@ commands::cmd_unimplemented(void)
 }
 
 
-// Settings dispatcher:
-
-settings::settings(void):
-  CmdFinder<FunctionPtr>(table, table +
-                         (sizeof(table) / sizeof(Entry)),
-                         USE_FIRST | INSENSITIVE)
-{
-}
-
-// Dummy implementations:
-
-message::code
-settings::set_client_name(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_priority(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_output_module(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_language(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_ssml_mode(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_punctuation(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_spelling(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_cap_let_recogn(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_voice(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_synthesis_voice(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_rate(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_pitch(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_volume(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_pause_context(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_history(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-message::code
-settings::set_notification(void)
-{
-  return message::ERR_NOT_IMPLEMENTED;
-}
-
-// Actual implementation:
-
-message::code
-settings::set_unknown(void)
-{
-  return message::ERR_PARAMETER_INVALID;
-}
-
-
 // Request destination parser:
 
 destination::destination(void):
@@ -427,35 +311,160 @@ destination::check_another(void)
 }
 
 
-// Boolean parameters parser:
+// Settings dispatcher:
 
-boolean_flag::boolean_flag(void):
+settings::settings(void):
   CmdFinder<FunctionPtr>(table, table +
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE)
 {
 }
 
-  // Dummy implementation:
+// Dummy implementations:
 
 message::code
+settings::set_client_name(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_priority(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_output_module(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_language(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_ssml_mode(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_punctuation(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_spelling(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_cap_let_recogn(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_voice(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_synthesis_voice(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_rate(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_pitch(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_volume(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_pause_context(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_history(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+message::code
+settings::set_notification(destination& target)
+{
+  return message::ERR_NOT_IMPLEMENTED;
+}
+
+// Actual implementation:
+
+message::code
+settings::set_unknown(destination& target)
+{
+  return message::ERR_PARAMETER_INVALID;
+}
+
+
+// Boolean parameters parser:
+
+boolean_flag::boolean_flag(bool& holder):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE),
+  value(holder)
+{
+}
+
+// Public methods:
+
+bool
+boolean_flag::parse(const string& request)
+{
+  return (this->*findCmd(request))();
+}
+
+// Private methods:
+
+bool
 boolean_flag::flag_on(void)
 {
-  return message::ERR_NOT_IMPLEMENTED;
+  value = true;
+  return true;
 }
 
-message::code
+bool
 boolean_flag::flag_off(void)
 {
-  return message::ERR_NOT_IMPLEMENTED;
+  value = false;
+  return true;
 }
 
-// Real implementation:
-
-message::code
+bool
 boolean_flag::flag_invalid(void)
 {
-  return message::ERR_PARAMETER_NOT_ON_OFF;
+  return false;
 }
 
 
@@ -533,19 +542,15 @@ notification_setup::notify_unknown(void)
 }
 
 
-// Notification mode setup and access:
+// Notification mode setup:
 
-notification_mode::notification_mode(void):
-  value(0)
+notification_mode::notification_mode(unsigned int& holder):
+  boolean_flag(flag),
+  value(holder)
 {
 }
 
 // Public methods:
-
-notification_mode::operator unsigned int(void) const
-{
-  return value;
-}
 
 message::code
 notification_mode::setup(const string& request)
@@ -558,43 +563,37 @@ notification_mode::setup(const string& request)
 message::code
 notification_mode::notify_all(void)
 {
-  mask = job::all_events;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::all_events);
 }
 
 message::code
 notification_mode::notify_begin(void)
 {
-  mask = job::started;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::started);
 }
 
 message::code
 notification_mode::notify_end(void)
 {
-  mask = job::complete;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::complete);
 }
 
 message::code
 notification_mode::notify_cancel(void)
 {
-  mask = job::cancelled;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::cancelled);
 }
 
 message::code
 notification_mode::notify_pause(void)
 {
-  mask = job::paused;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::paused);
 }
 
 message::code
 notification_mode::notify_resume(void)
 {
-  mask = job::resumed;
-  return (this->*boolean_flag::findCmd(notification_setup::beyond()))();
+  return set_mode(job::resumed);
 }
 
 message::code
@@ -604,36 +603,31 @@ notification_mode::notify_index_marks(void)
 }
 
 message::code
-notification_mode::flag_on(void)
+notification_mode::set_mode(unsigned int mask)
 {
-  value |= mask;
-  return message::OK_NOTIFICATION_SET;
-}
-
-message::code
-notification_mode::flag_off(void)
-{
-  value &= ~mask;
-  return message::OK_NOTIFICATION_SET;
+  message::code rc = message::ERR_PARAMETER_NOT_ON_OFF;
+  if (boolean_flag::parse(notification_setup::beyond()))
+    {
+      if (flag)
+        value |= mask;
+      else value &= ~mask;
+      rc = message::OK_NOTIFICATION_SET;
+    }
+  return rc;
 }
 
 
 // Block mode support:
 
-block_mode::block_mode(void):
+block_mode::block_mode(bool& holder):
   CmdFinder<FunctionPtr>(table, table +
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE),
-  state(false)
+  state(holder)
 {
 }
 
 // Public methods:
-
-block_mode::operator bool(void) const
-{
-  return state;
-}
 
 message::code
 block_mode::toggle(const string& request)
@@ -676,67 +670,59 @@ block_mode::unknown(void)
 
 // Punctuation mode control means:
 
-punctuation_mode::punctuation_mode(void):
+punctuation_mode::punctuation_mode(punctuations::mode& holder):
   CmdFinder<FunctionPtr>(table, table +
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE),
-  value(punctuations::unknown)
+  value(holder)
 {
 }
 
 // Public methods:
 
-punctuations::mode
+bool
 punctuation_mode::parse(const string& request)
 {
   return (this->*findCmd(request))();
 }
 
-punctuation_mode::operator punctuations::mode(void) const
-{
-  return value;
-}
-
-void
-punctuation_mode::operator()(punctuations::mode mode)
-{
-  value = mode;
-}
-
 // Private methods:
 
-punctuations::mode
+bool
 punctuation_mode::all(void)
 {
-  return punctuations::all;
+  value = punctuations::all;
+  return true;
 }
 
-punctuations::mode
+bool
 punctuation_mode::some(void)
 {
-  return punctuations::some;
+  value = punctuations::some;
+  return true;
 }
 
-punctuations::mode
+bool
 punctuation_mode::none(void)
 {
-  return punctuations::none;
+  value = punctuations::none;
+  return true;
 }
 
-punctuations::mode
+bool
 punctuation_mode::unknown(void)
 {
-  return punctuations::unknown;
+  return false;
 }
 
 
 // Priority control:
 
-urgency_mode::urgency_mode(void):
+urgency_mode::urgency_mode(category& holder):
   CmdFinder<FunctionPtr>(table, table +
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE),
-  value(text)
+  value(holder)
 {
 }
 
@@ -746,11 +732,6 @@ message::code
 urgency_mode::setup(const string& request)
 {
   return (this->*findCmd(request))();
-}
-
-urgency_mode::operator category(void) const
-{
-  return value;
 }
 
 // Private methods:
@@ -799,43 +780,37 @@ urgency_mode::set_unknown(void)
 
 // Dealing with digital parameters:
 
-digital_value::digital_value(void):
-  factor(1.0)
+digital_value::digital_value(double& holder):
+  factor(holder)
 {
 }
 
 // Public methods:
 
-int
-digital_value::extract(const string& request)
+digital_value::status
+digital_value::parse(const string& request)
 {
   smatch extractor;
-  int value = invalid;
+  status result = acceptable;
   if (regex_match(request, extractor, pattern))
     {
-      value = lexical_cast<int>(string(extractor[1].first, extractor[1].second));
+      int value = lexical_cast<int>(string(extractor[1].first, extractor[1].second));
       if (value < bottom)
-        value = too_low;
+        result = too_low;
       else if (value > top)
-        value = too_high;
+        result = too_high;
+      else
+        {
+          factor = static_cast<double>(value);
+          factor -= (top + bottom) / 2;
+          factor /= (top - bottom) / 2;
+          factor += 1.0;
+          if (factor <= 0.0)
+            factor = epsilon;
+        }
     }
-  return value;
-}
-
-void
-digital_value::operator()(int value)
-{
-  factor = static_cast<double>(value);
-  factor -= (top + bottom) / 2;
-  factor /= (top - bottom) / 2;
-  factor += 1.0;
-  if (factor <= 0.0)
-    factor = epsilon;
-}
-
-digital_value::operator double(void) const
-{
-  return factor;
+  else result = invalid;
+  return result;
 }
 
 } // namespace SSIP
