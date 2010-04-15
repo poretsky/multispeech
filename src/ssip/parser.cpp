@@ -146,6 +146,15 @@ const urgency_mode::Entry urgency_mode::table[] =
 // Digital parameter value pattern:
 const boost::regex digital_value::pattern("^([+-]?\\d+)\\s*$");
 
+// Capitalization mode request parser table:
+const capitalization::Entry capitalization::table[] =
+  {
+    Entry("none", &capitalization::caps_none),
+    Entry("spell", &capitalization::caps_spell),
+    Entry("icon", &capitalization::caps_icon),
+    Entry("", &capitalization::caps_unknown)
+  };
+
 
 // General commands dispatcher:
 
@@ -811,6 +820,54 @@ digital_value::parse(const string& request)
     }
   else result = invalid;
   return result;
+}
+
+
+// Capitalization mode request parser:
+
+capitalization::capitalization(mode& holder):
+  CmdFinder<FunctionPtr>(table, table +
+                         (sizeof(table) / sizeof(Entry)),
+                         USE_FIRST | INSENSITIVE),
+  value(holder)
+{
+}
+
+// Public methods:
+
+bool
+capitalization::parse(const string& request)
+{
+  return (this->*findCmd(request))();
+}
+
+// Private methods:
+
+bool
+capitalization::caps_none(void)
+{
+  value = none;
+  return true;
+}
+
+bool
+capitalization::caps_spell(void)
+{
+  value = spell;
+  return true;
+}
+
+bool
+capitalization::caps_icon(void)
+{
+  value = icon;
+  return true;
+}
+
+bool
+capitalization::caps_unknown(void)
+{
+  return false;
 }
 
 } // namespace SSIP

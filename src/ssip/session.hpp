@@ -57,12 +57,17 @@ private:
   void prepare(const std::string& text);
 
   // Submit prepared job and reply to the client:
-  void commit(void);
+  void commit(message::code rc);
+
+  // Submit capital letter marking sound icon or fall back
+  // to beep signal if it is not exist:
+  void caps_icon(void);
 
   // General commands dispatcher methods:
   bool cmd_speak(void);
   bool cmd_char(void);
   bool cmd_key(void);
+  bool cmd_sound_icon(void);
   bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
@@ -79,6 +84,7 @@ private:
   message::code set_pitch(destination& target);
   message::code set_volume(destination& target);
   message::code set_spelling(destination& target);
+  message::code set_cap_let_recogn(destination& target);
 
   // Local environment:
   client_info client;
@@ -90,6 +96,7 @@ private:
   double pitch_factor;
   double volume_factor;
   bool spelling;
+  capitalization::mode capitalization_mode;
 
   // Text accumulator for multiline messages:
   std::vector<std::string> accumulator;

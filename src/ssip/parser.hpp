@@ -383,6 +383,39 @@ private:
   static const boost::regex pattern;
 };
 
+
+// Capital letter recognition mode parser.
+class capitalization: private FBB::CmdFinder<bool (capitalization::*)(void)>
+{
+public:
+  // Available mode values:
+  enum mode
+  {
+    none,
+    spell,
+    icon
+  };
+
+  // Main constructor.
+  explicit capitalization(mode& holder);
+
+  // Parse request and store result. Return true when success.
+  bool parse(const std::string& request);
+
+private:
+  // Value detectors.
+  bool caps_none(void);
+  bool caps_spell(void);
+  bool caps_icon(void);
+  bool caps_unknown(void);
+
+  // Value holder.
+  mode& value;
+
+  // Parser table.
+  static const Entry table[];
+};
+
 } // namespace SSIP
 
 #endif

@@ -38,6 +38,8 @@
 #include <mscore/server.hpp>
 #include <mscore/text_filter.hpp>
 
+#include "parser.hpp"
+
 namespace SSIP
 {
 
@@ -48,11 +50,13 @@ protected:
   proxy(int argc, char* argv[]):
     multispeech::server(argc, argv),
     split_multiline_messages(option_value[multispeech::options::ssip::split_multiline_messages].as<bool>()),
+    sounds(option_value[multispeech::options::ssip::sounds].as<std::string>()),
     punctuation(multispeech::punctuations::some),
     rate_factor(1.0),
     pitch_factor(1.0),
     volume_factor(1.0),
-    spelling(false)
+    spelling(false),
+    capitalization_mode(capitalization::none)
   {
   }
 
@@ -62,11 +66,13 @@ public:
 
   // Taken from configuration:
   const bool split_multiline_messages;
+  const std::string sounds;
 
   // Initial defaults for session environment:
   multispeech::punctuations::mode punctuation;
   double rate_factor, pitch_factor, volume_factor;
   bool spelling;
+  capitalization::mode capitalization_mode;
 
   // Shared access synchronization means:
   boost::mutex access;
