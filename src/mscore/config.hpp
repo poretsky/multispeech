@@ -87,6 +87,7 @@ namespace options
   namespace ssip
   {
     extern const char* const port;
+    extern const char* const sounds;
     extern const char* const split_multiline_messages;
   };
 
@@ -246,6 +247,7 @@ private:
   static const boost::filesystem::path mbrola_voices_default;
   static const boost::filesystem::path enlex_default;
   static const boost::filesystem::path rulex_default;
+  static const boost::filesystem::path sounds_default;
 };
 
 } // namespace multispeech

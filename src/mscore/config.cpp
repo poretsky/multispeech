@@ -54,6 +54,7 @@ bool configuration::initialized = false;
 const path configuration::mbrola_voices_default(complete("mbrola-voices", DATA_DIR));
 const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
 const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
+const path configuration::sounds_default(complete("sounds/sound-icons", DATA_DIR));
 
 
 // Language id strings:
@@ -113,6 +114,7 @@ namespace options
   namespace ssip
   {
     const char* const port = "ssip.port";
+    const char* const sounds = "ssip.sounds";
     const char* const split_multiline_messages = "ssip.split_multiline_messages";
   };
 
@@ -295,6 +297,7 @@ configuration::configuration(int argc, char* argv[])
 
     // SSIP related options:
     (ssip::port, value<unsigned int>()->default_value(6560))
+    (ssip::sounds, value<string>()->default_value(sounds_default.file_string()))
     (ssip::split_multiline_messages, bool_switch()->default_value(false))
 
     // General audio options:

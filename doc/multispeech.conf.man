@@ -89,6 +89,10 @@ behaviour as an SSIP server.
 TCP port on which SSIP client connections will be accepted. By default
 port 6560 is used.
 .TP
+.B sounds
+.br
+Path to the directory where sound icons are stored.
+.TP
 .B split_multiline_messages
 .br
 When this option is set, multiline messages sent by command
