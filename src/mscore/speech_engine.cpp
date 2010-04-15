@@ -52,9 +52,6 @@ double speech_engine::persistent_rate = 1.0;
 double speech_engine::persistent_deviation = 1.0;
 double speech_engine::persistent_char_pitch = 1.0;
 double speech_engine::persistent_char_rate = 1.0;
-bool speech_engine::split_caps = false;
-bool speech_engine::capitalize = false;
-bool speech_engine::space_special_chars = false;
 
 // "No voice" string:
 const string speech_engine::novoice("no voice");
@@ -141,24 +138,6 @@ void
 speech_engine::char_speech_rate(double value)
 {
   persistent_char_rate = value;
-}
-
-void
-speech_engine::split_caps_mode(bool value)
-{
-  split_caps = value;
-}
-
-void
-speech_engine::capitalize_mode(bool value)
-{
-  capitalize = value;
-}
-
-void
-speech_engine::space_special_chars_mode(bool value)
-{
-  space_special_chars = value;
 }
 
 

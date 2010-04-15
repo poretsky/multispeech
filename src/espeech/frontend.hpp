@@ -57,8 +57,6 @@ private:
   bool do_set_char_scale(void);
   bool do_set_punctuations(void);
   bool do_set_speech_rate(void);
-  bool do_split_caps(void);
-  bool do_capitalize(void);
   bool do_stop(void);
   bool do_pause(void);
   bool do_resume(void);
@@ -69,6 +67,7 @@ private:
   bool do_prev_language(void);
   bool do_sync_state(void);
   bool do_say_version(void);
+  bool do_nothing(void);
   bool do_unknown(void);
 
   // Extract embedded parameters:

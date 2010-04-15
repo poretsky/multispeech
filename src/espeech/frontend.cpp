@@ -57,8 +57,8 @@ const frontend::Entry frontend::command_table[] =
     Entry("tts_set_punctuations", &frontend::do_set_punctuations),
     Entry("r", &frontend::do_set_speech_rate),
     Entry("tts_set_speech_rate", &frontend::do_set_speech_rate),
-    Entry("tts_split_caps", &frontend::do_split_caps),
-    Entry("tts_capitalize", &frontend::do_capitalize),
+    Entry("tts_split_caps", &frontend::do_nothing),
+    Entry("tts_capitalize", &frontend::do_nothing),
     Entry("s", &frontend::do_stop),
     Entry("tts_pause", &frontend::do_pause),
     Entry("tts_resume", &frontend::do_resume),
@@ -193,9 +193,6 @@ frontend::do_reset(void)
   speech_engine::sampling_deviation();
   speech_engine::char_voice_pitch();
   speech_engine::char_speech_rate();
-  speech_engine::split_caps_mode();
-  speech_engine::capitalize_mode();
-  speech_engine::space_special_chars_mode();
   punctuations::verbosity = punctuations::some;
   return true;
 }
@@ -245,24 +242,6 @@ frontend::do_set_speech_rate(void)
   string value(beyond());
   if (regex_match(value, validate_float))
     speech_engine::speech_rate(lexical_cast<double>(value) / rate_scale);
-  return true;
-}
-
-bool
-frontend::do_split_caps(void)
-{
-  string value(beyond());
-  if (regex_match(value, validate_integer))
-    speech_engine::split_caps_mode(lexical_cast<int>(value));
-  return true;
-}
-
-bool
-frontend::do_capitalize(void)
-{
-  string value(beyond());
-  if (regex_match(value, validate_integer))
-    speech_engine::capitalize_mode(lexical_cast<int>(value));
   return true;
 }
 
@@ -359,10 +338,6 @@ frontend::do_sync_state(void)
   if (regex_search(params, parse_result, tts_parameters))
     {
       set_punctuations_mode(params[0]);
-      if (parse_result[1].matched)
-        speech_engine::capitalize_mode(lexical_cast<int>(string(parse_result[1].first, parse_result[1].second)));
-      if (parse_result[2].matched)
-        speech_engine::split_caps_mode(lexical_cast<int>(string(parse_result[2].first, parse_result[2].second)));
       if (parse_result[3].matched)
         speech_engine::speech_rate(lexical_cast<double>(string(parse_result[3].first, parse_result[3].second))
                                    / rate_scale);
@@ -374,6 +349,12 @@ bool
 frontend::do_say_version(void)
 {
   execute(text_task(PACKAGE_VERSION));
+  return true;
+}
+
+bool
+frontend::do_nothing(void)
+{
   return true;
 }
 

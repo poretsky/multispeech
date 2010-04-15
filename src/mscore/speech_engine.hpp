@@ -110,11 +110,6 @@ public:
   static void char_voice_pitch(double value = 1.0);
   static void char_speech_rate(double value = 1.0);
 
-  // Dummy methods (unimplemented yet)
-  static void split_caps_mode(bool value = false);
-  static void capitalize_mode(bool value = false);
-  static void space_special_chars_mode(bool value = false);
-
   // Prepare speech task:
   speech_task text_task(const std::wstring& s,
                         bool use_translation = false);
@@ -138,9 +133,6 @@ protected:
 
   // Format substitutions to construct actual command:
   std::map<const std::string, std::string> format_macros;
-
-  // General options:
-  static bool split_caps, capitalize, space_special_chars;
 
   // "No voice" string:
   static const std::string novoice;
