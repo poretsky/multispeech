@@ -24,6 +24,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include <unicode/utf8.h>
 #include <unicode/uchar.h>
@@ -37,6 +38,7 @@ namespace SSIP
 using namespace std;
 using namespace boost;
 using namespace boost::filesystem;
+using namespace boost::algorithm;
 using namespace FBB;
 using namespace multispeech;
 
@@ -56,6 +58,7 @@ session::session(proxy* origin, int socket_fd):
   priority(urgency_mode::text),
   host(*origin),
   receiving(false),
+  valid(true),
   id(++count)
 {
   punctuation = host.punctuation;
@@ -85,8 +88,7 @@ session::perform(string& request)
 {
   mutex::scoped_lock lock(host.access);
   bool result = true;
-  if (*request.rbegin() == '\r')
-    request.resize(request.length() - 1);
+  trim_right(request);
   if (!receiving)
     {
       commands::FunctionPtr done = commands::findCmd(request);
@@ -99,7 +101,11 @@ session::perform(string& request)
         {
           ostringstream text;
           BOOST_FOREACH (const string& line, accumulator)
-            text << line << ' ';
+            {
+              if (!text.str().empty())
+                text << ' ';
+              text << line;
+            }
           prepare(text.str());
         }
       commit(OK_MESSAGE_QUEUED);
@@ -121,80 +127,84 @@ session::prepare(const string& text)
 {
   const char* s = text.c_str();
   size_t len = text.length();
-  int i = 0;
+  int i = 0, m = 0;
   UChar32 c;
+
   punctuations::verbosity = punctuation;
   speech_engine::volume(volume_factor);
   speech_engine::voice_pitch(pitch_factor);
   speech_engine::speech_rate(rate_factor);
   speech_engine::char_voice_pitch(pitch_factor);
   speech_engine::char_speech_rate(rate_factor);
-  if (spelling)
-    while (i < len)
-      {
-        int k = i;
-        U8_NEXT(s, i, len, c);
-        if ((capitalization_mode == capitalization::icon) && u_isupper(c))
-          caps_icon();
-        errand << host.letter_task(string(s + k, s + i));
-      }
-  else if (capitalization_mode != capitalization::none)
+
+  while (valid && (i < len))
     {
-      int m = 0;
-      while (i < len)
+      int k = i;
+      U8_NEXT(s, i, len, c);
+      if (c < 0)
+        valid = false;
+      else if (spelling)
         {
-          int k = i;
-          U8_NEXT(s, i, len, c);
-          if (u_isupper(c))
+          if (u_isspace(c))
+            errand << host.silence(1.0 / (4.0 * rate_factor + 1.0));
+          else if ((capitalization_mode == capitalization::icon) && u_isupper(c))
+            caps_icon();
+          errand << host.letter_task(text.substr(k, i - k));
+        }
+      else if ((capitalization_mode != capitalization::none) && u_isupper(c))
+        {
+          if (k > m)
+            errand << host.text_task(text.substr(m, k - m));
+          switch (capitalization_mode)
             {
-              if (k > m)
-                errand << host.text_task(string(s + m, s + k));
-              switch (capitalization_mode)
-                {
-                case capitalization::spell:
-                  errand << host.letter_task(string(s + k, s + i));
-                  m = i;
-                  break;
-                case capitalization::icon:
-                  caps_icon();
-                  m = k;
-                default:
-                  break;
-                }
+            case capitalization::spell:
+              errand << host.letter_task(text.substr(k, i - k));
+              m = i;
+              break;
+            case capitalization::icon:
+              caps_icon();
+              m = k;
+            default:
+              break;
             }
         }
-      if (i > m)
-        errand << host.text_task(string(s + m, s + i));
     }
-  else errand << host.text_task(text);
+
+  if (valid && !spelling && (i > m))
+    errand << host.text_task(text.substr(m, i - m));
 }
 
 void
 session::commit(message::code rc)
 {
-  bool dominate = false, update = false;
-  switch (errand.urgency())
+  if (valid)
     {
-    case urgency_mode::important:
-      dominate = true;
-    case urgency_mode::notification:
-      host.reject(urgency_mode::notification);
-      break;
-    case urgency_mode::message:
-    case urgency_mode::text:
-      host.reject(urgency_mode::text);
-      break;
-    case urgency_mode::progress:
-      update = true;
-    default:
-      break;
+      bool dominate = false, update = false;
+      switch (errand.urgency())
+        {
+        case urgency_mode::important:
+          dominate = true;
+        case urgency_mode::notification:
+          host.reject(urgency_mode::notification);
+          break;
+        case urgency_mode::message:
+        case urgency_mode::text:
+          host.reject(urgency_mode::text);
+          break;
+        case urgency_mode::progress:
+          update = true;
+        default:
+          break;
+        }
+      host.enqueue(errand, dominate, update);
+      host.proceed();
+      emit(rc, errand.id());
+      emit(rc);
     }
-  host.enqueue(errand, dominate, update);
-  host.proceed();
-  emit(rc, errand.id());
-  emit(rc);
+  else emit(ERR_INVALID_ENCODING);
   accumulator.clear();
   errand.clear();
+  valid = true;
 }
 
 void
@@ -206,6 +216,22 @@ session::caps_icon(void)
   else errand << tone_task(1000, 0.01, volume_factor);
 }
 
+void
+session::check_encoding(const string& text)
+{
+  const char* s = text.c_str();
+  size_t len = text.length();
+  int i = 0;
+  UChar32 c;
+  valid = true;
+  while (valid && (i < len))
+    {
+      U8_NEXT(s, i, len, c);
+      if (c < 0)
+        valid = false;
+    }
+}
+
 
 // Serving client requests:
 
@@ -215,6 +241,7 @@ session::cmd_speak(void)
   accumulator.clear();
   errand = job(id, priority, notified_events);
   receiving = true;
+  valid = true;
   emit(OK_RECEIVE_DATA);
   return true;
 }
@@ -222,11 +249,15 @@ session::cmd_speak(void)
 bool
 session::cmd_char(void)
 {
-  speech_engine::volume(volume_factor);
-  speech_engine::char_voice_pitch(pitch_factor);
-  speech_engine::char_speech_rate(rate_factor);
-  errand = job(id, priority, notified_events);
-  errand << host.letter_task(commands::beyond());
+  check_encoding(commands::beyond());
+  if (valid)
+    {
+      speech_engine::volume(volume_factor);
+      speech_engine::char_voice_pitch(pitch_factor);
+      speech_engine::char_speech_rate(rate_factor);
+      errand = job(id, priority, notified_events);
+      errand << host.letter_task(commands::beyond());
+    }
   commit(OK_MESSAGE_QUEUED);
   return true;
 }
@@ -234,14 +265,18 @@ session::cmd_char(void)
 bool
 session::cmd_key(void)
 {
-  istringstream keyname(commands::beyond());
-  string token;
-  speech_engine::volume(volume_factor);
-  speech_engine::char_voice_pitch(pitch_factor);
-  speech_engine::char_speech_rate(rate_factor);
-  errand = job(id, priority, notified_events);
-  while (getline(keyname, token, '_'))
-    errand << host.letter_task(token);
+  check_encoding(commands::beyond());
+  if (valid)
+    {
+      istringstream keyname(commands::beyond());
+      string token;
+      speech_engine::volume(volume_factor);
+      speech_engine::char_voice_pitch(pitch_factor);
+      speech_engine::char_speech_rate(rate_factor);
+      errand = job(id, priority, notified_events);
+      while (getline(keyname, token, '_'))
+        errand << host.letter_task(token);
+    }
   commit(OK_MESSAGE_QUEUED);
   return true;
 }

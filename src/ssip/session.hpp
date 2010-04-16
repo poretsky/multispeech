@@ -63,6 +63,9 @@ private:
   // to beep signal if it is not exist:
   void caps_icon(void);
 
+  // Check text encoding and set validity flag accordingly:
+  void check_encoding(const std::string& text);
+
   // General commands dispatcher methods:
   bool cmd_speak(void);
   bool cmd_char(void);
@@ -109,6 +112,9 @@ private:
 
   // Text receiving mode indicator:
   bool receiving;
+
+  // Encoding validity state while receiving a text:
+  bool valid;
 
   // Unique session id:
   unsigned long id;
