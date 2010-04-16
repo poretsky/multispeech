@@ -56,7 +56,7 @@ dtk_voices = on
 #port = 6560
 # TCP port on which SSIP client connections will be accepted.
 #
-#sounds = /usr/share/sounds/sound-icons
+#sounds = <datadir>/sounds/sound-icons
 # Path to the directory where sound icons are stored.
 #
 #split_multiline_messages = off
