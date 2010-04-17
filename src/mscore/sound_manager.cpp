@@ -63,7 +63,7 @@ void
 sound_manager::enqueue(const job&unit, bool dominate, bool update)
 {
   mutex::scoped_lock lock(access);
-  list<job>::iterator position;
+  jobs_queue::iterator position;
   for (position = jobs->begin(); position != jobs->end(); ++position)
     if ((*position) < unit)
       break;
@@ -85,24 +85,50 @@ sound_manager::enqueue(const job&unit, bool dominate, bool update)
 }
 
 void
-sound_manager::cancel(unsigned long id)
+sound_manager::cancel(unsigned long key, bool by_owner)
 {
   mutex::scoped_lock lock(access);
-  list<job>::iterator position;
-  for (position = jobs->begin(); position != jobs->end(); ++position)
-    if (position->id() == id)
-      break;
-  if (position != jobs->end())
+  jobs_queue::iterator position = jobs->begin();
+  while (position != jobs->end())
+    {
+      unsigned long identity = by_owner ? position->owner() : position->id();
+      if (identity == key)
+        {
+          if (position->state() == job::active)
+            {
+              mute();
+              position->kill();
+              ++position;
+            }
+          else
+            {
+              notify(job::cancelled, *position);
+              position = jobs->erase(position);
+            }
+          if (!by_owner)
+            break;
+        }
+      else ++position;
+    }
+}
+
+void
+sound_manager::cancel(void)
+{
+  mutex::scoped_lock lock(access);
+  jobs_queue::iterator position = jobs->begin();
+  mute();
+  while (position != jobs->end())
     {
       if (position->state() == job::active)
         {
-          mute();
           position->kill();
+          ++position;
         }
       else
         {
           notify(job::cancelled, *position);
-          jobs->erase(position);
+          position = jobs->erase(position);
         }
     }
 }
@@ -111,8 +137,7 @@ void
 sound_manager::reject(int urgency, bool exact)
 {
   mutex::scoped_lock lock(access);
-  list<job>::iterator position;
-  for (position = jobs->begin(); position != jobs->end(); ++position)
+  for (jobs_queue::iterator position = jobs->begin(); position != jobs->end(); ++position)
     if ((position->urgency() == urgency) ||
         (!exact && (position->urgency() < urgency)))
       {
@@ -132,12 +157,36 @@ sound_manager::reject(int urgency, bool exact)
 job::status
 sound_manager::query(unsigned long id)
 {
+  jobs_queue::iterator position;
   mutex::scoped_lock lock(access);
-  list<job>::iterator position;
   for (position = jobs->begin(); position != jobs->end(); ++position)
     if (position->id() == id)
       break;
   return (position != jobs->end()) ? position->state() : job::unknown;
+}
+
+sound_manager::jobs_queue*
+sound_manager::recall(unsigned long owner)
+{
+  jobs_queue* recalled_jobs = new jobs_queue;
+  mutex::scoped_lock lock(access);
+  jobs_queue::iterator position = jobs->begin();
+  while (position != jobs->end())
+    if (position->owner() == owner)
+      {
+        recalled_jobs->push_back(*position);
+        if (position->state() == job::active)
+          {
+            mute();
+            position->kill();
+            recalled_jobs->back().postpone();
+            notify(job::paused, recalled_jobs->back());
+            ++position;
+          }
+        else position = jobs->erase(position);
+      }
+    else ++position;
+  return recalled_jobs;
 }
 
 void
@@ -205,6 +254,22 @@ sound_manager::proceed(void)
       }
   }
   thread::yield();
+}
+
+void
+sound_manager::pause(void)
+{
+  mutex::scoped_lock lock(access);
+  if (state == running)
+    {
+      mute();
+      state = idle;
+      if (!jobs->empty() && (jobs->front().state() == job::active))
+        {
+          jobs->front().postpone();
+          notify(job::paused, jobs->front());
+        }
+    }
 }
 
 void

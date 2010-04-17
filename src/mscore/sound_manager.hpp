@@ -55,6 +55,9 @@ protected:
   ~sound_manager(void);
 
 public:
+  // Jobs queue container.
+  typedef std::list<job> jobs_queue;
+
   // Submit a job to the queue according to it's priority.
   // If some job is executing already at the time of submission,
   // this one will be added to the running queue and so will be
@@ -68,9 +71,14 @@ public:
   // is obsoleted though not cancelled.
   void enqueue(const job& unit, bool dominate = false, bool update = false);
 
-  // Cancel job by it's id. It is absolutely no harm to specify
-  // non-existent id here. There will nothing be done in that case.
-  void cancel(unsigned long id);
+  // Jobs cancellation. The first variant allows to cancel jobs
+  // by id or by owner depending on the selector flag specified
+  // as the second argument. It is absolutely no harm to specify
+  // non-existent key value. There will nothing be done in that case.
+  // The second variant, without arguments,
+  // cancels all jobs in active queue if any.
+  void cancel(unsigned long key, bool by_owner = false);
+  void cancel(void);
 
   // Jobs rejection by urgency. All jobs with urgency attribute
   // less than or equal to specified value will be cancelled
@@ -81,6 +89,15 @@ public:
   // Return current job state for specified id.
   job::status query(unsigned long id);
 
+  // Remove jobs of specified owner from the active queue and return
+  // pointer to the newly constructed container populated by these
+  // jobs. The order of items is preserved. If any of the affected
+  // jobs is active at the moment, it will be paused in usual way.
+  // Note that the returned container will be dynamically allocated
+  // and it is caller responsibility to delete it
+  // when it is not needed anymore.
+  jobs_queue* recall(unsigned long owner);
+
   // Execute specified task immediately. Other playing sounds
   // may be stopped depending on the asynchronous options.
   void execute(const sound_task& task);
@@ -90,6 +107,10 @@ public:
   // Execute queued jobs one by one until queue exhaustion.
   // No effect if some job is executing already.
   void proceed(void);
+
+  // Stop all current sounds, but don't touch jobs queue.
+  // Execution can be resumed by the method proceed().
+  void pause(void);
 
   // Stop all current sounds if any and backup the jobs queue.
   void suspend(void);
@@ -109,9 +130,6 @@ public:
   bool active(void);
 
 private:
-  // Jobs queue container.
-  typedef std::list<job> jobs_queue;
-
   // Job event info representation.
   struct event_info
   {
