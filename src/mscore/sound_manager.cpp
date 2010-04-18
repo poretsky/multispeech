@@ -90,7 +90,10 @@ sound_manager::abort(unsigned long owner)
   mutex::scoped_lock lock(access);
   if ((state == running) && !jobs->empty() &&
       (jobs->front().owner() == owner))
-    mute();
+    {
+      mute();
+      jobs->front().kill();
+    }
 }
 
 void
@@ -98,7 +101,10 @@ sound_manager::abort(void)
 {
   mutex::scoped_lock lock(access);
   if ((state == running) && !jobs->empty())
-    mute();
+    {
+      mute();
+      jobs->front().kill();
+    }
 }
 
 void
