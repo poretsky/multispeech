@@ -30,7 +30,11 @@
 #include "connection.hpp"
 #include "message.hpp"
 #include "proxy.hpp"
-#include "parser.hpp"
+#include "commands.hpp"
+#include "settings.hpp"
+#include "client_info.hpp"
+#include "priority.hpp"
+#include "capitalization.hpp"
 
 namespace SSIP
 {
@@ -93,8 +97,8 @@ private:
   client_info client;
   unsigned int notified_events;
   bool inside_block;
-  urgency_mode::category priority;
-  multispeech::punctuations::mode punctuation;
+  priority::category importance;
+  multispeech::punctuations::mode punctuation_mode;
   double rate_factor;
   double pitch_factor;
   double volume_factor;

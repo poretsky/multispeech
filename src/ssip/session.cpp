@@ -31,6 +31,15 @@
 
 #include "session.hpp"
 
+#include "boolean_flag.hpp"
+#include "digital_value.hpp"
+#include "destination.hpp"
+#include "priority.hpp"
+#include "notification.hpp"
+#include "block.hpp"
+#include "punctuation.hpp"
+#include "capitalization.hpp"
+
 
 namespace SSIP
 {
@@ -55,13 +64,13 @@ session::session(proxy* origin, int socket_fd):
   message(*output),
   notified_events(0),
   inside_block(false),
-  priority(urgency_mode::text),
+  importance(priority::text),
   host(*origin),
   receiving(false),
   valid(true),
   id(++count)
 {
-  punctuation = host.punctuation;
+  punctuation_mode = host.punctuation_mode;
   rate_factor = host.rate_factor;
   pitch_factor = host.pitch_factor;
   volume_factor = host.volume_factor;
@@ -130,7 +139,7 @@ session::prepare(const string& text)
   int i = 0, m = 0;
   UChar32 c;
 
-  punctuations::verbosity = punctuation;
+  punctuations::verbosity = punctuation_mode;
   speech_engine::volume(volume_factor);
   speech_engine::voice_pitch(pitch_factor);
   speech_engine::speech_rate(rate_factor);
@@ -182,16 +191,16 @@ session::commit(message::code rc)
       bool dominate = false, update = false;
       switch (errand.urgency())
         {
-        case urgency_mode::important:
+        case priority::important:
           dominate = true;
-        case urgency_mode::notification:
-          host.reject(urgency_mode::notification);
+        case priority::notification:
+          host.reject(priority::notification);
           break;
-        case urgency_mode::message:
-        case urgency_mode::text:
-          host.reject(urgency_mode::text);
+        case priority::message:
+        case priority::text:
+          host.reject(priority::text);
           break;
-        case urgency_mode::progress:
+        case priority::progress:
           update = true;
         default:
           break;
@@ -239,7 +248,7 @@ bool
 session::cmd_speak(void)
 {
   accumulator.clear();
-  errand = job(id, priority, notified_events);
+  errand = job(id, importance, notified_events);
   receiving = true;
   valid = true;
   emit(OK_RECEIVE_DATA);
@@ -255,7 +264,7 @@ session::cmd_char(void)
       speech_engine::volume(volume_factor);
       speech_engine::char_voice_pitch(pitch_factor);
       speech_engine::char_speech_rate(rate_factor);
-      errand = job(id, priority, notified_events);
+      errand = job(id, importance, notified_events);
       errand << host.letter_task(commands::beyond());
     }
   commit(OK_MESSAGE_QUEUED);
@@ -273,7 +282,7 @@ session::cmd_key(void)
       speech_engine::volume(volume_factor);
       speech_engine::char_voice_pitch(pitch_factor);
       speech_engine::char_speech_rate(rate_factor);
-      errand = job(id, priority, notified_events);
+      errand = job(id, importance, notified_events);
       while (getline(keyname, token, '_'))
         errand << host.letter_task(token);
     }
@@ -289,7 +298,7 @@ session::cmd_sound_icon(void)
       path sound(complete(commands::beyond(), host.sounds));
       if (exists(sound))
         {
-          errand = job(id, priority, notified_events);
+          errand = job(id, importance, notified_events);
           errand << sound_task(sound, volume_factor);
           commit(OK_SND_ICON_QUEUED);
         }
@@ -302,8 +311,8 @@ session::cmd_sound_icon(void)
 bool
 session::cmd_block(void)
 {
-  block_mode block(inside_block);
-  emit(block.toggle(commands::beyond()));
+  block state(inside_block);
+  emit(state.toggle(commands::beyond()));
   return true;
 }
 
@@ -365,8 +374,8 @@ session::set_notification(destination& target)
     rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     {
-      notification_mode notification(notified_events);
-      rc = notification.setup(settings::beyond());
+      notification mode(notified_events);
+      rc = mode.setup(settings::beyond());
     }
   return rc;
 }
@@ -378,23 +387,23 @@ session::set_punctuation(destination& target)
   if (!inside_block)
     {
       punctuations::mode customized;
-      punctuation_mode mode(customized);
+      punctuation mode(customized);
       if (mode.parse(settings::beyond()))
         switch (target.selection())
           {
           case destination::self:
-            punctuation = customized;
+            punctuation_mode = customized;
             break;
           case destination::all:
             BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
-              client.second->punctuation = customized;
-            host.punctuation = customized;
+              client.second->punctuation_mode = customized;
+            host.punctuation_mode = customized;
             break;
           case destination::another:
             {
               session* client = host.client(target.id());
               if (client)
-                client->punctuation = customized;
+                client->punctuation_mode = customized;
               else rc = ERR_NO_SUCH_CLIENT;
             }
             break;
@@ -416,8 +425,8 @@ session::set_priority(destination& target)
     rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   else if (target.selection() == destination::self)
     {
-      urgency_mode mode(priority);
-      rc = mode.setup(settings::beyond());
+      priority level(importance);
+      rc = level.setup(settings::beyond());
     }
   return rc;
 }

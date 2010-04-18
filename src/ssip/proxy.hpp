@@ -38,7 +38,7 @@
 #include <mscore/server.hpp>
 #include <mscore/text_filter.hpp>
 
-#include "parser.hpp"
+#include "capitalization.hpp"
 
 namespace SSIP
 {
@@ -51,7 +51,7 @@ protected:
     multispeech::server(argc, argv),
     split_multiline_messages(option_value[multispeech::options::ssip::split_multiline_messages].as<bool>()),
     sounds(option_value[multispeech::options::ssip::sounds].as<std::string>()),
-    punctuation(multispeech::punctuations::some),
+    punctuation_mode(multispeech::punctuations::some),
     rate_factor(1.0),
     pitch_factor(1.0),
     volume_factor(1.0),
@@ -69,7 +69,7 @@ public:
   const std::string sounds;
 
   // Initial defaults for session environment:
-  multispeech::punctuations::mode punctuation;
+  multispeech::punctuations::mode punctuation_mode;
   double rate_factor, pitch_factor, volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
