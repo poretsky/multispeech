@@ -85,6 +85,23 @@ sound_manager::enqueue(const job&unit, bool dominate, bool update)
 }
 
 void
+sound_manager::abort(unsigned long owner)
+{
+  mutex::scoped_lock lock(access);
+  if ((state == running) && !jobs->empty() &&
+      (jobs->front().owner() == owner))
+    mute();
+}
+
+void
+sound_manager::abort(void)
+{
+  mutex::scoped_lock lock(access);
+  if ((state == running) && !jobs->empty())
+    mute();
+}
+
+void
 sound_manager::cancel(unsigned long key, bool by_owner)
 {
   mutex::scoped_lock lock(access);

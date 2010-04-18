@@ -71,6 +71,13 @@ public:
   // is obsoleted though not cancelled.
   void enqueue(const job& unit, bool dominate = false, bool update = false);
 
+  // Abort currently running job if any and stop sound. Other jobs
+  // waiting in active queue will not be affected in any way.
+  // This action can be performed only for specified owner.
+  // or unconditionally.
+  void abort(unsigned long owner);
+  void abort(void);
+
   // Jobs cancellation. The first variant allows to cancel jobs
   // by id or by owner depending on the selector flag specified
   // as the second argument. It is absolutely no harm to specify
