@@ -47,21 +47,21 @@ const regex destination::validator("^\\d+$");
 
 // Main constructor:
 
-destination::destination(void):
+destination::destination(const string& request):
   CmdFinder<FunctionPtr>(table, table +
                          (sizeof(table) / sizeof(Entry)),
                          USE_FIRST | INSENSITIVE)
 {
+  (this->*findCmd(request))();
 }
 
 
 // Public methods:
 
 const string&
-destination::parse(const string& request)
+destination::beyond(void) const
 {
-  (this->*findCmd(request))();
-  return beyond();
+  return CmdFinderBase::beyond();
 }
 
 destination::choice

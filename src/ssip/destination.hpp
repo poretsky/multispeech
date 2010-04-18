@@ -42,19 +42,19 @@ public:
     invalid
   };
 
-  // Main constructor.
-  destination(void);
+  // Request parsing takes place at the object construction stage.
+  // The main constructor should be provided by the reference
+  // to the request tail beginning from the destination field.
+  destination(const std::string& request);
 
-  // Parse the request destination field. Usually it is used after
-  // general command dispatching. Being provided by the request
-  // tail as an argument it checks the first field as a destination
-  // parameter and returns reference to following part of request.
-  const std::string& parse(const std::string& request);
+  // Return reference to the request tail after the
+  // destination field for further processing.
+  const std::string& beyond(void) const;
 
-  // Return destination choice after parsing.
+  // Return destination choice.
   choice selection(void) const;
 
-  // Return destination id after parsing.
+  // Return destination session id.
   // Meaningful only when selection is another.
   unsigned long id(void) const;
 

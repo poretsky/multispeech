@@ -319,8 +319,8 @@ session::cmd_block(void)
 bool
 session::cmd_set(void)
 {
-  destination target;
-  emit((this->*settings::findCmd(target.parse(commands::beyond())))(target));
+  destination target(commands::beyond());
+  emit((this->*settings::findCmd(target.beyond()))(target));
   return true;
 }
 
