@@ -65,6 +65,7 @@ session::session(proxy* origin, int socket_fd):
   notified_events(0),
   inside_block(false),
   importance(priority::text),
+  paused(NULL),
   host(*origin),
   receiving(false),
   valid(true),
@@ -87,6 +88,7 @@ session::operator()(void)
   host.hello(id, this);
   run();
   host.bye(id);
+  delete paused;
 }
 
 
@@ -188,25 +190,42 @@ session::commit(message::code rc)
 {
   if (valid)
     {
-      bool dominate = false, update = false;
+      bool dominate = false, update = false, ignore = false;
       switch (errand.urgency())
         {
         case priority::important:
           dominate = true;
+          if (paused)
+            reject(priority::notification);
+          else host.reject(priority::notification);
+          break;
         case priority::notification:
-          host.reject(priority::notification);
+          if (paused || host.paused)
+            ignore = true;
+          else host.reject(priority::notification);
           break;
         case priority::message:
         case priority::text:
-          host.reject(priority::text);
+          if (paused)
+            reject(priority::text);
+          else host.reject(priority::text);
           break;
         case priority::progress:
-          update = true;
+          if (paused || host.paused)
+            ignore = true;
+          else update = true;
         default:
           break;
         }
-      host.enqueue(errand, dominate, update);
-      host.proceed();
+      if (ignore)
+        host.discard(errand);
+      else if (!paused)
+        {
+          host.enqueue(errand, dominate, update);
+          if (!host.paused)
+            host.proceed();
+        }
+      else remember(errand);
       emit(rc, errand.id());
       emit(rc);
     }
@@ -214,6 +233,74 @@ session::commit(message::code rc)
   accumulator.clear();
   errand.clear();
   valid = true;
+}
+
+void
+session::remember(const job& unit)
+{
+  server::jobs_queue::iterator position;
+  for (position = paused->begin(); position != paused->end(); ++position)
+    if ((*position) < unit)
+      break;
+  paused->insert(position, unit);
+}
+
+void
+session::reject(int urgency)
+{
+  for (server::jobs_queue::iterator position = paused->begin(); position != paused->end(); ++position)
+    if (position->urgency() <= urgency)
+      {
+        host.discard(*position);
+        position = paused->erase(position);
+      }
+}
+
+void
+session::forget(void)
+{
+  if (paused)
+    {
+      BOOST_FOREACH (job& item, *paused)
+        host.discard(item);
+      paused->clear();
+    }
+}
+
+  message::code
+session::resume(void)
+{
+  message::code rc = OK_RESUMED;
+  if (paused)
+    {
+      BOOST_FOREACH (job& item, *paused)
+        {
+          bool dominate = false, update = false;
+          switch (item.urgency())
+            {
+            case priority::important:
+              dominate = true;
+            case priority::notification:
+              host.reject(priority::notification);
+              break;
+            case priority::message:
+            case priority::text:
+              host.reject(priority::text);
+              break;
+            case priority::progress:
+              update = true;
+            default:
+              break;
+            }
+          host.enqueue(item, dominate, update);
+        }
+      if (!host.paused)
+        host.proceed();
+      delete paused;
+      paused = NULL;
+    }
+  else rc = ERR_NOTHING_TO_RESUME;
+  return rc;
 }
 
 void
@@ -305,6 +392,165 @@ session::cmd_sound_icon(void)
       else emit(ERR_UNKNOWN_ICON);
     }
   else emit(ERR_NO_SND_ICONS);
+  return true;
+}
+
+bool
+session::cmd_stop(void)
+{
+  message::code rc = OK_STOPPED;
+  if (!inside_block)
+    {
+      destination target(commands::beyond());
+      switch (target.selection())
+        {
+        case destination::self:
+          if (!(paused || host.paused))
+            host.abort(id);
+          break;
+        case destination::all:
+          if (!host.paused)
+            host.abort();
+          break;
+        case destination::another:
+          {
+            session* client = host.client(target.id());
+            if (client)
+              {
+                if (!(client->paused || host.paused))
+                  host.abort(client->id);
+              }
+            else rc = ERR_NO_SUCH_CLIENT;
+          }
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  emit(rc);
+  return true;
+}
+
+bool
+session::cmd_cancel(void)
+{
+  message::code rc = OK_CANCELLED;
+  if (!inside_block)
+    {
+      destination target(commands::beyond());
+      switch (target.selection())
+        {
+        case destination::self:
+          host.cancel(id, true);
+          forget();
+          break;
+        case destination::all:
+          host.cancel();
+          BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+            client.second->forget();
+          break;
+        case destination::another:
+          {
+            session* client = host.client(target.id());
+            if (client)
+              {
+                host.cancel(client->id, true);
+                client->forget();
+              }
+            else rc = ERR_NO_SUCH_CLIENT;
+          }
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  emit(rc);
+  return true;
+}
+
+bool
+session::cmd_pause(void)
+{
+  message::code rc = OK_PAUSED;
+  if (!inside_block)
+    {
+      destination target(commands::beyond());
+      switch (target.selection())
+        {
+        case destination::self:
+          if (!paused)
+            paused = host.recall(id);
+          else rc = ERR_ALREADY_PAUSED;
+          break;
+        case destination::all:
+          if (!host.paused)
+            {
+              host.pause();
+              host.paused = true;
+            }
+          else rc = ERR_ALREADY_PAUSED;
+          break;
+        case destination::another:
+          {
+            session* client = host.client(target.id());
+            if (client)
+              {
+                if (!client->paused)
+                  client->paused = host.recall(client->id);
+                else rc = ERR_ALREADY_PAUSED;
+              }
+            else rc = ERR_NO_SUCH_CLIENT;
+          }
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  emit(rc);
+  return true;
+}
+
+bool
+session::cmd_resume(void)
+{
+  message::code rc = OK_RESUMED;
+  if (!inside_block)
+    {
+      destination target(commands::beyond());
+      switch (target.selection())
+        {
+        case destination::self:
+          rc = resume();
+          break;
+        case destination::all:
+          if (host.paused)
+            {
+              host.proceed();
+              host.paused = false;
+            }
+          else rc = ERR_NOTHING_TO_RESUME;
+          break;
+        case destination::another:
+          {
+            session* client = host.client(target.id());
+            if (client)
+              rc = client->resume();
+            else rc = ERR_NO_SUCH_CLIENT;
+          }
+          break;
+        default:
+          rc = ERR_PARAMETER_INVALID;
+          break;
+        }
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  emit(rc);
   return true;
 }
 

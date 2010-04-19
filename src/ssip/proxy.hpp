@@ -56,7 +56,8 @@ protected:
     pitch_factor(1.0),
     volume_factor(1.0),
     spelling(false),
-    capitalization_mode(capitalization::none)
+    capitalization_mode(capitalization::none),
+    paused(false)
   {
   }
 
@@ -73,6 +74,9 @@ public:
   double rate_factor, pitch_factor, volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
+
+  // Global state:
+  bool paused;
 
   // Shared access synchronization means:
   boost::mutex access;

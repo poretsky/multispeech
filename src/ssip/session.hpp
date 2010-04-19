@@ -63,6 +63,21 @@ private:
   // Submit prepared job and reply to the client:
   void commit(message::code rc);
 
+  // Remember job as paused for later processing.
+  // Pointer to the list of paused jobs must be valid.
+  void remember(const multispeech::job& unit);
+
+  // Reject paused jobs of specified or less urgency.
+  // Pointer to the list of paused jobs must be valid.
+  void reject(int urgency);
+
+  // Resume previously paused jobs if any
+  // and return result code for client.
+  message::code resume(void);
+
+  // Forget all paused jobs if any, but do not change paused state.
+  void forget(void);
+
   // Submit capital letter marking sound icon or fall back
   // to beep signal if it is not exist:
   void caps_icon(void);
@@ -75,6 +90,10 @@ private:
   bool cmd_char(void);
   bool cmd_key(void);
   bool cmd_sound_icon(void);
+  bool cmd_stop(void);
+  bool cmd_cancel(void);
+  bool cmd_pause(void);
+  bool cmd_resume(void);
   bool cmd_block(void);
   bool cmd_set(void);
   bool cmd_quit(void);
@@ -110,6 +129,9 @@ private:
 
   // Job accumulator:
   multispeech::job errand;
+
+  // Pointer to the list of recalled jobs:
+  multispeech::server::jobs_queue* paused;
 
   // Host server reference:
   proxy& host;
