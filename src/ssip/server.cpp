@@ -77,6 +77,7 @@ void
 server::feedback(job::event event,
                  unsigned long id, unsigned long owner)
 {
+  mutex::scoped_lock lock(proxy::access);
   message* customer = client(owner);
   if (customer && notification.count(event))
     {
