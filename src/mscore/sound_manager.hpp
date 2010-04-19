@@ -71,10 +71,13 @@ public:
   // is obsoleted though not cancelled.
   void enqueue(const job& unit, bool dominate = false, bool update = false);
 
+  // Notify that job was cancelled before going to the queue.
+  void discard(const job& unit);
+
   // Abort currently running job if any and stop sound. Other jobs
   // waiting in active queue will not be affected in any way.
-  // This action can be performed only for specified owner.
-  // or unconditionally.
+  // This action can be performed either for specified owner
+  // or unconditionally for any processing job.
   void abort(unsigned long owner);
   void abort(void);
 

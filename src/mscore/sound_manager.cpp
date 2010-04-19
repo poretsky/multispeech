@@ -85,6 +85,13 @@ sound_manager::enqueue(const job&unit, bool dominate, bool update)
 }
 
 void
+sound_manager::discard(const job& unit)
+{
+  mutex::scoped_lock lock(access);
+  notify(job::cancelled, unit);
+}
+
+void
 sound_manager::abort(unsigned long owner)
 {
   mutex::scoped_lock lock(access);
