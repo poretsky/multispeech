@@ -227,7 +227,6 @@ private:
   void next(void); // Get and start the next job item from the queue.
   bool working(void); // Return true if a job item is in progress.
   void shift(void); // Shift to the next job or item if any.
-  void initiate(void); // Initiate job or item for execution.
 };
 
 } // namespace multispeech
