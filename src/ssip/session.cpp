@@ -65,6 +65,7 @@ session::session(proxy* origin, int socket_fd):
   notified_events(0),
   inside_block(false),
   importance(priority::text),
+  continuation(false),
   paused(NULL),
   host(*origin),
   receiving(false),
@@ -190,42 +191,62 @@ session::commit(message::code rc)
 {
   if (valid)
     {
-      bool dominate = false, update = false, ignore = false;
       switch (errand.urgency())
         {
         case priority::important:
-          dominate = true;
           if (paused)
-            reject(priority::notification);
-          else host.reject(priority::notification);
-          break;
-        case priority::notification:
-          if (paused || host.paused)
-            ignore = true;
-          else host.reject(priority::notification);
+            {
+              reject(priority::notification);
+              remember(errand);
+            }
+          else
+            {
+              host.reject(priority::notification);
+              host.enqueue(errand, true);
+            }
           break;
         case priority::message:
+          if (paused)
+            {
+              reject(priority::text);
+              remember(errand);
+            }
+          else
+            {
+              host.reject(priority::text);
+              host.enqueue(errand);
+            }
+          break;
         case priority::text:
           if (paused)
-            reject(priority::text);
-          else host.reject(priority::text);
+            {
+              reject(continuation ? priority::notification : priority::text);
+              remember(errand);
+            }
+          else
+            {
+              host.reject(continuation ? priority::notification : priority::text);
+              host.enqueue(errand);
+            }
+          break;
+        case priority::notification:
+          if (!(paused || host.paused))
+            {
+              host.reject(continuation ? priority::obsolete : priority::notification);
+              host.enqueue(errand);
+            }
+          else host.discard(errand);
           break;
         case priority::progress:
           if (paused || host.paused)
-            ignore = true;
-          else update = true;
+            host.discard(errand);
+          else host.enqueue(errand, false, !continuation);
         default:
           break;
         }
-      if (ignore)
-        host.discard(errand);
-      else if (!paused)
-        {
-          host.enqueue(errand, dominate, update);
-          if (!host.paused)
-            host.proceed();
-        }
-      else remember(errand);
+      if (!host.paused)
+        host.proceed();
+      continuation = inside_block;
       emit(rc, errand.id());
       emit(rc);
     }
@@ -242,7 +263,9 @@ session::remember(const job& unit)
   for (position = paused->begin(); position != paused->end(); ++position)
     if ((*position) < unit)
       break;
-  paused->insert(position, unit);
+  if (position != paused->end())
+    paused->insert(position, unit);
+  else paused->push_back(unit);
 }
 
 void
@@ -273,26 +296,34 @@ session::resume(void)
   message::code rc = OK_RESUMED;
   if (paused)
     {
+      int prev = priority::obsolete;
       BOOST_FOREACH (job& item, *paused)
         {
-          bool dominate = false, update = false;
           switch (item.urgency())
             {
             case priority::important:
-              dominate = true;
-            case priority::notification:
-              host.reject(priority::notification);
+              host.enqueue(item, true);
               break;
             case priority::message:
-            case priority::text:
               host.reject(priority::text);
+              host.enqueue(item);
+              break;
+            case priority::text:
+              host.reject((prev == priority::text) ? priority::notification : priority::text);
+              host.enqueue(item);
+              break;
+            case priority::notification:
+              host.reject((prev == priority::notification) ? priority::obsolete : priority::notification);
+              host.enqueue(item);
               break;
             case priority::progress:
-              update = true;
+              host.enqueue(item, false, prev != priority::progress);
+              break;
             default:
+              host.discard(item);
               break;
             }
-          host.enqueue(item, dominate, update);
+          prev = item.urgency();
         }
       if (!host.paused)
         host.proceed();
@@ -557,8 +588,11 @@ session::cmd_resume(void)
 bool
 session::cmd_block(void)
 {
+  bool prev_state = inside_block;
   block state(inside_block);
   emit(state.toggle(commands::beyond()));
+  if (prev_state != inside_block)
+    continuation = false;
   return true;
 }
 

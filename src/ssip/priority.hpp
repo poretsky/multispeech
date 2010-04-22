@@ -38,9 +38,10 @@ public:
   {
     important = 5,
     message = 4,
+    progress = 3,
     text = 2,
     notification = 1,
-    progress = 3
+    obsolete = 0
   };
 
   // Main constructor takes reference to the variable to be set

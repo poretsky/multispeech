@@ -124,6 +124,10 @@ private:
   bool spelling;
   capitalization::mode capitalization_mode;
 
+  // This flag is set after the first message in block
+  // to change priority interaction policy.
+  bool continuation;
+
   // Text accumulator for multiline messages:
   std::vector<std::string> accumulator;
 
