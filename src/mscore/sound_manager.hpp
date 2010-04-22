@@ -66,9 +66,8 @@ public:
   // When the dominate flag is specified and new job has enough
   // priority, it can interrupt and postpone currently running one.
   // By default running job is not affected by new insertions.
-  // If update flag is true and newly submitted job has the same
-  // priority as the currently running one, then currently running job
-  // is obsoleted though not cancelled.
+  // If update flag is true, then all jobs in the queue that have
+  // the same priority as the submitted one will be obsoleted.
   void enqueue(const job& unit, bool dominate = false, bool update = false);
 
   // Notify that job was cancelled before going to the queue.
@@ -77,18 +76,15 @@ public:
   // Abort currently running job if any and stop sound. Other jobs
   // waiting in active queue will not be affected in any way.
   // This action can be performed either for specified owner
-  // or unconditionally for any processing job.
-  void abort(unsigned long owner);
-  void abort(void);
+  // or unconditionally for any processing job if owner = 0.
+  void abort(unsigned long owner = 0);
 
-  // Jobs cancellation. The first variant allows to cancel jobs
-  // by id or by owner depending on the selector flag specified
-  // as the second argument. It is absolutely no harm to specify
-  // non-existent key value. There will nothing be done in that case.
-  // The second variant, without arguments,
-  // cancels all jobs in active queue if any.
-  void cancel(unsigned long key, bool by_owner = false);
-  void cancel(void);
+  // Cancel jobs by id or by owner depending on the selector flag
+  // specified as the second argument. It is absolutely no harm
+  // to specify non-existent key value. There will nothing be done
+  // in that case. If key = 0, all jobs in active queue
+  // will be cancelled.
+  void cancel(unsigned long key = 0, bool by_owner = false);
 
   // Jobs rejection by urgency. All jobs with urgency attribute
   // less than or equal to specified value will be cancelled

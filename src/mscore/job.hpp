@@ -87,6 +87,7 @@ public:
   status state(void) const;
   size_t size(void) const;
   bool empty(void) const;
+  bool over(void) const;
 
   // Life cycle control:
   void activate(void);

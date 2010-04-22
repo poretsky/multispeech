@@ -103,6 +103,12 @@ job::empty(void) const
   return prescription.empty();
 }
 
+bool
+job::over(void) const
+{
+  return index >= prescription.size();
+}
+
 void
 job::activate(void)
 {
@@ -118,6 +124,7 @@ job::postpone(void)
 void
 job::kill(void)
 {
+  index = prescription.size();
   current_state = idle;
 }
 
@@ -151,9 +158,7 @@ job::clear(void)
 bool
 job::operator<(const job& other) const
 {
-  return (this->empty() && !other.empty()) ? false
-    : ((other.empty() && !this->empty()) ? true
-       : (this->urgency_level < other.urgency_level));
+  return urgency_level < other.urgency_level;
 }
 
 } // namespace multispeech
