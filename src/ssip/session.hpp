@@ -111,6 +111,7 @@ private:
   message::code set_volume(destination& target);
   message::code set_spelling(destination& target);
   message::code set_cap_let_recogn(destination& target);
+  message::code set_pause_context(destination& target);
 
   // Local environment:
   client_info client;
@@ -123,6 +124,7 @@ private:
   double volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
+  size_t pause_context_size;
 
   // This flag is set after the first message in block
   // to change priority interaction policy.

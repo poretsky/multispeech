@@ -63,16 +63,19 @@ public:
 
   // Construct empty job for the sake of specified owner:
   explicit job(unsigned long owner, int urgency = 0,
-               unsigned int notification_mode = 0);
+               unsigned int notification_mode = 0,
+               size_t pause_context_size = 0);
 
   // Construct anonymous job for a single task:
   template <typename task_description>
   explicit job(const task_description& task, int urgency = 0,
-               unsigned int notification_mode = 0):
+               unsigned int notification_mode = 0,
+               size_t pause_context_size = 0):
     unit_id(++count),
     owner_id(0),
     urgency_level(urgency),
     event_mask(notification_mode),
+    rewind_context(pause_context_size),
     current_state(idle),
     index(0)
   {
@@ -132,6 +135,7 @@ private:
   unsigned long unit_id, owner_id;
   int urgency_level;
   unsigned int event_mask;
+  size_t rewind_context;
 
   // Job state:
   status current_state;

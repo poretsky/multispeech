@@ -42,17 +42,20 @@ job::job(void):
   owner_id(0),
   urgency_level(0),
   event_mask(0),
+  rewind_context(0),
   current_state(idle),
   index(0)
 {
 }
 
 job::job(unsigned long owner, int urgency,
-         unsigned int notification_mode):
+         unsigned int notification_mode,
+         size_t pause_context_size):
   unit_id(++count),
   owner_id(owner),
   urgency_level(urgency),
   event_mask(notification_mode),
+  rewind_context(pause_context_size),
   current_state(idle),
   index(0)
 {
@@ -119,6 +122,9 @@ void
 job::postpone(void)
 {
   current_state = postponed;
+  if (index > rewind_context)
+    index -= rewind_context;
+  else index = 0;
 }
 
 void

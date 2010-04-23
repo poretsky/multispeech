@@ -24,6 +24,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
 #include <unicode/utf8.h>
@@ -78,6 +79,7 @@ session::session(proxy* origin, int socket_fd):
   volume_factor = host.volume_factor;
   spelling = host.spelling;
   capitalization_mode = host.capitalization_mode;
+  pause_context_size = host.pause_context_size;
 }
 
 
@@ -366,7 +368,7 @@ bool
 session::cmd_speak(void)
 {
   accumulator.clear();
-  errand = job(id, importance, notified_events);
+  errand = job(id, importance, notified_events, pause_context_size);
   receiving = true;
   valid = true;
   emit(OK_RECEIVE_DATA);
@@ -936,6 +938,42 @@ session::set_cap_let_recogn(destination& target)
             break;
           }
       else rc = ERR_PARAMETER_INVALID;
+    }
+  else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
+  return rc;
+}
+
+message::code
+session::set_pause_context(destination& target)
+{
+  message::code rc = OK_PAUSE_CONTEXT_SET;
+  if (!inside_block)
+    {
+      smatch extractor;
+      if (regex_match(target.beyond(), extractor, regex("^(\\d+)\\s*$")))
+        switch (target.selection())
+          {
+          case destination::self:
+            pause_context_size = lexical_cast<size_t>(string(extractor[1].first, extractor[1].second));
+            break;
+          case destination::all:
+            host.pause_context_size = lexical_cast<size_t>(string(extractor[1].first, extractor[1].second));
+            BOOST_FOREACH (proxy::clients_list::value_type client, host.all_clients())
+              client.second->pause_context_size = host.pause_context_size;
+            break;
+          case destination::another:
+            {
+              session* client = host.client(target.id());
+              if (client)
+                client->pause_context_size = lexical_cast<size_t>(string(extractor[1].first, extractor[1].second));
+              else rc = ERR_NO_SUCH_CLIENT;
+            }
+            break;
+          default:
+            rc = ERR_PARAMETER_INVALID;
+            break;
+          }
+      else rc = ERR_NOT_A_NUMBER;
     }
   else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   return rc;

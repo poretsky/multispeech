@@ -57,6 +57,7 @@ protected:
     volume_factor(1.0),
     spelling(false),
     capitalization_mode(capitalization::none),
+    pause_context_size(0),
     paused(false)
   {
   }
@@ -74,6 +75,7 @@ public:
   double rate_factor, pitch_factor, volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
+  size_t pause_context_size;
 
   // Global state:
   bool paused;
