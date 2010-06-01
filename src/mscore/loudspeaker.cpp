@@ -26,16 +26,14 @@
 
 #include "loudspeaker.hpp"
 
+#include "config.hpp"
+
 
 namespace multispeech
 {
 
 using namespace std;
 using namespace boost;
-
-
-// Static data definition:
-float loudspeaker::relative_volume = 1.0;
 
 
 // Make up a task description:
@@ -80,10 +78,8 @@ speech_task::silence_params(unsigned int sampling, unsigned int length)
 
 // Construct / destroy:
 
-loudspeaker::loudspeaker(const configuration* conf):
-  soundfile(conf->option_value[options::speech::device].as<string>().empty() ?
-            conf->option_value[options::audio::device].as<string>() :
-            conf->option_value[options::speech::device].as<string>()),
+loudspeaker::loudspeaker(void):
+  soundfile(configuration::speech_output_device()),
   silence_timer(0),
   need_processing(false)
 {
@@ -143,7 +139,7 @@ loudspeaker::start(const speech_task& speech)
               setTempoChange(speech.accelerate);
               start_processing();
             }
-          start_playback(speech.volume * relative_volume,
+          start_playback(speech.volume,
                          playing_rate, soundfile::channels);
         }
       else source_release();

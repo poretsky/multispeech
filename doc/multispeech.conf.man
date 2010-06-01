@@ -61,18 +61,18 @@ can be found in \fI/usr/share/i18n/SUPPORTED\fP or wherever else
 it is on your system. By default this option is not set
 so current locale setting is used.
 .TP
-.B native_voices
+.B native_notation
 .br
 Enable native voice control embedded commands.
 .TP
-.B dtk_voices
+.B dtk_notation
 .br
 Enable DECtalk voice control embedded commands.
 .PP
 These two options control inline parameters parsing. In the default
-state only native voices are enabled, so \fBmultispeech\fP behaves as
+state only native notation is enabled, so \fBmultispeech\fP behaves as
 it used to and accepts only special inline commands formed by
-\fBemacspeak\fP. When dtk voices are enabled, \fBmultispeech\fP
+\fBemacspeak\fP. When dtk notation is enabled, \fBmultispeech\fP
 recognizes DECtalk inline commands and tries to emulate some subset of
 the DECtalk voice control capabilities. Use the word \(oqyes\(cq or
 \(oqon\(cq to enable and the word \(oqno\(cq or \(oqoff\(cq to disable
@@ -112,7 +112,7 @@ If it is not specified explicitly, then system default will be used.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
 are allowed here as well as the ALSA ones.
 .TP
-.B general_volume
+.B volume
 .br
 Volume level applied to all audio output in general.
 It should be in the range of (0.0..1.0]. When this option is not
@@ -189,39 +189,76 @@ are accepted here as well as the ALSA ones.
 .br
 Relative volume level for speech output. It is 1.0 by default.
 .TP
+.B pitch
+.br
+Voice pitch adjustment relative to it's normal level.
+It is 1.0 by default. Greater value causes higher pitch.
+.TP
+.B rate
+.br
+Relative speech rate for all voices. It is 1.0 by default.
+Higher value causes quicker speech.
+.TP
+.B char.pitch
+.br
+Relative voice pitch control applied to the single
+letters pronunciation. By default 1.0 is suggested.
+.TP
+.B char.rate
+.br
+Relative speech rate control applied to the single
+letters pronunciation. By default 1.0 is suggested.
+.TP
+.B caps_factor
+.br
+Voice pitch factor for capital letters. By default it is 1.2
+so capital letters are pronounced by slightly higher pitch.
+.TP
 .B language
 .br
-This option specifies default language. Allowed values are: \(oqen\(cq
+Define speech synthesis language. Allowed values are: \(oqen\(cq
 for English, \(oqru\(cq for Russian or \(oqautodetect\(cq for
 automatic detection from the text nature. By default language is
 autodetected.
-.SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
-There is a separate section for each supported language named
-\(oqen\(cq for English and \(oqru\(cq for Russian. These sections
-contain quite the same collection of options that affect speech on a
-specific language. Actual speech engine is chosen by the key option
-\(oqengine\(cq. This option has no default. If it is not set then the
-language will not be available in Multispeech. It is not necessary to
-define speech engine for each language, but at least one must be
-defined. It is wise to define speech engine for only those languages
-that are actually to be used.
-.PP
-Each language specific section consists of the following options:
 .TP
-.B engine
+.B en.engine
 .br
-TTS engine specification. Allowed values are as follows:
-.PP
+English TTS engine. This option has no default. If it is not set then
+English speech output will be unavailable in Multispeech. Reasonable
+alternatives are as follows:
+.br
 \fBfreephone\fP \- English speech with Freephone and Mbrola voice
 \(oqen1\(cq;
 .br
-\fBru_tts\fP \- Russian speech with Ru_tts speech synthesizer;
-.br
-\fBespeak\fP \- English and Russian speech with Espeak TTS engine;
-.br
-\fBespeak.mbrola\fP \- English speech with Espeak and Mbrola voices;
+\fBespeak\fP \- English speech with Espeak TTS engine;
 .br
 \fBuser\fP \- user defined TTS engine.
+.TP
+.B ru.engine
+.br
+Russian TTS engine. This option has no default. If it is not set then
+Russian speech output will be unavailable in Multispeech. Reasonable
+alternatives are as follows:
+.br
+\fBru_tts\fP \- Russian speech with Ru_tts speech synthesizer;
+.br
+\fBespeak\fP \- Russian speech with Espeak TTS engine;
+.br
+\fBuser\fP \- user defined TTS engine.
+.SH "VOICE RELATED SPEECH CONTROL OPTIONS"
+There is a separate section for each supported voice named by the
+unique voice identifier. The following names are recognized:
+\(oqmbrola-en1\(cq, \(oqmbrola-us1\(cq, \(oqmbrola-us2\(cq,
+\(oqmbrola-us3\(cq, \(oqespeak-default\(cq, \(oqespeak-ru\(cq.
+These sections contain quite the same collection of speech control
+options for a specific voice.
+.PP
+Each voice specific section consists of the following options:
+.TP
+.B voice_name
+.br
+Conventional voice name that will be used, for instance, in SSIP
+communications instead of default identifier.
 .TP
 .B volume
 .br
@@ -237,30 +274,6 @@ It is 1.0 by default. Greater value causes higher pitch.
 .br
 Relative speech rate for specific voice. It is 1.0 by default.
 Higher value causes quicker speech.
-.TP
-.B acceleration
-.br
-Apply additional speech tempo acceleration. Speech rate
-will be changed by specified difference in percents
-compared to the original tempo. Positive values cause
-speech acceleration while the negative ones actually imply
-slowing it down. Default value is 0 so no additional
-tempo change is applied.
-.TP
-.B char_pitch
-.br
-Relative voice pitch control applied to the single
-letters pronunciation. By default 1.0 is suggested.
-.TP
-.B char_rate
-.br
-Relative speech rate control applied to the single
-letters pronunciation. By default 1.0 is suggested.
-.TP
-.B caps_factor
-.br
-Voice pitch factor for capital letters. By default it is 1.2
-so capital letters are pronounced by slightly higher pitch.
 .SH "MBROLA RELATED OPTIONS"
 Section named \(oqmbrola\(cq contains some options affecting
 \fBmultispeech\fP interaction with \fBmbrola\fP speech engine:
@@ -310,6 +323,9 @@ Optional file to collect unknown words. This file must be writable
 for the Multispeech user. The collected data can be used later
 to improve lexical database. No such file is suggested by default
 so unknown words are not stored.
+.PP
+Since this backend has it's own voice, all voice related options are
+also allowed here.
 .SH "ESPEAK RELATED OPTIONS"
 Interaction with \fBespeak\fP TTS engine is controlled by the options
 grouped in section \(oqespeak\(cq:
@@ -320,30 +336,16 @@ Path to the Espeak executable. If only program name is specified
 (as it is by default) then environment variable \fBPATH\fP
 will be examined and all paths mentioned there will be searched.
 .TP
-.B en
+.B voice.en
 .br
-English voice specification. By default \(oqen\(cq is
-suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
-alternatives.
+English voice specification. By default \(oqespeak-default\(cq is
+suggested. All known \fBespeak\fP and \fBmbrola\fP voices can be used
+here.
 .TP
-.B ru
+.B voice.ru
 .br
-Russian voice specification. By default \(oqru\(cq is
-suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
-alternatives.
-.SH "ESPEAK AND MBROLA COMBINED SPEECH BACKEND RELATED OPTIONS"
-This section is named \(oqespeak.mbrola\(cq. It is devoted to
-assigning Mbrola voices to the supported languages. To see the list of
-the voices supported by Espeak try to invoke \(oqespeak \-\-voices\(cq.
-Only Mbrola voices are allowed here. Also make sure
-that you have corresponding Mbrola voices itself.
-See Espeak documentation for further details.
-.PP
-The following options are allowed here:
-.TP
-.B en
-.br
-English voice. By default \(oqen1\(cq is used.
+Russian voice specification. By default \(oqespeak-ru\(cq is
+suggested.
 .SH "USER DEFINED TTS BACKEND OPTIONS"
 The section name is \(oquser\(cq. The following options are grouped
 here:
@@ -362,6 +364,8 @@ engine. These keywords are as follows:
 .PP
 \fB%lang\fP \- replaced by the language id string;
 .br
+\fBvoice\fP \- replaced by conventional voice name;
+.br
 \fB%pitch\fP \- replaced by relative voice pitch value;
 .br
 \fB%rate\fP \- replaced by relative speech rate value;
@@ -370,6 +374,18 @@ engine. These keywords are as follows:
 .PP
 The last keyword is replaced only when freq_control is enabled
 (see below).
+.TP
+.B freq_control
+.br
+Set this option to \(oqyes\(cq if TTS engine accepts sampling frequency
+specification (as \fBmbrola\fP does, for instance) and you wish
+to make use of this capability. This option allows \(oq%freq\(cq
+keyword replacement in command line. Leave commented out if unsure.
+.SH "USER VOICE DEFINITION SECTIONS"
+It is assumed that the user defined TTS engine has separate voice for
+each supported language, so there are separate sections named
+\(oquser-en\(cq for English and \(oquser-ru\(cq for Russian voice. All
+these sections contain quite the same set of options.
 .TP
 .B format
 .br
@@ -398,19 +414,43 @@ Set to \(oqyes\(cq if produced sound stream is stereo. By default it is
 assumed mono. This option is ignored when sound stream format is
 autodetected.
 .TP
-.B freq_control
-.br
-Set this option to \(oqyes\(cq if TTS engine accepts sampling frequency
-specification (as \fBmbrola\fP does, for instance) and you wish
-to make use of this capability. This option allows \(oq%freq\(cq
-keyword replacement in command line. Leave commented out if unsure.
-.TP
 .B charset
 .br
 Character set in which the TTS engine accepts  it's input.
 Available charset names can be found in \fI/usr/share/i18n/SUPPORTED\fP
 or wherever else it is on your system. By default this option
 is not set so current locale setting is used.
+.TP
+.B acceleration
+.br
+Apply additional speech tempo acceleration. Speech rate
+will be changed by specified difference in percents
+compared to the original tempo. Positive values cause
+speech acceleration while the negative ones actually imply
+slowing it down. Default value is 0 so no additional
+tempo change is applied.
+.TP
+.B voice_name
+.br
+Conventional voice name that will be used, for instance, in SSIP
+communications instead of default identifier.
+.TP
+.B dialect
+.br
+Language dialect identification for use in SSIP communications. By
+default \(oqnone\(cq is assumed.
+.TP
+.B volume
+.br
+Relative volume level for the voice. By default 1.0 is assumed.
+.TP
+.B rate
+.br
+Relative speech rate for the voice. By default 1.0 is assumed.
+.TP
+.B pitch
+.br
+Relative voice pitch. By default 1.0 is assumed.
 .SH "SEE ALSO"
 .BR espeak(1),
 .BR freephone(1),

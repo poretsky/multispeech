@@ -29,29 +29,32 @@
 #include "freephone.hpp"
 
 #include "server.hpp"
+#include "config.hpp"
 
 
 namespace multispeech
 {
 
 using namespace std;
-using namespace boost::filesystem;
 using namespace FBB;
+using namespace boost::filesystem;
+
+
+// Instantiation mechanism:
+singleton<freephone> freephone::instance;
 
 
 // Object construction:
 
-freephone::freephone(const configuration* conf):
-  mbrola(conf, speaker::freephone, "en1", lang_id::en, 16000)
+freephone::freephone(void):
+  mbrola(speaker::freephone)
 {
-  if (conf->option_value.count(options::compose(name, option_name::executable)) &&
-      !conf->option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  string cmd(configuration::backend_executable(name));
+  if (!cmd.empty())
     {
-      string cmd(conf->option_value[options::compose(name, option_name::executable)].as<string>());
-      if (conf->option_value.count(options::compose(name, option_name::lexicon)) &&
-          !conf->option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
+      if (!configuration::backend_lexicon(name).empty())
         {
-          path lexicon(conf->option_value[options::compose(name, option_name::lexicon)].as<string>());
+          path lexicon(configuration::backend_lexicon(name));
           if (exists(lexicon))
             cmd += " -h " + lexicon.file_string();
           else
@@ -65,6 +68,10 @@ freephone::freephone(const configuration* conf):
       command(cmd);
     }
   else throw configuration::error("no path to " + name);
+  voices[en1] = &en1;
+  if (voice_available(en1))
+    voice_setup(en1);
+  else throw configuration::error("no voice for " + name);
 }
 
 } // namespace multispeech

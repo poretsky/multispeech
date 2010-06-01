@@ -15,7 +15,7 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	text_filter.cpp text_filter.hpp \
 	language_description.cpp language_description.hpp \
 	audioplayer.cpp audioplayer.hpp \
-	soundfile.cpp soundfile.hpp \
+	soundfile.cpp soundfile.hpp singleton.hpp \
 	sound_processor.cpp sound_processor.hpp \
 	loudspeaker.cpp loudspeaker.hpp \
 	file_player.cpp file_player.hpp \

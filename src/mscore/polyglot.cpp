@@ -21,6 +21,7 @@
 #include <sysconfig.h>
 
 #include <iostream>
+#include <cstring>
 
 #include <bobcat/syslogstream>
 
@@ -28,6 +29,7 @@
 
 #include "polyglot.hpp"
 
+#include "config.hpp"
 #include "server.hpp"
 #include "iconv_codecvt.hpp"
 #include "strcvt.hpp"
@@ -55,42 +57,38 @@ const vector<string> polyglot::langs = list_of
 
 // Construct the object:
 
-polyglot::polyglot(const configuration* conf):
+polyglot::polyglot(void):
   talker(langs.size()),
   lang(langs.size()),
-  autolanguage(false),
-  input_charset((conf->option_value.count(options::frontend::charset) &&
-                 !conf->option_value[options::frontend::charset].as<string>().empty()) ?
-                locale(locale(""), new iconv_codecvt(conf->option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
-                locale(""))
+  autolanguage(false)
 {
   bool initialized = false;
   for (unsigned int i = 0; i < langs.size(); i++)
-    if (conf->option_value.count(options::compose(langs[i], option_name::engine)))
+    if (!configuration::speech_backend(langs[i]).empty())
       {
-        talker[i].reset(speech_backend(conf->option_value[options::compose(langs[i], option_name::engine)].as<string>(),
-                                       langs[i], conf));
+        talker[i] = speech_backend(configuration::speech_backend(langs[i]),
+                                   langs[i]);
         initialized = true;
       }
   if (!initialized)
     throw configuration::error("no speech backends are defined");
-  if (conf->option_value.count(options::speech::language))
-    language(conf->option_value[options::speech::language].as<string>());
+  if (!configuration::default_language().empty())
+    language(configuration::default_language());
   else language(lang_id::autodetect);
   if (autolanguage)
     {
-      if (conf->option_value.count(options::speech::language) &&
-          (conf->option_value[options::speech::language].as<string>() != lang_id::autodetect))
+      if (!configuration::default_language().empty() &&
+          (configuration::default_language() != lang_id::autodetect))
         throw configuration::error("unsupported language " +
-                                  conf->option_value[options::speech::language].as<string>());
+                                   configuration::default_language());
       for (unsigned int i = 0; i < langs.size(); i++)
         {
-          if ((lang < langs.size()) && talker[lang].get())
+          if ((lang < langs.size()) && talker[lang])
             break;
           lang = i;
         }
     }
-  if ((lang >= langs.size()) || !talker[lang].get())
+  if ((lang >= langs.size()) || !talker[lang])
     throw configuration::error("no speech backend for chosen language");
 }
 
@@ -103,7 +101,7 @@ polyglot::text_task(const string& s, bool use_translation)
   intern_string t(s, input_charset);
   if (autolanguage)
     detect_language(t, use_translation);
-  if (talker[lang].get())
+  if (talker[lang])
     return talker[lang]->text_task(t, use_translation);
   return speech_task();
 }
@@ -117,7 +115,7 @@ polyglot::text_task(const string& s,
   intern_string t(s, input_charset);
   if (autolanguage)
     detect_language(t, use_translation);
-  if (talker[lang].get())
+  if (talker[lang])
     return talker[lang]->text_task(t, volume, rate, pitch, deviation,
                                    use_translation);
   return speech_task();
@@ -129,7 +127,7 @@ polyglot::letter_task(const string& s)
   intern_string t(s, input_charset);
   if (autolanguage)
     detect_language(t, true);
-  if (talker[lang].get())
+  if (talker[lang])
     return talker[lang]->letter_task(t);
   return speech_task();
 }
@@ -137,7 +135,7 @@ polyglot::letter_task(const string& s)
 speech_task
 polyglot::silence(double duration)
 {
-  if (talker[lang].get())
+  if (talker[lang])
     return talker[lang]->silence(duration);
   return speech_task();
 }
@@ -148,7 +146,7 @@ polyglot::language(const string& id)
   for (unsigned int i = 0; i < langs.size(); i++)
     if (id == langs[i])
       {
-        if (talker[i].get())
+        if (talker[i])
           {
             lang = i;
             autolanguage = false;
@@ -186,7 +184,7 @@ polyglot::lang_switch(bool direction)
 {
   int i = autolanguage ? (direction ? -1 : langs.size()) : lang;
   do i += direction ? 1 : -1;
-  while ((i >= 0) && (static_cast<unsigned int>(i) < langs.size()) && !talker[i].get());
+  while ((i >= 0) && (static_cast<unsigned int>(i) < langs.size()) && !talker[i]);
   if ((i >= 0) && (static_cast<unsigned int>(i) < langs.size()))
     {
       lang = static_cast<unsigned int>(i);
@@ -198,7 +196,9 @@ polyglot::lang_switch(bool direction)
 void
 polyglot::charset(const char* name)
 {
-  input_charset = locale(locale(""), new iconv_codecvt(name, NULL));
+  input_charset = name ?
+    locale(locale(""), new iconv_codecvt(name, NULL)) :
+    locale("");
 }
 
 
@@ -210,7 +210,7 @@ polyglot::detect_language(const wstring& s, bool check_translation)
   if (!check_translation || (s.length() == 1) ||
       talker[lang]->language->translate(s).empty())
     for (unsigned int i = 0; i < langs.size(); i++)
-      if (talker[i].get() && talker[i]->language->recognize(s))
+      if (talker[i] && talker[i]->language->recognize(s))
         {
           lang = i;
           break;
@@ -219,20 +219,32 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 
 speech_engine*
 polyglot::speech_backend(const string& name,
-                         const string& lang,
-                         const configuration* conf)
+                         const string& lang)
 {
+  speech_engine* backend;
   if (speaker::freephone == name)
-    return new freephone(conf);
+    backend = freephone::instance();
   else if (speaker::ru_tts == name)
-    return new ru_tts(conf);
+    backend = ru_tts::instance();
   else if (speaker::espeak == name)
-    return new espeak(conf, lang);
-  else if (options::compose(speaker::espeak, speaker::mbrola) == name)
-    return new mbrespeak(conf, lang);
-  else if (speaker::user == name)
-    return new user_tts(conf, lang);
-  throw configuration::error("unknown speech backend " + name);
+    {
+      string voice(configuration::backend_voice(name, lang));
+      if (voice.empty())
+        throw configuration::error("no voice is specified for " + name + " in section [" + lang + "]");
+      if (voice.compare(0, strlen(speaker::mbrola), speaker::mbrola))
+        backend = espeak::instance();
+      else backend = mbrespeak::instance();
+      if (backend->voice_available(voice))
+        backend->voice_setup(voice);
+      else throw configuration::error("illegal voice for " + name + " in section [" + lang + "]");
+    }
+  else if (speaker::user_defined == name)
+    {
+      backend = user_tts::instance();
+      backend->voice_setup(user_tts::voice(lang));
+    }
+  else throw configuration::error("unknown speech backend " + name);
+  return backend;
 }
 
 } // namespace multispeech

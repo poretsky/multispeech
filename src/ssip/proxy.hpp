@@ -49,8 +49,6 @@ protected:
   // Main constructor:
   proxy(int argc, char* argv[]):
     multispeech::server(argc, argv),
-    split_multiline_messages(option_value[multispeech::options::ssip::split_multiline_messages].as<bool>()),
-    sounds(option_value[multispeech::options::ssip::sounds].as<std::string>()),
     punctuation_mode(multispeech::punctuations::some),
     rate_factor(1.0),
     pitch_factor(1.0),
@@ -65,10 +63,6 @@ protected:
 public:
   // Clients list representation:
   typedef std::map<unsigned long, class session*> clients_list;
-
-  // Taken from configuration:
-  const bool split_multiline_messages;
-  const std::string sounds;
 
   // Initial defaults for session environment:
   multispeech::punctuations::mode punctuation_mode;

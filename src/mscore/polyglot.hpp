@@ -28,9 +28,6 @@
 #include <vector>
 #include <locale>
 
-#include <boost/shared_ptr.hpp>
-
-#include "config.hpp"
 #include "speech_engine.hpp"
 
 namespace multispeech
@@ -40,7 +37,7 @@ class polyglot
 {
 protected:
   // Construct the object:
-  explicit polyglot(const configuration* conf);
+  polyglot(void);
 
 public:
   // Prepare speech task:
@@ -75,11 +72,10 @@ private:
 
   // Construct speech backend by name:
   speech_engine* speech_backend(const std::string& name,
-                                const std::string& lang,
-                                const configuration* conf);
+                                const std::string& lang);
 
   // Multilingual speech engine:
-  std::vector< boost::shared_ptr<speech_engine> > talker;
+  std::vector<speech_engine*> talker;
 
   // Currently used language:
   unsigned int lang;

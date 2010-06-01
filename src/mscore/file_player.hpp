@@ -27,7 +27,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include "config.hpp"
 #include "soundfile.hpp"
 #include "exec_queue.hpp"
 
@@ -57,7 +56,7 @@ class file_player:
 {
 public:
   // Construct / destroy:
-  explicit file_player(const configuration* conf);
+  file_player(void);
   ~file_player(void);
 
   // Start task execution. If there is a task executing already
@@ -71,10 +70,6 @@ public:
 
   // Return true if something is currently playing:
   bool active(void);
-
-  // Configurable parameters:
-  static bool asynchronous;
-  static float relative_volume;
 
 private:
   // Methods required by exec_queue:

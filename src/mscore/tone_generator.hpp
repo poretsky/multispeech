@@ -25,7 +25,6 @@
 #ifndef MULTISPEECH_TONE_GENERATOR_HPP
 #define MULTISPEECH_TONE_GENERATOR_HPP
 
-#include "config.hpp"
 #include "audioplayer.hpp"
 #include "exec_queue.hpp"
 
@@ -56,7 +55,7 @@ class tone_generator:
 {
 public:
   // Construct / destroy:
-  explicit tone_generator(const configuration* conf);
+  tone_generator(void);
   ~tone_generator(void);
 
   // Start task execution. If there is a task executing already
@@ -70,11 +69,6 @@ public:
 
   // Return true if something is currently playing:
   bool active(void);
-
-  // Configurable parameters:
-  static bool asynchronous;
-  static unsigned int sampling;
-  static float relative_volume;
 
 private:
   // Internal operating data:

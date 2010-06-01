@@ -18,8 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// These backends are multilingual by nature. Language is specified
-// as the second constructor argument.
+// These backends are multilingual by nature.
 
 #ifndef MULTISPEECH_ESPEAK_HPP
 #define MULTISPEECH_ESPEAK_HPP
@@ -27,6 +26,7 @@
 #include <string>
 
 #include "mbrola.hpp"
+#include "singleton.hpp"
 
 namespace multispeech
 {
@@ -34,11 +34,25 @@ namespace multispeech
 // Espeak backend.
 class espeak: public speech_engine
 {
-public:
-  // Object construction:
-  espeak(const configuration* conf, const std::string& lang);
-
 private:
+  // Object construction:
+  espeak(void);
+
+  // Voice name construction:
+  struct voice: public voice_attributes
+  {
+    voice(const voice_attributes& attribs);
+    operator std::string(void) const;
+  };
+
+public:
+  // Instantiation by demand:
+  static singleton<espeak> instance;
+  friend class singleton<espeak>;
+
+  // Known voices:
+  static const voice en_default, ru;
+
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 };
@@ -46,9 +60,14 @@ private:
 // Espeak+Mbrola backend.
 class mbrespeak: public mbrola
 {
-public:
+private:
   // Object construction:
-  mbrespeak(const configuration* conf, const std::string& lang);
+  mbrespeak(void);
+
+public:
+  // Instantiation by demand:
+  static singleton<mbrespeak> instance;
+  friend class singleton<mbrespeak>;
 };
 
 } // namespace multispeech

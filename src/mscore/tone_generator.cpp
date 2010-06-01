@@ -24,17 +24,13 @@
 
 #include "tone_generator.hpp"
 
+#include "config.hpp"
+
 
 namespace multispeech
 {
 
 using namespace std;
-
-
-// Static data definition:
-bool tone_generator::asynchronous = true;
-unsigned int tone_generator::sampling = 44100;
-float tone_generator::relative_volume = 1.0;
 
 
 // Make up a task description:
@@ -50,10 +46,8 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 
 // Construct / destroy:
 
-tone_generator::tone_generator(const configuration* conf):
-  audioplayer(conf->option_value[options::tones::device].as<string>().empty() ?
-              conf->option_value[options::audio::device].as<string>() :
-              conf->option_value[options::tones::device].as<string>())
+tone_generator::tone_generator(void):
+  audioplayer(configuration::beep_device())
 {
 }
 
@@ -115,11 +109,11 @@ void
 tone_generator::execute(const tone_task& tone)
 {
   limit = 2.0 * M_PI * static_cast<float>(tone.frequency);
-  step = limit / static_cast<float>(sampling);
+  step = limit / static_cast<float>(configuration::beep_sampling());
   limit *= tone.duration;
   elapsed = 0.0;
   sprev = 0.0;
-  start_playback(tone.volume * relative_volume, sampling, 1);
+  start_playback(tone.volume * configuration::beep_volume(), configuration::beep_sampling(), 1);
 }
 
 void

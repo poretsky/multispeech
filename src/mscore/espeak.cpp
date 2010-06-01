@@ -26,6 +26,8 @@
 
 #include "espeak.hpp"
 
+#include "config.hpp"
+
 
 namespace multispeech
 {
@@ -34,22 +36,39 @@ using namespace std;
 using namespace boost;
 
 
+// Objects instantiation mechanism:
+singleton<espeak> espeak::instance;
+singleton<mbrespeak> mbrespeak::instance;
+
+
 // Espeak backend.
 
+// Voices definition:
+const espeak::voice espeak::en_default = (voice_attributes)
+  {
+    "", lang_id::en, "none", "default",
+    soundfile::autodetect, 22050, 1
+  };
+const espeak::voice espeak::ru = (voice_attributes)
+  {
+    "UTF-8", lang_id::ru, "none", "ru",
+    soundfile::autodetect, 22050, 1
+  };
+
+
 // Object construction:
-espeak::espeak(const configuration* conf, const string& lang):
-  speech_engine(conf, speaker::espeak, novoice, lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
+espeak::espeak(void):
+  speech_engine(speaker::espeak, true)
 {
-  if (voice.empty())
-    throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf->option_value.count(options::compose(name, option_name::executable)) &&
-      !conf->option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  string cmd(configuration::backend_executable(name));
+  if (!cmd.empty())
     {
-      string cmd(conf->option_value[options::compose(name, option_name::executable)].as<string>());
-      cmd += " --stdin --stdout -z -s %rate -p %pitch -v " + voice;
+      cmd += " --stdin --stdout -z -s %rate -p %pitch -v %voice";
       command(cmd);
     }
   else throw configuration::error("no path to " + name);
+  voices[en_default] = &en_default;
+  voices[ru] = &ru;
 }
 
 // Making up voice parameters:
@@ -61,22 +80,36 @@ espeak::voicify(double rate, double pitch)
 }
 
 
+// Constructing voice name:
+
+espeak::voice::voice(const voice_attributes& attribs):
+  voice_attributes(attribs)
+{
+}
+
+espeak::voice::operator string(void) const
+{
+  return string(speaker::espeak + string("-") + id);
+}
+
+
 // Espeak+Mbrola backend.
 
 // Object construction:
-mbrespeak::mbrespeak(const configuration* conf, const string& lang):
-  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang, 16000)
+mbrespeak::mbrespeak(void):
+  mbrola(speaker::espeak)
 {
-  if (lang_id::en != lang)
-    throw configuration::error("unsupported language " + lang + " specified for " + name);
-  if (conf->option_value.count(options::compose(speaker::espeak, option_name::executable)) &&
-      !conf->option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
+  string cmd(configuration::backend_executable(speaker::espeak));
+  if (!cmd.empty())
     {
-      string cmd(conf->option_value[options::compose(speaker::espeak, option_name::executable)].as<string>());
-      cmd += " --stdin -q -z -v mb-" + voice;
+      cmd += " --stdin -q -z -v mb-%voice";
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::espeak);
+  voices[en1] = &en1;
+  voices[us1] = &us1;
+  voices[us2] = &us2;
+  voices[us3] = &us3;
 }
 
 } // namespace multispeech

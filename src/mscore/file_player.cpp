@@ -22,17 +22,14 @@
 
 #include "file_player.hpp"
 
+#include "config.hpp"
+
 
 namespace multispeech
 {
 
 using namespace std;
 using namespace boost::filesystem;
-
-
-// Static data definition:
-bool file_player::asynchronous = true;
-float file_player::relative_volume = 1.0;
 
 
 // Make up a task description:
@@ -46,10 +43,8 @@ sound_task::sound_task(const path& sound_file, float sound_volume):
 
 // Construct / destroy:
 
-file_player::file_player(const configuration* conf):
-  soundfile(conf->option_value[options::sounds::device].as<string>().empty() ?
-            conf->option_value[options::audio::device].as<string>() :
-            conf->option_value[options::sounds::device].as<string>())
+file_player::file_player(void):
+  soundfile(configuration::sound_output_device())
 {
 }
 
@@ -89,7 +84,7 @@ file_player::execute(const sound_task& sound)
   SF_INFO::format = autodetect;
   source = sf_open(sound.file.file_string().c_str(), SFM_READ, this);
   if (source)
-    start_playback(sound.volume * relative_volume, samplerate, channels);
+    start_playback(sound.volume * configuration::sound_volume(), samplerate, channels);
 }
 
 void

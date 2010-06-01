@@ -42,6 +42,10 @@ using namespace boost;
 using namespace boost::assign;
 
 
+// Instantiation mechanism:
+singleton<Russian> Russian::instance;
+
+
 // Object construction:
 
 Russian::Russian(void):

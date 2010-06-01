@@ -22,8 +22,12 @@
 
 #include <cmath>
 #include <utility>
+#include <iostream>
+
+#include <bobcat/syslogstream>
 
 #include <boost/foreach.hpp>
+#include <boost/assign.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/algorithm/string.hpp>
@@ -36,65 +40,42 @@
 #include "pipeline.hpp"
 #include "English.hpp"
 #include "Russian.hpp"
+#include "server.hpp"
 
 
 namespace multispeech
 {
 
 using namespace std;
+using namespace FBB;
 using namespace boost;
+using namespace boost::assign;
 
+
+// Output charset encoders:
+speech_engine::charset_map speech_engine::encoders = map_list_of
+  ("", locale(""));
 
 // Common voice and speech parameters:
-double speech_engine::persistent_volume = 1.0;
-double speech_engine::persistent_pitch = 1.0;
-double speech_engine::persistent_rate = 1.0;
-double speech_engine::persistent_deviation = 1.0;
-double speech_engine::persistent_char_pitch = 1.0;
-double speech_engine::persistent_char_rate = 1.0;
-
-// "No voice" string:
-const string speech_engine::novoice("no voice");
+double speech_engine::general_volume = 1.0;
+double speech_engine::general_pitch = 1.0;
+double speech_engine::general_rate = 1.0;
+double speech_engine::general_deviation = 1.0;
+double speech_engine::char_pitch = 1.0;
+double speech_engine::char_rate = 1.0;
+double speech_engine::caps_factor = 1.2;
 
 
 // Constructing and destroying:
 
-speech_engine::speech_engine(const configuration* conf,
-                             const string& backend,
-                             const string& voice_id,
-                             const string& lang,
-                             soundfile::format fmt,
-                             unsigned int sampling,
-                             unsigned int channels,
-                             bool deviate,
-                             const string& charset):
+speech_engine::speech_engine(const string& backend, bool deviate):
   name(backend),
-  voice((voice_id == novoice) ?
-        (conf->option_value.count(options::compose(backend, lang)) ?
-         conf->option_value[options::compose(backend, lang)].as<string>() :
-         "") :
-        voice_id),
-  volume_factor(conf->option_value[options::compose(lang, option_name::volume)].as<double>()),
-  rate_factor(conf->option_value[options::compose(lang, option_name::rate)].as<double>()),
-  pitch_factor(conf->option_value[options::compose(lang, option_name::pitch)].as<double>()),
-  caps_factor(conf->option_value[options::compose(lang, option_name::caps_factor)].as<double>()),
-  char_pitch(conf->option_value[options::compose(lang, option_name::char_pitch)].as<double>()),
-  char_rate(conf->option_value[options::compose(lang, option_name::char_rate)].as<double>()),
-  acceleration(conf->option_value[options::compose(lang, option_name::acceleration)].as<double>()),
-  format(fmt),
-  native_sampling(sampling),
-  sound_channels(channels),
-  playing_deviation(deviate),
-  backend_charset(charset.empty() ?
-                  locale("") :
-                  locale(locale(""), new iconv_codecvt(NULL, charset.c_str())))
+  volume_factor(1.0),
+  rate_factor(1.0),
+  pitch_factor(1.0),
+  acceleration(0.0),
+  playing_deviation(deviate)
 {
-  if (lang_id::en == lang)
-    language.reset(new English);
-  else if (lang_id::ru == lang)
-    language.reset(new Russian);
-  else throw configuration::error("unsupported language " + lang + " specified for " + backend);
-  format_macros["%lang"] = lang;
 }
 
 speech_engine::~speech_engine(void)
@@ -107,41 +88,80 @@ speech_engine::~speech_engine(void)
 void
 speech_engine::volume(double value)
 {
-  persistent_volume = value;
+  general_volume = value;
 }
 
 void
 speech_engine::voice_pitch(double value)
 {
-  persistent_pitch = value;
+  general_pitch = value;
 }
 
 void
 speech_engine::speech_rate(double value)
 {
-  persistent_rate = value;
+  general_rate = value;
 }
 
 void
 speech_engine::sampling_deviation(double value)
 {
-  persistent_deviation = value;
+  general_deviation = value;
 }
 
 void
 speech_engine::char_voice_pitch(double value)
 {
-  persistent_char_pitch = value;
+  char_pitch = value;
 }
 
 void
 speech_engine::char_speech_rate(double value)
 {
-  persistent_char_rate = value;
+  char_rate = value;
 }
 
 
-// Speech queue control methods:
+// Switching voices:
+
+void
+speech_engine::voice_setup(const string& voice_name)
+{
+  if (voice_available(voice_name))
+    {
+      current_voice = voices[voice_name];
+      if (lang_id::en == current_voice->language)
+        language = English::instance();
+      else if (lang_id::ru == current_voice->language)
+        language = Russian::instance();
+      else throw configuration::error("Unknown language");
+      format_macros["%voice"] = current_voice->id;
+      format_macros["%lang"] = current_voice->language;
+      if (!encoders.count(current_voice->charset))
+        encoders[current_voice->charset] = locale(locale::classic(), new iconv_codecvt(NULL, current_voice->charset.c_str()));
+      volume_factor = configuration::speech_volume(voice_name);
+      rate_factor = configuration::speech_rate(voice_name);
+      pitch_factor = configuration::voice_pitch(voice_name);
+      if (speaker::user_defined == name)
+        acceleration = configuration::user_tts_acceleration(voice_name);
+    }
+  else if (server::debug)
+    {
+      string message(name + " voice \"" + voice_name + "\" is not available");
+      server::log << SyslogStream::debug << message << endl;
+      if (server::verbose)
+        cerr << message << endl;
+    }
+}
+
+bool
+speech_engine::voice_available(const string& voice_name)
+{
+  return voices.count(voice_name) ? check_voice(voice_name) : false;
+}
+
+
+// Speech task preparing methods:
 
 speech_task
 speech_engine::text_task(const wstring& s, bool use_translation)
@@ -159,30 +179,30 @@ speech_engine::text_task(const wstring& s,
   pipeline::script commands;
   pair<string, string> fmt;
   wstring prepared;
-  double freq = numeric_cast<double>(native_sampling);
+  double freq = numeric_cast<double>(current_voice->sampling);
   speech_task::details playing_params;
 
   // Parse speech parameters and prepare the voice.
   if (playing_deviation)
     {
-      if (format != soundfile::autodetect)
+      if (current_voice->format != soundfile::autodetect)
         {
-          freq /= (deviation > 0.0) ? deviation : persistent_deviation;
+          freq /= (deviation > 0.0) ? deviation : general_deviation;
           playing_params.sound.sampling = numeric_cast<unsigned int>(nearbyint(freq));
-          playing_params.sound.channels = sound_channels;
+          playing_params.sound.channels = current_voice->channels;
         }
-      else playing_params.deviation = (deviation > 0.0) ? deviation : persistent_deviation;
-      format_macros["%freq"] = lexical_cast<string>(native_sampling);
+      else playing_params.deviation = (deviation > 0.0) ? deviation : general_deviation;
+      format_macros["%freq"] = lexical_cast<string>(current_voice->sampling);
     }
   else
     {
-      playing_params.sound.sampling = native_sampling;
-      playing_params.sound.channels = sound_channels;
-      freq *= (deviation > 0.0) ? deviation : persistent_deviation;
+      playing_params.sound.sampling = current_voice->sampling;
+      playing_params.sound.channels = current_voice->channels;
+      freq *= (deviation > 0.0) ? deviation : general_deviation;
       format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
     }
-  voicify(rate_factor * ((rate > 0.0) ? rate : persistent_rate),
-          pitch_factor * ((pitch > 0.0) ? pitch : persistent_pitch));
+  voicify(rate_factor * ((rate > 0.0) ? rate : general_rate),
+          pitch_factor * ((pitch > 0.0) ? pitch : general_pitch));
 
   // Make up the TTS script.
   BOOST_FOREACH(string cmd, command_patterns)
@@ -209,17 +229,17 @@ speech_engine::text_task(const wstring& s,
     }
 
   // Make up and return complete task description.
-  return speech_task(extern_string(prepared, backend_charset),
-                     commands, format, playing_params,
-                     ((volume > 0) ? volume : persistent_volume) * volume_factor,
+  return speech_task(extern_string(prepared, encoders[current_voice->charset]),
+                     commands, current_voice->format, playing_params,
+                     ((volume > 0) ? volume : general_volume) * volume_factor,
                      acceleration);
 }
 
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  double pitch = char_pitch * persistent_char_pitch * pitch_factor;
-  double rate = char_rate * persistent_char_rate * rate_factor;
+  double pitch = char_pitch * pitch_factor;
+  double rate = char_rate * rate_factor;
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))
@@ -232,8 +252,8 @@ speech_engine::letter_task(wstring s)
 speech_task
 speech_engine::silence(double duration)
 {
-  return speech_task(native_sampling,
-                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(native_sampling) * duration)));
+  return speech_task(current_voice->sampling,
+                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(current_voice->sampling) * duration)));
 }
 
 
@@ -244,6 +264,12 @@ speech_engine::command(const string& pattern)
 {
   if (!pattern.empty())
     command_patterns.push_front(pattern);
+}
+
+bool
+speech_engine::check_voice(const string& voice_name)
+{
+  return true;
 }
 
 } // namespace multispeech

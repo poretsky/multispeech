@@ -49,30 +49,19 @@
 // data members placed in the protected section (accessible for descendants).
 //
 // The class constructor arguments are as follows:
-// conf -- reference to the current configuration;
 // backend -- TTS engine name;
-// voice_id -- voice name. Special protected identifier "novoice"
-// is used when actual name should be determined
-// from the configuration data;
-// lang -- language id;
-// fmt -- generated sound stream format;
-// sampling -- generated sound stream native sampling frequency;
-// channels -- number of channels in the sound stream (1 or 2);
 // deviate -- if it is true, frequency deviation will be done
 // on the playing stage. Otherwise the TTS pipeline
-// should take care of it;
-// charset -- backend native charset specification.
+// should take care of it.
 
 #ifndef MULTISPEECH_SPEECH_ENGINE_HPP
 #define MULTISPEECH_SPEECH_ENGINE_HPP
 
-#include <memory>
 #include <string>
 #include <locale>
 #include <list>
 #include <map>
 
-#include "config.hpp"
 #include "soundfile.hpp"
 #include "loudspeaker.hpp"
 #include "language_description.hpp"
@@ -82,17 +71,23 @@ namespace multispeech
 
 class speech_engine
 {
+public:
+  // Voice attributes mapping:
+  struct voice_attributes
+  {
+    const std::string charset;
+    const std::string language;
+    const char* dialect;
+    const char* id;
+    soundfile::format format;
+    unsigned int sampling;
+    unsigned int channels;
+  };
+  typedef std::map<const std::string, const voice_attributes*> voice_map;
+
 protected:
   // Object constructor:
-  speech_engine(const configuration* conf,
-                const std::string& backend,
-                const std::string& voice_id,
-                const std::string& lang,
-                soundfile::format fmt,
-                unsigned int sampling,
-                unsigned int channels,
-                bool deviate,
-                const std::string& charset = "");
+  speech_engine(const std::string& backend, bool deviate);
 
 public:
   // Destructor should be public to accommodate smart pointers:
@@ -100,7 +95,7 @@ public:
 
   // General attributes:
   const std::string name;
-  const std::string voice;
+  voice_map voices;
 
   // Voice and speech parameters control:
   static void volume(double value = 1.0);
@@ -109,6 +104,10 @@ public:
   static void sampling_deviation(double value = 1.0);
   static void char_voice_pitch(double value = 1.0);
   static void char_speech_rate(double value = 1.0);
+
+  // Voice switching:
+  void voice_setup(const std::string& voice_name);
+  bool voice_available(const std::string& voice_name);
 
   // Prepare speech task:
   speech_task text_task(const std::wstring& s,
@@ -124,8 +123,8 @@ public:
   // duration specified in seconds:
   speech_task silence(double duration);
 
-  // Language specific stuff:
-  std::auto_ptr<language_description> language;
+  // Pointer to the current language preprocessor:
+  language_description* language;
 
 protected:
   // Add a new command pattern to the beginning of the list:
@@ -134,38 +133,37 @@ protected:
   // Format substitutions to construct actual command:
   std::map<const std::string, std::string> format_macros;
 
-  // "No voice" string:
-  static const std::string novoice;
+  // Pointer to the currently used voice attributes:
+  const voice_attributes* current_voice;
 
 private:
-  // Common voice and speech parameters.
+  // Map input charsets by name:
+  typedef std::map<const std::string, std::locale> charset_map;
+
+  // Text encoders constructed by demand:
+  static charset_map encoders;
+
+  // General voice and speech parameters.
   // It is assumed that normal value is 1.0.
-  static double persistent_volume, persistent_pitch;
-  static double persistent_rate, persistent_deviation;
-  static double persistent_char_pitch, persistent_char_rate;
+  static double general_volume, general_pitch, general_rate;
+  static double char_pitch, char_rate, caps_factor;
+  static double general_deviation;
 
-  // Instance specific voice parameters that are set up
-  // from configuration at the object construction time:
-  double volume_factor, rate_factor, pitch_factor, caps_factor;
-  double char_pitch, char_rate, acceleration;
+  // Make these options configurable:
+  friend class configuration;
 
-  // Generated sound stream sample format:
-  soundfile::format format;
-
-  // Native sampling frequency in Hz:
-  unsigned int native_sampling;
-
-  // Generated sound stream channels number:
-  unsigned int sound_channels;
+  // Voice specific speech parameters that are set up
+  // from configuration at the voice assigning time:
+  double volume_factor, rate_factor, pitch_factor, acceleration;
 
   // Deviate sampling frequency by player:
   bool playing_deviation;
 
-  // Output charset holder:
-  const std::locale backend_charset;
-
   // Shell command patterns to make up a TTS script:
   std::list<std::string> command_patterns;
+
+  // Check actual voice availability. Fake implementation.
+  virtual bool check_voice(const std::string& voice_name);
 
   // Make up voice parameters for backend.
   // Should be defined in derived classes for particular speech engines.

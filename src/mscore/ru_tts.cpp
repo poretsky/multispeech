@@ -32,6 +32,7 @@
 #include "ru_tts.hpp"
 
 #include "server.hpp"
+#include "config.hpp"
 
 
 namespace multispeech
@@ -43,20 +44,30 @@ using namespace boost::filesystem;
 using namespace FBB;
 
 
+// Supported voices:
+ru_tts::voice_attributes ru_tts::native =
+  {
+    "KOI8-R", lang_id::ru, "none", "",
+    soundfile::s8, 10000, 1
+  };
+
+
+// Instantiation mechanism:
+singleton<ru_tts> ru_tts::instance;
+
+
 // Object construction:
 
-ru_tts::ru_tts(const configuration* conf):
-  speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
+ru_tts::ru_tts(void):
+  speech_engine(speaker::ru_tts, true)
 {
-  if (conf->option_value.count(options::compose(name, option_name::executable)) &&
-      !conf->option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  string cmd(configuration::backend_executable(name));
+  if (!cmd.empty())
     {
-      string cmd(conf->option_value[options::compose(name, option_name::executable)].as<string>());
       cmd += " -r %rate -p %pitch";
-      if (conf->option_value.count(options::compose(name, option_name::lexicon)) &&
-          !conf->option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
+      if (!configuration::backend_lexicon(name).empty())
         {
-          path lexicon(conf->option_value[options::compose(name, option_name::lexicon)].as<string>());
+          path lexicon(configuration::backend_lexicon(name));
           if (exists(lexicon))
             cmd += " -s " + lexicon.file_string();
           else
@@ -66,12 +77,13 @@ ru_tts::ru_tts(const configuration* conf):
                 cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
             }
         }
-      if (conf->option_value.count(options::compose(name, option_name::log)) &&
-          !conf->option_value[options::compose(name, option_name::log)].as<string>().empty())
-        cmd += " -l " + conf->option_value[options::compose(name, option_name::log)].as<string>();
+      if (!configuration::backend_log(name).empty())
+        cmd += " -l " + configuration::backend_log(name);
       command(cmd);
     }
   else throw configuration::error("no path to " + name);
+  voices[speaker::ru_tts] = &native;
+  voice_setup(speaker::ru_tts);
 }
 
 

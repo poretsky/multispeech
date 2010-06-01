@@ -18,8 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// This backend is assumed to be multilingual. Language is specified
-// as the second constructor argument.
+// This backend is assumed to be multilingual.
 
 #ifndef MULTISPEECH_USER_TTS_HPP
 #define MULTISPEECH_USER_TTS_HPP
@@ -27,22 +26,33 @@
 #include <string>
 
 #include "speech_engine.hpp"
+#include "singleton.hpp"
 
 namespace multispeech
 {
 
 class user_tts: public speech_engine
 {
-public:
-  // Object construction:
-  user_tts(const configuration* conf, const std::string& lang);
-
 private:
+  // Object construction:
+  user_tts(void);
+
+  // Supported voices:
+  const voice_attributes en, ru;
+
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 
-  // Extract sound format specification from the configuration:
-  static soundfile::format sound_format(const configuration* conf);
+  // Extract voice parameters from the configuration:
+  static voice_attributes make_voice(const char* language);
+
+public:
+  // Instantiation by demand:
+  static singleton<user_tts> instance;
+  friend class singleton<user_tts>;
+
+  // Compose internal voice name for specified language:
+  static std::string voice(const std::string& language);
 };
 
 } // namespace multispeech

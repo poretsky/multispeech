@@ -89,9 +89,10 @@ frontend::frontend(int argc, char* argv[]):
   tts_parameters("^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)"),
   garbage("\\s*\\[\\*]\\s*")
 {
-  if (option_value[options::frontend::native_voices].as<bool>())
+  charset(configuration::input_charset());
+  if (native_notation())
     native_params.reset(new multispeech_voices);
-  if (option_value[options::frontend::dtk_voices].as<bool>())
+  if (dtk_notation())
     dtk_params.reset(new dtk_voices);
 }
 

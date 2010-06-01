@@ -38,7 +38,6 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
-#include "config.hpp"
 #include "file_player.hpp"
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
@@ -51,7 +50,7 @@ class sound_manager: private portaudio::AutoSystem
 {
 protected:
   // Constructing / destroying.
-  explicit sound_manager(const configuration* conf);
+  sound_manager(void);
   ~sound_manager(void);
 
 public:

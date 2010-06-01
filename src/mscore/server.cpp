@@ -40,8 +40,8 @@ bool server::debug = false;
 
 server::server(int argc, char* argv[]):
   configuration(argc, argv),
-  sound_manager(dynamic_cast<configuration*>(this)),
-  polyglot(dynamic_cast<configuration*>(this))
+  sound_manager(),
+  polyglot()
 {
 }
 

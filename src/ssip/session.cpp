@@ -30,6 +30,8 @@
 #include <unicode/utf8.h>
 #include <unicode/uchar.h>
 
+#include <mscore/config.hpp>
+
 #include "session.hpp"
 
 #include "boolean_flag.hpp"
@@ -111,7 +113,7 @@ session::perform(string& request)
     }
   else if (request == ".")
     {
-      if (!host.split_multiline_messages)
+      if (!configuration::split_multiline_messages())
         {
           ostringstream text;
           BOOST_FOREACH (const string& line, accumulator)
@@ -130,7 +132,7 @@ session::perform(string& request)
       if (request == "..")
         request.resize(1);
       accumulator.push_back(request);
-      if (host.split_multiline_messages)
+      if (configuration::split_multiline_messages())
         prepare(request);
     }
   return result;
@@ -339,7 +341,7 @@ session::resume(void)
 void
 session::caps_icon(void)
 {
-  path sound(complete("capital", host.sounds));
+  path sound(complete("capital", configuration::sounds_repository()));
   if (exists(sound))
     errand << sound_task(sound, volume_factor);
   else errand << tone_task(1000, 0.01, volume_factor);
@@ -413,9 +415,9 @@ session::cmd_key(void)
 bool
 session::cmd_sound_icon(void)
 {
-  if (exists(host.sounds))
+  if (exists(configuration::sounds_repository()))
     {
-      path sound(complete(commands::beyond(), host.sounds));
+      path sound(complete(commands::beyond(), configuration::sounds_repository()));
       if (exists(sound))
         {
           errand = job(id, importance, notified_events);

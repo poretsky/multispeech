@@ -1,4 +1,4 @@
-// freephone.hpp -- Freephone speech backend interface
+// singleton.hpp -- Singleton instantiation by demand
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -18,27 +18,30 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// English speech backend. Uses Mbrola voice en1.
+#ifndef MULTISPEECH_SINGLETON_HPP
+#define MULTISPEECH_SINGLETON_HPP
 
-#ifndef MULTISPEECH_FREEPHONE_HPP
-#define MULTISPEECH_FREEPHONE_HPP
-
-#include "mbrola.hpp"
-#include "singleton.hpp"
+#include <memory>
 
 namespace multispeech
 {
 
-class freephone: public mbrola
+template <typename object>
+class singleton: private std::auto_ptr<object>
 {
-private:
-  // Object construction:
-  freephone(void);
-
 public:
-  // Instantiation by demand:
-  static singleton<freephone> instance;
-  friend class singleton<freephone>;
+  // Default constructor:
+  singleton(void)
+  {
+  }
+
+  // Instantiate object or get pointer to it:
+  object* operator()(void)
+  {
+    if (!std::auto_ptr<object>::get())
+      reset(new object);
+    return std::auto_ptr<object>::get();
+  }
 };
 
 } // namespace multispeech

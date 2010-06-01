@@ -30,11 +30,11 @@
 #include "config.hpp"
 
 #include "audioplayer.hpp"
-#include "file_player.hpp"
-#include "tone_generator.hpp"
-#include "loudspeaker.hpp"
 #include "speech_engine.hpp"
 #include "server.hpp"
+#include "mbrola.hpp"
+#include "espeak.hpp"
+#include "user_tts.hpp"
 
 
 namespace multispeech
@@ -45,12 +45,49 @@ using namespace boost::filesystem;
 using namespace boost::program_options;
 
 
-// Initialize duplication protector:
-bool configuration::initialized = false;
+// Options value repository:
+variables_map configuration::option_value;
 
+// Relative option names:
+configuration::option configuration::option::charset("charset");
+configuration::option configuration::option::native_notation("native_notation");
+configuration::option configuration::option::dtk_notation("dtk_notation");
+configuration::option configuration::option::port("port");
+configuration::option configuration::option::sounds("sounds");
+configuration::option configuration::option::split_multiline_messages("split_multiline_messages");
+configuration::option configuration::option::device("device");
+configuration::option configuration::option::latency("latency");
+configuration::option configuration::option::asynchronous("asynchronous");
+configuration::option configuration::option::engine("engine");
+configuration::option configuration::option::executable("executable");
+configuration::option configuration::option::command("command");
+configuration::option configuration::option::format("format");
+configuration::option configuration::option::sampling("sampling");
+configuration::option configuration::option::stereo("stereo");
+configuration::option configuration::option::freq_control("freq_control");
+configuration::option configuration::option::voices("voices");
+configuration::option configuration::option::lexicon("lexicon");
+configuration::option configuration::option::log("log");
+configuration::option configuration::option::language("language");
+configuration::option configuration::option::voice("voice");
+configuration::option configuration::option::voice_name("voice_name");
+configuration::option configuration::option::dialect("dialect");
+configuration::option configuration::option::volume("volume");
+configuration::option configuration::option::pitch("pitch");
+configuration::option configuration::option::rate("rate");
+configuration::option configuration::option::caps_factor("caps_factor");
+configuration::option configuration::option::acceleration("acceleration");
+
+// General sections:
+const string configuration::frontend("frontend");
+const string configuration::ssip("ssip");
+const string configuration::audio("audio");
+const string configuration::sounds("sounds");
+const string configuration::tones("tones");
+const string configuration::speech("speech");
+const string configuration::character("char");
 
 // Hardcoded default paths:
-
 const path configuration::mbrola_voices_default(complete("mbrola-voices", DATA_DIR));
 const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
 const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
@@ -72,170 +109,7 @@ namespace speaker
   const char* const espeak = "espeak";
   const char* const freephone = "freephone";
   const char* const ru_tts = "ru_tts";
-  const char* const user = "user";
-};
-
-// Various option names used in sections:
-namespace option_name
-{
-  const char* const engine = "engine";
-  const char* const executable = "executable";
-  const char* const command = "command";
-  const char* const format = "format";
-  const char* const sampling = "sampling";
-  const char* const stereo = "stereo";
-  const char* const freq_control = "freq_control";
-  const char* const charset = "charset";
-  const char* const voices = "voices";
-  const char* const lexicon = "lexicon";
-  const char* const log = "log";
-  const char* const volume = "volume";
-  const char* const pitch = "pitch";
-  const char* const rate = "rate";
-  const char* const char_pitch = "char_pitch";
-  const char* const char_rate = "char_rate";
-  const char* const caps_factor = "caps_factor";
-  const char* const acceleration = "acceleration";
-};
-
-
-// Option names definition
-namespace options
-{
-  // Frontend related options:
-  namespace frontend
-  {
-    const char* const charset = "frontend.charset";
-    const char* const native_voices = "frontend.native_voices";
-    const char* const dtk_voices = "frontend.dtk_voices";
-  };
-
-  // SSIP related options:
-  namespace ssip
-  {
-    const char* const port = "ssip.port";
-    const char* const sounds = "ssip.sounds";
-    const char* const split_multiline_messages = "ssip.split_multiline_messages";
-  };
-
-  // General audio output options:
-  namespace audio
-  {
-    const char* const device = "audio.device";
-    const char* const general_volume = "audio.general_volume";
-    const char* const latency = "audio.latency";
-  };
-
-  // Sound files playing section:
-  namespace sounds
-  {
-    const char* const device = "sounds.device";
-    const char* const volume = "sounds.volume";
-    const char* const asynchronous = "sounds.asynchronous";
-  };
-
-  // tones producing section:
-  namespace tones
-  {
-    const char* const device = "tones.device";
-    const char* const volume = "tones.volume";
-    const char* const sampling = "tones.sampling";
-    const char* const asynchronous = "tones.asynchronous";
-  };
-
-  // Speech section:
-  namespace speech
-  {
-    // General speech control options:
-    const char* const device = "speech.device";
-    const char* const volume = "speech.volume";
-    const char* const language = "speech.language";
-  };
-
-  // English speech section:
-  namespace en
-  {
-    const string engine(compose(lang_id::en, option_name::engine));
-    const string volume(compose(lang_id::en, option_name::volume));
-    const string pitch(compose(lang_id::en, option_name::pitch));
-    const string rate(compose(lang_id::en, option_name::rate));
-    const string acceleration(compose(lang_id::en, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::en, option_name::char_pitch));
-    const string char_rate(compose(lang_id::en, option_name::char_rate));
-    const string caps_factor(compose(lang_id::en, option_name::caps_factor));
-  };
-
-  // Russian speech section:
-  namespace ru
-  {
-    const std::string engine(compose(lang_id::ru, option_name::engine));
-    const string volume(compose(lang_id::ru, option_name::volume));
-    const string pitch(compose(lang_id::ru, option_name::pitch));
-    const string rate(compose(lang_id::ru, option_name::rate));
-    const string acceleration(compose(lang_id::ru, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::ru, option_name::char_pitch));
-    const string char_rate(compose(lang_id::ru, option_name::char_rate));
-    const string caps_factor(compose(lang_id::ru, option_name::caps_factor));
-  };
-
-  // Mbrola based backends options:
-  namespace mbrola
-  {
-    const string executable(compose(speaker::mbrola, option_name::executable));
-    const string voices(compose(speaker::mbrola, option_name::voices));
-  };
-
-  // Espeak based backends options:
-  namespace espeak
-  {
-    const string executable(compose(speaker::espeak, option_name::executable));
-
-    // Espeak voices assignment:
-    const string en(compose(speaker::espeak, lang_id::en));
-    const string ru(compose(speaker::espeak, lang_id::ru));
-
-    // Mbrola voices assignment:
-    namespace mbrola
-    {
-      const string en(compose(speaker::espeak, compose(speaker::mbrola, lang_id::en)));
-    };
-  };
-
-  // Freephone backend options:
-  namespace freephone
-  {
-    const string executable(compose(speaker::freephone, option_name::executable));
-    const string lexicon(compose(speaker::freephone, option_name::lexicon));
-  };
-
-  // Ru_tts backend options:
-  namespace ru_tts
-  {
-    const string executable(compose(speaker::ru_tts, option_name::executable));
-    const string lexicon(compose(speaker::ru_tts, option_name::lexicon));
-    const string log(compose(speaker::ru_tts, option_name::log));
-  };
-
-  // User defined TTS backend options:
-  namespace user
-  {
-    const string command(compose(speaker::user, option_name::command));
-    const string format(compose(speaker::user, option_name::format));
-    const string sampling(compose(speaker::user, option_name::sampling));
-    const string stereo(compose(speaker::user, option_name::stereo));
-    const string freq_control(compose(speaker::user, option_name::freq_control));
-    const string charset(compose(speaker::user, option_name::charset));
-  };
-
-  // Dynamic options name composing:
-  const string compose(const string& section, const string& option)
-  {
-    return section + '.' + option;
-  }
+  const char* const user_defined = "user";
 };
 
 
@@ -253,9 +127,8 @@ configuration::configuration(int argc, char* argv[])
   bool noconf = true;
 
   // Check if configured already:
-  if (initialized)
+  if (!option_value.empty())
     throw std::logic_error("Duplicated server initialization");
-  initialized = true;
 
   // Prevent searching for X:
   unsetenv("DISPLAY");
@@ -287,90 +160,123 @@ configuration::configuration(int argc, char* argv[])
     server::verbose = true;
 
   // Declare configuration options:
-  using namespace options;
   conf.add_options()
 
     // Frontend related options:
-    (frontend::charset, value<string>())
-    (frontend::native_voices, bool_switch()->default_value(true))
-    (frontend::dtk_voices, bool_switch()->default_value(false))
+    (option::charset(frontend), value<string>()->default_value(""))
+    (option::native_notation(frontend), bool_switch()->default_value(true))
+    (option::dtk_notation(frontend), bool_switch()->default_value(false))
 
     // SSIP related options:
-    (ssip::port, value<unsigned int>()->default_value(6560))
-    (ssip::sounds, value<string>()->default_value(sounds_default.file_string()))
-    (ssip::split_multiline_messages, bool_switch()->default_value(false))
+    (option::port(ssip), value<unsigned int>()->default_value(6560))
+    (option::sounds(ssip), value<string>()->default_value(sounds_default.file_string()))
+    (option::split_multiline_messages(ssip), bool_switch()->default_value(false))
 
     // General audio options:
-    (audio::device, value<string>()->default_value(""))
-    (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
-    (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.0))
+    (option::device(audio), value<string>()->default_value(""))
+    (option::volume(audio), value<float>(&audioplayer::general_volume)->default_value(0.8))
+    (option::latency(audio), value<double>(&audioplayer::suggested_latency)->default_value(0.0))
 
     // Sound files playing section:
-    (sounds::device, value<string>()->default_value(""))
-    (sounds::volume, value<float>(&file_player::relative_volume)->default_value(1.0))
-    (sounds::asynchronous, bool_switch(&file_player::asynchronous)->default_value(true))
+    (option::device(sounds), value<string>()->default_value(""))
+    (option::volume(sounds), value<float>()->default_value(1.0))
+    (option::asynchronous(sounds), bool_switch()->default_value(true))
 
     // tones producing section:
-    (tones::device, value<string>()->default_value(""))
-    (tones::volume, value<float>(&tone_generator::relative_volume)->default_value(1.0))
-    (tones::sampling, value<unsigned int>(&tone_generator::sampling)->default_value(44100))
-    (tones::asynchronous, bool_switch(&tone_generator::asynchronous)->default_value(true))
+    (option::device(tones), value<string>()->default_value(""))
+    (option::volume(tones), value<float>()->default_value(1.0))
+    (option::sampling(tones), value<unsigned int>()->default_value(44100))
+    (option::asynchronous(tones), bool_switch()->default_value(true))
 
     // General speech control options:
-    (speech::device, value<string>()->default_value(""))
-    (speech::volume, value<float>(&loudspeaker::relative_volume)->default_value(1.0))
-    (speech::language, value<string>())
+    (option::device(speech), value<string>()->default_value(""))
+    (option::volume(speech), value<double>(&speech_engine::general_volume))
+    (option::rate(speech), value<double>(&speech_engine::general_rate))
+    (option::pitch(speech), value<double>(&speech_engine::general_pitch))
+    (option::rate(character)(speech), value<double>(&speech_engine::char_rate))
+    (option::pitch(character)(speech), value<double>(&speech_engine::char_pitch))
+    (option::caps_factor(speech), value<double>(&speech_engine::caps_factor))
+    (option::language(speech), value<string>()->default_value(lang_id::autodetect))
 
-    // English speech options:
-    (en::engine.c_str(), value<string>())
-    (en::volume.c_str(), value<double>()->default_value(1.0))
-    (en::pitch.c_str(), value<double>()->default_value(1.0))
-    (en::rate.c_str(), value<double>()->default_value(1.0))
-    (en::acceleration.c_str(), value<double>()->default_value(0.0))
-    (en::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (en::char_rate.c_str(), value<double>()->default_value(1.0))
-    (en::caps_factor.c_str(), value<double>()->default_value(1.2))
+    // Speech engine choosing options:
+    (option::engine(lang_id::en)(speech), value<string>()->default_value(""))
+    (option::engine(lang_id::ru)(speech), value<string>()->default_value(""))
 
-    // Russian speech options:
-    (ru::engine.c_str(), value<string>())
-    (ru::volume.c_str(), value<double>()->default_value(1.0))
-    (ru::pitch.c_str(), value<double>()->default_value(1.0))
-    (ru::rate.c_str(), value<double>()->default_value(1.0))
-    (ru::acceleration.c_str(), value<double>()->default_value(0.0))
-    (ru::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (ru::char_rate.c_str(), value<double>()->default_value(1.0))
-    (ru::caps_factor.c_str(), value<double>()->default_value(1.2))
+    // Per voice speech options for Mbrola voices:
+    (option::voice_name(mbrola::en1), value<string>())
+    (option::volume(mbrola::en1), value<float>()->default_value(1.0))
+    (option::rate(mbrola::en1), value<double>()->default_value(1.0))
+    (option::pitch(mbrola::en1), value<double>()->default_value(1.0))
+    (option::voice_name(mbrola::us1), value<string>())
+    (option::volume(mbrola::us1), value<float>()->default_value(1.0))
+    (option::rate(mbrola::us1), value<double>()->default_value(1.0))
+    (option::pitch(mbrola::us1), value<double>()->default_value(1.0))
+    (option::voice_name(mbrola::us2), value<string>())
+    (option::volume(mbrola::us2), value<float>()->default_value(1.0))
+    (option::rate(mbrola::us2), value<double>()->default_value(1.0))
+    (option::pitch(mbrola::us2), value<double>()->default_value(1.0))
+    (option::voice_name(mbrola::us3), value<string>())
+    (option::volume(mbrola::us3), value<float>()->default_value(1.0))
+    (option::rate(mbrola::us3), value<double>()->default_value(1.0))
+    (option::pitch(mbrola::us3), value<double>()->default_value(1.0))
+
+    // Per voice speech options for Espeak voices:
+    (option::voice_name(espeak::en_default), value<string>()->default_value("default"))
+    (option::volume(espeak::en_default), value<float>()->default_value(1.0))
+    (option::rate(espeak::en_default), value<double>()->default_value(1.0))
+    (option::pitch(espeak::en_default), value<double>()->default_value(1.0))
+    (option::voice_name(espeak::ru), value<string>()->default_value("russian_test"))
+    (option::volume(espeak::ru), value<float>()->default_value(1.0))
+    (option::rate(espeak::ru), value<double>()->default_value(1.0))
+    (option::pitch(espeak::ru), value<double>()->default_value(1.0))
 
     // Mbrola based backends options:
-    (mbrola::executable.c_str(), value<string>()->default_value(speaker::mbrola))
-    (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.file_string()))
+    (option::executable(speaker::mbrola), value<string>()->default_value(speaker::mbrola))
+    (option::voices(speaker::mbrola), value<string>()->default_value(mbrola_voices_default.file_string()))
 
     // Espeak based backends options:
-    (espeak::executable.c_str(), value<string>()->default_value(speaker::espeak))
-
-    // Espeak voices assignment:
-    (espeak::en.c_str(), value<string>()->default_value(lang_id::en))
-    (espeak::ru.c_str(), value<string>()->default_value(lang_id::ru))
-
-    // Mbrola voices assignment:
-    (espeak::mbrola::en.c_str(), value<string>()->default_value("en1"))
+    (option::executable(speaker::espeak), value<string>()->default_value(speaker::espeak))
+    (option::voice(lang_id::en)(speaker::espeak), value<string>()->default_value(espeak::en_default))
+    (option::voice(lang_id::ru)(speaker::espeak), value<string>()->default_value(espeak::ru))
 
     // Freephone backend options:
-    (freephone::executable.c_str(), value<string>()->default_value(speaker::freephone))
-    (freephone::lexicon.c_str(), value<string>()->default_value(enlex_default.file_string()))
+    (option::executable(speaker::freephone), value<string>()->default_value(speaker::freephone))
+    (option::lexicon(speaker::freephone), value<string>()->default_value(enlex_default.file_string()))
 
     // Ru_tts backend options:
-    (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
-    (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.file_string()))
-    (ru_tts::log.c_str(), value<string>())
+    (option::executable(speaker::ru_tts), value<string>()->default_value(speaker::ru_tts))
+    (option::lexicon(speaker::ru_tts), value<string>()->default_value(rulex_default.file_string()))
+    (option::log(speaker::ru_tts), value<string>()->default_value(""))
+    (option::voice_name(speaker::ru_tts), value<string>())
+    (option::volume(speaker::ru_tts), value<float>()->default_value(1.0))
+    (option::rate(speaker::ru_tts), value<double>()->default_value(1.0))
+    (option::pitch(speaker::ru_tts), value<double>()->default_value(1.0))
 
     // User defined TTS backend options:
-    (user::command.c_str(), value<string>())
-    (user::format.c_str(), value<string>())
-    (user::sampling.c_str(), value<unsigned int>()->default_value(22050))
-    (user::stereo.c_str(), bool_switch()->default_value(false))
-    (user::freq_control.c_str(), bool_switch()->default_value(false))
-    (user::charset.c_str(), value<string>()->default_value(""));
+    (option::command(speaker::user_defined), value<string>()->default_value(""))
+    (option::freq_control(speaker::user_defined), bool_switch()->default_value(false))
+
+    // Per language options for user defined TTS:
+    (option::format(user_tts::voice(lang_id::en)), value<string>())
+    (option::sampling(user_tts::voice(lang_id::en)), value<unsigned int>()->default_value(22050))
+    (option::stereo(user_tts::voice(lang_id::en)), bool_switch()->default_value(false))
+    (option::charset(user_tts::voice(lang_id::en)), value<string>()->default_value(""))
+    (option::acceleration(user_tts::voice(lang_id::en)), value<double>()->default_value(0.0))
+    (option::voice_name(user_tts::voice(lang_id::en)), value<string>())
+    (option::dialect(user_tts::voice(lang_id::en)), value<string>()->default_value(""))
+    (option::volume(user_tts::voice(lang_id::en)), value<float>()->default_value(1.0))
+    (option::rate(user_tts::voice(lang_id::en)), value<double>()->default_value(1.0))
+    (option::pitch(user_tts::voice(lang_id::en)), value<double>()->default_value(1.0))
+    (option::format(user_tts::voice(lang_id::ru)), value<string>())
+    (option::sampling(user_tts::voice(lang_id::ru)), value<unsigned int>()->default_value(22050))
+    (option::stereo(user_tts::voice(lang_id::ru)), bool_switch()->default_value(false))
+    (option::charset(user_tts::voice(lang_id::ru)), value<string>()->default_value(""))
+    (option::acceleration(user_tts::voice(lang_id::ru)), value<double>()->default_value(0.0))
+    (option::voice_name(user_tts::voice(lang_id::ru)), value<string>())
+    (option::dialect(user_tts::voice(lang_id::ru)), value<string>()->default_value(""))
+    (option::volume(user_tts::voice(lang_id::ru)), value<float>()->default_value(1.0))
+    (option::rate(user_tts::voice(lang_id::ru)), value<double>()->default_value(1.0))
+    (option::pitch(user_tts::voice(lang_id::ru)), value<double>()->default_value(1.0));
 
   // Parse config files and store values
   if (cl_opt.count("config"))
@@ -403,11 +309,258 @@ configuration::configuration(int argc, char* argv[])
 }
 
 
-// Configuration errors signaling:
+// Options value access:
 
-configuration::error::error(const string& message):
-  logic_error(message)
+const char*
+configuration::input_charset(void)
 {
+  const string& charset = option_value[option::charset(frontend)].as<string>();
+  return charset.empty() ? NULL : charset.c_str();
+}
+
+bool
+configuration::native_notation(void)
+{
+  return option_value[option::native_notation(frontend)].as<bool>();
+}
+
+bool
+configuration::dtk_notation(void)
+{
+  return option_value[option::dtk_notation(frontend)].as<bool>();
+}
+
+unsigned int
+configuration::tcp_port(void)
+{
+  return option_value[option::port(ssip)].as<unsigned int>();
+}
+
+const string&
+configuration::sounds_repository(void)
+{
+  return option_value[option::sounds(ssip)].as<string>();
+}
+
+bool
+configuration::split_multiline_messages(void)
+{
+  return option_value[option::split_multiline_messages(ssip)].as<bool>();
+}
+
+const string&
+configuration::default_audio_device(void)
+{
+  return option_value[option::device(audio)].as<string>();
+}
+
+float
+configuration::general_volume(void)
+{
+  return option_value[option::volume(audio)].as<float>();
+}
+
+double
+configuration::audio_latency(void)
+{
+  return option_value[option::latency(audio)].as<double>();
+}
+
+const string&
+configuration::sound_output_device(void)
+{
+  const string& device = option_value[option::device(sounds)].as<string>();
+  return device.empty() ?
+    default_audio_device() :
+    device;
+}
+
+float
+configuration::sound_volume(void)
+{
+  return option_value[option::volume(sounds)].as<float>();
+}
+
+bool
+configuration::sound_async(void)
+{
+  return option_value[option::asynchronous(sounds)].as<bool>();
+}
+
+const string&
+configuration::beep_device(void)
+{
+  const string& device = option_value[option::device(tones)].as<string>();
+  return device.empty() ?
+    default_audio_device() :
+    device;
+}
+
+float
+configuration::beep_volume(void)
+{
+  return option_value[option::volume(tones)].as<float>();
+}
+
+unsigned int
+configuration::beep_sampling(void)
+{
+  return option_value[option::sampling(tones)].as<unsigned int>();
+}
+
+bool
+configuration::beep_async(void)
+{
+  return option_value[option::asynchronous(tones)].as<bool>();
+}
+
+const string&
+configuration::speech_output_device(void)
+{
+  const string& device = option_value[option::device(speech)].as<string>();
+  return device.empty() ?
+    default_audio_device() :
+    device;
+}
+
+float
+configuration::speech_volume(const string& voice)
+{
+  return option_value[option::volume(voice)].as<float>();
+}
+
+double
+configuration::speech_rate(const string& voice)
+{
+  return option_value[option::rate(voice)].as<double>();
+}
+
+double
+configuration::voice_pitch(const string& voice)
+{
+  return option_value[option::pitch(voice)].as<double>();
+}
+
+double
+configuration::char_rate(void)
+{
+  return option_value[option::rate(character)(speech)].as<double>();
+}
+
+double
+configuration::char_pitch(void)
+{
+  return option_value[option::pitch(character)(speech)].as<double>();
+}
+
+double
+configuration::caps_factor(void)
+{
+  return option_value[option::caps_factor(speech)].as<double>();
+}
+
+const string&
+configuration::default_language(void)
+{
+  return option_value[option::language(speech)].as<string>();
+}
+
+const string&
+configuration::speech_backend(const string& language)
+{
+  return option_value[option::engine(language)(speech)].as<string>();
+}
+
+const string&
+configuration::backend_voice(const string& backend, const string& language)
+{
+  return option_value[option::voice(language)(backend)].as<string>();
+}
+
+const string&
+configuration::backend_executable(const string& backend)
+{
+  return option_value[option::executable(backend)].as<string>();
+}
+
+const string&
+configuration::mbrola_voices(void)
+{
+  return option_value[option::voices(speaker::mbrola)].as<string>();
+}
+
+const string&
+configuration::backend_lexicon(const string& backend)
+{
+  return option_value[option::lexicon(backend)].as<string>();
+}
+
+const string&
+configuration::backend_log(const string& backend)
+{
+  return option_value[option::log(backend)].as<string>();
+}
+
+const string&
+configuration::user_tts_command(void)
+{
+  return option_value[option::command(speaker::user_defined)].as<string>();
+}
+
+bool
+configuration::user_freq_control(void)
+{
+  return option_value[option::freq_control(speaker::user_defined)].as<bool>();
+}
+
+soundfile::format
+configuration::user_sound_format(const string& language)
+{
+  if (!option_value.count(option::format(user_tts::voice(language))))
+    {
+      const string& fmt = option_value[option::format(user_tts::voice(language))].as<string>();
+      if ("s8" == fmt)
+        return soundfile::s8;
+      else if ("u8" == fmt)
+        return soundfile::u8;
+      else if ("s16" == fmt)
+        return soundfile::s16;
+      else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
+    }
+  return soundfile::autodetect;
+}
+
+unsigned int
+configuration::user_sampling(const string& language)
+{
+  return option_value[option::sampling(user_tts::voice(language))].as<unsigned int>();
+}
+
+unsigned int
+configuration::user_sound_channels(const string& language)
+{
+  return option_value[option::stereo(user_tts::voice(language))].as<bool>() ?
+    2 : 1;
+}
+
+const char*
+configuration::user_tts_charset(const string& language)
+{
+  const string& charset = option_value[option::charset(user_tts::voice(language))].as<string>();
+  return charset.empty() ? NULL : charset.c_str();
+}
+
+const char*
+configuration::user_tts_dialect(const string& language)
+{
+  const string& dialect = option_value[option::dialect(user_tts::voice(language))].as<string>();
+  return dialect.empty() ? "none" : dialect.c_str();
+}
+
+double
+configuration::user_tts_acceleration(const string& voice)
+{
+  return option_value[option::acceleration(voice)].as<double>();
 }
 
 
@@ -420,6 +573,33 @@ configuration::read(const path& config_file, const options_description& conf)
   stage = " in " + config_file.file_string();
   store(parse_config_file(source, conf), option_value);
   stage.erase();
+}
+
+
+// Configuration errors signaling:
+
+configuration::error::error(const string& message):
+  logic_error(message)
+{
+}
+
+
+// Option name composer:
+
+configuration::option::option(const string& name):
+  string(name)
+{
+}
+
+configuration::option
+configuration::option::operator()(const string& section)
+{
+  return option(section + '.' + (*this));
+}
+
+configuration::option::operator const char*(void)
+{
+  return c_str();
 }
 
 } // namespace multispeech

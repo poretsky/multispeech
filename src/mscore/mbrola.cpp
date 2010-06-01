@@ -20,12 +20,12 @@
 
 #include <sysconfig.h>
 
-#include <string>
-
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "mbrola.hpp"
+
+#include "config.hpp"
 
 
 namespace multispeech
@@ -36,35 +36,50 @@ using namespace boost;
 using namespace boost::filesystem;
 
 
+// Known voices definition:
+const mbrola::voice mbrola::en1 = (voice_attributes)
+  {
+    "", lang_id::en, "uk", "en1",
+    soundfile::s16, 16000, 1
+  };
+const mbrola::voice mbrola::us1 = (voice_attributes)
+  {
+    "", lang_id::en, "us", "us1",
+    soundfile::s16, 16000, 1
+  };
+const mbrola::voice mbrola::us2 = (voice_attributes)
+  {
+    "", lang_id::en, "us", "us2",
+    soundfile::s16, 16000, 1
+  };
+const mbrola::voice mbrola::us3 = (voice_attributes)
+  {
+    "", lang_id::en, "us", "us3",
+    soundfile::s16, 16000, 1
+  };
+
+
 // Object construction:
 
-mbrola::mbrola(const configuration* conf,
-               const string& backend,
-               const string& voice_id,
-               const string& lang,
-               unsigned int sampling):
-  speech_engine(conf, backend, voice_id, lang, soundfile::s16, sampling, 1, false)
+mbrola::mbrola(const string& backend):
+  speech_engine(backend, false)
 {
-  if (voice.empty())
-    throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf->option_value.count(options::compose(speaker::mbrola, option_name::executable)) &&
-      !conf->option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
+  string cmd(configuration::backend_executable(speaker::mbrola));
+  if (!cmd.empty())
     {
-      string cmd(conf->option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>());
-      cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e ";
-      if (conf->option_value.count(options::compose(speaker::mbrola, option_name::voices)))
-        {
-          path voice_file(complete(voice,
-                                   conf->option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
-          if (exists(voice_file))
-            cmd += voice_file.file_string();
-          else throw configuration::error(voice_file.file_string() + " does not exist");
-        }
-      else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
-      cmd += " - -A";
+      cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e %mbrola_voice - -A";
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::mbrola);
+}
+
+
+// Checking voice availability:
+
+bool
+mbrola::check_voice(const string& voice_name)
+{
+  return exists(complete(voices[voice_name]->id, configuration::mbrola_voices()));
 }
 
 
@@ -75,6 +90,20 @@ mbrola::voicify(double rate, double pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>(pitch);
   format_macros["%rate"] = lexical_cast<string>(1.0 / rate);
+  format_macros["%mbrola_voice"] = complete(current_voice->id, configuration::mbrola_voices()).file_string();
+}
+
+
+// Constructing voice name:
+
+mbrola::voice::voice(const voice_attributes& attribs):
+  voice_attributes(attribs)
+{
+}
+
+mbrola::voice::operator string(void) const
+{
+  return string(speaker::mbrola + string("-") + id);
 }
 
 } // namespace multispeech

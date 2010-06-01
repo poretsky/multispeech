@@ -24,6 +24,8 @@
 #ifndef MULTISPEECH_MBROLA_ENGINE_HPP
 #define MULTISPEECH_MBROLA_ENGINE_HPP
 
+#include <string>
+
 #include "speech_engine.hpp"
 
 namespace multispeech
@@ -33,13 +35,23 @@ class mbrola: public speech_engine
 {
 protected:
   // Constructing the object:
-  mbrola(const configuration* conf,
-         const std::string& backend,
-         const std::string& voice_id,
-         const std::string& lang,
-         unsigned int sampling);
+  mbrola(const std::string& backend);
+
+  // Voice name construction:
+  struct voice: public voice_attributes
+  {
+    voice(const voice_attributes& attribs);
+    operator std::string(void) const;
+  };
+
+public:
+  // Known voices:
+  static const voice en1, us1, us2, us3;
 
 private:
+  // Check actual voice availability:
+  bool check_voice(const std::string& voice_name);
+
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 };

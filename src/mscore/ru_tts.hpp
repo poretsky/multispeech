@@ -24,17 +24,26 @@
 #define MULTISPEECH_RU_TTS_ENGINE_HPP
 
 #include "speech_engine.hpp"
+#include "singleton.hpp"
 
 namespace multispeech
 {
 
 class ru_tts: public speech_engine
 {
-public:
+private:
   // Object construction:
-  explicit ru_tts(const configuration* conf);
+  ru_tts(void);
+
+public:
+  // Instantiation by demand:
+  static singleton<ru_tts> instance;
+  friend class singleton<ru_tts>;
 
 private:
+  // Supported voices:
+  static voice_attributes native;
+
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 };

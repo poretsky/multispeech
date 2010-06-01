@@ -27,6 +27,7 @@
 #include "sound_manager.hpp"
 
 #include "audioplayer.hpp"
+#include "config.hpp"
 
 
 namespace multispeech
@@ -38,15 +39,12 @@ using namespace boost;
 
 // Constructing / destroying:
 
-sound_manager::sound_manager(const configuration* conf):
+sound_manager::sound_manager(void):
   state(none),
   business(nothing),
   jobs(new jobs_queue),
   notifying(false),
-  notifications(false),
-  sounds(conf),
-  tones(conf),
-  speech(conf)
+  notifications(false)
 {
 }
 
@@ -211,11 +209,11 @@ void
 sound_manager::execute(const sound_task& task)
 {
   mutex::scoped_lock lock(access);
-  if (!file_player::asynchronous)
+  if (!configuration::sound_async())
     {
       if ((state == running) && !jobs->empty())
         business = playing;
-      if (!tone_generator::asynchronous)
+      if (!configuration::beep_async())
         tones.stop();
       speech.stop();
     }
@@ -228,11 +226,11 @@ void
 sound_manager::execute(const tone_task& task)
 {
   mutex::scoped_lock lock(access);
-  if (!tone_generator::asynchronous)
+  if (!configuration::beep_async())
     {
       if ((state == running) && !jobs->empty())
         business = beeping;
-      if (!file_player::asynchronous)
+      if (!configuration::sound_async())
         sounds.stop();
       speech.stop();
     }
@@ -247,9 +245,9 @@ sound_manager::execute(const speech_task& task)
   mutex::scoped_lock lock(access);
   if ((state == running) && !jobs->empty())
     business = speaking;
-  if (!file_player::asynchronous)
+  if (!configuration::sound_async())
     sounds.stop();
-  if (!tone_generator::asynchronous)
+  if (!configuration::beep_async())
     tones.stop();
   speech.stop();
   speech.start(task);
@@ -424,33 +422,33 @@ sound_manager::next(void)
         business = nothing;
       else if (jobs->front().item_type() == typeid(sound_task))
         {
-          if (!file_player::asynchronous)
+          if (!configuration::sound_async())
             {
-              if (!tone_generator::asynchronous)
+              if (!configuration::beep_async())
                 tones.stop();
               speech.stop();
             }
           sounds.start(jobs->front().item<sound_task>(),
-                       !file_player::asynchronous || (business != playing));
+                       !configuration::sound_async() || (business != playing));
           business = playing;
         }
       else if (jobs->front().item_type() == typeid(tone_task))
         {
-          if (!tone_generator::asynchronous)
+          if (!configuration::beep_async())
             {
-              if (!file_player::asynchronous)
+              if (!configuration::sound_async())
                 sounds.stop();
               speech.stop();
             }
           tones.start(jobs->front().item<tone_task>(),
-                      !tone_generator::asynchronous || (business != beeping));
+                      !configuration::beep_async() || (business != beeping));
           business = beeping;
         }
       else if (jobs->front().item_type() == typeid(speech_task))
         {
-          if (!file_player::asynchronous)
+          if (!configuration::sound_async())
             sounds.stop();
-          if (!tone_generator::asynchronous)
+          if (!configuration::beep_async())
             tones.stop();
           speech.stop();
           speech.start(jobs->front().item<speech_task>());
@@ -474,12 +472,12 @@ sound_manager::working(void)
       else switch (business)
         {
         case playing:
-          if (file_player::asynchronous || !sounds.active())
+          if (configuration::sound_async() || !sounds.active())
             shift();
           else result = true;
           break;
         case beeping:
-          if (tone_generator::asynchronous || !tones.active())
+          if (configuration::beep_async() || !tones.active())
             shift();
           else result = true;
           break;

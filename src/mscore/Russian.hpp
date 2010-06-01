@@ -24,15 +24,22 @@
 #include <map>
 
 #include "language_description.hpp"
+#include "singleton.hpp"
 
 namespace multispeech
 {
 
 class Russian: public language_description
 {
-public:
-  // Object construction:
+private:
+  // This class is not for direct construction,
+  // but for dynamic instantiation by demand.
   Russian(void);
+
+public:
+  // Instantiation by demand.
+  static singleton<Russian> instance;
+  friend class singleton<Russian>;
 
 private:
   // Transliteration table:

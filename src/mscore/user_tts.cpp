@@ -21,8 +21,11 @@
 #include <sysconfig.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/assign.hpp>
 
 #include "user_tts.hpp"
+
+#include "config.hpp"
 
 
 namespace multispeech
@@ -30,21 +33,34 @@ namespace multispeech
 
 using namespace std;
 using namespace boost;
+using namespace boost::assign;
+
+
+// Instantiation mechanism:
+singleton<user_tts> user_tts::instance;
 
 
 // Object construction:
 
-user_tts::user_tts(const configuration* conf, const string& lang):
-  speech_engine(conf, speaker::user, "", lang, sound_format(conf),
-                conf->option_value[options::compose(speaker::user, option_name::sampling)].as<unsigned int>(),
-                conf->option_value[options::compose(speaker::user, option_name::stereo)].as<bool>() ? 2 : 1,
-                !conf->option_value[options::compose(speaker::user, option_name::freq_control)].as<bool>(),
-                conf->option_value[options::compose(speaker::user, option_name::charset)].as<string>())
+user_tts::user_tts(void):
+  speech_engine(speaker::user_defined, !configuration::user_freq_control()),
+  en(make_voice(lang_id::en)),
+  ru(make_voice(lang_id::ru))
 {
-  if (conf->option_value.count(options::compose(name, option_name::command)) &&
-      !conf->option_value[options::compose(name, option_name::command)].as<string>().empty())
-    command(conf->option_value[options::compose(name, option_name::command)].as<string>());
+  if (!configuration::user_tts_command().empty())
+    command(configuration::user_tts_command());
   else throw configuration::error("no command is specified for user defined backend");
+  voices[voice(lang_id::en)] = &en;
+  voices[voice(lang_id::ru)] = &ru;
+}
+
+
+// Public methods:
+
+string
+user_tts::voice(const string& language)
+{
+  return string(speaker::user_defined + string("-") + language);
 }
 
 
@@ -57,25 +73,20 @@ user_tts::voicify(double rate, double pitch)
   format_macros["%rate"] = lexical_cast<string>(rate);
 }
 
-soundfile::format
-user_tts::sound_format(const configuration* conf)
+user_tts::voice_attributes
+user_tts::make_voice(const char* language)
 {
-  soundfile::format result = soundfile::autodetect;
-  if (conf->option_value.count(options::compose(speaker::user, option_name::format)))
+  voice_attributes voice =
     {
-      string fmt(conf->option_value[options::compose(speaker::user, option_name::format)].as<string>());
-      if (!fmt.empty())
-        {
-          if ("s8" == fmt)
-            result = soundfile::s8;
-          else if ("u8" == fmt)
-            result = soundfile::u8;
-          else if ("s16" == fmt)
-            result = soundfile::s16;
-          else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
-        }
-    }
-  return result;
+      configuration::user_tts_charset(language),
+      language,
+      configuration::user_tts_dialect(language),
+      language,
+      configuration::user_sound_format(language),
+      configuration::user_sampling(language),
+      configuration::user_sound_channels(language)
+    };
+  return voice;
 }
 
 } // namespace multispeech

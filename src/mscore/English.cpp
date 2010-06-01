@@ -38,6 +38,10 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Instantiation mechanism:
+singleton<English> English::instance;
+
+
 // Object construction:
 
 English::English(void):

@@ -27,6 +27,8 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 
+#include "soundfile.hpp"
+
 
 namespace multispeech
 {
@@ -46,169 +48,7 @@ namespace speaker
   extern const char* const espeak;
   extern const char* const freephone;
   extern const char* const ru_tts;
-  extern const char* const user;
-};
-
-// Various option names used in sections:
-namespace option_name
-{
-  extern const char* const engine;
-  extern const char* const executable;
-  extern const char* const command;
-  extern const char* const format;
-  extern const char* const sampling;
-  extern const char* const stereo;
-  extern const char* const freq_control;
-  extern const char* const charset;
-  extern const char* const voices;
-  extern const char* const lexicon;
-  extern const char* const log;
-  extern const char* const volume;
-  extern const char* const pitch;
-  extern const char* const rate;
-  extern const char* const char_pitch;
-  extern const char* const char_rate;
-  extern const char* const caps_factor;
-  extern const char* const acceleration;
-};
-
-// Options hierarchy:
-namespace options
-{
-  // Frontend related options:
-  namespace frontend
-  {
-    extern const char* const charset;
-    extern const char* const native_voices;
-    extern const char* const dtk_voices;
-  };
-
-  // SSIP related options:
-  namespace ssip
-  {
-    extern const char* const port;
-    extern const char* const sounds;
-    extern const char* const split_multiline_messages;
-  };
-
-  // General audio output:
-  namespace audio
-  {
-    extern const char* const device;
-    extern const char* const general_volume;
-    extern const char* const latency;
-  };
-
-  // Sound files playing section:
-  namespace sounds
-  {
-    extern const char* const device;
-    extern const char* const volume;
-    extern const char* const asynchronous;
-  };
-
-  // tones producing section:
-  namespace tones
-  {
-    extern const char* const device;
-    extern const char* const volume;
-    extern const char* const sampling;
-    extern const char* const asynchronous;
-  };
-
-  // Speech synthesis section:
-  namespace speech
-  {
-    // General speech control options:
-    extern const char* const device;
-    extern const char* const volume;
-    extern const char* const language;
-  };
-
-  // The next options are declared as strings to be dynamically constructable.
-
-  // English speech section:
-  namespace en
-  {
-    extern const std::string engine;
-    extern const std::string volume;
-    extern const std::string pitch;
-    extern const std::string rate;
-    extern const std::string acceleration;
-
-    // Single letters pronunciation parameters:
-    extern const std::string char_pitch;
-    extern const std::string char_rate;
-    extern const std::string caps_factor;
-  };
-
-  // Russian speech section:
-  namespace ru
-  {
-    extern const std::string engine;
-    extern const std::string volume;
-    extern const std::string pitch;
-    extern const std::string rate;
-    extern const std::string acceleration;
-
-    // Single letters pronunciation parameters:
-    extern const std::string char_pitch;
-    extern const std::string char_rate;
-    extern const std::string caps_factor;
-  };
-
-  // Mbrola based TTS backends options:
-  namespace mbrola
-  {
-    extern const std::string executable;
-    extern const std::string voices;
-  };
-
-  // Espeak based TTS backends options:
-  namespace espeak
-  {
-    extern const std::string executable;
-
-    // Espeak voices assignment:
-    extern const std::string en;
-    extern const std::string ru;
-
-    // Mbrola voices assignment:
-    namespace mbrola
-    {
-      extern const std::string en;
-    };
-  };
-
-  // Freephone TTS backend options:
-  namespace freephone
-  {
-    extern const std::string executable;
-    extern const std::string lexicon;
-  };
-
-  // Ru_tts speech backend options:
-  namespace ru_tts
-  {
-    extern const std::string executable;
-    extern const std::string lexicon;
-    extern const std::string log;
-  };
-
-  // User defined TTS backend options:
-  namespace user
-  {
-    extern const std::string command;
-    extern const std::string format;
-    extern const std::string sampling;
-    extern const std::string stereo;
-    extern const std::string freq_control;
-    extern const std::string charset;
-  };
-
-  // Dynamic options name composing:
-  extern const std::string compose(const std::string& section,
-                                   const std::string& option);
+  extern const char* const user_defined;
 };
 
 // This class is for deriving by the main server class.
@@ -223,7 +63,47 @@ protected:
 
 public:
   // Options value container:
-  boost::program_options::variables_map option_value;
+  static boost::program_options::variables_map option_value;
+
+  // Options value accessors for common use:
+  static const char* input_charset(void);
+  static bool native_notation(void);
+  static bool dtk_notation(void);
+  static unsigned int tcp_port(void);
+  static const std::string& sounds_repository(void);
+  static bool split_multiline_messages(void);
+  static const std::string& default_audio_device(void);
+  static float general_volume(void);
+  static double audio_latency(void);
+  static const std::string& sound_output_device(void);
+  static float sound_volume(void);
+  static bool sound_async(void);
+  static const std::string& beep_device(void);
+  static float beep_volume(void);
+  static unsigned int beep_sampling(void);
+  static bool beep_async(void);
+  static const std::string& speech_output_device(void);
+  static float speech_volume(const std::string& voice);
+  static double speech_rate(const std::string& voice);
+  static double voice_pitch(const std::string& voice);
+  static double char_rate(void);
+  static double char_pitch(void);
+  static double caps_factor(void);
+  static const std::string& default_language(void);
+  static const std::string& speech_backend(const std::string& language);
+  static const std::string& backend_voice(const std::string& backend, const std::string& language);
+  static const std::string& backend_executable(const std::string& backend);
+  static const std::string& mbrola_voices(void);
+  static const std::string& backend_lexicon(const std::string& backend);
+  static const std::string& backend_log(const std::string& backend);
+  static const std::string& user_tts_command(void);
+  static bool user_freq_control(void);
+  static soundfile::format user_sound_format(const std::string& language);
+  static unsigned int user_sampling(const std::string& language);
+  static unsigned int user_sound_channels(const std::string& language);
+  static const char* user_tts_charset(const std::string& language);
+  static const char* user_tts_dialect(const std::string& language);
+  static double user_tts_acceleration(const std::string& voice);
 
   // What we are parsing now:
   static std::string stage;
@@ -236,12 +116,62 @@ public:
   };
 
 private:
+  // Option name composer:
+  class option: public std::string
+  {
+  public:
+    // Remember option name:
+    explicit option(const std::string& name);
+
+    // Compose full name relative to specified section:
+    option operator()(const std::string& section);
+
+    // Access name as C-string:
+    operator const char*(void);
+
+    // Relative option names:
+    static option charset;
+    static option native_notation;
+    static option dtk_notation;
+    static option port;
+    static option sounds;
+    static option split_multiline_messages;
+    static option device;
+    static option latency;
+    static option asynchronous;
+    static option engine;
+    static option executable;
+    static option command;
+    static option format;
+    static option sampling;
+    static option stereo;
+    static option freq_control;
+    static option voices;
+    static option lexicon;
+    static option log;
+    static option language;
+    static option voice;
+    static option voice_name;
+    static option dialect;
+    static option volume;
+    static option pitch;
+    static option rate;
+    static option caps_factor;
+    static option acceleration;
+  };
+
+  // General sections:
+  static const std::string frontend;
+  static const std::string ssip;
+  static const std::string audio;
+  static const std::string sounds;
+  static const std::string tones;
+  static const std::string speech;
+  static const std::string character;
+
   // Read configuration file:
   void read(const boost::filesystem::path& config_file,
             const boost::program_options::options_description& conf);
-
-  // Duplication protector:
-  static bool initialized;
 
   // Hardcoded default paths:
   static const boost::filesystem::path mbrola_voices_default;
