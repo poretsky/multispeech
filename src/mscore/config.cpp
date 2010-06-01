@@ -175,7 +175,7 @@ configuration::configuration(int argc, char* argv[])
     // General audio options:
     (option::device(audio), value<string>()->default_value(""))
     (option::volume(audio), value<float>(&audioplayer::general_volume)->default_value(0.8))
-    (option::latency(audio), value<double>(&audioplayer::suggested_latency)->default_value(0.0))
+    (option::latency(audio), value<double>()->default_value(0.0))
 
     // Sound files playing section:
     (option::device(sounds), value<string>()->default_value(""))

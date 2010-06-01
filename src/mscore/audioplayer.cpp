@@ -35,7 +35,6 @@ using namespace portaudio;
 
 // Static data:
 condition audioplayer::complete;
-PaTime audioplayer::suggested_latency = 20;
 float audioplayer::general_volume = 0.8;
 
 
@@ -51,7 +50,7 @@ audioplayer::audioplayer(const string& device_name):
   string devname(device_name);
   System& system = System::instance();
   PaDeviceIndex device = system.defaultOutputDevice().index();
-  PaTime latency = suggested_latency;
+  PaTime latency = configuration::audio_latency();
   if (devname.empty())
     {
       devname = system.deviceByIndex(device).name();

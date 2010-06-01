@@ -64,7 +64,6 @@ public:
   static boost::condition complete;
 
   // Configurable parameters:
-  static PaTime suggested_latency;
   static float general_volume;
 
 protected:
