@@ -35,7 +35,6 @@ using namespace portaudio;
 
 // Static data:
 condition audioplayer::complete;
-float audioplayer::general_volume = 0.8;
 
 
 // Construct / destroy:
@@ -99,7 +98,7 @@ audioplayer::active(void)
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
-  volume_level = volume * general_volume;
+  volume_level = volume * configuration::general_volume();
   params.setSampleRate(static_cast<double>(rate));
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())

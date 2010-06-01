@@ -63,9 +63,6 @@ public:
   // Completion notifier:
   static boost::condition complete;
 
-  // Configurable parameters:
-  static float general_volume;
-
 protected:
   // Use in derived classes to start audio stream playing:
   void start_playback(float volume, unsigned int rate, unsigned int channels);

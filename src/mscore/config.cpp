@@ -29,9 +29,8 @@
 
 #include "config.hpp"
 
-#include "audioplayer.hpp"
-#include "speech_engine.hpp"
 #include "server.hpp"
+#include "speech_engine.hpp"
 #include "mbrola.hpp"
 #include "espeak.hpp"
 #include "user_tts.hpp"
@@ -174,7 +173,7 @@ configuration::configuration(int argc, char* argv[])
 
     // General audio options:
     (option::device(audio), value<string>()->default_value(""))
-    (option::volume(audio), value<float>(&audioplayer::general_volume)->default_value(0.8))
+    (option::volume(audio), value<float>()->default_value(0.8))
     (option::latency(audio), value<double>()->default_value(0.0))
 
     // Sound files playing section:
