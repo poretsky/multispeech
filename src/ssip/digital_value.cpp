@@ -38,7 +38,7 @@ const boost::regex digital_value::pattern("^([+-]?\\d+)\\s*$");
 
 // Main constructor:
 
-digital_value::digital_value(double& holder):
+digital_value::digital_value(float& holder):
   factor(holder)
 {
 }
@@ -60,7 +60,7 @@ digital_value::parse(const string& request)
         result = too_high;
       else
         {
-          factor = static_cast<double>(value);
+          factor = static_cast<float>(value);
           factor -= (top + bottom) / 2;
           factor /= (top - bottom) / 2;
           factor += 1.0;

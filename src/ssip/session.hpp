@@ -119,9 +119,9 @@ private:
   bool inside_block;
   priority::category importance;
   multispeech::punctuations::mode punctuation_mode;
-  double rate_factor;
-  double pitch_factor;
-  double volume_factor;
+  float rate_factor;
+  float pitch_factor;
+  float volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
   size_t pause_context_size;

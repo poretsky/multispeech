@@ -66,13 +66,13 @@ inline_parser::parse(string& data)
 
 // Protected methods:
 
-double
+float
 inline_parser::get_value(std::string& data, const boost::regex& extractor)
 {
   smatch parse_result;
-  double result_value = -1.0;
+  float result_value = -1.0;
   if (regex_search(data, parse_result, extractor) &&
       parse_result[2].matched)
-    result_value = lexical_cast<double>(string(parse_result[2].first, parse_result[2].second));
+    result_value = lexical_cast<float>(string(parse_result[2].first, parse_result[2].second));
   return result_value;
 }

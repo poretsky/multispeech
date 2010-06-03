@@ -45,7 +45,7 @@ private:
   static voice_attributes native;
 
   // Make up voice parameters for backend:
-  void voicify(double rate, double pitch = 1.0);
+  void voicify(float rate, float pitch = 1.0);
 };
 
 } // namespace multispeech

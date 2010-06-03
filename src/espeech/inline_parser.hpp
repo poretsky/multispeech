@@ -45,13 +45,13 @@ public:
   bool parse(std::string& data);
 
   // Extracted values:
-  double volume, rate, pitch, deviation;
+  float volume, rate, pitch, deviation;
   wchar_t punctuations_mode;
 
 protected:
   // Value extraction helper to ease actual parser design
   // in derived classes:
-  double get_value(std::string& data, const boost::regex& extractor);
+  float get_value(std::string& data, const boost::regex& extractor);
 
 private:
   // Patterns for parsing:

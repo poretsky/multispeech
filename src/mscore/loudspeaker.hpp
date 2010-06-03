@@ -52,7 +52,7 @@ public:
       unsigned int sampling;
       unsigned int length;
     } silence;
-    double deviation;
+    float deviation;
   };
 
   // Object constructors:

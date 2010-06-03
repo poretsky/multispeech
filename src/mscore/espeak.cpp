@@ -73,7 +73,7 @@ espeak::espeak(void):
 
 // Making up voice parameters:
 void
-espeak::voicify(double rate, double pitch)
+espeak::voicify(float rate, float pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>((atan((pitch * pitch) - 1) * 50.0 / M_2_PI) + 50.0);
   format_macros["%rate"] = lexical_cast<string>(rate * 170.0);

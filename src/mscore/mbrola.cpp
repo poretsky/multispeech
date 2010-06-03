@@ -86,7 +86,7 @@ mbrola::check_voice(const string& voice_name)
 // Making up voice parameters:
 
 void
-mbrola::voicify(double rate, double pitch)
+mbrola::voicify(float rate, float pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>(pitch);
   format_macros["%rate"] = lexical_cast<string>(1.0 / rate);

@@ -66,7 +66,7 @@ public:
 
   // Initial defaults for session environment:
   multispeech::punctuations::mode punctuation_mode;
-  double rate_factor, pitch_factor, volume_factor;
+  float rate_factor, pitch_factor, volume_factor;
   bool spelling;
   capitalization::mode capitalization_mode;
   size_t pause_context_size;

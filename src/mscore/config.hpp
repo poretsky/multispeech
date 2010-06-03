@@ -74,7 +74,7 @@ public:
   static bool split_multiline_messages(void);
   static const std::string& default_audio_device(void);
   static float general_volume(void);
-  static double audio_latency(void);
+  static float audio_latency(void);
   static const std::string& sound_output_device(void);
   static float sound_volume(void);
   static bool sound_async(void);
@@ -84,11 +84,11 @@ public:
   static bool beep_async(void);
   static const std::string& speech_output_device(void);
   static float speech_volume(const std::string& voice = "");
-  static double speech_rate(const std::string& voice = "");
-  static double voice_pitch(const std::string& voice = "");
-  static double char_rate(void);
-  static double char_pitch(void);
-  static double caps_factor(void);
+  static float speech_rate(const std::string& voice = "");
+  static float voice_pitch(const std::string& voice = "");
+  static float char_rate(void);
+  static float char_pitch(void);
+  static float caps_factor(void);
   static const std::string& default_language(void);
   static const std::string& speech_backend(const std::string& language);
   static const std::string& backend_voice(const std::string& backend, const std::string& language);
@@ -103,7 +103,7 @@ public:
   static unsigned int user_sound_channels(const std::string& language);
   static const char* user_tts_charset(const std::string& language);
   static const char* user_tts_dialect(const std::string& language);
-  static double user_tts_acceleration(const std::string& voice);
+  static float user_tts_acceleration(const std::string& voice);
 
   // What we are parsing now:
   static std::string stage;

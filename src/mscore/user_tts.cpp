@@ -67,7 +67,7 @@ user_tts::voice(const string& language)
 // Private methods:
 
 void
-user_tts::voicify(double rate, double pitch)
+user_tts::voicify(float rate, float pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>(pitch);
   format_macros["%rate"] = lexical_cast<string>(rate);

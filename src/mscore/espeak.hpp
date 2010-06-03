@@ -54,7 +54,7 @@ public:
   static const voice en_default, ru;
 
   // Make up voice parameters for backend:
-  void voicify(double rate, double pitch = 1.0);
+  void voicify(float rate, float pitch = 1.0);
 };
 
 // Espeak+Mbrola backend.

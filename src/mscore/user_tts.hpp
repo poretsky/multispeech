@@ -41,7 +41,7 @@ private:
   const voice_attributes en, ru;
 
   // Make up voice parameters for backend:
-  void voicify(double rate, double pitch = 1.0);
+  void voicify(float rate, float pitch = 1.0);
 
   // Extract voice parameters from the configuration:
   static voice_attributes make_voice(const char* language);

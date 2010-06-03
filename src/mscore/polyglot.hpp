@@ -44,14 +44,14 @@ public:
   speech_task text_task(const std::string& s,
                         bool use_translation = false);
   speech_task text_task(const std::string& s,
-                        double volume, double rate,
-                        double pitch, double deviation,
+                        float volume, float rate,
+                        float pitch, float deviation,
                         bool use_translation = false);
   speech_task letter_task(const std::string& s);
 
   // Make up special task to produce silence for the time
   // duration specified in seconds:
-  speech_task silence(double duration);
+  speech_task silence(float duration);
 
   // Choose language:
   void language(const std::string& id);

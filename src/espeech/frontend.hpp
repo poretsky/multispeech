@@ -93,7 +93,7 @@ private:
     beep_parameters, lang_parameters, tts_parameters, garbage;
 
   // Reference value:
-  static const double rate_scale = 200.0;
+  static const float rate_scale = 200.0;
 };
 
 #endif

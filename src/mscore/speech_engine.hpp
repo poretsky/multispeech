@@ -83,12 +83,12 @@ public:
   const std::string name;
 
   // Voice and speech parameters control:
-  static void volume(double value = 1.0);
-  static void voice_pitch(double value = 1.0);
-  static void speech_rate(double value = 1.0);
-  static void sampling_deviation(double value = 1.0);
-  static void char_voice_pitch(double value = 1.0);
-  static void char_speech_rate(double value = 1.0);
+  static void volume(float value = 1.0);
+  static void voice_pitch(float value = 1.0);
+  static void speech_rate(float value = 1.0);
+  static void sampling_deviation(float value = 1.0);
+  static void char_voice_pitch(float value = 1.0);
+  static void char_speech_rate(float value = 1.0);
 
   // Voice switching:
   void voice_setup(const std::string& voice_name);
@@ -98,15 +98,15 @@ public:
   speech_task text_task(const std::wstring& s,
                         bool use_translation = false);
   speech_task text_task(const std::wstring& s,
-                        double volume, double rate,
-                        double pitch, double deviation,
+                        float volume, float rate,
+                        float pitch, float deviation,
                         bool use_translation = false,
                         bool allpuncts = false);
   speech_task letter_task(std::wstring s);
 
   // Make up special task to produce silence for the time
   // duration specified in seconds:
-  speech_task silence(double duration);
+  speech_task silence(float duration);
 
   // Pointer to the current language preprocessor:
   language_description* language;
@@ -143,13 +143,13 @@ private:
 
   // General voice and speech parameters.
   // It is assumed that normal value is 1.0.
-  static double general_volume, general_pitch, general_rate;
-  static double char_pitch, char_rate;
-  static double general_deviation;
+  static float general_volume, general_pitch, general_rate;
+  static float char_pitch, char_rate;
+  static float general_deviation;
 
   // Voice specific speech parameters that are set up
   // from configuration at the voice assigning time:
-  double volume_factor, rate_factor, pitch_factor, acceleration;
+  float volume_factor, rate_factor, pitch_factor, acceleration;
 
   // Deviate sampling frequency by player:
   bool playing_deviation;
@@ -162,7 +162,7 @@ private:
 
   // Make up voice parameters for backend.
   // Should be defined in derived classes for particular speech engines.
-  virtual void voicify(double rate, double pitch = 1.0) = 0;
+  virtual void voicify(float rate, float pitch = 1.0) = 0;
 };
 
 } // namespace multispeech

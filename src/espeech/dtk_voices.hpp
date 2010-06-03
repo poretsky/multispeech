@@ -45,7 +45,7 @@ public:
 
 private:
   // Reference values:
-  static const double rate_scale = 200.0, volume_scale = 50.0;
+  static const float rate_scale = 200.0, volume_scale = 50.0;
 
   // Patterns for parameters extraction:
   const boost::regex person_extractor, pitch_range_extractor,
@@ -53,7 +53,7 @@ private:
     volume_extractor, mode_extractor, save_cmd_detector;
 
   // Saved voice parameters:
-  double val_pitch, val_deviation;
+  float val_pitch, val_deviation;
 
   // Actual parameters extraction methods:
   void get_person(std::string& data);

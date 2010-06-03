@@ -224,7 +224,7 @@ frontend::do_set_char_scale(void)
 {
   string data(beyond());
   if (regex_match(data, validate_float))
-    speech_engine::char_voice_pitch(lexical_cast<double>(data));
+    speech_engine::char_voice_pitch(lexical_cast<float>(data));
   return true;
 }
 
@@ -242,7 +242,7 @@ frontend::do_set_speech_rate(void)
 {
   string value(beyond());
   if (regex_match(value, validate_float))
-    speech_engine::speech_rate(lexical_cast<double>(value) / rate_scale);
+    speech_engine::speech_rate(lexical_cast<float>(value) / rate_scale);
   return true;
 }
 
@@ -289,9 +289,9 @@ bool
 frontend::do_enqueue_silence(void)
 {
   string value(beyond());
-  double duration = 0.05;
+  float duration = 0.05;
   if (regex_match(value, validate_float))
-    duration = lexical_cast<double>(value) / 1000.0;
+    duration = lexical_cast<float>(value) / 1000.0;
   enqueue(job(silence(duration)));
   return true;
 }
@@ -340,7 +340,7 @@ frontend::do_sync_state(void)
     {
       set_punctuations_mode(params[0]);
       if (parse_result[3].matched)
-        speech_engine::speech_rate(lexical_cast<double>(string(parse_result[3].first, parse_result[3].second))
+        speech_engine::speech_rate(lexical_cast<float>(string(parse_result[3].first, parse_result[3].second))
                                    / rate_scale);
     }
   return true;

@@ -108,8 +108,8 @@ polyglot::text_task(const string& s, bool use_translation)
 
 speech_task
 polyglot::text_task(const string& s,
-                double volume, double rate,
-                double pitch, double deviation,
+                float volume, float rate,
+                float pitch, float deviation,
                 bool use_translation)
 {
   intern_string t(s, input_charset);
@@ -133,7 +133,7 @@ polyglot::letter_task(const string& s)
 }
 
 speech_task
-polyglot::silence(double duration)
+polyglot::silence(float duration)
 {
   if (talker[lang])
     return talker[lang]->silence(duration);

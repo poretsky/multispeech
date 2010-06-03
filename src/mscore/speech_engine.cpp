@@ -57,12 +57,12 @@ speech_engine::charset_map speech_engine::encoders = map_list_of
   ("", locale(""));
 
 // Common voice and speech parameters:
-double speech_engine::general_volume = 1.0;
-double speech_engine::general_pitch = 1.0;
-double speech_engine::general_rate = 1.0;
-double speech_engine::general_deviation = 1.0;
-double speech_engine::char_pitch = 1.0;
-double speech_engine::char_rate = 1.0;
+float speech_engine::general_volume = 1.0;
+float speech_engine::general_pitch = 1.0;
+float speech_engine::general_rate = 1.0;
+float speech_engine::general_deviation = 1.0;
+float speech_engine::char_pitch = 1.0;
+float speech_engine::char_rate = 1.0;
 
 
 // Constructing and destroying:
@@ -85,37 +85,37 @@ speech_engine::~speech_engine(void)
 // Public methods for speech and voice control:
 
 void
-speech_engine::volume(double value)
+speech_engine::volume(float value)
 {
   general_volume = value;
 }
 
 void
-speech_engine::voice_pitch(double value)
+speech_engine::voice_pitch(float value)
 {
   general_pitch = value;
 }
 
 void
-speech_engine::speech_rate(double value)
+speech_engine::speech_rate(float value)
 {
   general_rate = value;
 }
 
 void
-speech_engine::sampling_deviation(double value)
+speech_engine::sampling_deviation(float value)
 {
   general_deviation = value;
 }
 
 void
-speech_engine::char_voice_pitch(double value)
+speech_engine::char_voice_pitch(float value)
 {
   char_pitch = value;
 }
 
 void
-speech_engine::char_speech_rate(double value)
+speech_engine::char_speech_rate(float value)
 {
   char_rate = value;
 }
@@ -170,15 +170,15 @@ speech_engine::text_task(const wstring& s, bool use_translation)
 
 speech_task
 speech_engine::text_task(const wstring& s,
-                         double volume, double rate,
-                         double pitch, double deviation,
+                         float volume, float rate,
+                         float pitch, float deviation,
                          bool use_translation,
                          bool allpuncts)
 {
   pipeline::script commands;
   pair<string, string> fmt;
   wstring prepared;
-  double freq = numeric_cast<double>(current_voice->sampling);
+  float freq = numeric_cast<float>(current_voice->sampling);
   speech_task::details playing_params;
 
   // Parse speech parameters and prepare the voice.
@@ -187,7 +187,7 @@ speech_engine::text_task(const wstring& s,
       if (current_voice->format != soundfile::autodetect)
         {
           freq /= (deviation > 0.0) ? deviation : general_deviation;
-          playing_params.sound.sampling = numeric_cast<unsigned int>(nearbyint(freq));
+          playing_params.sound.sampling = numeric_cast<unsigned int>(nearbyintf(freq));
           playing_params.sound.channels = current_voice->channels;
         }
       else playing_params.deviation = (deviation > 0.0) ? deviation : general_deviation;
@@ -198,7 +198,7 @@ speech_engine::text_task(const wstring& s,
       playing_params.sound.sampling = current_voice->sampling;
       playing_params.sound.channels = current_voice->channels;
       freq *= (deviation > 0.0) ? deviation : general_deviation;
-      format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
+      format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyintf(freq)));
     }
   voicify(configuration::speech_rate() * rate_factor *
           ((rate > 0.0) ? rate : general_rate),
@@ -239,8 +239,8 @@ speech_engine::text_task(const wstring& s,
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  double pitch = configuration::char_pitch() * char_pitch;
-  double rate = configuration::char_rate() * char_rate;
+  float pitch = configuration::char_pitch() * char_pitch;
+  float rate = configuration::char_rate() * char_rate;
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))
@@ -251,10 +251,10 @@ speech_engine::letter_task(wstring s)
 }
 
 speech_task
-speech_engine::silence(double duration)
+speech_engine::silence(float duration)
 {
   return speech_task(current_voice->sampling,
-                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(current_voice->sampling) * duration)));
+                     numeric_cast<unsigned int>(nearbyintf(numeric_cast<float>(current_voice->sampling) * duration)));
 }
 
 

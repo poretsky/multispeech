@@ -719,7 +719,7 @@ message::code
 session::set_rate(destination& target)
 {
   message::code rc = OK_RATE_SET;
-  double value;
+  float value;
   digital_value rate(value);
   digital_value::status result = rate.parse(settings::beyond());
   switch (result)
@@ -771,7 +771,7 @@ message::code
 session::set_pitch(destination& target)
 {
   message::code rc = OK_PITCH_SET;
-  double value;
+  float value;
   digital_value pitch(value);
   digital_value::status result = pitch.parse(settings::beyond());
   switch (result)
@@ -823,7 +823,7 @@ message::code
 session::set_volume(destination& target)
 {
   message::code rc = OK_VOLUME_SET;
-  double value;
+  float value;
   digital_value volume(value);
   digital_value::status result = volume.parse(settings::beyond());
   switch (result)

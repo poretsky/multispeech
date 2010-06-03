@@ -106,7 +106,7 @@ void
 dtk_voices::extract_parameters(string& data)
 {
   smatch parse_result;
-  double pitch_range = get_value(data, pitch_range_extractor),
+  float pitch_range = get_value(data, pitch_range_extractor),
     average_pitch = get_value(data, average_pitch_extractor),
     head_size = get_value(data, head_size_extractor);
   pitch = 1.0;

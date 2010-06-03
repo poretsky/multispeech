@@ -173,7 +173,7 @@ configuration::configuration(int argc, char* argv[])
     // General audio options:
     (option::device(audio), value<string>()->default_value(""))
     (option::volume(audio), value<float>()->default_value(0.8))
-    (option::latency(audio), value<double>()->default_value(0.0))
+    (option::latency(audio), value<float>()->default_value(0.0))
 
     // Sound files playing section:
     (option::device(sounds), value<string>()->default_value(""))
@@ -189,11 +189,11 @@ configuration::configuration(int argc, char* argv[])
     // General speech control options:
     (option::device(speech), value<string>()->default_value(""))
     (option::volume(speech), value<float>()->default_value(1.0))
-    (option::rate(speech), value<double>()->default_value(1.0))
-    (option::pitch(speech), value<double>()->default_value(1.0))
-    (option::rate(character)(speech), value<double>()->default_value(1.0))
-    (option::pitch(character)(speech), value<double>()->default_value(1.0))
-    (option::caps_factor(speech), value<double>()->default_value(1.2))
+    (option::rate(speech), value<float>()->default_value(1.0))
+    (option::pitch(speech), value<float>()->default_value(1.0))
+    (option::rate(character)(speech), value<float>()->default_value(1.0))
+    (option::pitch(character)(speech), value<float>()->default_value(1.0))
+    (option::caps_factor(speech), value<float>()->default_value(1.2))
     (option::language(speech), value<string>()->default_value(lang_id::autodetect))
 
     // Speech engine choosing options:
@@ -203,30 +203,30 @@ configuration::configuration(int argc, char* argv[])
     // Per voice speech options for Mbrola voices:
     (option::voice_name(mbrola::en1), value<string>())
     (option::volume(mbrola::en1), value<float>()->default_value(1.0))
-    (option::rate(mbrola::en1), value<double>()->default_value(1.0))
-    (option::pitch(mbrola::en1), value<double>()->default_value(1.0))
+    (option::rate(mbrola::en1), value<float>()->default_value(1.0))
+    (option::pitch(mbrola::en1), value<float>()->default_value(1.0))
     (option::voice_name(mbrola::us1), value<string>())
     (option::volume(mbrola::us1), value<float>()->default_value(1.0))
-    (option::rate(mbrola::us1), value<double>()->default_value(1.0))
-    (option::pitch(mbrola::us1), value<double>()->default_value(1.0))
+    (option::rate(mbrola::us1), value<float>()->default_value(1.0))
+    (option::pitch(mbrola::us1), value<float>()->default_value(1.0))
     (option::voice_name(mbrola::us2), value<string>())
     (option::volume(mbrola::us2), value<float>()->default_value(1.0))
-    (option::rate(mbrola::us2), value<double>()->default_value(1.0))
-    (option::pitch(mbrola::us2), value<double>()->default_value(1.0))
+    (option::rate(mbrola::us2), value<float>()->default_value(1.0))
+    (option::pitch(mbrola::us2), value<float>()->default_value(1.0))
     (option::voice_name(mbrola::us3), value<string>())
     (option::volume(mbrola::us3), value<float>()->default_value(1.0))
-    (option::rate(mbrola::us3), value<double>()->default_value(1.0))
-    (option::pitch(mbrola::us3), value<double>()->default_value(1.0))
+    (option::rate(mbrola::us3), value<float>()->default_value(1.0))
+    (option::pitch(mbrola::us3), value<float>()->default_value(1.0))
 
     // Per voice speech options for Espeak voices:
     (option::voice_name(espeak::en_default), value<string>()->default_value("default"))
     (option::volume(espeak::en_default), value<float>()->default_value(1.0))
-    (option::rate(espeak::en_default), value<double>()->default_value(1.0))
-    (option::pitch(espeak::en_default), value<double>()->default_value(1.0))
+    (option::rate(espeak::en_default), value<float>()->default_value(1.0))
+    (option::pitch(espeak::en_default), value<float>()->default_value(1.0))
     (option::voice_name(espeak::ru), value<string>()->default_value("russian_test"))
     (option::volume(espeak::ru), value<float>()->default_value(1.0))
-    (option::rate(espeak::ru), value<double>()->default_value(1.0))
-    (option::pitch(espeak::ru), value<double>()->default_value(1.0))
+    (option::rate(espeak::ru), value<float>()->default_value(1.0))
+    (option::pitch(espeak::ru), value<float>()->default_value(1.0))
 
     // Mbrola based backends options:
     (option::executable(speaker::mbrola), value<string>()->default_value(speaker::mbrola))
@@ -247,8 +247,8 @@ configuration::configuration(int argc, char* argv[])
     (option::log(speaker::ru_tts), value<string>()->default_value(""))
     (option::voice_name(speaker::ru_tts), value<string>())
     (option::volume(speaker::ru_tts), value<float>()->default_value(1.0))
-    (option::rate(speaker::ru_tts), value<double>()->default_value(1.0))
-    (option::pitch(speaker::ru_tts), value<double>()->default_value(1.0))
+    (option::rate(speaker::ru_tts), value<float>()->default_value(1.0))
+    (option::pitch(speaker::ru_tts), value<float>()->default_value(1.0))
 
     // User defined TTS backend options:
     (option::command(speaker::user_defined), value<string>()->default_value(""))
@@ -259,22 +259,22 @@ configuration::configuration(int argc, char* argv[])
     (option::sampling(user_tts::voice(lang_id::en)), value<unsigned int>()->default_value(22050))
     (option::stereo(user_tts::voice(lang_id::en)), bool_switch()->default_value(false))
     (option::charset(user_tts::voice(lang_id::en)), value<string>()->default_value(""))
-    (option::acceleration(user_tts::voice(lang_id::en)), value<double>()->default_value(0.0))
+    (option::acceleration(user_tts::voice(lang_id::en)), value<float>()->default_value(0.0))
     (option::voice_name(user_tts::voice(lang_id::en)), value<string>())
     (option::dialect(user_tts::voice(lang_id::en)), value<string>()->default_value(""))
     (option::volume(user_tts::voice(lang_id::en)), value<float>()->default_value(1.0))
-    (option::rate(user_tts::voice(lang_id::en)), value<double>()->default_value(1.0))
-    (option::pitch(user_tts::voice(lang_id::en)), value<double>()->default_value(1.0))
+    (option::rate(user_tts::voice(lang_id::en)), value<float>()->default_value(1.0))
+    (option::pitch(user_tts::voice(lang_id::en)), value<float>()->default_value(1.0))
     (option::format(user_tts::voice(lang_id::ru)), value<string>())
     (option::sampling(user_tts::voice(lang_id::ru)), value<unsigned int>()->default_value(22050))
     (option::stereo(user_tts::voice(lang_id::ru)), bool_switch()->default_value(false))
     (option::charset(user_tts::voice(lang_id::ru)), value<string>()->default_value(""))
-    (option::acceleration(user_tts::voice(lang_id::ru)), value<double>()->default_value(0.0))
+    (option::acceleration(user_tts::voice(lang_id::ru)), value<float>()->default_value(0.0))
     (option::voice_name(user_tts::voice(lang_id::ru)), value<string>())
     (option::dialect(user_tts::voice(lang_id::ru)), value<string>()->default_value(""))
     (option::volume(user_tts::voice(lang_id::ru)), value<float>()->default_value(1.0))
-    (option::rate(user_tts::voice(lang_id::ru)), value<double>()->default_value(1.0))
-    (option::pitch(user_tts::voice(lang_id::ru)), value<double>()->default_value(1.0));
+    (option::rate(user_tts::voice(lang_id::ru)), value<float>()->default_value(1.0))
+    (option::pitch(user_tts::voice(lang_id::ru)), value<float>()->default_value(1.0));
 
   // Parse config files and store values
   if (cl_opt.count("config"))
@@ -358,10 +358,10 @@ configuration::general_volume(void)
   return option_value[option::volume(audio)].as<float>();
 }
 
-double
+float
 configuration::audio_latency(void)
 {
-  return option_value[option::latency(audio)].as<double>();
+  return option_value[option::latency(audio)].as<float>();
 }
 
 const string&
@@ -429,38 +429,38 @@ configuration::speech_volume(const string& voice)
     option_value[option::volume(voice)].as<float>();
 }
 
-double
+float
 configuration::speech_rate(const string& voice)
 {
   return voice.empty() ?
-    option_value[option::rate(speech)].as<double>() :
-    option_value[option::rate(voice)].as<double>();
+    option_value[option::rate(speech)].as<float>() :
+    option_value[option::rate(voice)].as<float>();
 }
 
-double
+float
 configuration::voice_pitch(const string& voice)
 {
   return voice.empty() ?
-    option_value[option::pitch(speech)].as<double>() :
-    option_value[option::pitch(voice)].as<double>();
+    option_value[option::pitch(speech)].as<float>() :
+    option_value[option::pitch(voice)].as<float>();
 }
 
-double
+float
 configuration::char_rate(void)
 {
-  return option_value[option::rate(character)(speech)].as<double>();
+  return option_value[option::rate(character)(speech)].as<float>();
 }
 
-double
+float
 configuration::char_pitch(void)
 {
-  return option_value[option::pitch(character)(speech)].as<double>();
+  return option_value[option::pitch(character)(speech)].as<float>();
 }
 
-double
+float
 configuration::caps_factor(void)
 {
-  return option_value[option::caps_factor(speech)].as<double>();
+  return option_value[option::caps_factor(speech)].as<float>();
 }
 
 const string&
@@ -561,10 +561,10 @@ configuration::user_tts_dialect(const string& language)
   return dialect.empty() ? "none" : dialect.c_str();
 }
 
-double
+float
 configuration::user_tts_acceleration(const string& voice)
 {
-  return option_value[option::acceleration(voice)].as<double>();
+  return option_value[option::acceleration(voice)].as<float>();
 }
 
 

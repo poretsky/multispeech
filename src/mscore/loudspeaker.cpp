@@ -127,7 +127,7 @@ loudspeaker::start(const speech_task& speech)
           SF_INFO::format |= SF_FORMAT_RAW;
           source = sf_open_fd(sfd, SFM_READ, this, 0);
           if (speech.playing.deviation > 0.0)
-            playing_rate = numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(samplerate) / speech.playing.deviation));
+            playing_rate = numeric_cast<unsigned int>(nearbyintf(numeric_cast<float>(samplerate) / speech.playing.deviation));
         }
       if (source)
         {

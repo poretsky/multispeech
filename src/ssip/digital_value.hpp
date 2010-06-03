@@ -42,7 +42,7 @@ public:
 
   // Main constructor takes reference to the variable to be set
   // as an argument.
-  explicit digital_value(double& holder);
+  explicit digital_value(float& holder);
 
   // Validate and parse request.
   status parse(const std::string& request);
@@ -50,14 +50,14 @@ public:
 private:
   // Here we store the factor that will be applied to the configured
   // parameter value. It should never be zero or negative.
-  double& factor;
+  float& factor;
 
   // Allowed value boundaries.
   static const int bottom = -100;
   static const int top = 100;
 
   // Factor value used instead of zero.
-  static const double epsilon = 0.0001;
+  static const float epsilon = 0.0001;
 
   // Pattern for validation.
   static const boost::regex pattern;

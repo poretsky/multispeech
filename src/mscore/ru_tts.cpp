@@ -90,10 +90,10 @@ ru_tts::ru_tts(void):
 // Making up voice parameters:
 
 void
-ru_tts::voicify(double rate, double pitch)
+ru_tts::voicify(float rate, float pitch)
 {
-  double p = pitch * pitch;
-  double r = 0.5;
+  float p = pitch * pitch;
+  float r = 0.5;
   if (rate <= 0.0)
     r = 1.0;
   else if (rate >= 2.0)
