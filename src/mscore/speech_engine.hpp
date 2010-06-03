@@ -71,20 +71,6 @@ namespace multispeech
 
 class speech_engine
 {
-public:
-  // Voice attributes mapping:
-  struct voice_attributes
-  {
-    const std::string charset;
-    const std::string language;
-    const char* dialect;
-    const char* id;
-    soundfile::format format;
-    unsigned int sampling;
-    unsigned int channels;
-  };
-  typedef std::map<const std::string, const voice_attributes*> voice_map;
-
 protected:
   // Object constructor:
   speech_engine(const std::string& backend, bool deviate);
@@ -95,7 +81,6 @@ public:
 
   // General attributes:
   const std::string name;
-  voice_map voices;
 
   // Voice and speech parameters control:
   static void volume(double value = 1.0);
@@ -127,6 +112,19 @@ public:
   language_description* language;
 
 protected:
+  // Voice attributes mapping:
+  struct voice_attributes
+  {
+    const std::string charset;
+    const std::string language;
+    const char* dialect;
+    const char* id;
+    soundfile::format format;
+    unsigned int sampling;
+    unsigned int channels;
+  };
+  std::map<const std::string, const voice_attributes*> voices;
+
   // Add a new command pattern to the beginning of the list:
   void command(const std::string& pattern);
 
@@ -146,7 +144,7 @@ private:
   // General voice and speech parameters.
   // It is assumed that normal value is 1.0.
   static double general_volume, general_pitch, general_rate;
-  static double char_pitch, char_rate, caps_factor;
+  static double char_pitch, char_rate;
   static double general_deviation;
 
   // Make these options configurable:

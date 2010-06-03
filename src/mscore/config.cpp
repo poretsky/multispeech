@@ -194,7 +194,7 @@ configuration::configuration(int argc, char* argv[])
     (option::pitch(speech), value<double>(&speech_engine::general_pitch))
     (option::rate(character)(speech), value<double>(&speech_engine::char_rate))
     (option::pitch(character)(speech), value<double>(&speech_engine::char_pitch))
-    (option::caps_factor(speech), value<double>(&speech_engine::caps_factor))
+    (option::caps_factor(speech), value<double>()->default_value(1.2))
     (option::language(speech), value<string>()->default_value(lang_id::autodetect))
 
     // Speech engine choosing options:

@@ -63,7 +63,6 @@ double speech_engine::general_rate = 1.0;
 double speech_engine::general_deviation = 1.0;
 double speech_engine::char_pitch = 1.0;
 double speech_engine::char_rate = 1.0;
-double speech_engine::caps_factor = 1.2;
 
 
 // Constructing and destroying:
@@ -243,7 +242,7 @@ speech_engine::letter_task(wstring s)
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))
-        pitch *= caps_factor;
+        pitch *= configuration::caps_factor();
       else s[0] = toupper(s[0], locale(""));
     }
   return text_task(s, -1.0, rate, pitch, 0.0, true, true);
