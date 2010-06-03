@@ -30,7 +30,6 @@
 #include "config.hpp"
 
 #include "server.hpp"
-#include "speech_engine.hpp"
 #include "mbrola.hpp"
 #include "espeak.hpp"
 #include "user_tts.hpp"
@@ -189,11 +188,11 @@ configuration::configuration(int argc, char* argv[])
 
     // General speech control options:
     (option::device(speech), value<string>()->default_value(""))
-    (option::volume(speech), value<double>(&speech_engine::general_volume))
-    (option::rate(speech), value<double>(&speech_engine::general_rate))
-    (option::pitch(speech), value<double>(&speech_engine::general_pitch))
-    (option::rate(character)(speech), value<double>(&speech_engine::char_rate))
-    (option::pitch(character)(speech), value<double>(&speech_engine::char_pitch))
+    (option::volume(speech), value<float>()->default_value(1.0))
+    (option::rate(speech), value<double>()->default_value(1.0))
+    (option::pitch(speech), value<double>()->default_value(1.0))
+    (option::rate(character)(speech), value<double>()->default_value(1.0))
+    (option::pitch(character)(speech), value<double>()->default_value(1.0))
     (option::caps_factor(speech), value<double>()->default_value(1.2))
     (option::language(speech), value<string>()->default_value(lang_id::autodetect))
 
@@ -425,19 +424,25 @@ configuration::speech_output_device(void)
 float
 configuration::speech_volume(const string& voice)
 {
-  return option_value[option::volume(voice)].as<float>();
+  return voice.empty() ?
+    option_value[option::volume(speech)].as<float>() :
+    option_value[option::volume(voice)].as<float>();
 }
 
 double
 configuration::speech_rate(const string& voice)
 {
-  return option_value[option::rate(voice)].as<double>();
+  return voice.empty() ?
+    option_value[option::rate(speech)].as<double>() :
+    option_value[option::rate(voice)].as<double>();
 }
 
 double
 configuration::voice_pitch(const string& voice)
 {
-  return option_value[option::pitch(voice)].as<double>();
+  return voice.empty() ?
+    option_value[option::pitch(speech)].as<double>() :
+    option_value[option::pitch(voice)].as<double>();
 }
 
 double

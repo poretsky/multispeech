@@ -83,9 +83,9 @@ public:
   static unsigned int beep_sampling(void);
   static bool beep_async(void);
   static const std::string& speech_output_device(void);
-  static float speech_volume(const std::string& voice);
-  static double speech_rate(const std::string& voice);
-  static double voice_pitch(const std::string& voice);
+  static float speech_volume(const std::string& voice = "");
+  static double speech_rate(const std::string& voice = "");
+  static double voice_pitch(const std::string& voice = "");
   static double char_rate(void);
   static double char_pitch(void);
   static double caps_factor(void);

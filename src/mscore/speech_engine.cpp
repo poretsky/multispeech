@@ -200,8 +200,9 @@ speech_engine::text_task(const wstring& s,
       freq *= (deviation > 0.0) ? deviation : general_deviation;
       format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
     }
-  voicify(rate_factor * ((rate > 0.0) ? rate : general_rate),
-          pitch_factor * ((pitch > 0.0) ? pitch : general_pitch));
+  voicify(configuration::speech_rate() * rate_factor *
+          ((rate > 0.0) ? rate : general_rate),
+          configuration::voice_pitch() * pitch_factor * ((pitch > 0.0) ? pitch : general_pitch));
 
   // Make up the TTS script.
   BOOST_FOREACH(string cmd, command_patterns)
@@ -230,15 +231,16 @@ speech_engine::text_task(const wstring& s,
   // Make up and return complete task description.
   return speech_task(extern_string(prepared, encoders[current_voice->charset]),
                      commands, current_voice->format, playing_params,
-                     ((volume > 0) ? volume : general_volume) * volume_factor,
+                     configuration::speech_volume() * volume_factor *
+                     ((volume > 0) ? volume : general_volume),
                      acceleration);
 }
 
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  double pitch = char_pitch * pitch_factor;
-  double rate = char_rate * rate_factor;
+  double pitch = configuration::char_pitch() * char_pitch;
+  double rate = configuration::char_rate() * char_rate;
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))

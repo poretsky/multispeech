@@ -147,9 +147,6 @@ private:
   static double char_pitch, char_rate;
   static double general_deviation;
 
-  // Make these options configurable:
-  friend class configuration;
-
   // Voice specific speech parameters that are set up
   // from configuration at the voice assigning time:
   double volume_factor, rate_factor, pitch_factor, acceleration;
