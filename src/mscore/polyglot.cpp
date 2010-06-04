@@ -230,13 +230,13 @@ polyglot::speech_backend(const string& name,
     {
       string voice(configuration::backend_voice(name, lang));
       if (voice.empty())
-        throw configuration::error("no voice is specified for " + name + " in section [" + lang + "]");
+        throw configuration::error("no " + lang + ".voice is specified for " + name);
       if (voice.compare(0, strlen(speaker::mbrola), speaker::mbrola))
         backend = espeak::instance();
       else backend = mbrespeak::instance();
       if (backend->voice_available(voice))
         backend->voice_setup(voice);
-      else throw configuration::error("illegal voice for " + name + " in section [" + lang + "]");
+      else throw configuration::error("illegal " + lang + ".voice for " + name);
     }
   else if (speaker::user_defined == name)
     {
