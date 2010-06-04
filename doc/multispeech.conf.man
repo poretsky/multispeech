@@ -336,13 +336,13 @@ Path to the Espeak executable. If only program name is specified
 (as it is by default) then environment variable \fBPATH\fP
 will be examined and all paths mentioned there will be searched.
 .TP
-.B voice.en
+.B en.voice
 .br
 English voice specification. By default \(oqespeak-default\(cq is
 suggested. All known \fBespeak\fP and \fBmbrola\fP voices can be used
 here.
 .TP
-.B voice.ru
+.B ru.voice
 .br
 Russian voice specification. By default \(oqespeak-ru\(cq is
 suggested.
@@ -364,7 +364,7 @@ engine. These keywords are as follows:
 .PP
 \fB%lang\fP \- replaced by the language id string;
 .br
-\fBvoice\fP \- replaced by conventional voice name;
+\fB%voice\fP \- replaced by conventional voice name;
 .br
 \fB%pitch\fP \- replaced by relative voice pitch value;
 .br

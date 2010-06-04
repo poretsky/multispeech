@@ -357,8 +357,8 @@ ru.engine = ru_tts
 # the voice that will be used when it is chosen for speech
 # synthesis in a specific language. See speech section.
 #
-#voice.en = espeak-default
-#ru = espeak-ru
+#en.voice = espeak-default
+#ru.voice = espeak-ru
 # These are the default settings for English and Russian.
 # All known Espeak and Mbrola voices can be used here.
 
