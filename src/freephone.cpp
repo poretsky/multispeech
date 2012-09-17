@@ -47,12 +47,12 @@ freephone::freephone(const configuration& conf):
         {
           path lexicon(conf.option_value[options::compose(name, option_name::lexicon)].as<string>());
           if (exists(lexicon))
-            cmd += " -h " + lexicon.file_string();
+            cmd += " -h " + lexicon.generic_string();
           else
             {
-              server::log << SyslogStream::warning << lexicon.file_string() << " does not exist" << endl;
+              server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
               if (server::verbose)
-                cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
+                cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
       cmd += " -i - -o -";

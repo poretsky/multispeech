@@ -27,7 +27,7 @@
 
 using namespace std;
 using namespace boost;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 
 
 // Object construction:
@@ -51,8 +51,8 @@ mbrola::mbrola(const configuration& conf,
           path voice_file(complete(voice,
                                    conf.option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
           if (exists(voice_file))
-            cmd += voice_file.file_string();
-          else throw configuration::error(voice_file.file_string() + " does not exist");
+            cmd += voice_file.generic_string();
+          else throw configuration::error(voice_file.generic_string() + " does not exist");
         }
       else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
       cmd += " - -A";

@@ -81,7 +81,7 @@ void
 file_player::execute(const sound_task& sound)
 {
   SF_INFO::format = autodetect;
-  source = sf_open(sound.file.file_string().c_str(), SFM_READ, this);
+  source = sf_open(sound.file.generic_string().c_str(), SFM_READ, this);
   if (source)
     start_playback(sound.volume * relative_volume, samplerate, channels);
 }

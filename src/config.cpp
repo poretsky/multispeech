@@ -37,7 +37,7 @@
 #include "server.hpp"
 
 using namespace std;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 using namespace boost::program_options;
 
 
@@ -316,7 +316,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Mbrola based backends options:
     (mbrola::executable.c_str(), value<string>()->default_value(speaker::mbrola))
-    (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.file_string()))
+    (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.generic_string()))
 
     // Espeak based backends options:
     (espeak::executable.c_str(), value<string>()->default_value(speaker::espeak))
@@ -330,11 +330,11 @@ configuration::configuration(int argc, char* argv[])
 
     // Freephone backend options:
     (freephone::executable.c_str(), value<string>()->default_value(speaker::freephone))
-    (freephone::lexicon.c_str(), value<string>()->default_value(enlex_default.file_string()))
+    (freephone::lexicon.c_str(), value<string>()->default_value(enlex_default.generic_string()))
 
     // Ru_tts backend options:
     (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
-    (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.file_string()))
+    (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.generic_string()))
     (ru_tts::log.c_str(), value<string>())
 
     // User defined TTS backend options:
@@ -385,7 +385,7 @@ void
 configuration::read(const path& config_file, const options_description& conf)
 {
   boost::filesystem::ifstream source(config_file);
-  stage = " in " + config_file.file_string();
+  stage = " in " + config_file.generic_string();
   store(parse_config_file(source, conf), option_value);
   stage.erase();
 }

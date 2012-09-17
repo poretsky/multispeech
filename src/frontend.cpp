@@ -139,10 +139,10 @@ frontend::perform_command(void)
     soundmaster.execute(speechmaster.letter_task(regex_replace(data, garbage, L" ")));
 
   else if (L"a" == cmd)
-    soundmaster.enqueue(sound_task(extern_string(data, locale(""))));
+    soundmaster.enqueue(sound_task(extern_string(data, locale("")).c_str()));
 
   else if (L"p" == cmd)
-    soundmaster.execute(sound_task(extern_string(data, locale(""))));
+    soundmaster.execute(sound_task(extern_string(data, locale("")).c_str()));
 
   else if (L"tts_reset" == cmd)
     {
