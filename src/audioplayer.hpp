@@ -42,6 +42,7 @@
 #include <memory>
 
 #include <boost/thread/condition.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
@@ -70,6 +71,7 @@ protected:
 private:
   // Indicate that playback is in progress:
   bool playing;
+  boost::mutex access;
 
   // Audio playing stream:
   portaudio::InterfaceCallbackStream stream;

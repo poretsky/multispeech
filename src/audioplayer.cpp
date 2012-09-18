@@ -75,16 +75,28 @@ void
 audioplayer::stop(void)
 {
   if (stream.isOpen())
-    stream.close();
-  while (playing)
-    continue;
+    {
+      if (stream.isActive())
+        stream.stop();
+      stream.close();
+    }
 }
 
 bool
 audioplayer::active(void)
 {
-  if ((!playing) && stream.isOpen())
-    stream.close();
+  bool done;
+  {
+    mutex::scoped_lock lock(access);
+    done = !playing;
+  }
+  if (done && stream.isOpen())
+    {
+      if (stream.isActive())
+        stream.stop();
+      stream.close();
+    }
+  mutex::scoped_lock lock(access);
   return playing;
 }
 
@@ -153,6 +165,7 @@ void
 audioplayer::release(void* handle)
 {
   reinterpret_cast<audioplayer*>(handle)->source_release();
+  mutex::scoped_lock lock(reinterpret_cast<audioplayer*>(handle)->access);
   reinterpret_cast<audioplayer*>(handle)->playing = false;
   complete.notify_all();
 }
