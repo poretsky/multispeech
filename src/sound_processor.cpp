@@ -105,7 +105,6 @@ sound_processor::soundmaster::operator()(void)
 {
   float buffer[chunk_size * holder->channels];
   unsigned int obtained;
-  bool active = true;
 
   while (holder->state != quit)
     {
@@ -134,8 +133,6 @@ sound_processor::soundmaster::operator()(void)
                 holder->event.notify_all();
               }
           }
-        if (holder->state == quit)
-          active = false;
       }
     }
 
