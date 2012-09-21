@@ -75,10 +75,12 @@ private:
 
   // Audio playing stream:
   portaudio::InterfaceCallbackStream stream;
+  static boost::mutex control;
 
   // Audio stream parameters:
   portaudio::StreamParameters params;
   float volume_level;
+  unsigned int frame_size;
 
   // Find device by it's name:
   PaDeviceIndex find_device(const std::string& device_name);
