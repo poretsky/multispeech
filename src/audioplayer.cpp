@@ -88,7 +88,7 @@ audioplayer::stop(void)
       if (finished)
         while (stream.isActive())
           thread::yield();
-      else stream.stop();
+      else stream.abort();
       stream.close();
     }
 }
