@@ -80,15 +80,13 @@ audioplayer::stop(void)
   mutex::scoped_lock exclusive(control);
   if (stream.isOpen())
     {
-      bool finished;
       {
         mutex::scoped_lock lock(access);
-        finished = !playing;
+        if (playing)
+          playing = false;
       }
-      if (finished)
-        while (stream.isActive())
-          thread::yield();
-      else stream.stop();
+      while (stream.isActive())
+        thread::yield();
       stream.close();
     }
 }
@@ -175,6 +173,9 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       if (obtained < numFrames)
         result = paComplete;
     }
+  mutex::scoped_lock lock(access);
+  if (!playing)
+    result = paAbort;
   return result;
 }
 
