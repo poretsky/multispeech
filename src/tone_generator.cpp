@@ -85,17 +85,14 @@ unsigned int
 tone_generator::source_read(float* buffer, unsigned int nframes)
 {
   unsigned int n;
-  for (n = 0; (n < nframes) && (elapsed < limit); n++, elapsed += step)
-    buffer[n] = sinf(elapsed);
-  if (n)
-    sprev = buffer[n - 1];
-  while ((sprev != 0.0) && (n < nframes))
+  for (n = 0; (n < nframes) && (count < amount); n++, count++, omega_t += step)
     {
-      buffer[n] = sinf(elapsed);
-      elapsed += step;
-      if ((sprev * buffer[n]) < 0.0)
-        buffer[n] = 0.0;
-      sprev = buffer[n++];
+      float fade = 1.0;
+      if (count < (fade_in - 1))
+        fade = static_cast<float>(count + 1) / static_cast<float>(fade_in);
+      else if ((amount - count) < fade_out)
+        fade = static_cast<float>(count + 1) / static_cast<float>(fade_in);
+      buffer[n] = sinf(omega_t) * fade * fade;
     }
   return n;
 }
@@ -108,11 +105,13 @@ tone_generator::source_release(void)
 void
 tone_generator::execute(const tone_task& tone)
 {
-  limit = 2.0 * M_PI * static_cast<float>(tone.frequency);
-  step = limit / static_cast<float>(sampling);
-  limit *= tone.duration;
-  elapsed = 0.0;
-  sprev = 0.0;
+  float duration = floor(static_cast<float>(tone.frequency) * tone.duration + 0.5) / static_cast<float>(tone.frequency);
+  float omega = 2.0 * M_PI * static_cast<float>(tone.frequency);
+  amount = static_cast<int>(ceil(duration * static_cast<float>(sampling)));
+  omega_t = 0.5 * (duration - (static_cast<float>(amount - 1) / static_cast<float>(sampling))) * omega;
+  step = omega / static_cast<float>(sampling);
+  count = 0;
+  fade_in = fade_out = static_cast<int>(floor(duration / 10.0 + 0.5));
   start_playback(tone.volume * relative_volume, sampling, 1);
 }
 

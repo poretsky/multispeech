@@ -18,6 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <boost/thread/thread.hpp>
+
 #include "audioplayer.hpp"
 
 #include "config.hpp"
@@ -29,6 +31,7 @@ using namespace portaudio;
 
 // Static data:
 condition audioplayer::complete;
+mutex audioplayer::control;
 PaTime audioplayer::suggested_latency = 20;
 float audioplayer::general_volume = 0.8;
 
@@ -74,17 +77,41 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
+  mutex::scoped_lock exclusive(control);
   if (stream.isOpen())
-    stream.close();
-  while (playing)
-    continue;
+    {
+      bool finished;
+      {
+        mutex::scoped_lock lock(access);
+        finished = !playing;
+      }
+      if (finished)
+        while (stream.isActive())
+          thread::yield();
+      else stream.stop();
+      stream.close();
+    }
 }
 
 bool
 audioplayer::active(void)
 {
-  if ((!playing) && stream.isOpen())
-    stream.close();
+  bool done;
+  {
+    mutex::scoped_lock lock(access);
+    done = !playing;
+  }
+  {
+    mutex::scoped_lock exclusive(control);
+    if (done && stream.isOpen())
+      {
+        while (stream.isActive())
+          thread::yield();
+        stream.close();
+      }
+  }
+  thread::yield();
+  mutex::scoped_lock lock(access);
   return playing;
 }
 
@@ -94,7 +121,9 @@ audioplayer::active(void)
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
+  mutex::scoped_lock exclusive(control);
   volume_level = volume * general_volume;
+  frame_size = channels;
   params.setSampleRate(static_cast<double>(rate));
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())
@@ -139,9 +168,9 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       float* buffer = reinterpret_cast<float*>(outputBuffer);
       unsigned int obtained = source_read(buffer, numFrames);
       if (obtained)
-        for (unsigned int i = 0; i < (obtained * params.outputParameters().numChannels()); i++)
+        for (unsigned int i = 0; i < (obtained * frame_size); i++)
           buffer[i] *= volume_level;
-      for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
+      for (unsigned int i = obtained; i < (numFrames * frame_size); i++)
         buffer[i] = 0.0;
       if (obtained < numFrames)
         result = paComplete;
@@ -153,6 +182,7 @@ void
 audioplayer::release(void* handle)
 {
   reinterpret_cast<audioplayer*>(handle)->source_release();
+  mutex::scoped_lock lock(reinterpret_cast<audioplayer*>(handle)->access);
   reinterpret_cast<audioplayer*>(handle)->playing = false;
   complete.notify_all();
 }

@@ -131,7 +131,7 @@ Russian::Russian(void):
     (L"greater than", L"больше")
     (L"space", L"пробел")
     (L"tab", L"табуляция")
-    (L"newline", L"перевод строки+")
+    (L"newline", L"новая строка")
     (L"dot", L"точка")
 
     // Language name:
@@ -170,7 +170,7 @@ Russian::Russian(void):
   filter_chain.setup()
     (L"[\\+-]?[0-9]+(\\.[0-9]+)?|_", L" $& ")
     (L"-([0-9])", L"минус $1")
-    (L"([а-яА-ЯёЁ][аеёиоуыэюяАЕЁИОУЫЭЮЯ]) +([бж]\\b)", L"$1$2")
+    (L"([а-яА-ЯёЁ][аеёиоуыэюяАЕЁИОУЫЭЮЯ]) +(([бж]|ль)\\b)", L"$1$2")
     (L"\\b[БВКС]\\.", spell(this))
     (case_conversion::lowercase)
     (L"\\<([bcdfghj-np-tv-zб-джзй-нп-тф-ъь]{2,}|[a-zбжъь])\\>", spell(this))
