@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Place this file into ~/.orca and edit according to your preferences.
+# Place this file into ~/.orca and edit it according to your preferences.
 
 # At first import Emacspeak speech services bridge.
 import orca.espeechfactory
