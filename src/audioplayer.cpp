@@ -170,10 +170,12 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       if (obtained)
         for (unsigned int i = 0; i < (obtained * frame_size); i++)
           buffer[i] *= volume_level;
-      for (unsigned int i = obtained; i < (numFrames * frame_size); i++)
-        buffer[i] = 0.0;
       if (obtained < numFrames)
-        result = paComplete;
+        {
+          for (unsigned int i = obtained * frame_size; i < (numFrames * frame_size); i++)
+            buffer[i] = 0.0;
+          result = paComplete;
+        }
     }
   return result;
 }
