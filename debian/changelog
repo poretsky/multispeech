@@ -1,3 +1,15 @@
+multispeech (2.5.0lucid1) lucid; urgency=low
+
+  * Improved audio stream control.
+  * Fixed a couple of minor Russian pronunciation issues.
+  * Slightly improved tone generator. Hope it will produce a bit
+    smoother sound.
+  * Changed default path to the Mbrola voices to fit packages included
+    in the distribution.
+  * Per distribution build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Oct 2012 04:39:54 +0400
+
 multispeech (2.4.5) unstable; urgency=low
 
   * Improved robustness of sound stream control mechanism.
