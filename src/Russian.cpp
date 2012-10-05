@@ -189,7 +189,7 @@ Russian::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
 {
   wstring result;
   map<const wstring, const wstring>::const_iterator item;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); sptr++)
+  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
     {
       item = dictionary.find(wstring(1, toupper(*sptr, locale(""))));
       if (item == dictionary.end())
