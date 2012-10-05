@@ -130,6 +130,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
       if (stream.isOpen())
         {
           playing = true;
+          finishTime = 0;
           stream.setStreamFinishedCallback(release);
           stream.start();
         }
@@ -144,7 +145,7 @@ audioplayer::find_device(const string& device_name)
 {
   System& system = System::instance();
   System::DeviceIterator found;
-  for (found = system.devicesBegin(); found != system.devicesEnd(); found++)
+  for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
     if (found->name() == device_name)
       break;
   if (found == system.devicesEnd())
@@ -168,10 +169,13 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       if (obtained)
         for (unsigned int i = 0; i < (obtained * frame_size); i++)
           buffer[i] *= volume_level;
-      for (unsigned int i = obtained; i < (numFrames * frame_size); i++)
-        buffer[i] = 0.0;
-      if (obtained < numFrames)
+      else if (finishTime == 0)
+        finishTime = timeInfo->outputBufferDacTime;
+      else if (finishTime <= timeInfo->currentTime)
         result = paComplete;
+      if (obtained < numFrames)
+        for (unsigned int i = obtained * frame_size; i < (numFrames * frame_size); i++)
+          buffer[i] = 0.0;
     }
   mutex::scoped_lock lock(access);
   if (!playing)
