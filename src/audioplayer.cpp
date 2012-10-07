@@ -50,7 +50,7 @@ audioplayer::audioplayer(const string& device_name):
   string devname(device_name);
   System& system = System::instance();
   PaDeviceIndex device = system.defaultOutputDevice().index();
-  latency = suggested_latency;
+  PaTime latency = suggested_latency;
   if (devname.empty())
     {
       devname = system.deviceByIndex(device).name();
@@ -79,38 +79,26 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
-  mutex::scoped_lock exclusive(control);
-  if (stream.isOpen())
+  if (stream_is_active())
     {
-      {
-        mutex::scoped_lock lock(access);
-        if (playing)
-          playing = false;
-      }
-      while (stream.isActive())
-        thread::yield();
-      stream.close();
+      mutex::scoped_lock lock(access);
+      if (playing)
+        playing = false;
     }
+  while (stream_is_active())
+    thread::yield();
+  close_stream();
 }
 
 bool
 audioplayer::active(void)
 {
-  bool done;
-  {
-    mutex::scoped_lock lock(access);
-    done = !playing;
-  }
-  {
-    mutex::scoped_lock exclusive(control);
-    if (done && stream.isOpen())
-      {
-        while (stream.isActive())
-          thread::yield();
-        stream.close();
-      }
-  }
-  thread::yield();
+  if (stream_is_over())
+    {
+      while (stream_is_active())
+        thread::yield();
+      close_stream();
+    }
   mutex::scoped_lock lock(access);
   return playing;
 }
@@ -134,8 +122,9 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
         {
           playing = true;
           finish_time = 0;
-          buffer_time = 0;
-          stream_time_available = (stream.time() != 0);
+          stream_time_available = stream.time() != 0;
+          if (!stream_time_available)
+            buffer_time = clock_time() + stream.outputLatency();
           stream.setStreamFinishedCallback(release);
           stream.start();
         }
@@ -144,6 +133,36 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
 
 
 // Private methods:
+
+PaTime
+audioplayer::clock_time(void)
+{
+  timespec tv;
+  clock_gettime(CLOCK_MONOTONIC, &tv);
+  return static_cast<PaTime>(tv.tv_nsec) * 1e-9 + static_cast<PaTime>(tv.tv_sec);
+}
+
+bool
+audioplayer::stream_is_active(void)
+{
+  mutex::scoped_lock exclusive(control);
+  return stream.isOpen() && stream.isActive();
+}
+
+bool
+audioplayer::stream_is_over(void)
+{
+  mutex::scoped_lock lock(access);
+  return !playing;
+}
+
+void
+audioplayer::close_stream(void)
+{
+  mutex::scoped_lock exclusive(control);
+  if (stream.isOpen())
+    stream.close();
+}
 
 PaDeviceIndex
 audioplayer::find_device(const string& device_name)
@@ -176,14 +195,7 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
           current_time = timeInfo->currentTime;
           buffer_time = timeInfo->outputBufferDacTime;
         }
-      else
-        {
-          timespec tv;
-          clock_gettime(CLOCK_MONOTONIC, &tv);
-          current_time = static_cast<PaTime>(tv.tv_nsec) * 1e-9 + static_cast<PaTime>(tv.tv_sec);
-          if (buffer_time == 0)
-            buffer_time = current_time + latency;
-        }
+      else current_time = clock_time();
       if (obtained)
         for (unsigned int i = 0; i < (obtained * frame_size); i++)
           buffer[i] *= volume_level;
