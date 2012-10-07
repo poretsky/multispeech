@@ -48,11 +48,14 @@ mbrola::mbrola(const configuration& conf,
       cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e ";
       if (conf.option_value.count(options::compose(speaker::mbrola, option_name::voices)))
         {
-          path voice_file(complete(voice,
+          path voice_path(complete(voice,
                                    conf.option_value[options::compose(speaker::mbrola, option_name::voices)].as<string>()));
+          path voice_file(complete(voice, voice_path));
           if (exists(voice_file))
             cmd += voice_file.file_string();
-          else throw configuration::error(voice_file.file_string() + " does not exist");
+          else if (exists(voice_path))
+            cmd += voice_path.file_string();
+          else throw configuration::error(voice_path.file_string() + " does not exist");
         }
       else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
       cmd += " - -A";

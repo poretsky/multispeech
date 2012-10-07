@@ -81,7 +81,16 @@ private:
   portaudio::StreamParameters params;
   float volume_level;
   unsigned int frame_size;
-  PaTime finishTime;
+  double sampling_rate;
+  PaTime current_time, buffer_time, finish_time;
+  bool stream_time_available;
+
+  // Internal audiostream control:
+  PaTime clock_time();
+  bool stream_is_active(void);
+  bool stream_is_over(void);
+  void close_stream(void);
+  void cancel_stream(void);
 
   // Find device by it's name:
   PaDeviceIndex find_device(const std::string& device_name);
