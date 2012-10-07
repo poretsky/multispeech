@@ -232,9 +232,9 @@ engine = ru_tts
 # (as it is by default) then environment variable "PATH"
 # will be examined and all paths mentioned there will be searched.
 #
-#voices = <datadir>/mbrola-voices
+#voices = <datadir>/mbrola
 # Path to the directory where Mbrola voice files are stored.
-# By default "<datadir>/mbrola-voices" is suggested.
+# By default "<datadir>/mbrola" is suggested.
 
 [freephone]
 # Freephone backend specific options.
