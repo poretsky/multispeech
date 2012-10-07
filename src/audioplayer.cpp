@@ -82,8 +82,7 @@ audioplayer::stop(void)
   if (stream_is_active())
     {
       mutex::scoped_lock lock(access);
-      if (playing)
-        playing = false;
+      playing = false;
     }
   while (stream_is_active())
     thread::yield();
