@@ -1,3 +1,14 @@
+multispeech (2.5.1lucid1) lucid; urgency=low
+
+  * Two different path layouts for the Mbrola voices are made
+    acceptable.
+  * Revised and improved audio stream control. Now it works correctly
+    even on the poor systems lacking stream time service.
+  * Bumped standards version to 3.9.3.
+  * Corrected dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 07 Oct 2012 23:21:59 +0400
+
 multispeech (2.5.0lucid1) lucid; urgency=low
 
   * Improved audio stream control.
