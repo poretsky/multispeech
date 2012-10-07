@@ -127,7 +127,9 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
           stream.setStreamFinishedCallback(release);
           stream.start();
         }
+      else source_release();
     }
+  else source_release();
 }
 
 
