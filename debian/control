@@ -8,8 +8,9 @@ Standards-Version: 3.9.3
 Package: multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: emacspeak, espeak
-Suggests: mbrola, mbrola-en1, freephone, ru-tts
+Recommends: espeak, espeak-data
+Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
+Enhances: emacspeak
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
