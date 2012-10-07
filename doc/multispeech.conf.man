@@ -252,7 +252,7 @@ will be examined and all paths mentioned there will be searched.
 .B voices
 .br
 Path to the directory where Mbrola voice files are stored.
-By default \(oq<datadir>/mbrola-voices\(cq is suggested.
+By default \(oq<datadir>/mbrola/voices\(cq is suggested.
 .SH "FREEPHONE RELATED OPTIONS"
 Section named \(oqfreephone\(cq is devoted to \fBfreephone\fP speech
 backend. Here are the following options:

@@ -234,7 +234,7 @@ engine = ru_tts
 #
 #voices = <datadir>/mbrola/voices
 # Path to the directory where Mbrola voice files are stored.
-# By default "<datadir>/mbrola-voices" is suggested.
+# By default "<datadir>/mbrola/voices" is suggested.
 
 [freephone]
 # Freephone backend specific options.
