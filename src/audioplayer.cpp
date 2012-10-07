@@ -18,6 +18,10 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <ctime>
+
+#include <boost/thread/thread.hpp>
+
 #include "audioplayer.hpp"
 
 #include "config.hpp"
@@ -29,6 +33,7 @@ using namespace portaudio;
 
 // Static data:
 condition audioplayer::complete;
+mutex audioplayer::control;
 PaTime audioplayer::suggested_latency = 20;
 float audioplayer::general_volume = 0.8;
 
@@ -74,17 +79,22 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
-  if (stream.isOpen())
-    stream.close();
-  while (playing)
-    continue;
+  cancel_stream();
+  while (stream_is_active())
+    thread::yield();
+  close_stream();
 }
 
 bool
 audioplayer::active(void)
 {
-  if ((!playing) && stream.isOpen())
-    stream.close();
+  if (stream_is_over())
+    {
+      while (stream_is_active())
+        thread::yield();
+      close_stream();
+    }
+  mutex::scoped_lock lock(access);
   return playing;
 }
 
@@ -94,8 +104,11 @@ audioplayer::active(void)
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
+  mutex::scoped_lock exclusive(control);
   volume_level = volume * general_volume;
-  params.setSampleRate(static_cast<double>(rate));
+  frame_size = channels;
+  sampling_rate = static_cast<double>(rate);
+  params.setSampleRate(sampling_rate);
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())
     {
@@ -103,21 +116,65 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
       if (stream.isOpen())
         {
           playing = true;
+          finish_time = 0;
+          stream_time_available = stream.time() != 0;
+          if (!stream_time_available)
+            buffer_time = clock_time() + stream.outputLatency();
           stream.setStreamFinishedCallback(release);
           stream.start();
         }
+      else source_release();
     }
+  else source_release();
 }
 
 
 // Private methods:
+
+PaTime
+audioplayer::clock_time(void)
+{
+  timespec tv;
+  clock_gettime(CLOCK_MONOTONIC, &tv);
+  return static_cast<PaTime>(tv.tv_nsec) * 1e-9 + static_cast<PaTime>(tv.tv_sec);
+}
+
+bool
+audioplayer::stream_is_active(void)
+{
+  mutex::scoped_lock exclusive(control);
+  return stream.isOpen() && stream.isActive();
+}
+
+bool
+audioplayer::stream_is_over(void)
+{
+  mutex::scoped_lock lock(access);
+  return !playing;
+}
+
+void
+audioplayer::close_stream(void)
+{
+  mutex::scoped_lock exclusive(control);
+  if (stream.isOpen())
+    stream.close();
+}
+
+void
+audioplayer::cancel_stream(void)
+{
+  mutex::scoped_lock exclusive(control);
+  if (stream.isOpen() && stream.isActive())
+    stream.abort();
+}
 
 PaDeviceIndex
 audioplayer::find_device(const string& device_name)
 {
   System& system = System::instance();
   System::DeviceIterator found;
-  for (found = system.devicesBegin(); found != system.devicesEnd(); found++)
+  for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
     if (found->name() == device_name)
       break;
   if (found == system.devicesEnd())
@@ -138,13 +195,24 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
     {
       float* buffer = reinterpret_cast<float*>(outputBuffer);
       unsigned int obtained = source_read(buffer, numFrames);
+      if (stream_time_available)
+        {
+          current_time = timeInfo->currentTime;
+          buffer_time = timeInfo->outputBufferDacTime;
+        }
+      else current_time = clock_time();
       if (obtained)
-        for (unsigned int i = 0; i < (obtained * params.outputParameters().numChannels()); i++)
+        for (unsigned int i = 0; i < (obtained * frame_size); i++)
           buffer[i] *= volume_level;
-      for (unsigned int i = obtained; i < (numFrames * params.outputParameters().numChannels()); i++)
-        buffer[i] = 0.0;
-      if (obtained < numFrames)
+      else if (finish_time == 0)
+        finish_time = buffer_time;
+      else if (finish_time <= current_time)
         result = paComplete;
+      if (obtained < numFrames)
+        for (unsigned int i = obtained * frame_size; i < (numFrames * frame_size); i++)
+          buffer[i] = 0.0;
+      if (!stream_time_available)
+        buffer_time += static_cast<double>(numFrames) / sampling_rate;
     }
   return result;
 }
@@ -153,6 +221,7 @@ void
 audioplayer::release(void* handle)
 {
   reinterpret_cast<audioplayer*>(handle)->source_release();
+  mutex::scoped_lock lock(reinterpret_cast<audioplayer*>(handle)->access);
   reinterpret_cast<audioplayer*>(handle)->playing = false;
   complete.notify_all();
 }

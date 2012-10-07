@@ -42,6 +42,7 @@
 #include <memory>
 
 #include <boost/thread/condition.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
@@ -70,13 +71,26 @@ protected:
 private:
   // Indicate that playback is in progress:
   bool playing;
+  boost::mutex access;
 
   // Audio playing stream:
   portaudio::InterfaceCallbackStream stream;
+  static boost::mutex control;
 
   // Audio stream parameters:
   portaudio::StreamParameters params;
   float volume_level;
+  unsigned int frame_size;
+  double sampling_rate;
+  PaTime current_time, buffer_time, finish_time;
+  bool stream_time_available;
+
+  // Internal audiostream control:
+  PaTime clock_time();
+  bool stream_is_active(void);
+  bool stream_is_over(void);
+  void close_stream(void);
+  void cancel_stream(void);
 
   // Find device by it's name:
   PaDeviceIndex find_device(const std::string& device_name);

@@ -8,7 +8,7 @@ AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
 AM_CXXFLAGS = -O2 -Wall -Wno-sign-compare
 AM_LDFLAGS = -pthread
 LDADD = @BOOST_LIBS@ @BOBCAT_LIBS@ @SNDFILE_LIBS@ \
-	@PORTAUDIOCPP_LIBS@ @SOUNDTOUCH_LIBS@ -lm
+	@PORTAUDIOCPP_LIBS@ @SOUNDTOUCH_LIBS@ -lrt -lm
 
 multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	config.cpp config.hpp frontend.cpp frontend.hpp \

@@ -75,10 +75,8 @@ public:
 
 private:
   // Internal operating data:
-  float limit, step, elapsed, sprev;
-
-  // Generate next chunk:
-  unsigned int get_chunk(float* buffer, unsigned int length);
+  float omega_t, step;
+  int count, amount, fade_in, fade_out;
 
   // Methods required by audioplayer:
   unsigned int source_read(float* buffer, unsigned int nframes);
