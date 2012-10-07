@@ -49,7 +49,7 @@ const path configuration::local_conf(complete(".multispeechrc", getenv("HOME")))
 
 // Hardcoded default paths:
 
-const path configuration::mbrola_voices_default(complete("mbrola-voices", DATA_DIR));
+const path configuration::mbrola_voices_default(complete("mbrola", DATA_DIR));
 const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
 const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
 
