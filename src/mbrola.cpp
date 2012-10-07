@@ -55,7 +55,7 @@ mbrola::mbrola(const configuration& conf,
             cmd += voice_file.generic_string();
           else if (exists(voice_path))
             cmd += voice_path.generic_string();
-          else throw configuration::error(voice_file.generic_string() + " does not exist");
+          else throw configuration::error(voice_path.generic_string() + " does not exist");
         }
       else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
       cmd += " - -A";
