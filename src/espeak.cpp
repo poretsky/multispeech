@@ -67,7 +67,7 @@ mbrespeak::mbrespeak(const configuration& conf, const string& lang):
       !conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
     {
       string cmd(conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>());
-      cmd += " --stdin -q -z -v mb-" + voice;
+      cmd += " --stdin -q --pho -z -v mb-" + voice;
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::espeak);
