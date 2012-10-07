@@ -1,3 +1,20 @@
+multispeech (2.5.1squeeze1) squeeze; urgency=low
+
+  * Distribution specific build.
+  * Two different path layouts for the Mbrola voices are made
+    acceptable.
+  * Default path to the Mbrola voices is corrected according to the
+    distribution conventions.
+  * Revised and improved audio stream control. Now it works correctly
+    even on the poor systems lacking stream time service.
+  * Fixed a couple of minor Russian pronunciation issues.
+  * Slightly improved tone generator. Hope it will produce a bit
+    smoother sound.
+  * Bumped standards version to 3.9.3.
+  * Corrected dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 07 Oct 2012 23:30:18 +0400
+
 multispeech (2.4.5) unstable; urgency=low
 
   * Improved robustness of sound stream control mechanism.
