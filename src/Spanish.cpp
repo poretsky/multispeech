@@ -121,18 +121,3 @@ Spanish::Spanish(void):
     (L"(^[^-0-9a-záéíñóú]+| +$)", L"", true)
     (L"  +", L" ");
 }
-
-
-// Abbreviations spelling:
-
-wstring
-Spanish::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
-{
-  wstring result;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
-    {
-      result += *sptr;
-      result += L' ';
-    }
-  return to_upper_copy(result);
-}

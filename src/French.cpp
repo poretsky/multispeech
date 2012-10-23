@@ -133,18 +133,3 @@ French::French(void):
     (L"(^[^-0-9a-zäâàçéèêë€ïîùûüµ]+| +$)", L"", true)
     (L"  +", L" ");
 }
-
-
-// Abbreviations spelling:
-
-wstring
-French::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
-{
-  wstring result;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
-    {
-      result += *sptr;
-      result += L' ';
-    }
-  return to_upper_copy(result);
-}

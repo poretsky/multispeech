@@ -78,6 +78,25 @@ Russian::Russian(void):
 
   // Letters dictionary:
   dictionary = map_list_of
+    (L"б", L"бэ")
+    (L"в", L"вэ")
+    (L"й", L"и краткое")
+    (L"к", L"ка")
+    (L"с", L"эс")
+    (L"ъ", L"твёрдый знак")
+    (L"ь", L"мягкий знак")
+    (L"b", L"бэ")
+    (L"g", L"ж")
+    (L"h", L"аш")
+    (L"j", L"йот")
+    (L"k", L"ка")
+    (L"q", L"ку")
+    (L"s", L"эс")
+    (L"v", L"вэ")
+    (L"w", L"дубльвэ")
+    (L"x", L"икс")
+    (L"y", L"игрек")
+    (L"z", L"зэт")
     (L"Б", L"бэ")
     (L"В", L"вэ")
     (L"Й", L"и краткое")
@@ -180,22 +199,4 @@ Russian::Russian(void):
     (L"([0-9])( +[0-9])", L"$1,$2")
     (L"(^[^-0-9а-яё]+| +$)", L"")
     (L"  +", L" ");
-}
-
-// Abbreviations spelling:
-
-wstring
-Russian::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
-{
-  wstring result;
-  map<const wstring, const wstring>::const_iterator item;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
-    {
-      item = dictionary.find(wstring(1, toupper(*sptr, locale(""))));
-      if (item == dictionary.end())
-        result += *sptr;
-      else result += item->second;
-      result += L' ';
-    }
-  return result;
 }

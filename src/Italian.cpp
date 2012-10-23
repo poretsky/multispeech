@@ -118,18 +118,3 @@ Italian::Italian(void):
     (L"(^[^-0-9a-zàèéìíîòóùú]+| +$)", L"", true)
     (L"  +", L" ");
 }
-
-
-// Abbreviations spelling:
-
-wstring
-Italian::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
-{
-  wstring result;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
-    {
-      result += *sptr;
-      result += L' ';
-    }
-  return to_upper_copy(result);
-}

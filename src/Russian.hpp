@@ -34,9 +34,6 @@ public:
 private:
   // Transliteration table:
   std::map<wchar_t, const wchar_t*> translit;
-
-  // Abbreviation speller:
-  std::wstring do_spell(const boost::iterator_range<std::wstring::const_iterator>& abbrev);
 };
 
 #endif

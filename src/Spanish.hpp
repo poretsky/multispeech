@@ -28,10 +28,6 @@ class Spanish: public language_description
 public:
   // Object construction:
   Spanish(void);
-
-private:
-  // Abbreviation speller:
-  std::wstring do_spell(const boost::iterator_range<std::wstring::const_iterator>& abbrev);
 };
 
 #endif
