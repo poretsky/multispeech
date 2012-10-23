@@ -42,6 +42,10 @@ using namespace boost::assign;
 const vector<string> polyglot::langs = list_of
   // Follow detection order
   (lang_id::ru)
+  (lang_id::fr)
+  (lang_id::it)
+  (lang_id::es)
+  (lang_id::de)
   (lang_id::en);
 
 

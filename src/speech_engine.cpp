@@ -34,6 +34,10 @@
 #include "pipeline.hpp"
 #include "English.hpp"
 #include "Russian.hpp"
+#include "German.hpp"
+#include "French.hpp"
+#include "Spanish.hpp"
+#include "Italian.hpp"
 
 using namespace std;
 using namespace boost;
@@ -90,6 +94,14 @@ speech_engine::speech_engine(const configuration& conf,
     language.reset(new English);
   else if (lang_id::ru == lang)
     language.reset(new Russian);
+  else if (lang_id::de == lang)
+    language.reset(new German);	
+  else if (lang_id::fr == lang)
+    language.reset(new French);	
+  else if (lang_id::es == lang)
+    language.reset(new Spanish);	
+  else if (lang_id::it == lang)
+    language.reset(new Italian);	
   else throw configuration::error("unsupported language " + lang + " specified for " + backend);
   format_macros["%lang"] = lang;
 }

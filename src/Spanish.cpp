@@ -1,0 +1,138 @@
+// Spanish.cpp -- Spanish language implementation
+/*
+   Copyright (C) 2012 Igor B. Poretsky <poretsky@mlbox.ru>
+   This file is part of Multispeech.
+
+   Multispeech is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   Multispeech is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Multispeech; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+*/
+
+#include <boost/assign.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include "Spanish.hpp"
+
+#include "config.hpp"
+#include "strcvt.hpp"
+
+using namespace std;
+using namespace boost;
+using namespace boost::assign;
+using namespace boost::algorithm;
+
+
+// Object construction:
+
+Spanish::Spanish(void):
+  language_description(lang_id::es, L"[a-zA-ZáéíñóúÑ]")
+{
+  // Punctuations pronunciation:
+  punctuations = list_of
+    (L" Exclamación ")
+    (L" Apostrofo ")
+    (L" Interrogación ")
+    (L" Coma ")
+    (L" Punto ")
+    (L" Punto y coma ")
+    (L" Dos puntos ")
+    (L" Guión-Menos ")
+    (L" Arroba ")
+    (L" Signo de número ")
+    (L" Signo de dólar ")
+    (L" Por ciento ")
+    (L" Acento circunflejo ")
+    (L" y comercial ")
+    (L" Asterísco ")
+    (L" Guión Bajo ")
+    (L" Abrir paréntesis ")
+    (L" Cerrar paréntesis ")
+    (L" Más ")
+    (L" Igual ")
+    (L" Abrir corchete ")
+    (L" Cerrar corchete ")
+    (L" Abrir llave ")
+    (L" Cerra llave ")
+    (L" barra invertida ")
+    (L" línea vertical ")
+    (L" Comillas ")
+    (L" Barra ")
+    (L" acento grave ")
+    (L" tilde ")
+    (L" Menor que ")
+    (L" Mayor que ");
+
+  // Letters dictionary:
+  dictionary = map_list_of
+    (L"dollar", L"SignoDeDólar")
+    (L"pound", L"SignoDeNúmero")
+    (L"at", L"arroba")
+    (L"exclamation", L"Exclamación")
+    (L"slash", L"barra")
+    (L"percent", L"PorCiento")
+    (L"caret", L"AcentoCircunflejo")
+    (L"ampersand", L"yComercial")
+    (L"star", L"asterísco")
+    (L"dash", L"GuiónMenos")
+    (L"underscore", L"GuiónBajo")
+    (L"plus", L"Más")
+    (L"equals", L"Igual")
+    (L"backslash", L"barraInvertida")
+    (L"pipe", L"líneaVertical")
+    (L"period", L"punto")
+    (L"comma", L"coma")
+    (L"semi", L"puntoYcoma")
+    (L"colon", L"dosPuntos")
+    (L"apostrophe", L"apostrofo")
+    (L"quotes", L"Comillas")
+    (L"questionmark", L"Interrogación")
+    (L"backquote", L"acento")
+    (L"space", L"espacio")
+    (L"tab", L"tabulación")
+    (L"newline", L"alimentaciónDeLínea")
+    (L"¿", L"interrogaciónInversa")
+    (L"¡", L"inversoDeExclamación")
+    (L"dot", L"punto")
+
+    // Language name:
+    (intern_string(id(), locale("")).c_str(), L"Español");
+
+  // Text filtering chain:
+  filter_chain.setup()
+    (L"\\.,", L" punto coma ")
+    (L"\\.{3}", L" punto punto punto ")
+    (L"\\.{2}", L" punto punto ")
+    (L"([a-záéíñóú])\\.([a-záéíñóú])", L"$1 punto $2", true)
+    (L"([0-9])\\.([0-9])", L"$1punto$2")
+    (L"[\\+-]?[0-9]+|_", L" $& ")
+    (L"\\<[bcdfghj-np-tvwxzñ]+\\>", spell(this), true)
+    (punctuations)
+    (L"[^\\.,!\\?';\\:0-9a-záéíñóú]", L" ", true)
+    (L"(^[^-0-9a-záéíñóú]+| +$)", L"", true)
+    (L"  +", L" ");
+}
+
+
+// Abbreviations spelling:
+
+wstring
+Spanish::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
+{
+  wstring result;
+  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
+    {
+      result += *sptr;
+      result += L' ';
+    }
+  return to_upper_copy(result);
+}

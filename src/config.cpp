@@ -53,12 +53,15 @@ const path configuration::mbrola_voices_default(complete("mbrola", DATA_DIR));
 const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
 const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
 
-
 // Language id strings:
 namespace lang_id
 {
   const char* const en = "en";
   const char* const ru = "ru";
+  const char* const de = "de";
+  const char* const fr = "fr";
+  const char* const es = "es";
+  const char* const it = "it";
   const char* const autodetect = "autodetect";
 };
 
@@ -171,6 +174,67 @@ namespace options
     const string caps_factor(compose(lang_id::ru, option_name::caps_factor));
   };
 
+  // German speech section:
+  namespace de
+  {
+    const string engine(compose(lang_id::de, option_name::engine));
+    const string volume(compose(lang_id::de, option_name::volume));
+    const string pitch(compose(lang_id::de, option_name::pitch));
+    const string rate(compose(lang_id::de, option_name::rate));
+    const string acceleration(compose(lang_id::de, option_name::acceleration));
+
+    // Single letters pronunciation parameters:
+    const string char_pitch(compose(lang_id::de, option_name::char_pitch));
+    const string char_rate(compose(lang_id::de, option_name::char_rate));
+    const string caps_factor(compose(lang_id::de, option_name::caps_factor));
+  };
+
+  // French speech section:
+  namespace fr
+  {
+    const string engine(compose(lang_id::fr, option_name::engine));
+    const string volume(compose(lang_id::fr, option_name::volume));
+    const string pitch(compose(lang_id::fr, option_name::pitch));
+    const string rate(compose(lang_id::fr, option_name::rate));
+    const string acceleration(compose(lang_id::fr, option_name::acceleration));
+
+    // Single letters pronunciation parameters:
+    const string char_pitch(compose(lang_id::fr, option_name::char_pitch));
+    const string char_rate(compose(lang_id::fr, option_name::char_rate));
+    const string caps_factor(compose(lang_id::fr, option_name::caps_factor));
+  };
+
+  // Spanish speech section:
+  namespace es
+  {
+    const string engine(compose(lang_id::es, option_name::engine));
+    const string volume(compose(lang_id::es, option_name::volume));
+    const string pitch(compose(lang_id::es, option_name::pitch));
+    const string rate(compose(lang_id::es, option_name::rate));
+    const string acceleration(compose(lang_id::es, option_name::acceleration));
+
+    // Single letters pronunciation parameters:
+    const string char_pitch(compose(lang_id::es, option_name::char_pitch));
+    const string char_rate(compose(lang_id::es, option_name::char_rate));
+    const string caps_factor(compose(lang_id::es, option_name::caps_factor));
+  };
+
+  // Italian speech section:
+  namespace it
+  {
+    const string engine(compose(lang_id::it, option_name::engine));
+    const string volume(compose(lang_id::it, option_name::volume));
+    const string pitch(compose(lang_id::it, option_name::pitch));
+    const string rate(compose(lang_id::it, option_name::rate));
+    const string acceleration(compose(lang_id::it, option_name::acceleration));
+
+    // Single letters pronunciation parameters:
+    const string char_pitch(compose(lang_id::it, option_name::char_pitch));
+    const string char_rate(compose(lang_id::it, option_name::char_rate));
+    const string caps_factor(compose(lang_id::it, option_name::caps_factor));
+  };
+
+
   // Mbrola based backends options:
   namespace mbrola
   {
@@ -186,11 +250,19 @@ namespace options
     // Espeak voices assignment:
     const string en(compose(speaker::espeak, lang_id::en));
     const string ru(compose(speaker::espeak, lang_id::ru));
+    const string de(compose(speaker::espeak, lang_id::de));
+    const string fr(compose(speaker::espeak, lang_id::fr));
+    const string es(compose(speaker::espeak, lang_id::es));
+    const string it(compose(speaker::espeak, lang_id::it));
 
     // Mbrola voices assignment:
     namespace mbrola
     {
       const string en(compose(speaker::espeak, compose(speaker::mbrola, lang_id::en)));
+      const string de(compose(speaker::espeak, compose(speaker::mbrola, lang_id::de)));
+      const string fr(compose(speaker::espeak, compose(speaker::mbrola, lang_id::fr)));
+      const string es(compose(speaker::espeak, compose(speaker::mbrola, lang_id::es)));
+      const string it(compose(speaker::espeak, compose(speaker::mbrola, lang_id::it)));
     };
   };
 
@@ -314,6 +386,46 @@ configuration::configuration(int argc, char* argv[])
     (ru::char_rate.c_str(), value<double>()->default_value(1.0))
     (ru::caps_factor.c_str(), value<double>()->default_value(1.2))
 
+    // German speech options:
+    (de::engine.c_str(), value<string>())
+    (de::volume.c_str(), value<double>()->default_value(1.0))
+    (de::pitch.c_str(), value<double>()->default_value(1.0))
+    (de::rate.c_str(), value<double>()->default_value(1.0))
+    (de::acceleration.c_str(), value<double>()->default_value(0.0))
+    (de::char_pitch.c_str(), value<double>()->default_value(1.0))
+    (de::char_rate.c_str(), value<double>()->default_value(1.0))
+    (de::caps_factor.c_str(), value<double>()->default_value(1.2))
+
+    // French speech options:
+    (fr::engine.c_str(), value<string>())
+    (fr::volume.c_str(), value<double>()->default_value(1.0))
+    (fr::pitch.c_str(), value<double>()->default_value(1.0))
+    (fr::rate.c_str(), value<double>()->default_value(1.0))
+    (fr::acceleration.c_str(), value<double>()->default_value(0.0))
+    (fr::char_pitch.c_str(), value<double>()->default_value(1.0))
+    (fr::char_rate.c_str(), value<double>()->default_value(1.0))
+    (fr::caps_factor.c_str(), value<double>()->default_value(1.2))
+
+    // Spanish speech options:
+    (es::engine.c_str(), value<string>())
+    (es::volume.c_str(), value<double>()->default_value(1.0))
+    (es::pitch.c_str(), value<double>()->default_value(1.0))
+    (es::rate.c_str(), value<double>()->default_value(1.0))
+    (es::acceleration.c_str(), value<double>()->default_value(0.0))
+    (es::char_pitch.c_str(), value<double>()->default_value(1.0))
+    (es::char_rate.c_str(), value<double>()->default_value(1.0))
+    (es::caps_factor.c_str(), value<double>()->default_value(1.2))
+
+    // Italian speech options:
+    (it::engine.c_str(), value<string>())
+    (it::volume.c_str(), value<double>()->default_value(1.0))
+    (it::pitch.c_str(), value<double>()->default_value(1.0))
+    (it::rate.c_str(), value<double>()->default_value(1.0))
+    (it::acceleration.c_str(), value<double>()->default_value(0.0))
+    (it::char_pitch.c_str(), value<double>()->default_value(1.0))
+    (it::char_rate.c_str(), value<double>()->default_value(1.0))
+    (it::caps_factor.c_str(), value<double>()->default_value(1.2))
+
     // Mbrola based backends options:
     (mbrola::executable.c_str(), value<string>()->default_value(speaker::mbrola))
     (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.generic_string()))
@@ -324,9 +436,17 @@ configuration::configuration(int argc, char* argv[])
     // Espeak voices assignment:
     (espeak::en.c_str(), value<string>()->default_value(lang_id::en))
     (espeak::ru.c_str(), value<string>()->default_value(lang_id::ru))
+    (espeak::de.c_str(), value<string>()->default_value(lang_id::de))
+    (espeak::fr.c_str(), value<string>()->default_value(lang_id::fr))
+    (espeak::es.c_str(), value<string>()->default_value(lang_id::es))
+    (espeak::it.c_str(), value<string>()->default_value(lang_id::it))
 
     // Mbrola voices assignment:
     (espeak::mbrola::en.c_str(), value<string>()->default_value("en1"))
+    (espeak::mbrola::de.c_str(), value<string>()->default_value("de6"))
+    (espeak::mbrola::fr.c_str(), value<string>()->default_value("fr1"))
+    (espeak::mbrola::es.c_str(), value<string>()->default_value("es1"))
+    (espeak::mbrola::it.c_str(), value<string>()->default_value("it3"))
 
     // Freephone backend options:
     (freephone::executable.c_str(), value<string>()->default_value(speaker::freephone))
