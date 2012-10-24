@@ -116,6 +116,7 @@ namespace options
     extern const char* const device;
     extern const char* const volume;
     extern const char* const language;
+    extern const char* const fallback;
   };
 
   // The next options are declared as strings to be dynamically constructable.

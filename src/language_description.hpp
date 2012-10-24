@@ -49,6 +49,9 @@ public:
   // Native language presence recognition:
   bool recognize(const std::wstring& s);
 
+  // Foreign language presence recognition:
+  virtual bool foreign(const std::wstring& s);
+
   // text filtering:
   std::wstring filter(const std::wstring& s);
 

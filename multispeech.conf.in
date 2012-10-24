@@ -126,11 +126,15 @@ dtk_voices = on
 # Relative volume level for speech output. It is 1.0 by default.
 #
 #language = autodetect
-# This option specifies default language. Allowed values are:
+# This option specifies the language to speak. Allowed values are:
 # "en" for English, "ru" for Russian, "de" for German, "fr" for French,
 # "es" for Spanish, "it" for Italian or "autodetect" for automatic
 # detection from the text nature.
 # By default language is autodetected.
+#
+#fallback = en
+# This option specifies the language that should be used when
+# no specific language can be detected.
 
 # Language related sections. These sections contain quite the same
 # collection of options that affect speech on a specific language.

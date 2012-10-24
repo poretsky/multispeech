@@ -56,6 +56,12 @@ language_description::recognize(const wstring& s)
   return regex_search(s, detector, match_default | match_any);
 }
 
+bool
+language_description::foreign(const wstring& s)
+{
+  return false;
+}
+
 wstring
 language_description::filter(const wstring& s)
 {

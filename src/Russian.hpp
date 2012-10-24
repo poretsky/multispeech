@@ -31,9 +31,15 @@ public:
   // Object construction:
   Russian(void);
 
+  // Foreign language presence recognition:
+  bool foreign(const std::wstring& s);
+
 private:
   // Transliteration table:
   std::map<wchar_t, const wchar_t*> translit;
+
+  // Foreign characters:
+  const boost::wregex foreign_chars;
 };
 
 #endif

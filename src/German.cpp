@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 German::German(void):
-  language_description(lang_id::de, L"[a-zA-ZÄäÖöÜüß]")
+  language_description(lang_id::de, L"[ÖöÜß]")
 {
   // Punctuations pronunciation:
   punctuations = list_of

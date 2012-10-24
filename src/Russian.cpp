@@ -39,7 +39,8 @@ using namespace boost::assign;
 // Object construction:
 
 Russian::Russian(void):
-  language_description(lang_id::ru, L"[а-яёА-ЯЁ]")
+  language_description(lang_id::ru, L"[а-яёА-ЯЁ]"),
+  foreign_chars(L"[a-zA-Z]")
 {
   // Punctuations pronunciation:
   punctuations = list_of
@@ -199,4 +200,13 @@ Russian::Russian(void):
     (L"([0-9])( +[0-9])", L"$1,$2")
     (L"(^[^-0-9а-яё]+| +$)", L"")
     (L"  +", L" ");
+}
+
+
+// Foreign language presence recognition:
+
+bool
+Russian::foreign(const wstring& s)
+{
+  return regex_search(s, foreign_chars, match_default | match_any);
 }

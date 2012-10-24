@@ -142,6 +142,7 @@ namespace options
     const char* const device = "speech.device";
     const char* const volume = "speech.volume";
     const char* const language = "speech.language";
+    const char* const fallback = "speech.fallback";
   };
 
   // English speech section:
@@ -365,6 +366,7 @@ configuration::configuration(int argc, char* argv[])
     (speech::device, value<string>()->default_value(""))
     (speech::volume, value<float>(&loudspeaker::relative_volume)->default_value(1.0))
     (speech::language, value<string>())
+    (speech::fallback, value<string>()->default_value(lang_id::en))
 
     // English speech options:
     (en::engine.c_str(), value<string>())

@@ -169,11 +169,18 @@ Relative volume level for speech output. It is 1.0 by default.
 .TP
 .B language
 .br
-This option specifies default language. Allowed values are: \(oqen\(cq
-for English, \(oqru\(cq for Russian, \(oqde\(cq for German, \(oqfr\(cq
-for French, \(oqes\(cq for Spanish, \(oqit\(cq for Italian or
-\(oqautodetect\(cq for automatic detection from the text nature. By
-default language is autodetected.
+This option specifies the language to speak. Allowed values are:
+\(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
+\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqit\(cq for Italian
+or \(oqautodetect\(cq for automatic detection from the text nature. By
+default language is autodetected. The language may be changed during
+runtime by respective commands.
+.TP
+.B fallback
+.br
+This option specifies the language that will be chosen when it should
+be changed, but autodetection fails. Any supported language may be
+specified here, of course, except of \(oqautodetect\(cq.
 .SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
 There is a separate section for each supported language named
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
