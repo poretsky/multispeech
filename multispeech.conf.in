@@ -126,9 +126,15 @@ dtk_voices = on
 # Relative volume level for speech output. It is 1.0 by default.
 #
 #language = autodetect
-# This option specifies default language. Allowed values are:
-# "en" for English, "ru" for Russian or "autodetect" for automatic
-# detection from the text nature. By default language is autodetected.
+# This option specifies the language to speak. Allowed values are:
+# "en" for English, "ru" for Russian, "de" for German, "fr" for French,
+# "es" for Spanish, "br" for Brazilian, "it" for Italian or "autodetect"
+# for automatic detection from the text nature.
+# By default language is autodetected.
+#
+#fallback = en
+# This option specifies the language that should be used when
+# no specific language can be detected.
 
 # Language related sections. These sections contain quite the same
 # collection of options that affect speech on a specific language.
@@ -220,6 +226,206 @@ engine = ru_tts
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
 
+[de]
+# German language related speech options.
+#
+engine = espeak
+# German TTS engine. This option has no default. If it is not set
+# then German speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- German speech with Espeak TTS engine;
+# espeak.mbrola -- German speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# German voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# German voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for German voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[fr]
+# French language related speech options.
+#
+engine = espeak
+# French TTS engine. This option has no default. If it is not set
+# then French speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- French speech with Espeak TTS engine;
+# espeak.mbrola -- French speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# French voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# French voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for French voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[es]
+# Spanish language related speech options.
+#
+engine = espeak
+# Spanish TTS engine. This option has no default. If it is not set
+# then Spanish speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Spanish speech with Espeak TTS engine;
+# espeak.mbrola -- Spanish speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# Spanish voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# Spanish voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for Spanish voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[br]
+# Brazilian language related speech options.
+#
+engine = espeak
+# Brazilian TTS engine. This option has no default. If it is not set
+# then Brazilian speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Brazilian speech with Espeak TTS engine;
+# espeak.mbrola -- Brazilian speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# Brazilian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# Brazilian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for Brazilian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[it]
+# Italian language related speech options.
+#
+engine = espeak
+# Italian TTS engine. This option has no default. If it is not set
+# then Italian speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Italian speech with Espeak TTS engine;
+# espeak.mbrola -- Italian speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# Italian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# Italian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for Italian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
 # Speech backend sections. These sections contain some options
 # allowing to control various aspects of interaction with the
 # external programs utilized by Multispeech for TTS transformation.
@@ -278,7 +484,12 @@ engine = ru_tts
 #
 #en = en
 #ru = ru
-# These are the default settings for English and Russian.
+#de = de
+#fr = fr
+#es = es
+#br = pt
+#it = it
+# These are the default settings for supported languages.
 # Invoke "espeak --voices" to see all available alternatives.
 
 [espeak.mbrola]
@@ -292,6 +503,21 @@ engine = ru_tts
 #
 #en = en1
 # English voice. By default en1 is used.
+#
+#de = de6
+# German voice. By default de6 is used.
+#
+#fr = fr1
+# French voice. By default fr1 is used.
+#
+#es = es1
+# Spanish voice. By default es1 is used.
+#
+#br = br3
+# Brazilian voice. By default br3 is used.
+#
+#it = it3
+# Italian voice. By default it3 is used.
 
 [user]
 # User defined TTS backend options.

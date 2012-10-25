@@ -42,6 +42,11 @@ using namespace boost::assign;
 const vector<string> polyglot::langs = list_of
   // Follow detection order
   (lang_id::ru)
+  (lang_id::br)
+  (lang_id::it)
+  (lang_id::fr)
+  (lang_id::de)
+  (lang_id::es)
   (lang_id::en);
 
 
@@ -50,6 +55,7 @@ const vector<string> polyglot::langs = list_of
 polyglot::polyglot(const configuration& conf):
   talker(langs.size()),
   lang(langs.size()),
+  fallback(langs.size()),
   autolanguage(false)
 {
   bool initialized = false;
@@ -58,10 +64,14 @@ polyglot::polyglot(const configuration& conf):
       {
         talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(),
                                        langs[i], conf));
+        if (conf.option_value[options::speech::fallback].as<string>() == langs[i])
+          fallback = i;
         initialized = true;
       }
   if (!initialized)
     throw configuration::error("no speech backends are defined");
+  if (fallback >= langs.size())
+    throw configuration::error("illegal fallback language");
   if (conf.option_value.count(options::speech::language))
     language(conf.option_value[options::speech::language].as<string>());
   else language(lang_id::autodetect);
@@ -188,12 +198,19 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 {
   if (!check_translation || (s.length() == 1) ||
       talker[lang]->language->translate(s).empty())
-    for (unsigned int i = 0; i < langs.size(); i++)
-      if (talker[i].get() && talker[i]->language->recognize(s))
-        {
-          lang = i;
-          break;
-        }
+    {
+      unsigned int newlang = langs.size();
+      for (unsigned int i = 0; i < langs.size(); i++)
+        if (talker[i].get() && talker[i]->language->recognize(s))
+          {
+            newlang = i;
+            break;
+          }
+      if (newlang < langs.size())
+        lang = newlang;
+      else if (talker[lang]->language->foreign(s))
+        lang = fallback;
+    }
 }
 
 speech_engine*

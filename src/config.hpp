@@ -33,6 +33,11 @@ namespace lang_id
 {
   extern const char* const en;
   extern const char* const ru;
+  extern const char* const de;
+  extern const char* const fr;
+  extern const char* const es;
+  extern const char* const br;
+  extern const char* const it;
   extern const char* const autodetect;
 };
 
@@ -112,6 +117,7 @@ namespace options
     extern const char* const device;
     extern const char* const volume;
     extern const char* const language;
+    extern const char* const fallback;
   };
 
   // The next options are declared as strings to be dynamically constructable.
@@ -146,6 +152,81 @@ namespace options
     extern const std::string caps_factor;
   };
 
+// German speech section:
+  namespace de
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
+// French speech section:
+  namespace fr
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
+// Spanish speech section:
+  namespace es
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
+// Brazilian speech section:
+  namespace br
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
+// Italian speech section:
+  namespace it
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
   // Mbrola based TTS backends options:
   namespace mbrola
   {
@@ -166,6 +247,11 @@ namespace options
     namespace mbrola
     {
       extern const std::string en;
+      extern const std::string de;
+      extern const std::string fr;
+      extern const std::string es;
+      extern const std::string br;
+      extern const std::string it;
     };
   };
 

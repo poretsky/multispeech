@@ -1,6 +1,6 @@
-// English.hpp -- English language description
+// French.hpp -- French language description
 /*
-   Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
+   Copyright (C) 2012 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
 
    Multispeech is free software; you can redistribute it and/or modify
@@ -15,19 +15,19 @@
 
    You should have received a copy of the GNU General Public License
    along with Multispeech; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef ENGLISH_HPP
-#define ENGLISH_HPP
+#ifndef FRENCH_HPP
+#define FRENCH_HPP
 
 #include "language_description.hpp"
 
-class English: public language_description
+class French: public language_description
 {
 public:
   // Object construction:
-  English(void);
+  French(void);
 };
 
 #endif

@@ -31,7 +31,7 @@ using namespace boost;
 language_description::language_description(const char* language_id,
                                            const wchar_t* language_detector):
   id_str(language_id),
-  detector(language_detector)
+  detector(language_detector, regex::normal | regex::icase)
 {
   filter_chain.setup()
     (L"\\s+", L" ");
@@ -54,6 +54,12 @@ bool
 language_description::recognize(const wstring& s)
 {
   return regex_search(s, detector, match_default | match_any);
+}
+
+bool
+language_description::foreign(const wstring& s)
+{
+  return false;
 }
 
 wstring
@@ -84,5 +90,14 @@ language_description::spell::spell(language_description* owner):
 wstring
 language_description::spell::operator()(const iterator_range<wstring::const_iterator>& s)
 {
-  return language->do_spell(s);
+  wstring result, item;
+  for (wstring::const_iterator sptr = s.begin(); sptr != s.end(); ++sptr)
+    {
+      item = language->translate(wstring(1, *sptr));
+      if (item.empty())
+        result += toupper(*sptr, locale(""));
+      else result += item;
+      result += L' ';
+    }
+  return result;
 }

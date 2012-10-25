@@ -1,3 +1,10 @@
+multispeech (2.6.0squeeze1) squeeze; urgency=low
+
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 01:56:30 +0400
+
 multispeech (2.5.1squeeze1) squeeze; urgency=low
 
   * Distribution specific build.
