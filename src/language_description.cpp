@@ -31,7 +31,7 @@ using namespace boost;
 language_description::language_description(const char* language_id,
                                            const wchar_t* language_detector):
   id_str(language_id),
-  detector(language_detector)
+  detector(language_detector, regex::normal | regex::icase)
 {
   filter_chain.setup()
     (L"\\s+", L" ");
