@@ -74,6 +74,13 @@ German::German(void):
 
   // Letters dictionary:
   dictionary = map_list_of
+    (L"ä", L"a-umlaut")
+    (L"ö", L"o-umlaut")
+    (L"ü", L"u-umlaut")
+    (L"Ä", L"a-umlaut")
+    (L"Ö", L"o-umlaut")
+    (L"Ü", L"u-umlaut")
+    (L"ß", L"scharf-s")
     (L"pound", L"Pfund")
     (L"at", L"KommerziellesAt")
     (L"exclamation", L"Ausrufezeichen")
