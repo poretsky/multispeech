@@ -1,3 +1,10 @@
+multispeech (2.6.0lucid1) lucid; urgency=low
+
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 01:44:52 +0400
+
 multispeech (2.5.1lucid1) lucid; urgency=low
 
   * Two different path layouts for the Mbrola voices are made
