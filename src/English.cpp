@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 English::English(void):
-  language_description(lang_id::en, L"\\<[Tt]h(en?|at|is)\\>")
+  language_description(lang_id::en, L"\\<([Tt]h(e(re|n)?|at|is)|TH(E(RE|N)?|AT|IS))\\>")
 {
   // Punctuations pronunciation:
   punctuations = list_of
