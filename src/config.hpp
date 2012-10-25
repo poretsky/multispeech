@@ -36,6 +36,7 @@ namespace lang_id
   extern const char* const de;
   extern const char* const fr;
   extern const char* const es;
+  extern const char* const br;
   extern const char* const it;
   extern const char* const autodetect;
 };
@@ -196,6 +197,21 @@ namespace options
     extern const std::string caps_factor;
   };
 
+// Brazilian speech section:
+  namespace br
+  {
+    extern const std::string engine;
+    extern const std::string volume;
+    extern const std::string pitch;
+    extern const std::string rate;
+    extern const std::string acceleration;
+
+    // Single letters pronunciation parameters:
+    extern const std::string char_pitch;
+    extern const std::string char_rate;
+    extern const std::string caps_factor;
+  };
+
 // Italian speech section:
   namespace it
   {
@@ -234,6 +250,7 @@ namespace options
       extern const std::string de;
       extern const std::string fr;
       extern const std::string es;
+      extern const std::string br;
       extern const std::string it;
     };
   };

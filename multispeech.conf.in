@@ -128,8 +128,8 @@ dtk_voices = on
 #language = autodetect
 # This option specifies the language to speak. Allowed values are:
 # "en" for English, "ru" for Russian, "de" for German, "fr" for French,
-# "es" for Spanish, "it" for Italian or "autodetect" for automatic
-# detection from the text nature.
+# "es" for Spanish, "br" for Brazilian, "it" for Italian or "autodetect"
+# for automatic detection from the text nature.
 # By default language is autodetected.
 #
 #fallback = en
@@ -346,6 +346,46 @@ engine = espeak
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
 
+[br]
+# Brazilian language related speech options.
+#
+engine = espeak
+# Brazilian TTS engine. This option has no default. If it is not set
+# then Brazilian speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Brazilian speech with Espeak TTS engine;
+# espeak.mbrola -- Brazilian speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# Brazilian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
+#pitch = 1.0
+# Brazilian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for Brazilian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
 [it]
 # Italian language related speech options.
 #
@@ -447,6 +487,7 @@ engine = espeak
 #de = de
 #fr = fr
 #es = es
+#br = pt
 #it = it
 # These are the default settings for supported languages.
 # Invoke "espeak --voices" to see all available alternatives.
@@ -466,11 +507,14 @@ engine = espeak
 #de = de6
 # German voice. By default de6 is used.
 #
-#fr = fr16
+#fr = fr1
 # French voice. By default fr1 is used.
 #
 #es = es1
 # Spanish voice. By default es1 is used.
+#
+#br = br3
+# Brazilian voice. By default br3 is used.
 #
 #it = it3
 # Italian voice. By default it3 is used.

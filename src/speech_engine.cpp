@@ -37,6 +37,7 @@
 #include "German.hpp"
 #include "French.hpp"
 #include "Spanish.hpp"
+#include "Brazilian.hpp"
 #include "Italian.hpp"
 
 using namespace std;
@@ -100,6 +101,8 @@ speech_engine::speech_engine(const configuration& conf,
     language.reset(new French);	
   else if (lang_id::es == lang)
     language.reset(new Spanish);	
+  else if (lang_id::br == lang)
+    language.reset(new Brazilian);	
   else if (lang_id::it == lang)
     language.reset(new Italian);	
   else throw configuration::error("unsupported language " + lang + " specified for " + backend);

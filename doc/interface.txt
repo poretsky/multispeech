@@ -74,10 +74,10 @@ tts_set_speech_rate rate
 set_lang language say_it
   Change speaking language. Allowed values are "en" for English, "ru"
   for Russian, "de" for German, "fr" for French, "es" for Spanish,
-  "it" for Italian and "autodetect" for automatic language
-  detection by the text nature. The second argument is optional.
-  If it is specified and it's value is not "nil" then new language
-  name will be spoken.
+  "br" for Brazilian, "it" for Italian and "autodetect" for automatic
+  language detection by the text nature. The second argument is
+  optional. If it is specified and it's value is not "nil" then newly
+  selected language name will be spoken.
 
 set_next_lang say_it
   Switch language forward to the next available one. Argument is

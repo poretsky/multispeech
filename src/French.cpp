@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 French::French(void):
-  language_description(lang_id::fr, L"[âçêë€ïîûµÇ]")
+  language_description(lang_id::fr, L"[ë€ïîûµ]")
 {
   // Punctuations pronunciation:
   punctuations = list_of

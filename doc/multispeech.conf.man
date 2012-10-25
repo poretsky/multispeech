@@ -171,9 +171,10 @@ Relative volume level for speech output. It is 1.0 by default.
 .br
 This option specifies the language to speak. Allowed values are:
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
-\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqit\(cq for Italian
-or \(oqautodetect\(cq for automatic detection from the text nature. By
-default language is autodetected. The language may be changed during
+\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqbr\(cq for
+Brazilian, \(oqit\(cq for Italian or \(oqautodetect\(cq for automatic
+detection from the text nature. By default language is
+autodetected. The language then may be changed on the fly during
 runtime by respective commands.
 .TP
 .B fallback
@@ -184,14 +185,15 @@ specified here, of course, except of \(oqautodetect\(cq.
 .SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
 There is a separate section for each supported language named
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
-\(oqfr\(cq for French, \(oqes\(cq for Spanish and \(oqit\(cq for
-Italian. These sections contain quite the same collection of options
-that affect speech on a specific language. Actual speech engine is
-chosen by the key option \(oqengine\(cq. This option has no
-default. If it is not set then the language will not be available in
-Multispeech. It is not necessary to define speech engine for each
-language, but at least one must be defined. It is wise to define
-speech engine for only those languages that are actually to be used.
+\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqbr\(cq for
+Brazilian and \(oqit\(cq for Italian. These sections contain quite the
+same collection of options that affect speech on a specific
+language. Actual speech engine is chosen by the key option
+\(oqengine\(cq. This option has no default. If it is not set then the
+language will not be available in Multispeech. It is not necessary to
+define speech engine for each language, but at least one must be
+defined. It is wise to define speech engine for only those languages
+that are actually to be used.
 .PP
 Each language specific section consists of the following options:
 .TP
@@ -206,8 +208,8 @@ TTS engine specification. Allowed values are as follows:
 .br
 \fBespeak\fP \- all supported languages with Espeak TTS engine;
 .br
-\fBespeak.mbrola\fP \- English, German, French, Spanish and Italian
-speech with Espeak and Mbrola voices;
+\fBespeak.mbrola\fP \- English, German, French, Spanish, Brazilian and
+Italian speech with Espeak and Mbrola voices;
 .br
 \fBuser\fP \- user defined TTS engine.
 .TP
@@ -338,6 +340,12 @@ Spanish voice specification. By default \(oqes\(cq is
 suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
 alternatives.
 .TP
+.B br
+.br
+Brazilian voice specification. By default \(oqpt\(cq is
+suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
+alternatives.
+.TP
 .B it
 .br
 Italian voice specification. By default \(oqit\(cq is
@@ -368,6 +376,10 @@ French voice. By default \(oqfr1\(cq is used.
 .B es
 .br
 Spanish voice. By default \(oqes1\(cq is used.
+.TP
+.B br
+.br
+Brazilian voice. By default \(oqbr3\(cq is used.
 .TP
 .B it
 .br

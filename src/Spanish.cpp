@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 Spanish::Spanish(void):
-  language_description(lang_id::es, L"[áñÑ]")
+  language_description(lang_id::es, L"[ñÑ]")
 {
   // Punctuations pronunciation:
   punctuations = list_of
