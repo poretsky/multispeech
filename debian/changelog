@@ -1,3 +1,10 @@
+multispeech (2.6.0precise1) precise; urgency=low
+
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 01:33:16 +0400
+
 multispeech (2.5.1precise1) precise; urgency=low
 
   * Distribution specific build.

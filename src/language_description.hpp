@@ -49,6 +49,9 @@ public:
   // Native language presence recognition:
   bool recognize(const std::wstring& s);
 
+  // Foreign language presence recognition:
+  virtual bool foreign(const std::wstring& s);
+
   // text filtering:
   std::wstring filter(const std::wstring& s);
 
@@ -68,8 +71,6 @@ protected:
     language_description* language;
   };
 
-  friend class spell;
-
   // These members are to be initialized in derived classes.
   std::vector<const wchar_t*> punctuations;
   std::map<const std::wstring, const std::wstring> dictionary;
@@ -81,9 +82,6 @@ private:
 
   // Native language detector:
   const boost::wregex detector;
-
-  // Abbreviation spelling method:
-  virtual std::wstring do_spell(const boost::iterator_range<std::wstring::const_iterator>& s) = 0;
 };
 
 #endif

@@ -77,6 +77,9 @@ private:
   // Currently used language:
   unsigned int lang;
 
+  // The language used as a fallback when autodetection fails:
+  unsigned int fallback;
+
   // Language autodetection enabling flag:
   bool autolanguage;
 

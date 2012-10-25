@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 English::English(void):
-  language_description(lang_id::en, L"[a-zA-Z]")
+  language_description(lang_id::en, L"\\<th(e(re|n)?|at|is)\\>.")
 {
   // Punctuations pronunciation:
   punctuations = list_of
@@ -92,18 +92,4 @@ English::English(void):
     (L"[^\\.,!\\?';\\:0-9a-z]", L" ", true)
     (L"(^[^-0-9a-z]+| +$)", L"", true)
     (L"  +", L" ");
-}
-
-// Abbreviations spelling:
-
-wstring
-English::do_spell(const iterator_range<wstring::const_iterator>& abbrev)
-{
-  wstring result;
-  for (wstring::const_iterator sptr = abbrev.begin(); sptr != abbrev.end(); ++sptr)
-    {
-      result += *sptr;
-      result += L' ';
-    }
-  return to_upper_copy(result);
 }
