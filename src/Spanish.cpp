@@ -74,6 +74,13 @@ Spanish::Spanish(void):
 
   // Letters dictionary:
   dictionary = map_list_of
+    (L"á", L"a acento agudo")
+    (L"é", L"e acento agudo")
+    (L"í", L"i acento agudo")
+    (L"ñ", L"n tilde")
+    (L"ó", L"o acento agudo")
+    (L"ú", L"u acento agudo")
+    (L"Ñ", L"n tilde")
     (L"dollar", L"SignoDeDólar")
     (L"pound", L"SignoDeNúmero")
     (L"at", L"arroba")
