@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 Italian::Italian(void):
-  language_description(lang_id::it, L"[ìòÈÌÎÒÙ]")
+  language_description(lang_id::it, L"[ìòÈÌÎÒÙ]|\\<(di|ch[ei]|il|sono|ho|ma)\\>")
 {
   // Punctuations pronunciation:
   punctuations = list_of
