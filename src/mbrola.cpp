@@ -44,7 +44,10 @@ mbrola::mbrola(const configuration& conf,
       !conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
     {
       string cmd(conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>());
-      cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e ";
+      cmd += " -t %rate -f %pitch -l %freq -v ";
+      // The en1 voice is especially quiet.
+      cmd += (voice == "en1") ? "3.0" : "1.0";
+      cmd += " -e ";
       if (conf.option_value.count(options::compose(speaker::mbrola, option_name::voices)))
         {
           path voice_path(complete(voice,
