@@ -371,7 +371,7 @@ German voice. By default \(oqde6\(cq is used.
 .TP
 .B fr
 .br
-French voice. By default \(oqfr1\(cq is used.
+French voice. By default \(oqfr4\(cq is used.
 .TP
 .B es
 .br
