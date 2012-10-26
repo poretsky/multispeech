@@ -475,7 +475,7 @@ configuration::configuration(int argc, char* argv[])
     // Mbrola voices assignment:
     (espeak::mbrola::en.c_str(), value<string>()->default_value("en1"))
     (espeak::mbrola::de.c_str(), value<string>()->default_value("de6"))
-    (espeak::mbrola::fr.c_str(), value<string>()->default_value("fr1"))
+    (espeak::mbrola::fr.c_str(), value<string>()->default_value("fr4"))
     (espeak::mbrola::es.c_str(), value<string>()->default_value("es1"))
     (espeak::mbrola::br.c_str(), value<string>()->default_value("br3"))
     (espeak::mbrola::it.c_str(), value<string>()->default_value("it3"))
