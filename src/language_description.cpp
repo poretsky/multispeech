@@ -94,10 +94,11 @@ language_description::spell::operator()(const iterator_range<wstring::const_iter
   for (wstring::const_iterator sptr = s.begin(); sptr != s.end(); ++sptr)
     {
       item = language->translate(wstring(1, *sptr));
+      if (!result.empty())
+        result += L' ';
       if (item.empty())
-        result += toupper(*sptr, locale(""));
+        result += *sptr;
       else result += item;
-      result += L' ';
     }
   return result;
 }
