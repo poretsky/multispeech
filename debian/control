@@ -14,7 +14,8 @@ Enhances: emacspeak
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
- At the moment English and Russian languages are supported.
+ At the moment English, German, French, Italian, Spanish,
+ Brazilian and Russian languages are supported.
  .
  The most prominent features are as follows:
   - flexible configuration;
