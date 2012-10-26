@@ -35,9 +35,8 @@ using namespace boost::filesystem3;
 mbrola::mbrola(const configuration& conf,
                const string& backend,
                const string& voice_id,
-               const string& lang,
-               unsigned int sampling):
-  speech_engine(conf, backend, voice_id, lang, soundfile::s16, sampling, 1, false)
+               const string& lang):
+  speech_engine(conf, backend, voice_id, lang, soundfile::s16, 16000, 1, false)
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
@@ -62,6 +61,10 @@ mbrola::mbrola(const configuration& conf,
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::mbrola);
+  // Take in account some especial voices sampling rate
+  if ((voice == "de5") || (voice == "de6") ||
+      (voice == "de7") || (voice == "es2"))
+    sampling(22050);
 }
 
 

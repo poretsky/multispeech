@@ -33,8 +33,7 @@ public:
   mbrola(const configuration& conf,
          const std::string& backend,
          const std::string& voice_id,
-         const std::string& lang,
-         unsigned int sampling);
+         const std::string& lang);
 
 private:
   // Make up voice parameters for backend:
