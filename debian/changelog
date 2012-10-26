@@ -1,3 +1,14 @@
+multispeech (2.6.1lucid1) lucid; urgency=low
+
+  * Fixed espeak.mbrola backend functionality for non-English languages.
+  * Used fr4 instead of fr1 as a default Mbrola voice for French
+    language since it is more widely available as Debian package.
+  * Slightly improved automatic language recognition.
+  * All currently supported languages are mentioned in the package
+    description.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 20:22:41 +0400
+
 multispeech (2.6.0lucid1) lucid; urgency=low
 
   * Added support for German, French, Italian, Spanish and Brazilian

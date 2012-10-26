@@ -507,8 +507,8 @@ engine = espeak
 #de = de6
 # German voice. By default de6 is used.
 #
-#fr = fr1
-# French voice. By default fr1 is used.
+#fr = fr4
+# French voice. By default fr4 is used.
 #
 #es = es1
 # Spanish voice. By default es1 is used.

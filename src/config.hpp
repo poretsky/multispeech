@@ -242,6 +242,11 @@ namespace options
     // Espeak voices assignment:
     extern const std::string en;
     extern const std::string ru;
+    extern const std::string de;
+    extern const std::string fr;
+    extern const std::string es;
+    extern const std::string br;
+    extern const std::string it;
 
     // Mbrola voices assignment:
     namespace mbrola
