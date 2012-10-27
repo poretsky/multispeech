@@ -81,7 +81,6 @@ Russian::Russian(void):
   dictionary = map_list_of
     (L"б", L"бэ")
     (L"в", L"вэ")
-    (L"ж", L"ж")
     (L"й", L"и краткое")
     (L"к", L"ка")
     (L"с", L"эс")
@@ -101,7 +100,6 @@ Russian::Russian(void):
     (L"z", L"зэт")
     (L"Б", L"бэ")
     (L"В", L"вэ")
-    (L"Ж", L"ж")
     (L"Й", L"и краткое")
     (L"К", L"ка")
     (L"С", L"эс")

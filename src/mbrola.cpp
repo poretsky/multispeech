@@ -35,9 +35,8 @@ using namespace boost::filesystem3;
 mbrola::mbrola(const configuration& conf,
                const string& backend,
                const string& voice_id,
-               const string& lang,
-               unsigned int sampling):
-  speech_engine(conf, backend, voice_id, lang, soundfile::s16, sampling, 1, false)
+               const string& lang):
+  speech_engine(conf, backend, voice_id, lang, soundfile::s16, 16000, 1, false)
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
@@ -45,7 +44,10 @@ mbrola::mbrola(const configuration& conf,
       !conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>().empty())
     {
       string cmd(conf.option_value[options::compose(speaker::mbrola, option_name::executable)].as<string>());
-      cmd += " -t %rate -f %pitch -l %freq -v 3.0 -e ";
+      cmd += " -t %rate -f %pitch -l %freq -v ";
+      // The en1 voice is especially quiet.
+      cmd += (voice == "en1") ? "3.0" : "1.0";
+      cmd += " -e ";
       if (conf.option_value.count(options::compose(speaker::mbrola, option_name::voices)))
         {
           path voice_path(complete(voice,
@@ -62,6 +64,10 @@ mbrola::mbrola(const configuration& conf,
       command(cmd);
     }
   else throw configuration::error(string("no path to ") + speaker::mbrola);
+  // Take in account some especial voices sampling rate
+  if ((voice == "de5") || (voice == "de6") ||
+      (voice == "de7") || (voice == "es2"))
+    sampling(22050);
 }
 
 

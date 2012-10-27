@@ -275,3 +275,9 @@ speech_engine::command(const string& pattern)
   if (!pattern.empty())
     command_patterns.push_front(pattern);
 }
+
+void
+speech_engine::sampling(unsigned int value)
+{
+  native_sampling = value;
+}
