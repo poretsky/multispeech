@@ -130,6 +130,9 @@ protected:
   // Add a new command pattern to the beginning of the list:
   void command(const std::string& pattern);
 
+  // Change native sampling frequency:
+  void sampling(unsigned int value);
+
   // Format substitutions to construct actual command:
   std::map<const std::string, std::string> format_macros;
 

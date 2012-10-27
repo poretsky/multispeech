@@ -59,7 +59,7 @@ espeak::voicify(double rate, double pitch)
 
 // Object construction:
 mbrespeak::mbrespeak(const configuration& conf, const string& lang):
-  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang, 16000)
+  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang)
 {
   if (conf.option_value.count(options::compose(speaker::espeak, option_name::executable)) &&
       !conf.option_value[options::compose(speaker::espeak, option_name::executable)].as<string>().empty())
