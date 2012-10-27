@@ -1,3 +1,13 @@
+multispeech (2.6.2squeeze1) squeeze; urgency=low
+
+  * Fixed usage of some Mbrola voices with unusual sampling frequency.
+  * Adjusted volume of Mbrola voices to get rid of distortion in some
+    cases.
+  * Fixed spelling procedure and avoided disturbance of some complex
+    words pronunciation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 27 Oct 2012 04:10:21 +0400
+
 multispeech (2.6.1squeeze1) squeeze; urgency=low
 
   * Fixed espeak.mbrola backend functionality for non-English languages.
