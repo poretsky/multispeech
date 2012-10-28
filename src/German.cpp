@@ -126,8 +126,8 @@ German::German(void):
     (L"([a-zäöüß])\\.([a-zäöüß])", L"$1 punkt $2", true)
     (L"([0-9])\\.([0-9])", L"$1punkt$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxzß]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxzß]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-zäöüß]", L" ", true)
     (L"(^[^-0-9a-zäöüß]+| +$)", L"", true)
     (L"  +", L" ");

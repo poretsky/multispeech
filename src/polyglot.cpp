@@ -71,7 +71,7 @@ polyglot::polyglot(const configuration& conf):
   if (!initialized)
     throw configuration::error("no speech backends are defined");
   if (fallback >= langs.size())
-    throw configuration::error("illegal fallback language");
+    throw configuration::error("fallback language is unavailable");
   if (conf.option_value.count(options::speech::language))
     language(conf.option_value[options::speech::language].as<string>());
   else language(lang_id::autodetect);
