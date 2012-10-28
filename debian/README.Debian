@@ -16,9 +16,9 @@ actual switching to it. See multispeech(1) and multispeech.conf(5) man
 pages for more info.
 
 This package is preconfigured for use freephone and mbrola with
-mbrola-en1 voice for English and ru-tts for Russian speech. So, you
-should install the suggested packages or edit configuration
-appropriately.
+mbrola-en1 voice for English, ru-tts for Russian and espeak for all
+other languages. So, you should either install respective packages
+or edit configuration appropriately.
 
 If you wish to use Multispeech in conjunction with Orca, make sure
 that DECtalk voices are enabled in the Multispeech configuration.

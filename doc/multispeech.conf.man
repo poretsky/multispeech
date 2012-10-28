@@ -181,7 +181,9 @@ runtime by respective commands.
 .br
 This option specifies the language that will be chosen when it should
 be changed, but autodetection fails. Any supported language may be
-specified here, of course, except of \(oqautodetect\(cq.
+specified here, of course, except of \(oqautodetect\(cq. Of course,
+the language declared as a fallback must be available itself. See
+below about language related options.
 .SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
 There is a separate section for each supported language named
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,

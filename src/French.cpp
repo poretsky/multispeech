@@ -135,8 +135,8 @@ French::French(void):
     (L"([a-zäâàçéèêë€ïîùûüµ])\\.([a-zäâàçéèêë€ïîùûüµ])", L"$1 point $2", true)
     (L"([0-9])\\.([0-9])", L"$1point$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxzç]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxzç]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-zäâàçéèêë€ïîùûüµ]", L" ", true)
     (L"(^[^-0-9a-zäâàçéèêë€ïîùûüµ]+| +$)", L"", true)
     (L"  +", L" ");

@@ -1,3 +1,11 @@
+multispeech (2.6.3lucid1) lucid; urgency=low
+
+  * Prevented spelling for parts of word separated by apostrophe.
+  * A bit of extra clarification in documentation.
+  * Better Italian translation for space.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 28 Oct 2012 14:33:07 +0400
+
 multispeech (2.6.2lucid1) lucid; urgency=low
 
   * Fixed usage of some Mbrola voices with unusual sampling frequency.
