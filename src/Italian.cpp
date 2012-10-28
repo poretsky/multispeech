@@ -124,7 +124,7 @@ Italian::Italian(void):
     (L"right brace", L"parentesi graffe chiusa")
     (L"less than", L"minore")
     (L"greater than", L"maggiore")
-    (L"space", L"BarraSpaziatrice")
+    (L"space", L"spazio")
     (L"tab", L"Tabulatore")
     (L"newline", L"NuovaLinea")
     (L"dot", L"Punto")
