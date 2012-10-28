@@ -87,8 +87,8 @@ English::English(void):
     (L"([a-z])\\.([a-z])", L"$1 dot $2", true)
     (L"([0-9])\\.([0-9])", L"$1period$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxz]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxz]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-z]", L" ", true)
     (L"(^[^-0-9a-z]+| +$)", L"", true)
     (L"  +", L" ");
