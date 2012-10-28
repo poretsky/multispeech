@@ -147,8 +147,8 @@ Brazilian::Brazilian(void):
     (L"([a-záâãàçéêíóôõúü])\\.([a-záâãàçéêíóôõúü])", L"$1 ponto $2", true)
     (L"([0-9])\\.([0-9])", L"$1ponto$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxzç]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxzç]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-záâãàçéêíóôõúü]", L" ", true)
     (L"(^[^-0-9a-záâãàçéêíóôõúü]+| +$)", L"", true)
     (L"  +", L" ");

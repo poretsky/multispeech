@@ -130,8 +130,8 @@ Spanish::Spanish(void):
     (L"([a-záéíñóú])\\.([a-záéíñóú])", L"$1 punto $2", true)
     (L"([0-9])\\.([0-9])", L"$1punto$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxzñ]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxzñ]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-záéíñóú]", L" ", true)
     (L"(^[^-0-9a-záéíñóú]+| +$)", L"", true)
     (L"  +", L" ");

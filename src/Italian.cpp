@@ -140,8 +140,8 @@ Italian::Italian(void):
     (L"([a-zàèéìíîòóùú])\\.([a-zàèéìíîòóùú])", L"$1 punto $2", true)
     (L"([0-9])\\.([0-9])", L"$1punto$2")
     (L"[\\+-]?[0-9]+|_", L" $& ")
-    (L"\\<[bcdfghj-np-tvwxz]+\\>", spell(this), true)
     (punctuations)
+    (L"(^|[^'])\\<[bcdfghj-np-tvwxz]+\\>([^']|$)", spell(this), true)
     (L"[^\\.,!\\?';\\:0-9a-zàèéìíîòóùú]", L" ", true)
     (L"(^[^-0-9a-zàèéìíîòóùú]+| +$)", L"", true)
     (L"  +", L" ");
