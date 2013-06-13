@@ -1,3 +1,66 @@
+multispeech (2.6.3wheezy1) wheezy; urgency=low
+
+  * Per distribution build.
+  * Fixed dependencies for Wheezy distribution.
+  * Satisfied compiler complaint.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 13 Jun 2013 22:55:25 +0400
+
+multispeech (2.6.3precise1) precise; urgency=low
+
+  * Prevented spelling for parts of word separated by apostrophe.
+  * A bit of extra clarification in documentation.
+  * Better Italian translation for space.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 28 Oct 2012 14:27:27 +0400
+
+multispeech (2.6.2precise1) precise; urgency=low
+
+  * Fixed usage of some Mbrola voices with unusual sampling frequency.
+  * Adjusted volume of Mbrola voices to get rid of distortion in some
+    cases.
+  * Fixed spelling procedure and avoided disturbance of some complex
+    words pronunciation.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 27 Oct 2012 03:58:50 +0400
+
+multispeech (2.6.1precise1) precise; urgency=low
+
+  * Fixed espeak.mbrola backend functionality for non-English languages.
+  * Used fr4 instead of fr1 as a default Mbrola voice for French
+    language since it is more widely available as Debian package.
+  * Slightly improved automatic language recognition.
+  * All currently supported languages are mentioned in the package
+    description.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 20:17:31 +0400
+
+multispeech (2.6.0precise1) precise; urgency=low
+
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 26 Oct 2012 01:33:16 +0400
+
+multispeech (2.5.1precise1) precise; urgency=low
+
+  * Distribution specific build.
+  * Linked against the modern Boost library.
+  * Accommodated to the modern Espeak.
+  * Two different path layouts for the Mbrola voices are made
+    acceptable.
+  * Default path to the Mbrola voices is corrected according to the
+    distribution conventions.
+  * Revised and improved audio stream control. Now it works correctly
+    even on the poor systems lacking stream time service.
+  * Fixed a couple of minor Russian pronunciation issues.
+  * Slightly improved tone generator. Hope it will produce a bit
+    smoother sound.
+  * Bumped standards version to 3.9.3.
+  * Corrected dependencies.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 07 Oct 2012 23:14:01 +0400
+
 multispeech (2.4.5) unstable; urgency=low
 
   * Improved robustness of sound stream control mechanism.
