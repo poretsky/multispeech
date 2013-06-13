@@ -66,7 +66,7 @@ public:
     boost::mutex::scoped_lock lock(access);
     if (std::queue<task_description>::empty())
       event.notify_one();
-    push(task);
+    this->push(task);
   }
 
   // Stop current task if any and clear the queue:
