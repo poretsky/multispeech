@@ -37,7 +37,7 @@
 #include "server.hpp"
 
 using namespace std;
-using namespace boost::filesystem3;
+using namespace boost::filesystem;
 using namespace boost::program_options;
 
 

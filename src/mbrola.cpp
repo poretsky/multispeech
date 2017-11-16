@@ -27,7 +27,7 @@
 
 using namespace std;
 using namespace boost;
-using namespace boost::filesystem3;
+using namespace boost::filesystem;
 
 
 // Object construction:
