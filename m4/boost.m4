@@ -42,7 +42,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 		AC_CHECK_HEADERS([boost/thread/thread.hpp boost/thread/mutex.hpp boost/thread/condition.hpp], [
 
 			dnl check for libboost_thread
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread -lboost_system"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
 				[[boost::thread::yield();]])], [
@@ -50,7 +50,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 				], [
 
 			dnl check for libboost_thread
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread -lboost_system"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
 				[[boost::thread::yield();]])], [
