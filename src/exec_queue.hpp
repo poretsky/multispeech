@@ -64,9 +64,9 @@ public:
   void submit(const task_description& task)
   {
     boost::mutex::scoped_lock lock(access);
-    if (std::queue<task_description>::empty())
+    if (this->empty())
       event.notify_one();
-    push(task);
+    this->push(task);
   }
 
   // Stop current task if any and clear the queue:
@@ -81,7 +81,7 @@ public:
   bool done(void)
   {
     boost::mutex::scoped_lock lock(access);
-    return std::queue<task_description>::empty() && !busy();
+    return this->empty() && !busy();
   }
 
 private:
@@ -133,8 +133,8 @@ private:
   // Clear task queue:
   void clear(void)
   {
-    while (!std::queue<task_description>::empty())
-      std::queue<task_description>::pop();
+    while (!this->empty())
+      this->pop();
   }
 
   // The following three methods are devoted to a specific task
