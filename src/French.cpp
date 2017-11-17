@@ -70,7 +70,8 @@ French::French(void):
     (L" accent grave ")
     (L" tilde ")
     (L" inférieur à ")
-    (L" supérieur à ");
+    (L" supérieur à ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -125,7 +126,8 @@ French::French(void):
     (L"dot", L"point")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Français");
+    (intern_string(id(), locale("")).c_str(), L"Français")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()

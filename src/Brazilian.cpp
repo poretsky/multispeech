@@ -70,7 +70,8 @@ Brazilian::Brazilian(void):
     (L" acento ")
     (L" til ")
     (L" menor que ")
-    (L" maior que ");
+    (L" maior que ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -137,7 +138,8 @@ Brazilian::Brazilian(void):
     (L"dot", L"ponto")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Brasileiro");
+    (intern_string(id(), locale("")).c_str(), L"Brasileiro")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()

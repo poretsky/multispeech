@@ -70,7 +70,8 @@ Spanish::Spanish(void):
     (L" acento grave ")
     (L" tilde ")
     (L" Menor que ")
-    (L" Mayor que ");
+    (L" Mayor que ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -120,7 +121,8 @@ Spanish::Spanish(void):
     (L"dot", L"punto")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Español");
+    (intern_string(id(), locale("")).c_str(), L"Español")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()

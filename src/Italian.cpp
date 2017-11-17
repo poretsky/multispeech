@@ -70,7 +70,8 @@ Italian::Italian(void):
     (L" accento ")
     (L" tilde ")
     (L" minore ")
-    (L" maggiore ");
+    (L" maggiore ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -130,7 +131,8 @@ Italian::Italian(void):
     (L"dot", L"Punto")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Italiano");
+    (intern_string(id(), locale("")).c_str(), L"Italiano")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()

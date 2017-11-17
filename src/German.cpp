@@ -70,7 +70,8 @@ German::German(void):
     (L" grave-akzent ")
     (L" tilde ")
     (L" kleiner als ")
-    (L" großer als ");
+    (L" großer als ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -116,7 +117,8 @@ German::German(void):
     (L"dot", L"Punkt")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Deutsch");
+    (intern_string(id(), locale("")).c_str(), L"Deutsch")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()
