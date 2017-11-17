@@ -56,7 +56,7 @@ private:
   boost::wsmatch parse_result;
 
   // Reference value:
-  static const double rate_scale = 200.0;
+  static BOOST_CONSTEXPR_OR_CONST double rate_scale = 200.0;
 };
 
 #endif

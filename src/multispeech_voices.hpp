@@ -38,7 +38,7 @@ public:
 
 private:
   // Reference values:
-  static const double ref_freq = 16000.0, rate_scale = 200.0;
+  static BOOST_CONSTEXPR_OR_CONST double ref_freq = 16000.0, rate_scale = 200.0;
 
   // Patterns for parameters extraction:
   const boost::wregex freq_extractor, pitch_extractor, rate_extractor, volume_extractor,
