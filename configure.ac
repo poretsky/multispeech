@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [2.6.3precise1])
+AC_INIT([Multispeech], [2.6.3wheezy2])
 AC_CONFIG_SRCDIR([src/multispeech.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
                             AM_INIT_AUTOMAKE([foreign])

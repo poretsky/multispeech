@@ -1,3 +1,9 @@
+multispeech (2.6.3wheezy2) wheezy; urgency=low
+
+  * Version fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 17 Nov 2017 19:59:37 +0300
+
 multispeech (2.6.3wheezy1) wheezy; urgency=low
 
   * Per distribution build.
