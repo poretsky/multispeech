@@ -66,11 +66,12 @@
 #ifndef SPEECH_ENGINE_HPP
 #define SPEECH_ENGINE_HPP
 
-#include <memory>
 #include <string>
 #include <locale>
 #include <list>
 #include <map>
+
+#include <boost/scoped_ptr.hpp>
 
 #include "config.hpp"
 #include "soundfile.hpp"
@@ -124,7 +125,7 @@ public:
   speech_task silence(double duration);
 
   // Language specific stuff:
-  std::auto_ptr<language_description> language;
+  boost::scoped_ptr<language_description> language;
 
 protected:
   // Add a new command pattern to the beginning of the list:

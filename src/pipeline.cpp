@@ -28,7 +28,6 @@
 #include <string>
 #include <ostream>
 #include <vector>
-#include <memory>
 
 #include <bobcat/string>
 #include <bobcat/redirector>
@@ -36,6 +35,7 @@
 #include "pipeline.hpp"
 
 using namespace std;
+using namespace boost;
 using namespace FBB;
 
 
@@ -120,7 +120,7 @@ pipeline::childProcess(void)
 {
   vector<string> parsed_command;
   String::split(&parsed_command, commands.top());
-  auto_ptr<const char*> argv(String::argv(parsed_command));
+  scoped_ptr<const char*> argv(String::argv(parsed_command));
   execvp(argv.get()[0], const_cast<char* const *>(argv.get()));
 }
 

@@ -30,9 +30,10 @@
 
 #include <string>
 #include <ostream>
-#include <memory>
 #include <queue>
 #include <stack>
+
+#include <boost/scoped_ptr.hpp>
 
 #include <bobcat/fork>
 #include <bobcat/pipe>
@@ -95,8 +96,8 @@ private:
   int feeder;
 
   // Data streams control means:
-  std::auto_ptr<FBB::OFdStreambuf> input;
-  std::auto_ptr<FBB::Pipe> connector, outlet;
+  boost::scoped_ptr<FBB::OFdStreambuf> input;
+  boost::scoped_ptr<FBB::Pipe> connector, outlet;
 
   // Temporary command storage:
   script commands;

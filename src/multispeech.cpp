@@ -18,10 +18,11 @@
 */
 
 #include <cstdlib>
-#include <memory>
 #include <exception>
 #include <string>
 #include <iostream>
+
+#include <boost/scoped_ptr.hpp>
 
 #include <bobcat/syslogstream>
 
@@ -32,13 +33,14 @@
 #include "frontend.hpp"
 
 using namespace std;
+using namespace boost;
 using namespace FBB;
 using namespace portaudio;
 
 int main(int argc, char* argv[])
 {
   unsetenv("DISPLAY");
-  auto_ptr<server> multispeech;
+  scoped_ptr<server> multispeech;
   AutoSystem audio;
 
   try
@@ -58,7 +60,7 @@ int main(int argc, char* argv[])
         cerr << "Configuration error: " << error.what() << endl;
       return EXIT_FAILURE;
     }
-  catch (const exception& error)
+  catch (const std::exception& error)
     {
       server::log << SyslogStream::err << error.what() << configuration::stage << endl;
       if (server::verbose)

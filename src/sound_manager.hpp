@@ -27,10 +27,10 @@
 #ifndef SOUND_MANAGER_HPP
 #define SOUND_MANAGER_HPP
 
-#include <memory>
 #include <queue>
 
 #include <boost/any.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
@@ -131,7 +131,7 @@ private:
   activity business;
 
   // Job queues.
-  std::auto_ptr<jobs_queue> jobs, backup;
+  boost::shared_ptr<jobs_queue> jobs, backup;
 
   // Sound streams.
   file_player sounds;

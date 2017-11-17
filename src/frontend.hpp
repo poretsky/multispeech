@@ -21,9 +21,8 @@
 #ifndef FRONTEND_HPP
 #define FRONTEND_HPP
 
-#include <memory>
-
 #include <boost/regex.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include "server.hpp"
 #include "inline_parser.hpp"
@@ -40,7 +39,7 @@ private:
   bool perform_command(void);
 
   // Additional parsers for inline parameters extraction:
-  std::auto_ptr<inline_parser> native_params, dtk_params;
+  boost::scoped_ptr<inline_parser> native_params, dtk_params;
 
   // Extract embedded parameters:
   inline_parser* extract_parameters(void);
