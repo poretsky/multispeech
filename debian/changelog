@@ -1,3 +1,40 @@
+multispeech (2.6.4xenial1) xenial; urgency=low
+
+  * Distribution specific build.
+  * Prevented spelling for parts of word separated by apostrophe.
+  * A bit of extra clarification in documentation.
+  * Better Italian translation for space.
+  * Fixed usage of some Mbrola voices with unusual sampling frequency.
+  * Adjusted volume of Mbrola voices to get rid of distortion in some
+    cases.
+  * Fixed spelling procedure and avoided disturbance of some complex
+    words pronunciation.
+  * Fixed espeak.mbrola backend functionality for non-English languages.
+  * Used fr4 instead of fr1 as a default Mbrola voice for French
+    language since it is more widely available as Debian package.
+  * Slightly improved automatic language recognition.
+  * All currently supported languages are mentioned in the package
+    description.
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+  * Linked against the modern Boost library.
+  * Accommodated to the modern Espeak.
+  * Two different path layouts for the Mbrola voices are made
+    acceptable.
+  * Default path to the Mbrola voices is corrected according to the
+    distribution conventions.
+  * Revised and improved audio stream control. Now it works correctly
+    even on the poor systems lacking stream time service.
+  * Fixed a couple of minor Russian pronunciation issues.
+  * Slightly improved tone generator. Hope it will produce a bit
+    smoother sound.
+  * Bumped standards version to 3.9.7.
+  * Corrected dependencies.
+  * Boost smart pointers are used instead of auto_ptr.
+  * Fixed various modern compiler related issues.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 18 Nov 2017 02:45:06 +0300
+
 multispeech (2.4.5) unstable; urgency=low
 
   * Improved robustness of sound stream control mechanism.
