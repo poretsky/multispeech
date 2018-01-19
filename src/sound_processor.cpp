@@ -24,40 +24,42 @@ using namespace boost;
 using namespace soundtouch;
 
 
-// Static data:
-const unsigned int sound_processor::soundmaster::chunk_size = 128;
-
-
 // Construct / destroy:
 
-sound_processor::sound_processor(void):
+sound_processor::sound_processor(FIFOSamplePipe& conveyer):
+  fifo(conveyer),
   state(inactive),
-  chunk_size(0)
+  capacity(0)
 {
 }
 
 sound_processor::~sound_processor(void)
 {
-  stop_processing();
 }
 
 
 // Public methods:
 
 void
-sound_processor::start_processing(void)
+sound_processor::start_processing(unsigned int reserve)
 {
   stop_processing();
-  chunk_size = 0;
+  capacity = reserve;
   state = hungry;
   thread(soundmaster(this));
+  if (reserve)
+    {
+      mutex::scoped_lock lock(access);
+      while (state == hungry)
+        event.wait(lock);
+    }
 }
 
 void
 sound_processor::stop_processing(void)
 {
   mutex::scoped_lock lock(access);
-  clear();
+  fifo.clear();
   if (state != inactive)
     {
       state = quit;
@@ -72,24 +74,32 @@ sound_processor::read_result(float* buffer, unsigned int nframes)
 {
   unsigned int obtained;
   mutex::scoped_lock lock(access);
-  if (chunk_size < nframes)
-    {
-      chunk_size = nframes;
-      if ((state == replete) && (numSamples() < nframes))
-        {
-          state = hungry;
-          event.notify_all();
-        }
-    }
   while (state == hungry)
     event.wait(lock);
-  obtained = receiveSamples(buffer, nframes);
-  if ((state == replete) && (numSamples() < nframes))
+  if ((state == replete) && (fifo.numSamples() < nframes))
+    {
+      if (capacity < nframes)
+        capacity = nframes;
+      state = hungry;
+      event.notify_all();
+      while (state == hungry)
+        event.wait(lock);
+    }
+  obtained = fifo.receiveSamples(buffer, nframes);
+  if (state == replete)
     {
       state = hungry;
       event.notify_all();
     }
   return obtained;
+}
+
+
+// Private methods:
+
+void
+sound_processor::flush(void)
+{
 }
 
 
@@ -103,42 +113,30 @@ sound_processor::soundmaster::soundmaster(sound_processor* owner):
 void
 sound_processor::soundmaster::operator()(void)
 {
-  float buffer[chunk_size * holder->channels];
+  float buffer[chunk_size * holder->nChannels()];
   unsigned int obtained;
-
+  mutex::scoped_lock lock(holder->access);
   while (holder->state != quit)
     {
-      {
-        mutex::scoped_lock lock(holder->access);
       while (holder->state == replete)
         holder->event.wait(lock);
-      }
-
-      {
-        mutex::scoped_lock lock(holder->access);
-        if (holder->state == hungry)
-          {
-            obtained = holder->get_source(buffer, chunk_size);
-            if (obtained)
-              holder->putSamples(buffer, obtained);
-            if (obtained < chunk_size)
-              {
-                holder->flush();
-                holder->state = quit;
-              }
-            else if ((!holder->chunk_size && !holder->isEmpty()) ||
-                     (holder->chunk_size && (holder->numSamples() >= holder->chunk_size)))
-              {
-                holder->state = replete;
-                holder->event.notify_all();
-              }
-          }
-      }
+      if (holder->state == hungry)
+        {
+          obtained = holder->get_source(buffer, chunk_size);
+          if (obtained)
+            holder->fifo.putSamples(buffer, obtained);
+          if (obtained < chunk_size)
+            {
+              holder->flush();
+              holder->state = quit;
+            }
+          else if (holder->fifo.numSamples() >= holder->capacity)
+            {
+              holder->state = replete;
+              holder->event.notify_all();
+            }
+        }
     }
-
-  {
-    mutex::scoped_lock lock(holder->access);
-    holder->state = inactive;
-    holder->event.notify_all();
-  }
+  holder->state = inactive;
+  holder->event.notify_all();
 }
