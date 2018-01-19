@@ -62,11 +62,11 @@ dtk_voices = on
 # This value is applied to the audio output in general.
 # It should be in the range of (0.0..1.0]. Default value is 0.8.
 #
-#latency = 0.0
-# Audio output latency in seconds. Default value 0.0 implies
-# that reasonable latency will be chosen automatically.
+#latency = 0.05
+# Audio output latency in seconds. Special value 0.0 implies
+# that reasonable latency will be chosen automatically by system.
 # Normally this option should not be set up explicitly.
-# Do it only if you are pretty unsatisfied by the automatic choice.
+# Do it only if you are pretty unsatisfied by the default.
 
 [sounds]
 # Sound files playing control options.

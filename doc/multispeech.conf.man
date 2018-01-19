@@ -98,10 +98,10 @@ specified the default value 0.8 is used.
 .TP
 .B latency
 .br
-Audio output latency in seconds. Default value 0.0 implies
-that reasonable latency will be chosen automatically.
+Audio output latency in seconds. Special value 0.0 implies
+that reasonable latency will be chosen automatically by system.
 Normally this option should not be set up explicitly.
-Do it only if you are pretty unsatisfied by the automatic choice.
+Do it only if you are pretty unsatisfied by the default.
 .SH "SOUNDS PLAYING CONTROL OPTIONS"
 Section name is \(oqsounds\(cq. It contains several options that
 affect sound file playing capability:
