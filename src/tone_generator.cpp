@@ -135,7 +135,7 @@ tone_generator::execute(const tone_task& tone)
   step = omega / static_cast<float>(sampling);
   count = 0;
   fade_in = fade_out = static_cast<int>(floor(fminf(duration, 0.1) * static_cast<float>(sampling) / 10.0 + 0.5));
-  start_processing();
+  start_processing(bufsize(sampling));
   start_playback(tone.volume * relative_volume, sampling, 1);
 }
 
