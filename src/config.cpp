@@ -367,7 +367,7 @@ configuration::configuration(int argc, char* argv[])
     // General audio options:
     (audio::device, value<string>()->default_value(""))
     (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
-    (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.0))
+    (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.05))
 
     // Sound files playing section:
     (sounds::device, value<string>()->default_value(""))

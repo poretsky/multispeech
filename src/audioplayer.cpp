@@ -34,7 +34,7 @@ using namespace portaudio;
 // Static data:
 condition audioplayer::complete;
 mutex audioplayer::control;
-PaTime audioplayer::suggested_latency = 20;
+PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
 
 
