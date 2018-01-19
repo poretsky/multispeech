@@ -137,7 +137,7 @@ loudspeaker::start(const speech_task& speech)
               accelerator.setChannels(soundfile::channels);
               accelerator.setSampleRate(samplerate);
               accelerator.setTempoChange(speech.accelerate);
-              start_processing();
+              start_processing(bufsize(playing_rate));
             }
           start_playback(speech.volume * relative_volume,
                          playing_rate, soundfile::channels);
