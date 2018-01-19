@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// The sound_processor class provides the SoundTouch sound processing
+// The sound_processor class provides general sound processing
 // functionality allowing to do all the work as a background process.
 // To retrieve source data this process uses private virtual method
 // get_source() that must be defined in the derived classes.
@@ -30,17 +30,17 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
-#include <soundtouch/SoundTouch.h>
+#include <soundtouch/FIFOSamplePipe.h>
 
-class sound_processor: public soundtouch::SoundTouch
+class sound_processor
 {
 public:
   // Construct / destroy:
-  sound_processor(void);
+  sound_processor(soundtouch::FIFOSamplePipe& conveyer);
   ~sound_processor(void);
 
   // Background processing control:
-  void start_processing(void);
+  void start_processing(unsigned int reserve = 0);
   void stop_processing(void);
   unsigned int read_result(float* buffer, unsigned int nframes);
 
@@ -69,21 +69,30 @@ private:
     sound_processor* holder;
 
     // Chunk size for data input:
-    static const unsigned int chunk_size;
+    static const unsigned int chunk_size = 128;
   };
 
   friend class soundmaster;
+
+  // Actual production line:
+  soundtouch::FIFOSamplePipe& fifo;
 
   // Thread synchronization control:
   boost::mutex access;
   boost::condition event;
   status state;
 
-  // Suggested chunk size for output:
-  unsigned int chunk_size;
+  // Amount of data to keep ready:
+  unsigned int capacity;
 
   // Query source. Must be implemented in the derived classes.
   virtual unsigned int get_source(float* buffer, unsigned int nframes) = 0;
+
+  // get number of channels. Must be implemented in the derived classes.
+  virtual unsigned int nChannels(void) = 0;
+
+  // Flush remaining data if any. Implemented as dummy here.
+  virtual void flush();
 };
 
 #endif

@@ -78,6 +78,7 @@ loudspeaker::loudspeaker(const configuration& conf):
   soundfile(conf.option_value[options::speech::device].as<string>().empty() ?
             conf.option_value[options::audio::device].as<string>() :
             conf.option_value[options::speech::device].as<string>()),
+  sound_processor(accelerator),
   silence_timer(0),
   need_processing(false)
 {
@@ -85,6 +86,7 @@ loudspeaker::loudspeaker(const configuration& conf):
 
 loudspeaker::~loudspeaker(void)
 {
+  stop_processing();
 }
 
 
@@ -132,9 +134,9 @@ loudspeaker::start(const speech_task& speech)
           if (speech.accelerate != 0.0)
             {
               need_processing = true;
-              setChannels(soundfile::channels);
-              setSampleRate(samplerate);
-              setTempoChange(speech.accelerate);
+              accelerator.setChannels(soundfile::channels);
+              accelerator.setSampleRate(samplerate);
+              accelerator.setTempoChange(speech.accelerate);
               start_processing();
             }
           start_playback(speech.volume * relative_volume,
@@ -146,7 +148,6 @@ loudspeaker::start(const speech_task& speech)
 
 
 // Private methods:
-
 
 unsigned int
 loudspeaker::source_read(float* buffer, unsigned int nframes)
@@ -214,6 +215,18 @@ loudspeaker::get_source(float* buffer, unsigned int nframes)
       else obtained = sf_readf_float(source, buffer, nframes);
     }
   return obtained;
+}
+
+unsigned int
+loudspeaker::nChannels(void)
+{
+  return soundfile::channels;
+}
+
+void
+loudspeaker::flush(void)
+{
+  accelerator.flush();
 }
 
 void
