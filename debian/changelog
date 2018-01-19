@@ -1,3 +1,12 @@
+multispeech (2.6.5precise1) precise; urgency=low
+
+  * Tone signals quality improvement.
+  * Audio buffering setup according to playback frequency.
+  * Explicitly defined default audio latency instead of relying on
+    system choice.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Jan 2018 23:31:35 +0300
+
 multispeech (2.6.3precise1) precise; urgency=low
 
   * Prevented spelling for parts of word separated by apostrophe.
