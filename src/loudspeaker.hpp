@@ -26,6 +26,8 @@
 
 #include <string>
 
+#include <soundtouch/SoundTouch.h>
+
 #include "config.hpp"
 #include "soundfile.hpp"
 #include "sound_processor.hpp"
@@ -101,10 +103,19 @@ private:
   // Get a sound chunk for processing:
   unsigned int get_source(float* buffer, unsigned int nframes);
 
+  // Get number of channels:
+  unsigned int nChannels(void);
+
+  // Flush remaining accelerator data:
+  void flush(void);
+
   // Attach to the sound stream by file descriptor:
   void attach(int fd);
 
   friend class pipeline;
+
+  // Speech rate accelerator:
+  soundtouch::SoundTouch accelerator;
 
   // External TTS pipeline:
   pipeline tts;
