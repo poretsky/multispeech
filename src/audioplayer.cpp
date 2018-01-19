@@ -105,6 +105,12 @@ audioplayer::active(void)
 
 // Protected methods:
 
+unsigned int
+audioplayer::bufsize(unsigned int rate)
+{
+  return ((rate + 5000) / 10000) << 8;
+}
+
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
@@ -113,6 +119,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
   frame_size = channels;
   sampling_rate = static_cast<double>(rate);
   params.setSampleRate(sampling_rate);
+  params.setFramesPerBuffer(bufsize(rate));
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())
     {
