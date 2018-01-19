@@ -25,8 +25,11 @@
 #ifndef TONE_GENERATOR_HPP
 #define TONE_GENERATOR_HPP
 
+#include <soundtouch/FIFOSampleBuffer.h>
+
 #include "config.hpp"
 #include "audioplayer.hpp"
+#include "sound_processor.hpp"
 #include "exec_queue.hpp"
 
 // Tone producing task description is represented by frequency in Hz,
@@ -49,6 +52,7 @@ private:
 
 class tone_generator:
   public audioplayer,
+  private sound_processor,
   private exec_queue<tone_task>
 {
 public:
@@ -78,9 +82,15 @@ private:
   float omega_t, step;
   int count, amount, fade_in, fade_out;
 
+  soundtouch::FIFOSampleBuffer fifo;
+
   // Methods required by audioplayer:
   unsigned int source_read(float* buffer, unsigned int nframes);
   void source_release(void);
+
+  // Methods required by sound_processor:
+  unsigned int get_source(float* buffer, unsigned int nframes);
+  unsigned int nChannels(void);
 
   // Methods required by exec_queue:
   void execute(const tone_task& task);
