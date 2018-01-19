@@ -47,12 +47,15 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 tone_generator::tone_generator(const configuration& conf):
   audioplayer(conf.option_value[options::tones::device].as<string>().empty() ?
               conf.option_value[options::audio::device].as<string>() :
-              conf.option_value[options::tones::device].as<string>())
+              conf.option_value[options::tones::device].as<string>()),
+  sound_processor(fifo),
+  fifo(1)
 {
 }
 
 tone_generator::~tone_generator(void)
 {
+  stop_processing();
 }
 
 
@@ -82,24 +85,44 @@ tone_generator::active(void)
 // Private methods:
 
 unsigned int
-tone_generator::source_read(float* buffer, unsigned int nframes)
+tone_generator::get_source(float* buffer, unsigned int nframes)
 {
   unsigned int n;
   for (n = 0; (n < nframes) && (count < amount); n++, count++, omega_t += step)
     {
-      float fade = 1.0;
+      if (omega_t > (2.0 * M_PI))
+        omega_t -= 2.0 * M_PI;
+      buffer[n] = sinf(omega_t);
       if (count < (fade_in - 1))
-        fade = static_cast<float>(count + 1) / static_cast<float>(fade_in);
+        {
+          float fade = static_cast<float>(count + 1) / static_cast<float>(fade_in);
+          buffer[n] *= fade * (2.0 - fade);
+        }
       else if ((amount - count) < fade_out)
-        fade = static_cast<float>(count + 1) / static_cast<float>(fade_in);
-      buffer[n] = sinf(omega_t) * fade * fade;
+        {
+          float fade = static_cast<float>(amount - count) / static_cast<float>(fade_out);
+          buffer[n] *= fade * (2.0 - fade);
+        }
     }
   return n;
+}
+
+unsigned int
+tone_generator::nChannels(void)
+{
+  return 1;
+}
+
+unsigned int
+tone_generator::source_read(float* buffer, unsigned int nframes)
+{
+  return read_result(buffer, nframes);
 }
 
 void
 tone_generator::source_release(void)
 {
+  stop_processing();
 }
 
 void
@@ -111,7 +134,8 @@ tone_generator::execute(const tone_task& tone)
   omega_t = 0.5 * (duration - (static_cast<float>(amount - 1) / static_cast<float>(sampling))) * omega;
   step = omega / static_cast<float>(sampling);
   count = 0;
-  fade_in = fade_out = static_cast<int>(floor(duration / 10.0 + 0.5));
+  fade_in = fade_out = static_cast<int>(floor(fminf(duration, 0.1) * static_cast<float>(sampling) / 10.0 + 0.5));
+  start_processing();
   start_playback(tone.volume * relative_volume, sampling, 1);
 }
 
