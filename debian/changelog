@@ -1,3 +1,12 @@
+multispeech (2.6.5jessie1) jessie; urgency=low
+
+  * Tone signals quality improvement.
+  * Audio buffering setup according to playback frequency.
+  * Explicitly defined default audio latency instead of relying on
+    system choice.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Jan 2018 23:55:31 +0300
+
 multispeech (2.6.4jessie1) jessie; urgency=low
 
   * Distribution specific build.
