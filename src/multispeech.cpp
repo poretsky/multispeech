@@ -17,6 +17,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <cstdlib>
 #include <exception>
 #include <string>
@@ -40,34 +45,64 @@ using namespace portaudio;
 int main(int argc, char* argv[])
 {
   unsetenv("DISPLAY");
+
   scoped_ptr<server> multispeech;
-  AutoSystem audio;
+  AutoSystem audio(false);
+  int efd = dup(STDERR_FILENO);
 
   try
     {
       configuration conf(argc, argv);
+
+      if (!server::verbose)
+        {
+          int fd = open("/dev/null", O_WRONLY);
+          if (fd >= 0)
+            {
+              dup2(fd, STDERR_FILENO);
+              close(fd);
+            }
+        }
+
+      if (server::verbose)
+        cerr << "Initializing audio system..." << endl;
+      audio.initialize();
+      if (server::verbose)
+        cerr << "Audio system initialization complete." << endl;
       multispeech.reset(new frontend(conf));
     }
   catch (const string& info)
     {
       cout << info << endl;
+      if (efd >= 0)
+        close(efd);
       return EXIT_SUCCESS;
     }
   catch (const configuration::error& error)
     {
       server::log << SyslogStream::err << error.what() << endl;
-      if (server::verbose)
-        cerr << "Configuration error: " << error.what() << endl;
+      if (efd >= 0)
+        {
+          dup2(efd, STDERR_FILENO);
+          close(efd);
+        }
+      cerr << "Configuration error: " << error.what() << endl;
       return EXIT_FAILURE;
     }
   catch (const std::exception& error)
     {
       server::log << SyslogStream::err << error.what() << configuration::stage << endl;
-      if (server::verbose)
-        cerr << "Error" << configuration::stage << ": " << error.what() << endl;
+      if (efd >= 0)
+        {
+          dup2(efd, STDERR_FILENO);
+          close(efd);
+        }
+      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
       return EXIT_FAILURE;
     }
 
+  if (efd >= 0)
+    close(efd);
   multispeech->run();
 
   return EXIT_SUCCESS;
