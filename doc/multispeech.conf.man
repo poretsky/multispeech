@@ -110,6 +110,14 @@ Normally it is absolutely not necessary, thus, disabled by default,
 but theoretically there can be some circumstances where it would be
 preferable. Use the word \(oqyes\(cq or \(oqon\(cq to enable and the word
 \(oqno\(cq or \(oqoff\(cq to disable.
+.TP
+.B pulseaudio_direct
+.br
+This option allows direct usage of PulseAudio API for \(oqpulse\(cq and
+\(oqdefault\(cq devices when \(oqpulse\(cq device is present in the system.
+If it is disabled, these devices will be accessed via native host
+API bridge. Use the word \(oqyes\(cq or \(oqon\(cq to enable and the word
+\(oqno\(cq or \(oqoff\(cq to disable.
 .SH "SOUNDS PLAYING CONTROL OPTIONS"
 Section name is \(oqsounds\(cq. It contains several options that
 affect sound file playing capability:

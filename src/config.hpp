@@ -92,6 +92,7 @@ namespace options
     extern const char* const general_volume;
     extern const char* const latency;
     extern const char* const async_operation;
+    extern const char* const pulseaudio_direct;
   };
 
   // Sound files playing section:

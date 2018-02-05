@@ -46,11 +46,13 @@
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
+#include <pulse/simple.h>
+
 class audioplayer: private portaudio::CallbackInterface
 {
 public:
   // Construct / destroy:
-  audioplayer(const std::string& device_name);
+  audioplayer(const std::string& device_name, const char* stream_id);
   virtual ~audioplayer(void);
 
   // Playing process control:
@@ -64,6 +66,7 @@ public:
   static PaTime suggested_latency;
   static float general_volume;
   static bool async;
+  static bool use_pa;
 
 protected:
   // Internal buffer size in samples for specified rate:
@@ -106,6 +109,13 @@ private:
   double sampling_rate;
   PaTime current_time, buffer_time, finish_time;
   bool stream_time_available;
+
+  // Pulseaudio support means:
+  pa_simple* paStream;
+  const char* paStreamId;
+  pa_sample_spec paStreamParams;
+  pa_buffer_attr paBufAttr;
+  bool paActive;
 
   // Internal audiostream control:
   PaTime clock_time(void);
