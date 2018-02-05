@@ -18,6 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <sysconfig.h>
+
+#include <cmath>
 #include <ctime>
 #include <exception>
 
@@ -38,46 +41,64 @@ mutex audioplayer::control;
 PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
 bool audioplayer::async = false;
+bool audioplayer::use_pa = true;
 
 
 // Construct / destroy:
 
-audioplayer::audioplayer(const string& device_name):
+audioplayer::audioplayer(const string& device_name, const char* stream_id):
   playing(false),
-  stream(async ?
-         reinterpret_cast<Stream*>(new InterfaceCallbackStream) :
-         reinterpret_cast<Stream*>(new BlockingStream)),
+  stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
          0.0,
          paFramesPerBufferUnspecified,
-         paPrimeOutputBuffersUsingStreamCallback)
+         paPrimeOutputBuffersUsingStreamCallback),
+  paStream(NULL),
+  paStreamId(stream_id),
+  paActive(false)
 {
-  string devname(device_name);
   System& system = System::instance();
-  PaDeviceIndex device = system.defaultOutputDevice().index();
-  PaTime latency = suggested_latency;
-  if (devname.empty())
+  PaDeviceIndex devidx = device_name.empty() ?
+    system.defaultOutputDevice().index() :
+    find_device(device_name);
+  if (devidx == paNoDevice)
+    throw configuration::error("audio output device \"" + device_name + "\" is not found");
+  Device& device = system.deviceByIndex(devidx);
+  if (device.isInputOnlyDevice())
+    throw configuration::error("audio device \"" + string(device.name()) + "\" is not valid");
+  devidx = use_pa ? find_device("pulse") : paNoDevice;
+  if ((devidx == paNoDevice) || ((device.index() != system.defaultOutputDevice().index()) && (device.index() != devidx)))
+    stream = async ?
+      reinterpret_cast<Stream*>(new InterfaceCallbackStream) :
+      reinterpret_cast<Stream*>(new BlockingStream);
+  if (stream)
     {
-      devname = system.deviceByIndex(device).name();
-      if (devname.empty())
-        devname = "default";
-      device = find_device(devname);
+      PaTime latency = (suggested_latency > 0.0) ?
+        suggested_latency :
+        device.defaultLowOutputLatency();
+      params.setOutputParameters(DirectionSpecificStreamParameters(device,
+                                                                   2, FLOAT32, true,
+                                                                   latency, NULL));
+      params.setSampleRate(device.defaultSampleRate());
+      if (!params.isSupported())
+        throw configuration::error("cannot properly initialize audio device \"" + string(device.name()) + "\"");
     }
-  else device = find_device(devname);
-  if (latency <= 0.0)
-    latency = system.deviceByIndex(device).defaultLowOutputLatency();
-  params.setOutputParameters(DirectionSpecificStreamParameters(system.deviceByIndex(device),
-                                                               2, FLOAT32, true,
-                                                               latency, NULL));
-  params.setSampleRate(system.deviceByIndex(device).defaultSampleRate());
-  if (!params.isSupported())
-    throw configuration::error("cannot properly initialize audio device \"" + devname + "\"");
+  else
+    {
+      paStreamParams.format = PA_SAMPLE_FLOAT32;
+      paBufAttr.maxlength = -1;
+      paBufAttr.tlength = -1;
+      paBufAttr.prebuf = -1;
+      paBufAttr.minreq = -1;
+      paBufAttr.fragsize = -1;
+    }
 }
 
 audioplayer::~audioplayer(void)
 {
-  delete stream;
+  if (stream)
+    delete stream;
 }
 
 
@@ -90,7 +111,7 @@ audioplayer::stop(void)
     {
       mutex::scoped_lock lock(access);
       playing = false;
-      if (!async)
+      if (!(async && stream))
         abandon.notify_all();
     }
   while (stream_is_active())
@@ -129,31 +150,53 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
   sampling_rate = static_cast<double>(rate);
   params.setSampleRate(sampling_rate);
   params.setFramesPerBuffer(bufsize(rate));
-  params.outputParameters().setNumChannels(channels);
-  if (params.isSupported())
+  if (stream)
     {
-      if (async)
-        dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
-      else dynamic_cast<BlockingStream*>(stream)->open(params);
-      if (stream->isOpen())
+      params.outputParameters().setNumChannels(channels);
+      if (params.isSupported())
         {
-          playing = true;
-          finish_time = 0;
           if (async)
+            dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
+          else dynamic_cast<BlockingStream*>(stream)->open(params);
+          if (stream->isOpen())
             {
-              stream_time_available = stream->time() != 0;
-              stream->setStreamFinishedCallback(release);
+              playing = true;
+              finish_time = 0;
+              if (async)
+                {
+                  stream_time_available = stream->time() != 0;
+                  stream->setStreamFinishedCallback(release);
+                }
+              else stream_time_available = false;
+              if (!stream_time_available)
+                buffer_time = clock_time() + stream->outputLatency();
+              stream->start();
+              if (!async)
+                thread(playback(this));
             }
-          else stream_time_available = false;
-          if (!stream_time_available)
-            buffer_time = clock_time() + stream->outputLatency();
-          stream->start();
-          if (!async)
-            thread(playback(this));
+          else source_release();
         }
       else source_release();
     }
-  else source_release();
+  else
+    {
+      paStreamParams.rate = rate;
+      paStreamParams.channels = channels;
+      if (pa_sample_spec_valid(&paStreamParams))
+        {
+          paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
+          paStream = pa_simple_new(NULL, PACKAGE_NAME, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
+          if (paStream)
+            {
+              playing = true;
+              paActive = true;
+              buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
+              thread(playback(this));
+            }
+          else source_release();
+        }
+      else source_release();
+    }
 }
 
 
@@ -171,7 +214,9 @@ bool
 audioplayer::stream_is_active(void)
 {
   mutex::scoped_lock exclusive(control);
-  return stream->isOpen() && stream->isActive();
+  if (stream)
+    return stream->isOpen() && stream->isActive();
+  return paStream && paActive;
 }
 
 bool
@@ -185,8 +230,16 @@ void
 audioplayer::close_stream(void)
 {
   mutex::scoped_lock exclusive(control);
-  if (stream->isOpen())
-    stream->close();
+  if (stream)
+    {
+      if (stream->isOpen())
+        stream->close();
+    }
+  else if (paStream)
+    {
+      pa_simple_free(paStream);
+      paStream = NULL;
+    }
 }
 
 PaDeviceIndex
@@ -196,12 +249,8 @@ audioplayer::find_device(const string& device_name)
   System::DeviceIterator found;
   for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
     if (found->name() == device_name)
-      break;
-  if (found == system.devicesEnd())
-    throw configuration::error("audio device \"" + device_name + "\" is not found");
-  if (found->isInputOnlyDevice())
-    throw configuration::error("audio device \"" + device_name + "\" is not valid");
-  return found->index();
+      return found->isInputOnlyDevice() ? paNoDevice : found->index();
+  return paNoDevice;
 }
 
 int
@@ -260,7 +309,8 @@ audioplayer::playback::playback(audioplayer* owner):
 void
 audioplayer::playback::operator()(void)
 {
-  BlockingStream* stream = dynamic_cast<BlockingStream*>(master->stream);
+  BlockingStream* stream = master->stream ? dynamic_cast<BlockingStream*>(master->stream) : NULL;
+  unsigned int paFrameSize = stream ? 0 : pa_frame_size(&master->paStreamParams);
   unsigned int chunk_size = master->params.framesPerBuffer();
   float buffer[chunk_size * master->frame_size];
   while (!master->stream_is_over())
@@ -271,12 +321,14 @@ audioplayer::playback::operator()(void)
           {
             for (unsigned int i = 0; i < (obtained * master->frame_size); i++)
               buffer[i] *= master->volume_level;
-            stream->write(buffer, obtained);
+            if (stream)
+              stream->write(buffer, obtained);
+            else pa_simple_write(master->paStream, buffer, obtained * paFrameSize, NULL);
             master->buffer_time += static_cast<double>(obtained) / master->sampling_rate;
           }
         catch (const std::exception& error)
           {
-            if (stream->isActive())
+            if ((!stream) || stream->isActive())
               continue;
             else break;
           }
@@ -290,11 +342,20 @@ audioplayer::playback::operator()(void)
       break;
   if (master->playing)
     {
-      if (stream->isActive())
+      if (!stream)
+        pa_simple_drain(master->paStream, NULL);
+      else if (stream->isActive())
         stream->stop();
       master->playing = false;
     }
+  else if (!stream)
+    pa_simple_flush(master->paStream, NULL);
   else if (stream->isActive())
     stream->abort();
+  if (!stream)
+    {
+      mutex::scoped_lock exclusive(control);
+      master->paActive = false;
+    }
   complete.notify_all();
 }
