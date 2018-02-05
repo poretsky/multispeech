@@ -74,6 +74,13 @@ dtk_voices = on
 # but theoretically there can be some circumstances where it would be
 # preferable. Use the word "yes" or "on" to enable and the word
 # "no" or "off" to disable.
+#
+#pulseaudio_direct = yes
+# This option allows direct usage of PulseAudio API for "pulse" and
+# "default" devices when "pulse" device is present in the system.
+# If it is disabled, these devices will be accessed via native host
+# API bridge. Use the word "yes" or "on" to enable and the word
+# "no" or "off" to disable.
 
 [sounds]
 # Sound files playing control options.

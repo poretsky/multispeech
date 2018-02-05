@@ -27,8 +27,8 @@ using namespace std;
 
 // Construct / destroy:
 
-soundfile::soundfile(const string& device_name):
-  audioplayer(device_name),
+soundfile::soundfile(const string& device_name, const char* stream_id):
+  audioplayer(device_name, stream_id),
   source(NULL)
 {
 }

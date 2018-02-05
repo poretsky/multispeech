@@ -118,6 +118,7 @@ namespace options
     const char* const general_volume = "audio.general_volume";
     const char* const latency = "audio.latency";
     const char* const async_operation = "audio.async_operation";
+    const char* const pulseaudio_direct = "audio.pulseaudio_direct";
   };
 
   // Sound files playing section:
@@ -370,6 +371,7 @@ configuration::configuration(int argc, char* argv[])
     (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
     (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.05))
     (audio::async_operation, bool_switch(&audioplayer::async)->default_value(false))
+    (audio::pulseaudio_direct, bool_switch(&audioplayer::use_pa)->default_value(true))
 
     // Sound files playing section:
     (sounds::device, value<string>()->default_value(""))
