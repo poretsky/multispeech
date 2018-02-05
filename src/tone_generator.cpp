@@ -47,7 +47,8 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 tone_generator::tone_generator(const configuration& conf):
   audioplayer(conf.option_value[options::tones::device].as<string>().empty() ?
               conf.option_value[options::audio::device].as<string>() :
-              conf.option_value[options::tones::device].as<string>()),
+              conf.option_value[options::tones::device].as<string>(),
+              "tones"),
   sound_processor(fifo),
   fifo(1)
 {

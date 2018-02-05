@@ -77,7 +77,8 @@ speech_task::silence_params(unsigned int sampling, unsigned int length)
 loudspeaker::loudspeaker(const configuration& conf):
   soundfile(conf.option_value[options::speech::device].as<string>().empty() ?
             conf.option_value[options::audio::device].as<string>() :
-            conf.option_value[options::speech::device].as<string>()),
+            conf.option_value[options::speech::device].as<string>(),
+            "speech"),
   sound_processor(accelerator),
   silence_timer(0),
   need_processing(false)
