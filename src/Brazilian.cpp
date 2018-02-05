@@ -35,7 +35,7 @@ using namespace boost::algorithm;
 // Object construction:
 
 Brazilian::Brazilian(void):
-  language_description(lang_id::br, L"[ãôõÁÂÃÊÔÕ]|(^| )(não|você|está|el[ae]|isso|meu) ")
+  language_description(lang_id::br, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
