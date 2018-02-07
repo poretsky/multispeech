@@ -28,6 +28,14 @@
 #include <boost/filesystem.hpp>
 
 
+// Package configuration data:
+namespace package
+{
+  extern const char* const name;
+  extern const char* const string;
+  extern const char* const version;
+};
+
 // Language id strings:
 namespace lang_id
 {
@@ -154,7 +162,7 @@ namespace options
     extern const std::string caps_factor;
   };
 
-// German speech section:
+  // German speech section:
   namespace de
   {
     extern const std::string engine;
@@ -169,7 +177,7 @@ namespace options
     extern const std::string caps_factor;
   };
 
-// French speech section:
+  // French speech section:
   namespace fr
   {
     extern const std::string engine;
@@ -184,7 +192,7 @@ namespace options
     extern const std::string caps_factor;
   };
 
-// Spanish speech section:
+  // Spanish speech section:
   namespace es
   {
     extern const std::string engine;
@@ -199,7 +207,7 @@ namespace options
     extern const std::string caps_factor;
   };
 
-// Brazilian speech section:
+  // Brazilian speech section:
   namespace br
   {
     extern const std::string engine;
@@ -214,7 +222,7 @@ namespace options
     extern const std::string caps_factor;
   };
 
-// Italian speech section:
+  // Italian speech section:
   namespace it
   {
     extern const std::string engine;

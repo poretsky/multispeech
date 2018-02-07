@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <sysconfig.h>
-
 #include <cmath>
 #include <ctime>
 #include <exception>
@@ -196,7 +194,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
       if (pa_sample_spec_valid(&paStreamParams))
         {
           paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
-          paStream = pa_simple_new(NULL, PACKAGE_NAME, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
+          paStream = pa_simple_new(NULL, package::name, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
           if (paStream)
             {
               playing = true;
