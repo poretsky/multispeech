@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <sysconfig.h>
-
 #include <string>
 #include <iostream>
 
@@ -35,6 +33,7 @@
 #include "speech_engine.hpp"
 #include "multispeech_voices.hpp"
 #include "dtk_voices.hpp"
+#include "config.hpp"
 
 using namespace std;
 using namespace boost;
@@ -280,7 +279,7 @@ frontend::perform_command(void)
     }
 
   else if (L"version" == cmd)
-    soundmaster.execute(speechmaster.text_task(intern_string(PACKAGE_VERSION, locale(""))));
+    soundmaster.execute(speechmaster.text_task(intern_string(package::version, locale(""))));
 
   else if (debug)
     {
