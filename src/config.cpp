@@ -366,7 +366,9 @@ configuration::configuration(int argc, char* argv[])
     info << package::string << endl;
   if (cl_opt.count("help"))
     info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
-  if (cl_opt.count("list-devices"))
+  if (cl_opt.count("verbose"))
+    server::verbose = true;
+  else
     {
       int fd = open("/dev/null", O_WRONLY);
       if (fd >= 0)
@@ -374,6 +376,9 @@ configuration::configuration(int argc, char* argv[])
           dup2(fd, STDERR_FILENO);
           close(fd);
         }
+    }
+  if (cl_opt.count("list-devices"))
+    {
       AutoSystem audio;
       System& system = System::instance();
       System::DeviceIterator device;
@@ -386,8 +391,6 @@ configuration::configuration(int argc, char* argv[])
     throw info.str();
   if (cl_opt.count("debug"))
     server::debug = true;
-  if (cl_opt.count("verbose"))
-    server::verbose = true;
 
   // Declare configuration options:
   using namespace options;
