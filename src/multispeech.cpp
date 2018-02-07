@@ -18,9 +18,6 @@
 */
 
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #include <cstdlib>
 #include <memory>
@@ -51,16 +48,6 @@ int main(int argc, char* argv[])
   try
     {
       configuration conf(argc, argv);
-
-      if (!server::verbose)
-        {
-          int fd = open("/dev/null", O_WRONLY);
-          if (fd >= 0)
-            {
-              dup2(fd, STDERR_FILENO);
-              close(fd);
-            }
-        }
 
       if (server::verbose)
         cerr << "Initializing audio system..." << endl;
@@ -100,7 +87,11 @@ int main(int argc, char* argv[])
     }
 
   if (efd >= 0)
-    close(efd);
+    {
+      close(efd);
+      efd = -1;
+    }
+
   multispeech->run();
 
   return EXIT_SUCCESS;
