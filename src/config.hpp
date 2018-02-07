@@ -91,6 +91,7 @@ namespace options
     extern const char* const device;
     extern const char* const general_volume;
     extern const char* const latency;
+    extern const char* const async_operation;
   };
 
   // Sound files playing section:

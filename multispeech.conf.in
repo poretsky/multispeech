@@ -67,6 +67,13 @@ dtk_voices = on
 # that reasonable latency will be chosen automatically by system.
 # Normally this option should not be set up explicitly.
 # Do it only if you are pretty unsatisfied by the default.
+#
+#async_operation = no
+# This option enables truly asynchronous audio stream operation.
+# Normally it is absolutely not necessary, thus, disabled by default,
+# but theoretically there can be some circumstances where it would be
+# preferable. Use the word "yes" or "on" to enable and the word
+# "no" or "off" to disable.
 
 [sounds]
 # Sound files playing control options.

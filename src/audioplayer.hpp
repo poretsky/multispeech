@@ -63,6 +63,7 @@ public:
   // Configurable parameters:
   static PaTime suggested_latency;
   static float general_volume;
+  static bool async;
 
 protected:
   // Internal buffer size in samples for specified rate:
@@ -72,12 +73,30 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
+  // The functor to be executed in a separate thread to perform synchronous playback.
+  class playback
+  {
+  public:
+    // Object constructor.
+    playback(audioplayer* owner);
+
+    // The thread execution loop.
+    void operator()(void);
+
+  private:
+    // the parent class pointer.
+    audioplayer* master;
+  };
+
+  friend class playback;
+
   // Indicate that playback is in progress:
   bool playing;
   boost::mutex access;
+  boost::condition abandon;
 
   // Audio playing stream:
-  portaudio::InterfaceCallbackStream stream;
+  portaudio::Stream* stream;
   static boost::mutex control;
 
   // Audio stream parameters:
@@ -89,7 +108,7 @@ private:
   bool stream_time_available;
 
   // Internal audiostream control:
-  PaTime clock_time();
+  PaTime clock_time(void);
   bool stream_is_active(void);
   bool stream_is_over(void);
   void close_stream(void);
