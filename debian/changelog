@@ -1,3 +1,16 @@
+multispeech (2.7.0stretch1) stretch; urgency=low
+
+  * Introduced sync and async audio stream operation strategies.
+  * Implemented native PulseAudio API support.
+  * Discarded spurious messages on stderr in non-verbose mode.
+  * Revised language detection patterns.
+  * Fixed naming of audio devices.
+  * Added an option to get list of all available devices on the system.
+  * Fixed package related info.
+  * Removed outdated Orca cooperation hints.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 07 Feb 2018 21:54:18 +0300
+
 multispeech (2.6.5stretch1) stretch; urgency=low
 
   * Tone signals quality improvement.
