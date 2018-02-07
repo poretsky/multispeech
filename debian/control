@@ -22,7 +22,3 @@ Description: Multilingual speech server for emacspeak
   - easy adaptation to various speech engines;
   - language autodetection capability;
   - online voice control means.
- .
- Though Multispeech was primarily designed for use in conjunction
- with Emacspeak, now it can easily be employed as a full featured
- speech service for Orca screenreader as well.
