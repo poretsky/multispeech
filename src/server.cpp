@@ -18,14 +18,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <sysconfig.h>
-
 #include <iostream>
 #include <exception>
 
 #include "server.hpp"
 
 #include "iconv_codecvt.hpp"
+#include "config.hpp"
 
 using namespace std;
 using namespace boost;
@@ -33,7 +32,7 @@ using namespace FBB;
 
 
 // Open logging stream:
-SyslogStream server::log(PACKAGE_NAME, NOTICE, USER, LOG_PID);
+SyslogStream server::log(package::name, NOTICE, USER, LOG_PID);
 bool server::verbose = false;
 bool server::debug = false;
 
