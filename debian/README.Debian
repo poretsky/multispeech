@@ -20,9 +20,4 @@ mbrola-en1 voice for English, ru-tts for Russian and espeak for all
 other languages. So, you should either install respective packages
 or edit configuration appropriately.
 
-If you wish to use Multispeech in conjunction with Orca, make sure
-that DECtalk voices are enabled in the Multispeech configuration.
-Sample Orca customizations for that case are provided
-in the examples subdirectory.
-
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 24 Jan 2010 17:38:17 +0300
