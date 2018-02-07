@@ -20,6 +20,14 @@
 
 #include <sysconfig.h>
 
+// Package configuration data:
+namespace package
+{
+  extern const char* const name = PACKAGE_NAME;
+  extern const char* const string = PACKAGE_STRING;
+  extern const char* const version = PACKAGE_VERSION;
+};
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -355,7 +363,7 @@ configuration::configuration(int argc, char* argv[])
   stage.erase();
   notify(cl_opt);
   if (cl_opt.count("version"))
-    info << PACKAGE_STRING << endl;
+    info << package::string << endl;
   if (cl_opt.count("help"))
     info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
   if (cl_opt.count("list-devices"))
