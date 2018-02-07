@@ -42,6 +42,7 @@ PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
 bool audioplayer::async = false;
 bool audioplayer::use_pa = true;
+const regex audioplayer::devname_pattern("\\((.+)\\)");
 
 
 // Construct / destroy:
@@ -66,7 +67,7 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
     throw configuration::error("audio output device \"" + device_name + "\" is not found");
   Device& device = system.deviceByIndex(devidx);
   if (device.isInputOnlyDevice())
-    throw configuration::error("audio device \"" + string(device.name()) + "\" is not valid");
+    throw configuration::error("audio device \"" + canonical_name(device) + "\" is not valid");
   devidx = use_pa ? find_device("pulse") : paNoDevice;
   if ((devidx == paNoDevice) || ((device.index() != system.defaultOutputDevice().index()) && (device.index() != devidx)))
     stream = async ?
@@ -82,7 +83,7 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
                                                                    latency, NULL));
       params.setSampleRate(device.defaultSampleRate());
       if (!params.isSupported())
-        throw configuration::error("cannot properly initialize audio device \"" + string(device.name()) + "\"");
+        throw configuration::error("cannot properly initialize audio device \"" + canonical_name(device) + "\"");
     }
   else
     {
@@ -130,6 +131,16 @@ audioplayer::active(void)
     }
   mutex::scoped_lock lock(access);
   return playing;
+}
+
+string
+audioplayer::canonical_name(Device& device)
+{
+  smatch match_result;
+  string devname = device.name();
+  return regex_search(devname, match_result, devname_pattern) ?
+    string(match_result[1].first, match_result[1].second) :
+    devname;
 }
 
 
@@ -248,7 +259,7 @@ audioplayer::find_device(const string& device_name)
   System& system = System::instance();
   System::DeviceIterator found;
   for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
-    if (found->name() == device_name)
+    if (canonical_name(*found) == device_name)
       return found->isInputOnlyDevice() ? paNoDevice : found->index();
   return paNoDevice;
 }

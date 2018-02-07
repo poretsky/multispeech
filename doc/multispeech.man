@@ -67,6 +67,10 @@ syslog and nothing is output on stderr or stdout by default.
 .br
 Allow some extra diagnostic info to be logged.
 .TP
+.B \-l, \-\-list\-devices
+.br
+Print list of all available audio output devices and exit.
+.TP
 .B \-h, \-\-help
 .br
 Show summary of options and exit.
