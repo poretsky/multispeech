@@ -41,6 +41,7 @@
 #include <string>
 #include <memory>
 
+#include <boost/regex.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
 
@@ -59,7 +60,10 @@ public:
   virtual void stop(void);
   virtual bool active(void);
 
-  // Completion notifier:
+  // Get canonical name for PortAudio device:
+  static std::string canonical_name(portaudio::Device& device);
+
+  // Playback completion notifier:
   static boost::condition complete;
 
   // Configurable parameters:
@@ -93,6 +97,9 @@ private:
 
   friend class playback;
 
+  // Device name canonicalizer:
+  static const boost::regex devname_pattern;
+
   // Indicate that playback is in progress:
   bool playing;
   boost::mutex access;
@@ -124,7 +131,7 @@ private:
   void close_stream(void);
 
   // Find device by it's name:
-  PaDeviceIndex find_device(const std::string& device_name);
+  static PaDeviceIndex find_device(const std::string& device_name);
 
   // Audio playing callback function:
   int paCallbackFun(const void *inputBuffer, void *outputBuffer,

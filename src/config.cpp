@@ -20,12 +20,19 @@
 
 #include <sysconfig.h>
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <cstdlib>
 #include <string>
 #include <sstream>
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem/fstream.hpp>
+
+#include <portaudiocpp/PortAudioCpp.hxx>
 
 #include "config.hpp"
 
@@ -39,6 +46,7 @@
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
+using namespace portaudio;
 
 
 // Configuration files:
@@ -330,10 +338,12 @@ configuration::configuration(int argc, char* argv[])
   options_description conf, cl_desc("Available options");
   variables_map cl_opt;
   bool noconf = true;
+  ostringstream info;
 
   // Declare command line options:
   cl_desc.add_options()
     ("help,h", "produce help message and exit")
+    ("list-devices,l", "print list of available audio output devices and exit")
     ("config,c", value<string>(), "read configuration from specified file")
     ("debug,d", "log debug information")
     ("verbose,v", "print diagnostic messages on stderr")
@@ -344,14 +354,28 @@ configuration::configuration(int argc, char* argv[])
   store(parse_command_line(argc, argv, cl_desc), cl_opt);
   stage.erase();
   notify(cl_opt);
-  if (cl_opt.count("help"))
-    {
-      ostringstream usage;
-      usage << "Usage: " << argv[0] << " [options]\n" << cl_desc;
-      throw usage.str();
-    }
   if (cl_opt.count("version"))
-    throw string(PACKAGE_STRING);
+    info << PACKAGE_STRING << endl;
+  if (cl_opt.count("help"))
+    info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
+  if (cl_opt.count("list-devices"))
+    {
+      int fd = open("/dev/null", O_WRONLY);
+      if (fd >= 0)
+        {
+          dup2(fd, STDERR_FILENO);
+          close(fd);
+        }
+      AutoSystem audio;
+      System& system = System::instance();
+      System::DeviceIterator device;
+      info << "Available audio devices:" << endl;
+      for (device = system.devicesBegin(); device != system.devicesEnd(); ++device)
+        if (!device->isInputOnlyDevice())
+          info << "  " << audioplayer::canonical_name(*device) << endl;
+    }
+  if (!info.str().empty())
+    throw info.str();
   if (cl_opt.count("debug"))
     server::debug = true;
   if (cl_opt.count("verbose"))
