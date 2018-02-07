@@ -102,6 +102,14 @@ Audio output latency in seconds. Special value 0.0 implies
 that reasonable latency will be chosen automatically by system.
 Normally this option should not be set up explicitly.
 Do it only if you are pretty unsatisfied by the default.
+.TP
+.B async_operation
+.br
+This option enables truly asynchronous audio stream operation.
+Normally it is absolutely not necessary, thus, disabled by default,
+but theoretically there can be some circumstances where it would be
+preferable. Use the word \(oqyes\(cq or \(oqon\(cq to enable and the word
+\(oqno\(cq or \(oqoff\(cq to disable.
 .SH "SOUNDS PLAYING CONTROL OPTIONS"
 Section name is \(oqsounds\(cq. It contains several options that
 affect sound file playing capability:

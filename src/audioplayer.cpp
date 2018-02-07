@@ -19,6 +19,7 @@
 */
 
 #include <ctime>
+#include <exception>
 
 #include <boost/thread/thread.hpp>
 
@@ -36,15 +37,20 @@ condition audioplayer::complete;
 mutex audioplayer::control;
 PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
+bool audioplayer::async = false;
 
 
 // Construct / destroy:
 
 audioplayer::audioplayer(const string& device_name):
   playing(false),
+  stream(async ?
+         reinterpret_cast<Stream*>(new InterfaceCallbackStream) :
+         reinterpret_cast<Stream*>(new BlockingStream)),
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
-         0.0, 0,
+         0.0,
+         paFramesPerBufferUnspecified,
          paPrimeOutputBuffersUsingStreamCallback)
 {
   string devname(device_name);
@@ -71,6 +77,7 @@ audioplayer::audioplayer(const string& device_name):
 
 audioplayer::~audioplayer(void)
 {
+  delete stream;
 }
 
 
@@ -83,6 +90,8 @@ audioplayer::stop(void)
     {
       mutex::scoped_lock lock(access);
       playing = false;
+      if (!async)
+        abandon.notify_all();
     }
   while (stream_is_active())
     thread::yield();
@@ -123,16 +132,24 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
   params.outputParameters().setNumChannels(channels);
   if (params.isSupported())
     {
-      stream.open(params, *this);
-      if (stream.isOpen())
+      if (async)
+        dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
+      else dynamic_cast<BlockingStream*>(stream)->open(params);
+      if (stream->isOpen())
         {
           playing = true;
           finish_time = 0;
-          stream_time_available = stream.time() != 0;
+          if (async)
+            {
+              stream_time_available = stream->time() != 0;
+              stream->setStreamFinishedCallback(release);
+            }
+          else stream_time_available = false;
           if (!stream_time_available)
-            buffer_time = clock_time() + stream.outputLatency();
-          stream.setStreamFinishedCallback(release);
-          stream.start();
+            buffer_time = clock_time() + stream->outputLatency();
+          stream->start();
+          if (!async)
+            thread(playback(this));
         }
       else source_release();
     }
@@ -154,7 +171,7 @@ bool
 audioplayer::stream_is_active(void)
 {
   mutex::scoped_lock exclusive(control);
-  return stream.isOpen() && stream.isActive();
+  return stream->isOpen() && stream->isActive();
 }
 
 bool
@@ -168,8 +185,8 @@ void
 audioplayer::close_stream(void)
 {
   mutex::scoped_lock exclusive(control);
-  if (stream.isOpen())
-    stream.close();
+  if (stream->isOpen())
+    stream->close();
 }
 
 PaDeviceIndex
@@ -229,5 +246,55 @@ audioplayer::release(void* handle)
   reinterpret_cast<audioplayer*>(handle)->source_release();
   mutex::scoped_lock lock(reinterpret_cast<audioplayer*>(handle)->access);
   reinterpret_cast<audioplayer*>(handle)->playing = false;
+  complete.notify_all();
+}
+
+
+// Playback subclass:
+
+audioplayer::playback::playback(audioplayer* owner):
+  master(owner)
+{
+}
+
+void
+audioplayer::playback::operator()(void)
+{
+  BlockingStream* stream = dynamic_cast<BlockingStream*>(master->stream);
+  unsigned int chunk_size = master->params.framesPerBuffer();
+  float buffer[chunk_size * master->frame_size];
+  while (!master->stream_is_over())
+    {
+      unsigned int obtained = master->source_read(buffer, chunk_size);
+      if (obtained)
+        try
+          {
+            for (unsigned int i = 0; i < (obtained * master->frame_size); i++)
+              buffer[i] *= master->volume_level;
+            stream->write(buffer, obtained);
+            master->buffer_time += static_cast<double>(obtained) / master->sampling_rate;
+          }
+        catch (const std::exception& error)
+          {
+            if (stream->isActive())
+              continue;
+            else break;
+          }
+      else break;
+      thread::yield();
+    }
+  master->source_release();
+  mutex::scoped_lock lock(master->access);
+  while (master->playing)
+    if (!master->abandon.timed_wait(lock, posix_time::milliseconds(static_cast<int>((master->buffer_time - master->clock_time()) * 1000))))
+      break;
+  if (master->playing)
+    {
+      if (stream->isActive())
+        stream->stop();
+      master->playing = false;
+    }
+  else if (stream->isActive())
+    stream->abort();
   complete.notify_all();
 }
