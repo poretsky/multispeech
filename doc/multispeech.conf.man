@@ -88,7 +88,8 @@ Section name is \(oqaudio\(cq. It contains following options:
 Default device for all audio output (speech, sounds and tones).
 If it is not specified explicitly, then system default will be used.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are allowed here as well as the ALSA ones.
+are allowed here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
+to get list of all available devices on your system.
 .TP
 .B general_volume
 .br
@@ -127,7 +128,8 @@ affect sound file playing capability:
 Sound files playing device. This setting overwrites general default
 and allows to play sound files on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are accepted here as well as the ALSA ones.
+are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
+to get list of all available devices on your system.
 .TP
 .B volume
 .br
@@ -149,7 +151,8 @@ Section name is \(oqtones\(cq. It consists of the following options:
 Tones producing device. This setting overwrites general default
 and allows to use a separate device for tone signals.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are accepted here as well as the ALSA ones.
+are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
+to get list of all available devices on your system.
 .TP
 .B volume
 .br
@@ -177,7 +180,8 @@ general:
 Speech output device. This setting overwrites general default
 and allows to produce speech on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
-are accepted here as well as the ALSA ones.
+are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
+to get list of all available devices on your system.
 .TP
 .B volume
 .br

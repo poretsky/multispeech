@@ -56,7 +56,8 @@ dtk_voices = on
 # Default device for all audio output (speech, sounds and tones).
 # If it is not specified explicitly, then system default will be used.
 # The DSP device specifications (such as "/dev/dsp")
-# are allowed here as well as the ALSA ones.
+# are allowed here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #general_volume = 0.8
 # This value is applied to the audio output in general.
@@ -89,7 +90,8 @@ dtk_voices = on
 # Sound files playing device. This setting overwrites general default
 # and allows to play sound files on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for sound files playing. It is 1.0
@@ -110,7 +112,8 @@ dtk_voices = on
 # Tones producing device. This setting overwrites general default
 # and allows to use a separate device for tone signals.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for tone signals producing. It is 1.0
@@ -134,7 +137,8 @@ dtk_voices = on
 # Speech output device. This setting overwrites general default
 # and allows to produce speech on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for speech output. It is 1.0 by default.
