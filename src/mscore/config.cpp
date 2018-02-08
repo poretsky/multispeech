@@ -39,7 +39,7 @@ namespace multispeech
 {
 
 using namespace std;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 using namespace boost::program_options;
 
 
@@ -118,7 +118,7 @@ string configuration::stage;
 configuration::configuration(int argc, char* argv[])
 {
   path global_conf(complete(string(PACKAGE) + ".conf", SYSCONF_DIR));
-  path alternate_conf(complete(path(argv[0]).leaf() + ".conf", SYSCONF_DIR));
+  path alternate_conf(complete(path(argv[0]).leaf().generic_string() + ".conf", SYSCONF_DIR));
   path local_conf(complete("." + string(PACKAGE) + "rc", getenv("HOME")));
   options_description conf, cl_desc("Available options");
   variables_map cl_opt;
@@ -167,7 +167,7 @@ configuration::configuration(int argc, char* argv[])
 
     // SSIP related options:
     (option::port(ssip), value<unsigned int>()->default_value(6560))
-    (option::sounds(ssip), value<string>()->default_value(sounds_default.file_string()))
+    (option::sounds(ssip), value<string>()->default_value(sounds_default.generic_string()))
     (option::split_multiline_messages(ssip), bool_switch()->default_value(false))
 
     // General audio options:
@@ -230,7 +230,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Mbrola based backends options:
     (option::executable(speaker::mbrola), value<string>()->default_value(speaker::mbrola))
-    (option::voices(speaker::mbrola), value<string>()->default_value(mbrola_voices_default.file_string()))
+    (option::voices(speaker::mbrola), value<string>()->default_value(mbrola_voices_default.generic_string()))
 
     // Espeak based backends options:
     (option::executable(speaker::espeak), value<string>()->default_value(speaker::espeak))
@@ -239,11 +239,11 @@ configuration::configuration(int argc, char* argv[])
 
     // Freephone backend options:
     (option::executable(speaker::freephone), value<string>()->default_value(speaker::freephone))
-    (option::lexicon(speaker::freephone), value<string>()->default_value(enlex_default.file_string()))
+    (option::lexicon(speaker::freephone), value<string>()->default_value(enlex_default.generic_string()))
 
     // Ru_tts backend options:
     (option::executable(speaker::ru_tts), value<string>()->default_value(speaker::ru_tts))
-    (option::lexicon(speaker::ru_tts), value<string>()->default_value(rulex_default.file_string()))
+    (option::lexicon(speaker::ru_tts), value<string>()->default_value(rulex_default.generic_string()))
     (option::log(speaker::ru_tts), value<string>()->default_value(""))
     (option::voice_name(speaker::ru_tts), value<string>())
     (option::volume(speaker::ru_tts), value<float>()->default_value(1.0))
@@ -574,7 +574,7 @@ void
 configuration::read(const path& config_file, const options_description& conf)
 {
   boost::filesystem::ifstream source(config_file);
-  stage = " in " + config_file.file_string();
+  stage = " in " + config_file.generic_string();
   store(parse_config_file(source, conf), option_value);
   stage.erase();
 }

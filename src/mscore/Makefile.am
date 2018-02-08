@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libmultispeech.la
 AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
 	-pthread @BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @SNDFILE_CPPFLAGS@ \
 	@PORTAUDIOCPP_CPPFLAGS@ @SOUNDTOUCH_CXXFLAGS@
-AM_CXXFLAGS = -O2 -Wall -Wno-sign-compare
+AM_CXXFLAGS = -O2 -Wall -Wno-sign-compare -std=c++0x
 AM_LDFLAGS = -pthread
 libmultispeech_la_LIBADD = @BOOST_LIBS@ @BOBCAT_LIBS@ @SNDFILE_LIBS@ \
 	@PORTAUDIOCPP_LIBS@ @SOUNDTOUCH_LIBS@ -lm

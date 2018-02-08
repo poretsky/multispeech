@@ -37,7 +37,7 @@ namespace multispeech
 
 using namespace std;
 using namespace FBB;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 
 
 // Instantiation mechanism:
@@ -56,12 +56,12 @@ freephone::freephone(void):
         {
           path lexicon(configuration::backend_lexicon(name));
           if (exists(lexicon))
-            cmd += " -h " + lexicon.file_string();
+            cmd += " -h " + lexicon.generic_string();
           else
             {
-              server::log << SyslogStream::warning << lexicon.file_string() << " does not exist" << endl;
+              server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
               if (server::verbose)
-                cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
+                cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
       cmd += " -i - -o -";

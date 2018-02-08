@@ -84,7 +84,8 @@ Russian::Russian(void):
     (L" обратная кавычка ")
     (L" тильда ")
     (L" меньше ")
-    (L" больше ");
+    (L" больше ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -216,7 +217,8 @@ Russian::Russian(void):
     (L"window", L"окно")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"русский");
+    (intern_string(id(), locale("")).c_str(), L"русский")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Transliteration table:
   translit = map_list_of
@@ -245,7 +247,8 @@ Russian::Russian(void):
     (L'w', L"в")
     (L'x', L"кс")
     (L'y', L"и")
-    (L'z', L"з");
+    (L'z', L"з")
+    .convert_to_container< map<wchar_t, const wchar_t*> >();
 
   // Text filtering chain:
   filter_chain.setup()

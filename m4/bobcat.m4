@@ -18,7 +18,7 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -I$bobcat_prefix/include"
+	CPPFLAGS="$CPPFLAGS -std=c++0x -I$bobcat_prefix/include"
 		LIBS="$LIBS -L$bobcat_prefix/lib -lbobcat"
 
 	dnl make sure all necessary header files exist

@@ -21,9 +21,8 @@
 #ifndef MULTISPEECH_FRONTEND_HPP
 #define MULTISPEECH_FRONTEND_HPP
 
-#include <memory>
-
 #include <boost/regex.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include <bobcat/cmdfinder>
 
@@ -86,14 +85,14 @@ private:
   int disbalance;
 
   // Additional parsers for inline parameters extraction:
-  std::auto_ptr<inline_parser> native_params, dtk_params;
+  boost::scoped_ptr<inline_parser> native_params, dtk_params;
 
   // Regular expressions for commands parsing:
   const boost::regex validate_float, validate_integer,
     beep_parameters, lang_parameters, tts_parameters, garbage;
 
   // Reference value:
-  static const float rate_scale = 200.0;
+  static constexpr float rate_scale = 200.0;
 };
 
 #endif

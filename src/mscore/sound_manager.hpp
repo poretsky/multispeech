@@ -29,12 +29,12 @@
 #ifndef MULTISPEECH_SOUND_MANAGER_HPP
 #define MULTISPEECH_SOUND_MANAGER_HPP
 
-#include <memory>
 #include <list>
 #include <queue>
 
 #include <portaudiocpp/PortAudioCpp.hxx>
 
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
@@ -191,7 +191,7 @@ private:
   activity business;
 
   // Job queues.
-  std::auto_ptr<jobs_queue> jobs, backup;
+  boost::shared_ptr<jobs_queue> jobs, backup;
 
   // Notifications queue.
   std::queue<event_info> reports;

@@ -80,7 +80,8 @@ English::English(void):
     (L" backquote ")
     (L" tilde ")
     (L" less than ")
-    (L" greater than ");
+    (L" greater than ")
+    .convert_to_container< vector<const wchar_t*> >();
 
   // Letters dictionary:
   dictionary = map_list_of
@@ -108,7 +109,8 @@ English::English(void):
     (L"scroll-lock", L"scroll lock")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"English");
+    (intern_string(id(), locale("")).c_str(), L"English")
+    .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
   filter_chain.setup()

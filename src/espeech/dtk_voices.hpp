@@ -45,7 +45,7 @@ public:
 
 private:
   // Reference values:
-  static const float rate_scale = 200.0, volume_scale = 50.0;
+  static constexpr float rate_scale = 200.0, volume_scale = 50.0;
 
   // Patterns for parameters extraction:
   const boost::regex person_extractor, pitch_range_extractor,
