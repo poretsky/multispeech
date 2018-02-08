@@ -33,7 +33,7 @@ namespace multispeech
 
 using namespace std;
 using namespace boost;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 
 
 // Known voices definition:
@@ -90,7 +90,7 @@ mbrola::voicify(float rate, float pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>(pitch);
   format_macros["%rate"] = lexical_cast<string>(1.0 / rate);
-  format_macros["%mbrola_voice"] = complete(current_voice->id, configuration::mbrola_voices()).file_string();
+  format_macros["%mbrola_voice"] = complete(current_voice->id, configuration::mbrola_voices()).generic_string();
 }
 
 

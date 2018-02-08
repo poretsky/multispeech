@@ -47,11 +47,22 @@ class session:
   public message
 {
 public:
-  // Object constructor:
+  // Construct / destroy:
   session(proxy* origin, int socket_fd);
+  ~session(void);
 
   // Session loop execution functor:
-  void operator()(void);
+  class spawn
+  {
+  public:
+    spawn(proxy* origin, int socket_fd);
+    ~spawn(void);
+    void operator()(void);
+  private:
+    session* client;
+  };
+
+  friend class spawn;
 
 private:
   // Client requests parsing and execution:

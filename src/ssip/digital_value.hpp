@@ -57,7 +57,7 @@ private:
   static const int top = 100;
 
   // Factor value used instead of zero.
-  static const float epsilon = 0.0001;
+  static constexpr float epsilon = 0.0001;
 
   // Pattern for validation.
   static const boost::regex pattern;

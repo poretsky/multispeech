@@ -40,7 +40,7 @@ namespace multispeech
 
 using namespace std;
 using namespace boost;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 using namespace FBB;
 
 
@@ -69,12 +69,12 @@ ru_tts::ru_tts(void):
         {
           path lexicon(configuration::backend_lexicon(name));
           if (exists(lexicon))
-            cmd += " -s " + lexicon.file_string();
+            cmd += " -s " + lexicon.generic_string();
           else
             {
-              server::log << SyslogStream::warning << lexicon.file_string() << " does not exist" << endl;
+              server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
               if (server::verbose)
-                cerr << "Warning: " << lexicon.file_string() << " does not exist" << endl;
+                cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
       if (!configuration::backend_log(name).empty())

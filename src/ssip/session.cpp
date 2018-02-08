@@ -49,7 +49,7 @@ namespace SSIP
 
 using namespace std;
 using namespace boost;
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 using namespace boost::algorithm;
 using namespace FBB;
 using namespace multispeech;
@@ -84,16 +84,10 @@ session::session(proxy* origin, int socket_fd):
   pause_context_size = host.pause_context_size;
 }
 
-
-// Session loop:
-
-void
-session::operator()(void)
+session::~session(void)
 {
-  host.hello(id, this);
-  run();
-  host.bye(id);
-  delete paused;
+  if (paused)
+    delete paused;
 }
 
 
@@ -979,6 +973,27 @@ session::set_pause_context(destination& target)
     }
   else rc = ERR_NOT_ALLOWED_INSIDE_BLOCK;
   return rc;
+}
+
+
+// Session loop:
+
+session::spawn::spawn(proxy* origin, int socket_fd):
+  client(new session(origin, socket_fd))
+{
+}
+
+session::spawn::~spawn(void)
+{
+  delete client;
+}
+
+void
+session::spawn::operator()(void)
+{
+  client->host.hello(client->id, client);
+  client->run();
+  client->host.bye(client->id);
 }
 
 } // namespace SSIP

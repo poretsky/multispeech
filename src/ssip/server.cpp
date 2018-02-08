@@ -68,7 +68,7 @@ server::connect(int fd)
 {
   mutex::scoped_lock lock(proxy::access);
   connecting = true;
-  thread(session(this, fd));
+  thread(session::spawn(this, fd));
   while (connecting)
     connected.wait(lock);
 }
