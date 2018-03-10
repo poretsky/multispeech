@@ -1,3 +1,9 @@
+multispeech (2.8.0) unstable; urgency=low
+
+  * Implemented queue voice change facility.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 09:03:58 +0300
+
 multispeech (2.7.0) unstable; urgency=low
 
   * Introduced sync and async audio stream operation strategies.
