@@ -31,6 +31,19 @@ using namespace boost;
 
 // Object construction / destruction:
 
+voice_params::voice_params(void)
+{
+}
+
+voice_params::voice_params(voice_params* other):
+  volume(other->volume),
+  rate(other->rate),
+  pitch(other->pitch),
+  deviation(other->deviation),
+  punctuations_mode(other->punctuations_mode)
+{
+}
+
 inline_parser::inline_parser(const wstring& detector,
                              const wstring& precleaner,
                              const wstring& postcleaner):
