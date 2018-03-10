@@ -42,8 +42,11 @@ private:
   // Additional parsers for inline parameters extraction:
   std::auto_ptr<inline_parser> native_params, dtk_params;
 
+  // Default voice for subsequent speech queue: 
+  boost::scoped_ptr<voice_params> queue_voice;
+
   // Extract embedded parameters:
-  inline_parser* extract_parameters(void);
+  voice_params* extract_parameters(void);
 
   // Set punctuations mode according to identifying character:
   void set_punctuations_mode(wchar_t mode);
