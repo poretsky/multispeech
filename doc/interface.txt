@@ -109,6 +109,10 @@ tts_split_caps flag
 tts_sync_state punctuation_mode capitalize_mode split_caps_mode speech_rate
   Set specified speech parameters.
 
+c voice_spec
+  Set voice for subsequent speech in queue. Reset it to default
+  when voice_spec is empty or invalid.
+
 tts_reset
   Stop all current sound activities and reset all general speech
   parameters to the default state.
@@ -125,7 +129,9 @@ Embedded speech parameters.
 The text passed as an argument for the "q" and "tts_say" commands may
 include a special sequence That allows to alter some speech parameters
 for that text chunk locally leaving global settings untouched. This
-sequence should be placed at the very beginning of the text.
+sequence should be placed at the very beginning of the text. Just the
+same syntax is used in command "c" to specify voice for the subsequent
+speech chunks in queue.
 
 When native voices are enabled in the Multispeech configuration, the
 embedded sequences of the form "[_: key:value ...]" are recognized.
