@@ -25,7 +25,19 @@
 
 #include <boost/regex.hpp>
 
-class inline_parser
+
+class voice_params
+{
+public:
+  voice_params(void);
+  voice_params(voice_params* other);
+
+  // Parameter values:
+  double volume, rate, pitch, deviation;
+  wchar_t punctuations_mode;
+};
+
+class inline_parser: public voice_params
 {
 public:
   // Construct / destroy:
@@ -37,10 +49,6 @@ public:
   // Test given string for embedded voice parameters and extract them.
   // Return true if parameters were detected and extracted.
   bool parse(std::wstring& data);
-
-  // Extracted values:
-  double volume, rate, pitch, deviation;
-  wchar_t punctuations_mode;
 
 protected:
   // Value extraction helper to ease actual parser design
