@@ -106,7 +106,7 @@ frontend::get_command(void)
 bool
 frontend::perform_command(void)
 {
-  inline_parser* voice_params;
+  voice_params* voice;
 
   if (cmd.empty())
     return true;
@@ -117,18 +117,28 @@ frontend::perform_command(void)
   else if (L"d" == cmd)
     soundmaster.proceed();
 
+  else if (L"c" == cmd)
+    {
+      voice = extract_parameters();
+      if (voice)
+        queue_voice.reset(new voice_params(voice));
+      else queue_voice.reset();
+    }
+
   else if (L"q" == cmd)
     {
-      voice_params = extract_parameters();
-      if (voice_params)
+      voice = extract_parameters();
+      if (!voice)
+        voice = queue_voice.get();
+      if (voice)
         {
           punctuations::mode preserve = punctuations::verbosity;
-          set_punctuations_mode(voice_params->punctuations_mode);
+          set_punctuations_mode(voice->punctuations_mode);
           soundmaster.enqueue(speechmaster.text_task(data,
-                                                     voice_params->volume,
-                                                     voice_params->rate,
-                                                     voice_params->pitch,
-                                                     voice_params->deviation));
+                                                     voice->volume,
+                                                     voice->rate,
+                                                     voice->pitch,
+                                                     voice->deviation));
           punctuations::verbosity = preserve;
         }
       else soundmaster.enqueue(speechmaster.text_task(data));
@@ -155,21 +165,22 @@ frontend::perform_command(void)
       speech_engine::capitalize_mode();
       speech_engine::space_special_chars_mode();
       punctuations::verbosity = punctuations::some;
+      queue_voice.reset();
     }
 
   else if (L"tts_say" == cmd)
     {
       soundmaster.stop();
-      voice_params = extract_parameters();
-      if (voice_params)
+      voice = extract_parameters();
+      if (voice)
         {
           punctuations::mode preserve = punctuations::verbosity;
-          set_punctuations_mode(voice_params->punctuations_mode);
+          set_punctuations_mode(voice->punctuations_mode);
           soundmaster.execute(speechmaster.text_task(data,
-                                                     voice_params->volume,
-                                                     voice_params->rate,
-                                                     voice_params->pitch,
-                                                     voice_params->deviation,
+                                                     voice->volume,
+                                                     voice->rate,
+                                                     voice->pitch,
+                                                     voice->deviation,
                                                      true));
           punctuations::verbosity = preserve;
         }
@@ -296,16 +307,16 @@ frontend::perform_command(void)
   return true;
 }
 
-inline_parser*
+voice_params*
 frontend::extract_parameters(void)
 {
-  inline_parser* voice_params = 0;
+  voice_params* voice = 0;
   data = regex_replace(data, garbage, L" ");
   if (native_params.get() && native_params->parse(data))
-    voice_params = native_params.get();
+    voice = native_params.get();
   else if (dtk_params.get() && dtk_params->parse(data))
-    voice_params = dtk_params.get();
-  return voice_params;
+    voice = dtk_params.get();
+  return voice;
 }
 
 void
