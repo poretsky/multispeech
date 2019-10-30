@@ -20,8 +20,8 @@
 
 // Russian speech backend.
 
-#ifndef RU_TTS_ENGINE_HPP
-#define RU_TTS_ENGINE_HPP
+#ifndef MULTISPEECH_RU_TTS_HPP
+#define MULTISPEECH_RU_TTS_HPP
 
 #include "speech_engine.hpp"
 

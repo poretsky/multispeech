@@ -21,8 +21,8 @@
 // Use these classes to transform strings from their external  to internal
 // representation and vice versa according to specified locale.
 
-#ifndef STRCVT_HPP
-#define STRCVT_HPP
+#ifndef MULTISPEECH_STRCVT_HPP
+#define MULTISPEECH_STRCVT_HPP
 
 #include <string>
 #include <locale>

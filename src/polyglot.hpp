@@ -21,8 +21,8 @@
 // Main purpose of the polyglot class is to provide general interface
 // to the multilingual speech synthesis functionality.
 
-#ifndef POLYGLOT_HPP
-#define POLYGLOT_HPP
+#ifndef MULTISPEECH_POLYGLOT_HPP
+#define MULTISPEECH_POLYGLOT_HPP
 
 #include <string>
 #include <vector>

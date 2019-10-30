@@ -22,8 +22,8 @@
 // description and provides basic playing control means along with
 // pending tasks queue maintenance.
 
-#ifndef TONE_GENERATOR_HPP
-#define TONE_GENERATOR_HPP
+#ifndef MULTISPEECH_TONE_GENERATOR_HPP
+#define MULTISPEECH_TONE_GENERATOR_HPP
 
 #include <soundtouch/FIFOSampleBuffer.h>
 
