@@ -28,8 +28,8 @@
 // is also provided. Besides that, the parser supports
 // speech rate and volume control.
 
-#ifndef DTK_VOICES_HPP
-#define DTK_VOICES_HPP
+#ifndef MULTISPEECH_DTK_VOICES_HPP
+#define MULTISPEECH_DTK_VOICES_HPP
 
 #include <string>
 

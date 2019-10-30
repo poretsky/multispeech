@@ -21,8 +21,8 @@
 // These backends are multilingual by nature. Language is specified
 // as the second constructor argument.
 
-#ifndef ESPEAK_HPP
-#define ESPEAK_HPP
+#ifndef MULTISPEECH_ESPEAK_HPP
+#define MULTISPEECH_ESPEAK_HPP
 
 #include <string>
 

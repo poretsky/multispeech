@@ -23,8 +23,8 @@
 // should define actual command set and input method by implementing
 // virtual methods declared in private section.
 
-#ifndef SPEECH_SERVER_HPP
-#define SPEECH_SERVER_HPP
+#ifndef MULTISPEECH_SERVER_HPP
+#define MULTISPEECH_SERVER_HPP
 
 #include <string>
 #include <locale>

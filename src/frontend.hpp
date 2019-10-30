@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef FRONTEND_HPP
-#define FRONTEND_HPP
+#ifndef MULTISPEECH_FRONTEND_HPP
+#define MULTISPEECH_FRONTEND_HPP
 
 #include <boost/regex.hpp>
 #include <boost/scoped_ptr.hpp>

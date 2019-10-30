@@ -50,8 +50,8 @@
 // character translation filter.
 // See char_translation class definition for details.
 
-#ifndef TEXT_FILTER_HPP
-#define TEXT_FILTER_HPP
+#ifndef MULTISPEECH_TEXT_FILTER_HPP
+#define MULTISPEECH_TEXT_FILTER_HPP
 
 #include <string>
 #include <vector>
