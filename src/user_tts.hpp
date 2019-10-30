@@ -21,8 +21,8 @@
 // This backend is assumed to be multilingual. Language is specified
 // as the second constructor argument.
 
-#ifndef USER_TTS_HPP
-#define USER_TTS_HPP
+#ifndef MULTISPEECH_USER_TTS_HPP
+#define MULTISPEECH_USER_TTS_HPP
 
 #include <string>
 

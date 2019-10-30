@@ -25,8 +25,8 @@
 // it can be attached to a pipeline::consumer class object.
 // The pipeline standard error stream is discarded.
 
-#ifndef PIPELINE_HPP
-#define PIPELINE_HPP
+#ifndef MULTISPEECH_PIPELINE_HPP
+#define MULTISPEECH_PIPELINE_HPP
 
 #include <string>
 #include <ostream>

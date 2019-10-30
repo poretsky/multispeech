@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef CONFIG_HPP
-#define CONFIG_HPP
+#ifndef MULTISPEECH_CONFIG_HPP
+#define MULTISPEECH_CONFIG_HPP
 
 #include <string>
 #include <stdexcept>
