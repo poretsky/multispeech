@@ -4,7 +4,6 @@ ChangeLog
 config.log
 config.status
 configure
-libtool
 Makefile
 Makefile.in
 stamp-h1

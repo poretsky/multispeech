@@ -2,13 +2,10 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [2.4.5], [poretsky@mlbox.ru])
-AC_CONFIG_SRCDIR([src/espeech/multispeech.cpp])
+AC_INIT([Multispeech], [2.8.0])
+AC_CONFIG_SRCDIR([src/multispeech.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
                             AM_INIT_AUTOMAKE([foreign])
-
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
 
 AC_SUBST(VERSION)
 
@@ -36,10 +33,11 @@ AC_TYPE_SIZE_T
 # Checks for libraries.
 AM_PATH_SOUNDTOUCH([], [], [AC_MSG_ERROR([the SoundTouch library is mandatory])])
 AM_PATH_PORTAUDIOCPP
+AM_PATH_PULSEAUDIO
 AM_PATH_SNDFILE
 AM_PATH_BOBCAT
 AM_PATH_BOOST
 
 # Output results.
-AC_CONFIG_FILES([Makefile src/Makefile src/mscore/Makefile src/espeech/Makefile src/ssip/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
 AC_OUTPUT

@@ -2,18 +2,20 @@ Source: multispeech
 Section: sound
 Priority: extra
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
-Build-Depends: cdbs, debhelper (>= 5), po-debconf, autotools-dev, libsndfile1-dev, libsoundtouch1-dev, portaudio19-dev, libportaudiocpp0, libbobcat1-dev, libboost-thread-dev, libboost-regex-dev, libboost-filesystem-dev, libboost-iostreams-dev, libboost-program-options-dev
-Standards-Version: 3.7.3
+Build-Depends: cdbs, debhelper (>= 5), po-debconf, autotools-dev, libsndfile1-dev, libsoundtouch1-dev, portaudio19-dev, libportaudiocpp0, libpulse-dev, libbobcat1-dev, libboost-thread-dev, libboost-regex-dev, libboost-filesystem-dev, libboost-iostreams-dev, libboost-program-options-dev
+Standards-Version: 3.9.3
 
 Package: multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: emacspeak, espeak
-Suggests: mbrola, mbrola-en1, freephone, ru-tts
+Recommends: espeak, espeak-data
+Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
+Enhances: emacspeak
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
- At the moment English and Russian languages are supported.
+ At the moment English, German, French, Italian, Spanish,
+ Brazilian and Russian languages are supported.
  .
  The most prominent features are as follows:
   - flexible configuration;

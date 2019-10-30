@@ -18,11 +18,11 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -std=c++0x -I$bobcat_prefix/include"
+	CPPFLAGS="$CPPFLAGS -I$bobcat_prefix/include"
 		LIBS="$LIBS -L$bobcat_prefix/lib -lbobcat"
 
 	dnl make sure all necessary header files exist
-	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream bobcat/cmdfinder bobcat/ifdstream bobcat/ofdstream bobcat/serversocket], [
+	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream], [
 
 		dnl make sure libbobcat is linkable
 		AC_LINK_IFELSE([

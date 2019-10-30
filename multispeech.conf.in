@@ -26,8 +26,7 @@
 
 
 [frontend]
-# The frontend options control interactions with client
-# when Multispeech is used as Emacspeak speech server.
+# The frontend options control interactions with client.
 #
 #charset = KOI8-R
 # Input charset should be specified by its name. Available names
@@ -35,13 +34,13 @@
 # it is on your system. By default this option is not set
 # so current locale setting is used.
 #
-#native_notation = on
-dtk_notation = on
+#native_voices = on
+dtk_voices = on
 # These two options control inline parameters parsing.
-# In the default state only native notation is enabled,
+# In the default state only native voices are enabled,
 # so Multispeech behaves as it used to and accepts only
-# special inline commands formed by Emacspeak. When dtk notation
-# is enabled, Multispeech recognizes DECtalk inline commands and tries
+# special inline commands formed by Emacspeak. When dtk voices
+# are enabled, Multispeech recognizes DECtalk inline commands and tries
 # to emulate some subset of the DECtalk voice control capabilities.
 # Use the word "yes" or "on" to enable and the word
 # "no" or "off" to disable the option. Nothing prevents to keep
@@ -50,24 +49,6 @@ dtk_notation = on
 # If both options are disabled, then inline commands detection
 # and parsing will not be performed at all.
 
-[ssip]
-# This section affects Multispeech behaviour as an SSIP server.
-#
-#port = 6560
-# TCP port on which SSIP client connections will be accepted.
-#
-#sounds = <datadir>/sounds/sound-icons
-# Path to the directory where sound icons are stored.
-#
-#split_multiline_messages = off
-# When this option is set, multiline messages sent by command
-# "speak" are processed and synthisized line by line, that provides
-# more flexibility in the sense of language detection and resuming
-# context control, but may cause some additional speech articulation.
-# Of course, message itself remains atomic in the protocol terms.
-# By default all lines of the multiline message are concatenated
-# and processed as one continuous text chunk.
-
 [audio]
 # This section contains general audio output control options.
 #
@@ -75,17 +56,32 @@ dtk_notation = on
 # Default device for all audio output (speech, sounds and tones).
 # If it is not specified explicitly, then system default will be used.
 # The DSP device specifications (such as "/dev/dsp")
-# are allowed here as well as the ALSA ones.
+# are allowed here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
-#volume = 0.8
+#general_volume = 0.8
 # This value is applied to the audio output in general.
 # It should be in the range of (0.0..1.0]. Default value is 0.8.
 #
-#latency = 0.0
-# Audio output latency in seconds. Default value 0.0 implies
-# that reasonable latency will be chosen automatically.
+#latency = 0.05
+# Audio output latency in seconds. Special value 0.0 implies
+# that reasonable latency will be chosen automatically by system.
 # Normally this option should not be set up explicitly.
-# Do it only if you are pretty unsatisfied by the automatic choice.
+# Do it only if you are pretty unsatisfied by the default.
+#
+#async_operation = no
+# This option enables truly asynchronous audio stream operation.
+# Normally it is absolutely not necessary, thus, disabled by default,
+# but theoretically there can be some circumstances where it would be
+# preferable. Use the word "yes" or "on" to enable and the word
+# "no" or "off" to disable.
+#
+#pulseaudio_direct = yes
+# This option allows direct usage of PulseAudio API for "pulse" and
+# "default" devices when "pulse" device is present in the system.
+# If it is disabled, these devices will be accessed via native host
+# API bridge. Use the word "yes" or "on" to enable and the word
+# "no" or "off" to disable.
 
 [sounds]
 # Sound files playing control options.
@@ -94,7 +90,8 @@ dtk_notation = on
 # Sound files playing device. This setting overwrites general default
 # and allows to play sound files on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for sound files playing. It is 1.0
@@ -115,7 +112,8 @@ dtk_notation = on
 # Tones producing device. This setting overwrites general default
 # and allows to use a separate device for tone signals.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for tone signals producing. It is 1.0
@@ -139,149 +137,312 @@ dtk_notation = on
 # Speech output device. This setting overwrites general default
 # and allows to produce speech on a separate audio device.
 # The DSP device specifications (such as "/dev/dsp")
-# are accepted here as well as the ALSA ones.
+# are accepted here as well as the ALSA ones. Invoke "multispeech -l"
+# to get list of all available devices on your system.
 #
 #volume = 1.0
 # Relative volume level for speech output. It is 1.0 by default.
 #
+#language = autodetect
+# This option specifies the language to speak. Allowed values are:
+# "en" for English, "ru" for Russian, "de" for German, "fr" for French,
+# "es" for Spanish, "br" for Brazilian, "it" for Italian or "autodetect"
+# for automatic detection from the text nature.
+# By default language is autodetected.
+#
+#fallback = en
+# This option specifies the language that should be used when
+# no specific language can be detected.
+
+# Language related sections. These sections contain quite the same
+# collection of options that affect speech on a specific language.
+# Actual speech engine is chosen by the key option "engine".
+# This option has no default. If it is not set then the language
+# will not be available in Multispeech. It is not necessary to define
+# speech engine for each language, but at least one must be defined.
+# It is wise to define speech engine for only those languages
+# that are actually to be used.
+
+[en]
+# English language related speech options.
+#
+engine = freephone
+# English TTS engine. This option has no default. If it is not set
+# then English speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# freephone -- English speech with Freephone and Mbrola voice "en1";
+# espeak -- English speech with Espeak TTS engine;
+# espeak.mbrola -- English speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
+#
+#volume = 1.0
+# English voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
+#
 #pitch = 1.0
-# Voice pitch adjustment relative to it's normal level.
+# English voice pitch adjustment relative to it's normal level.
 # It is 1.0 by default. Greater value causes higher pitch.
 #
 #rate = 1.0
-# Relative speech rate for all voices. It is 1.0 by default.
+# Relative speech rate for English voice. It is 1.0 by default.
 # Higher value causes quicker speech.
 #
-#char.pitch = 1.0
-#char.rate = 1.0
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
 # Relative voice pitch and speech rate control applied to the single
 # letters pronunciation. By default 1.0 is suggested.
 #
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+
+[ru]
+# Russian language related speech options.
 #
-#language = autodetect
-# Define speech synthesis language. Allowed values are:
-# "en" for English, "ru" for Russian or "autodetect" for automatic
-# detection from the text nature. By default language is autodetected.
-#
-en.engine = freephone
-# English TTS engine. This option has no default. If it is not set
-# then English speech output will be unavailable in Multispeech.
-# Reasonable alternatives are as follows:
-# freephone -- English speech with Freephone and Mbrola voice "en1";
-# espeak -- English speech with Espeak TTS engine;
-# user -- user defined TTS engine.
-#
-ru.engine = ru_tts
+engine = ru_tts
 # Russian TTS engine. This option has no default. If it is not set
 # then Russian speech output will be unavailable in Multispeech.
-# Reasonable alternatives are as follows:
+# The alternatives are as follows:
 # ru_tts -- Russian speech with Ru_tts speech synthesizer;
 # espeak -- Russian speech with Espeak speech synthesizer;
 # user -- User defined TTS engine.
-
-# Voice related sections. These sections contain quite the same
-# collection of speech control options for each known voice.
-# Each section is named by the internal voice name, that is used
-# for unambiguous voice identification in the configuration files.
-
-[mbrola-en1]
-# Mbrola UK English voice.
-#
-#voice_name = mbrola-en1
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# Russian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
-
-[mbrola-us1]
-# Mbrola US English voice.
+# Russian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
 #
-#voice_name = mbrola-us1
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
+#rate = 1.0
+# Relative speech rate for Russian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[de]
+# German language related speech options.
+#
+engine = espeak
+# German TTS engine. This option has no default. If it is not set
+# then German speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- German speech with Espeak TTS engine;
+# espeak.mbrola -- German speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# German voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
-
-[mbrola-us2]
-# Mbrola US English voice.
+# German voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
 #
-#voice_name = mbrola-us2
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
+#rate = 1.0
+# Relative speech rate for German voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[fr]
+# French language related speech options.
+#
+engine = espeak
+# French TTS engine. This option has no default. If it is not set
+# then French speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- French speech with Espeak TTS engine;
+# espeak.mbrola -- French speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# French voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
-
-[mbrola-us3]
-# Mbrola US English voice.
+# French voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
 #
-#voice_name = mbrola-us3
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
+#rate = 1.0
+# Relative speech rate for French voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[es]
+# Spanish language related speech options.
+#
+engine = espeak
+# Spanish TTS engine. This option has no default. If it is not set
+# then Spanish speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Spanish speech with Espeak TTS engine;
+# espeak.mbrola -- Spanish speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# Spanish voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
-
-[espeak-default]
-# Default Espeak English voice.
+# Spanish voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
 #
-#voice_name = default
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
+#rate = 1.0
+# Relative speech rate for Spanish voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[br]
+# Brazilian language related speech options.
+#
+engine = espeak
+# Brazilian TTS engine. This option has no default. If it is not set
+# then Brazilian speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Brazilian speech with Espeak TTS engine;
+# espeak.mbrola -- Brazilian speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# Brazilian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
-
-[espeak-ru]
-# Espeak Russian voice.
+# Brazilian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
 #
-#voice_name = russian_test
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
+#rate = 1.0
+# Relative speech rate for Brazilian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
+
+[it]
+# Italian language related speech options.
+#
+engine = espeak
+# Italian TTS engine. This option has no default. If it is not set
+# then Italian speech output will be unavailable in Multispeech.
+# The alternatives are as follows:
+# espeak -- Italian speech with Espeak TTS engine;
+# espeak.mbrola -- Italian speech with Espeak and Mbrola voices;
+# user -- user defined TTS engine.
 #
 #volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
+# Italian voice loudness relatively to the general speech volume
+# level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Relative voice pitch.
+# Italian voice pitch adjustment relative to it's normal level.
+# It is 1.0 by default. Greater value causes higher pitch.
+#
+#rate = 1.0
+# Relative speech rate for Italian voice. It is 1.0 by default.
+# Higher value causes quicker speech.
+#
+#acceleration = 0
+# Apply additional speech tempo acceleration. Speech rate
+# will be changed by specified difference in percents
+# compared to the original tempo. Positive values cause
+# speech acceleration while the negative ones actually imply
+# slowing it down. Default value is 0 so no additional
+# tempo change is applied.
+#
+#char_pitch = 1.0
+#char_rate = 1.0
+# Relative voice pitch and speech rate control applied to the single
+# letters pronunciation. By default 1.0 is suggested.
+#
+#caps_factor = 1.2
+# Voice pitch factor for capital letters. By default it is 1.2
+# so capital letters are pronounced by slightly higher pitch.
 
 # Speech backend sections. These sections contain some options
 # allowing to control various aspects of interaction with the
@@ -295,9 +456,9 @@ ru.engine = ru_tts
 # (as it is by default) then environment variable "PATH"
 # will be examined and all paths mentioned there will be searched.
 #
-#voices = <datadir>/mbrola-voices
+#voices = <datadir>/mbrola
 # Path to the directory where Mbrola voice files are stored.
-# By default "<datadir>/mbrola-voices" is suggested.
+# By default "<datadir>/mbrola" is suggested.
 
 [freephone]
 # Freephone backend specific options.
@@ -329,38 +490,52 @@ ru.engine = ru_tts
 # to improve lexical database. No such file is suggested by default
 # so unknown words are not stored.
 
-# Since this backend has it's own voice,
-# here are the voice options.
-#
-#voice_name = ru_tts
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
-#
-#volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
-#
-#pitch = 1.0
-# Relative voice pitch.
-
 [espeak]
-# Espeak backend specific options.
+# Espeak based backends specific options.
 #
 #executable = espeak
 # Path to the Espeak executable. If only program name is specified
 # (as it is by default) then environment variable "PATH"
 # will be examined and all paths mentioned there will be searched.
 
-# Since this backend is multivoice by nature, we must define
-# the voice that will be used when it is chosen for speech
-# synthesis in a specific language. See speech section.
+# Espeak voices for the supported languages.
 #
-#en.voice = espeak-default
-#ru.voice = espeak-ru
-# These are the default settings for English and Russian.
-# All known Espeak and Mbrola voices can be used here.
+#en = en
+#ru = ru
+#de = de
+#fr = fr
+#es = es
+#br = pt
+#it = it
+# These are the default settings for supported languages.
+# Invoke "espeak --voices" to see all available alternatives.
+
+[espeak.mbrola]
+# Espeak+Mbrola multilingual speech backend control options.
+# This section is devoted to assigning Mbrola voices
+# to the supported languages. To see the list of the voices
+# supported by Espeak try to invoke "espeak --voices".
+# Only Mbrola voices are allowed here. Also make sure
+# that you have corresponding Mbrola voices itself.
+# See Espeak documentation for further details.
+#
+#en = en1
+# English voice. By default en1 is used.
+#
+#de = de6
+# German voice. By default de6 is used.
+#
+#fr = fr4
+# French voice. By default fr4 is used.
+#
+#es = es1
+# Spanish voice. By default es1 is used.
+#
+#br = br3
+# Brazilian voice. By default br3 is used.
+#
+#it = it3
+# Italian voice. By default it3 is used.
 
 [user]
 # User defined TTS backend options.
@@ -376,121 +551,40 @@ ru.engine = ru_tts
 # allows Multispeech to pass current speech parameters to the TTS
 # engine. These keywords are as follows:
 # %lang -- replaced by the language id string;
-# %voice -- replaced by conventional voice name;
 # %pitch -- replaced by relative voice pitch value;
 # %rate -- replaced by relative speech rate value;
 # %freq -- replaced by the sampling frequency value.
 # The last keyword is replaced only when freq_control is enabled
 # (see below).
 #
+#format = 
+# Produced sound stream sample format. The following values
+# are allowed here:
+# s8 -- signed 8 bits;
+# u8 -- unsigned 8 bits;
+# s16 -- signed 16 bits.
+# Leave this option commented out if sound stream is produced
+# in a format that can be detected automatically, such as wave file
+# for instance.
+#
+#sampling = 22050
+# Produced sound stream sampling frequency in Hz. Assumed 22050
+# by default. This option is ignored when sound stream format
+# is autodetected.
+#
+#stereo = no
+# Set to "yes" if produced sound stream is stereo. By default it is
+# assumed mono. This option is ignored when sound stream format
+# is autodetected.
+#
 #freq_control = no
 # Set this option to "yes" if TTS engine accepts sampling frequency
 # specification (as Mbrola does, for instance) and you wish
 # to make use of this capability. This option allows "%freq"
 # keyword replacement in command line. Leave commented out if unsure.
-
-[user-en]
-# English voice specific options.
-#
-#format = 
-# Produced sound stream sample format. The following values
-# are allowed here:
-# s8 -- signed 8 bits;
-# u8 -- unsigned 8 bits;
-# s16 -- signed 16 bits.
-# Leave this option commented out if sound stream is produced
-# in a format that can be detected automatically, such as wave file
-# for instance.
-#
-#sampling = 22050
-# Produced sound stream sampling frequency in Hz. Assumed 22050
-# by default. This option is ignored when sound stream format
-# is autodetected.
-#
-#stereo = no
-# Set to "yes" if produced sound stream is stereo. By default it is
-# assumed mono. This option is ignored when sound stream format
-# is autodetected.
 #
 #charset = 
 # Character set in which the TTS engine accepts  it's input.
 # Available charset names can be found in "/usr/share/i18n/SUPPORTED"
 # or wherever else it is on your system. By default this option
 # is not set so current locale setting is used.
-#
-#acceleration = 0
-# Apply additional speech tempo acceleration. Speech rate
-# will be changed by specified difference in percents
-# compared to the original tempo. Positive values cause
-# speech acceleration while the negative ones actually imply
-# slowing it down. Default value is 0 so no additional
-# tempo change is applied.
-#
-#voice_name = mbrola-en1
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
-#
-#dialect = none
-# Language dialect identification for use in SSIP communications.
-#
-#volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
-#
-#pitch = 1.0
-# Relative voice pitch.
-
-[user-ru]
-# Russian voice specific options.
-#
-#format = 
-# Produced sound stream sample format. The following values
-# are allowed here:
-# s8 -- signed 8 bits;
-# u8 -- unsigned 8 bits;
-# s16 -- signed 16 bits.
-# Leave this option commented out if sound stream is produced
-# in a format that can be detected automatically, such as wave file
-# for instance.
-#
-#sampling = 22050
-# Produced sound stream sampling frequency in Hz. Assumed 22050
-# by default. This option is ignored when sound stream format
-# is autodetected.
-#
-#stereo = no
-# Set to "yes" if produced sound stream is stereo. By default it is
-# assumed mono. This option is ignored when sound stream format
-# is autodetected.
-#
-#charset = 
-# Character set in which the TTS engine accepts  it's input.
-# Available charset names can be found in "/usr/share/i18n/SUPPORTED"
-# or wherever else it is on your system. By default this option
-# is not set so current locale setting is used.
-#
-#acceleration = 0
-# Apply additional speech tempo acceleration. Speech rate
-# will be changed by specified difference in percents
-# compared to the original tempo. Positive values cause
-# speech acceleration while the negative ones actually imply
-# slowing it down. Default value is 0 so no additional
-# tempo change is applied.
-#
-#voice_name = mbrola-en1
-# Conventional voice name that will be used, for instance,
-# in SSIP communications instead of default identifier.
-#
-#dialect = none
-# Language dialect identification for use in SSIP communications.
-#
-#volume = 1.0
-# Relative volume level for the voice.
-#
-#rate = 1.0
-# Relative speech rate for the voice.
-#
-#pitch = 1.0
-# Relative voice pitch.

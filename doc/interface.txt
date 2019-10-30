@@ -73,9 +73,11 @@ tts_set_speech_rate rate
 
 set_lang language say_it
   Change speaking language. Allowed values are "en" for English, "ru"
-  for Russian and "autodetect" for automatic language detection by the
-  text nature. The second argument is optional. If it is specified and
-  it's value is not "nil" then new language name will be spoken.
+  for Russian, "de" for German, "fr" for French, "es" for Spanish,
+  "br" for Brazilian, "it" for Italian and "autodetect" for automatic
+  language detection by the text nature. The second argument is
+  optional. If it is specified and it's value is not "nil" then newly
+  selected language name will be spoken.
 
 set_next_lang say_it
   Switch language forward to the next available one. Argument is
@@ -107,6 +109,10 @@ tts_split_caps flag
 tts_sync_state punctuation_mode capitalize_mode split_caps_mode speech_rate
   Set specified speech parameters.
 
+c voice_spec
+  Set voice for subsequent speech in queue. Reset it to default
+  when voice_spec is empty or invalid.
+
 tts_reset
   Stop all current sound activities and reset all general speech
   parameters to the default state.
@@ -123,7 +129,9 @@ Embedded speech parameters.
 The text passed as an argument for the "q" and "tts_say" commands may
 include a special sequence That allows to alter some speech parameters
 for that text chunk locally leaving global settings untouched. This
-sequence should be placed at the very beginning of the text.
+sequence should be placed at the very beginning of the text. Just the
+same syntax is used in command "c" to specify voice for the subsequent
+speech chunks in queue.
 
 When native voices are enabled in the Multispeech configuration, the
 embedded sequences of the form "[_: key:value ...]" are recognized.

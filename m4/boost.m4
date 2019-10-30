@@ -42,19 +42,19 @@ AC_DEFUN([AM_PATH_BOOST], [
 		AC_CHECK_HEADERS([boost/thread/thread.hpp boost/thread/mutex.hpp boost/thread/condition.hpp], [
 
 			dnl check for libboost_thread
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread -lboost_system"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
 				[[boost::thread::yield();]])], [
 				BOOST_LIBTHREAD="-lboost_thread"
 				], [
 
-			dnl check for libboost_thread-mt
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread-mt"
+			dnl check for libboost_thread
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_thread -lboost_system"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>]],
 				[[boost::thread::yield();]])], [
-				BOOST_LIBTHREAD="-lboost_thread-mt"
+				BOOST_LIBTHREAD="-lboost_thread"
 				], [
 
 				dnl fail to link
@@ -65,7 +65,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl check for regex support
 		AC_CHECK_HEADER([boost/regex.hpp], [
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_regex-mt"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_regex"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/regex.hpp>]],
 				[[boost::wregex re(L"pattern", boost::regex::normal);]])], [], [
@@ -78,7 +78,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl check for file system support
 		AC_CHECK_HEADERS([boost/filesystem.hpp boost/filesystem/fstream.hpp], [
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_filesystem-mt -lboost_system-mt"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_filesystem -lboost_system"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/filesystem.hpp>]],
 				[[boost::filesystem::path file("/dev/null");]])], [], [
@@ -104,7 +104,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl check for program options support
 		AC_CHECK_HEADER([boost/program_options.hpp], [
-			LIBS="$saved_LIBS $BOOST_LIBS -lboost_program_options-mt"
+			LIBS="$saved_LIBS $BOOST_LIBS -lboost_program_options"
 			AC_LINK_IFELSE([
 				AC_LANG_PROGRAM([[#include <boost/program_options.hpp>]],
 				[[boost::program_options::variables_map options;]])], [], [
@@ -117,7 +117,7 @@ AC_DEFUN([AM_PATH_BOOST], [
 
 		dnl libboost found
 		AC_SUBST(BOOST_CPPFLAGS, [-I$boost_prefix/include])
-		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_regex-mt -lboost_program_options-mt -lboost_filesystem-mt -lboost_system-mt"])
+		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_regex -lboost_program_options -lboost_filesystem -lboost_system"])
 	], [
 		AC_MSG_ERROR([incomplete or broken Boost library installation])])
 

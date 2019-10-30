@@ -1,3 +1,58 @@
+multispeech (2.8.0) unstable; urgency=low
+
+  * Implemented queue voice change facility.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 10 Mar 2018 09:03:58 +0300
+
+multispeech (2.7.0) unstable; urgency=low
+
+  * Introduced sync and async audio stream operation strategies.
+  * Implemented native PulseAudio API support.
+  * Discarded spurious messages on stderr in non-verbose mode.
+  * Revised language detection patterns.
+  * Fixed naming of audio devices.
+  * Added an option to get list of all available devices on the system.
+  * Fixed package related info.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 07 Feb 2018 21:11:54 +0300
+
+multispeech (2.6.5) unstable; urgency=low
+
+  * Fixed various modern compiler related issues.
+  * Boost smart pointers are used instead of auto_ptr.
+  * Prevented spelling for parts of word separated by apostrophe.
+  * A bit of extra clarification in documentation.
+  * Better Italian translation for space.
+  * Fixed usage of some Mbrola voices with unusual sampling frequency.
+  * Adjusted volume of Mbrola voices to get rid of distortion in some
+    cases.
+  * Fixed spelling procedure and avoided disturbance of some complex
+    words pronunciation.
+  * Fixed espeak.mbrola backend functionality for non-English languages.
+  * Used fr4 instead of fr1 as a default Mbrola voice for French
+    language since it is more widely available as Debian package.
+  * Slightly improved automatic language recognition.
+  * All currently supported languages are mentioned in the package
+    description.
+  * Added support for German, French, Italian, Spanish and Brazilian
+    languages.
+  * Accommodated to the modern Espeak.
+  * Two different path layouts for the Mbrola voices are made
+    acceptable.
+  * Default path to the Mbrola voices is corrected according to the
+    distribution conventions.
+  * Revised and improved audio stream control. Now it works correctly
+    even on the poor systems lacking stream time service.
+  * Fixed a couple of minor Russian pronunciation issues.
+  * Improved tone generator in order to produce smoother sound.
+  * Bumped standards version to 3.9.3.
+  * Corrected dependencies.
+  * Audio buffering setup according to playback frequency.
+  * Explicitly defined default audio latency instead of relying on
+    system choice.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 19 Jan 2018 23:39:02 +0300
+
 multispeech (2.4.5) unstable; urgency=low
 
   * Improved robustness of sound stream control mechanism.
