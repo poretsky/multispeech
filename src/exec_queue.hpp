@@ -28,8 +28,8 @@
 // void abort(void) -- to stop currently executed task;
 // bool busy(void) -- to indicate execution state.
 
-#ifndef EXEC_QUEUE_HPP
-#define EXEC_QUEUE_HPP
+#ifndef MULTISPEECH_EXEC_QUEUE_HPP
+#define MULTISPEECH_EXEC_QUEUE_HPP
 
 #include <queue>
 
