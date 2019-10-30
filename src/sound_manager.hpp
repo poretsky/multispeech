@@ -24,8 +24,8 @@
 // and manage sound producing tasks queue as well as the ones
 // to execute such tasks immediately.
 
-#ifndef SOUND_MANAGER_HPP
-#define SOUND_MANAGER_HPP
+#ifndef MULTISPEECH_SOUND_MANAGER_HPP
+#define MULTISPEECH_SOUND_MANAGER_HPP
 
 #include <queue>
 

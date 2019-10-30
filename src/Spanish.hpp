@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef SPANISH_HPP
-#define SPANISH_HPP
+#ifndef MULTISPEECH_SPANISH_HPP
+#define MULTISPEECH_SPANISH_HPP
 
 #include "language_description.hpp"
 

@@ -63,8 +63,8 @@
 // should take care of it;
 // charset -- backend native charset specification.
 
-#ifndef SPEECH_ENGINE_HPP
-#define SPEECH_ENGINE_HPP
+#ifndef MULTISPEECH_SPEECH_ENGINE_HPP
+#define MULTISPEECH_SPEECH_ENGINE_HPP
 
 #include <string>
 #include <locale>

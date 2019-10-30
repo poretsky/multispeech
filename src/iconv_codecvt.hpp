@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef ICONV_CODECVT_HPP
-#define ICONV_CODECVT_HPP
+#ifndef MULTISPEECH_ICONV_CODECVT_HPP
+#define MULTISPEECH_ICONV_CODECVT_HPP
 
 #include <locale>
 

@@ -21,8 +21,8 @@
 // The mbrola class is not a complete speech backend class,
 // but all Mbrola based backend classes should be derived from it.
 
-#ifndef MBROLA_ENGINE_HPP
-#define MBROLA_ENGINE_HPP
+#ifndef MULTISPEECH_MBROLA_HPP
+#define MULTISPEECH_MBROLA_HPP
 
 #include "speech_engine.hpp"
 
