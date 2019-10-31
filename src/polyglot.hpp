@@ -37,7 +37,7 @@ class polyglot
 {
 public:
   // Construct the object:
-  polyglot(const configuration& conf);
+  explicit polyglot(const configuration& conf);
 
   // Prepare speech task:
   speech_task text_task(const std::wstring& s,

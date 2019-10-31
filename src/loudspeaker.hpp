@@ -84,7 +84,7 @@ class loudspeaker:
 {
 public:
   // Construct / destroy:
-  loudspeaker(const configuration& conf);
+  explicit loudspeaker(const configuration& conf);
   ~loudspeaker(void);
 
   // Start task execution:
