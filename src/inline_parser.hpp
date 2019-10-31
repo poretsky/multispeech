@@ -28,8 +28,10 @@
 
 class voice_params
 {
-public:
+protected:
   voice_params(void);
+
+public:
   voice_params(voice_params* other);
 
   // Parameter values:
@@ -39,11 +41,14 @@ public:
 
 class inline_parser: public voice_params
 {
-public:
-  // Construct / destroy:
+protected:
+  // Object constructor:
   inline_parser(const std::wstring& detector,
                 const std::wstring& precleaner,
                 const std::wstring& postcleaner);
+
+public:
+  // Destructor is made public to accommodate smart pointers:
   virtual ~inline_parser(void);
 
   // Test given string for embedded voice parameters and extract them.
