@@ -54,7 +54,7 @@ class file_player:
 {
 public:
   // Object constructor:
-  file_player(const configuration& conf);
+  explicit file_player(const configuration& conf);
 
   // Start task execution. If there is a task executing already
   // and the new one is started with the override option, then

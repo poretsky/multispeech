@@ -76,7 +76,7 @@ public:
     uppercase
   };
 
-  case_conversion(mode md);
+  explicit case_conversion(mode md);
 
 private:
   std::wstring do_filter(const std::wstring& s);
@@ -96,7 +96,7 @@ public:
     none = 1000 // Beyond the list
   };
 
-  punctuations(const std::vector<const wchar_t*>& pronunciations_list);
+  explicit punctuations(const std::vector<const wchar_t*>& pronunciations_list);
 
   static mode verbosity;
 
@@ -111,7 +111,7 @@ private:
 class char_translations: public boost::iostreams::wline_filter
 {
 public:
-  char_translations(const std::map<wchar_t, const wchar_t*>& table);
+  explicit char_translations(const std::map<wchar_t, const wchar_t*>& table);
 
 private:
   std::wstring do_filter(const std::wstring& s);
@@ -162,7 +162,7 @@ private:
 class text_filter_constructor
 {
 public:
-  text_filter_constructor(boost::iostreams::filtering_wostream* owner);
+  explicit text_filter_constructor(boost::iostreams::filtering_wostream* owner);
 
   text_filter_constructor& operator()(case_conversion::mode case_mode);
   text_filter_constructor& operator()(const std::vector<const wchar_t*>& pronunciations_list);

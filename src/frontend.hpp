@@ -31,7 +31,7 @@ class frontend: public server
 {
 public:
   // Construct the object:
-  frontend(const configuration& conf);
+  explicit frontend(const configuration& conf);
 
 private:
   // Input method and command syntax definition (see base class):
