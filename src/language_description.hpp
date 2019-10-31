@@ -37,10 +37,13 @@
 
 class language_description
 {
-public:
-  // Construct / destroy:
+protected:
+  // Object constructor:
   language_description(const char* language_id,
                        const wchar_t* language_detector);
+
+public:
+  // Destructor is made public to accommodate smart pointers:
   virtual ~language_description(void);
 
   // Language id string:
