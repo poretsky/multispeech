@@ -80,8 +80,8 @@
 
 class speech_engine
 {
-public:
-  // Constructing and destroying:
+protected:
+  // Object constructor:
   speech_engine(const configuration& conf,
                 const std::string& backend,
                 const std::string& voice_id,
@@ -91,6 +91,9 @@ public:
                 unsigned int channels,
                 bool deviate,
                 const std::string& charset = "");
+
+public:
+  // Destructor should be public to accommodate smart pointers:
   virtual ~speech_engine(void);
 
   // General attributes:

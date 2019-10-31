@@ -37,9 +37,12 @@
 
 class server
 {
-public:
-  // Construct / destroy:
+protected:
+  // Object constructor:
   server(const configuration& conf);
+
+public:
+  // Destructor is made public to accommodate smart pointers:
   virtual ~server(void);
 
   // General execution loop:

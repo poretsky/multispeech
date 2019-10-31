@@ -55,9 +55,11 @@ public:
   // opened for read by pipeline::run() and closed by pipeline::stop().
   class consumer
   {
-  public:
+  protected:
     consumer(void);
-    virtual ~consumer(void);
+    ~consumer(void);
+
+  public:
     virtual void attach(int fd) = 0;
   };
 

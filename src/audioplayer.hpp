@@ -51,11 +51,12 @@
 
 class audioplayer: private portaudio::CallbackInterface
 {
-public:
+protected:
   // Construct / destroy:
   audioplayer(const std::string& device_name, const char* stream_id);
-  virtual ~audioplayer(void);
+  ~audioplayer(void);
 
+public:
   // Playing process control:
   virtual void stop(void);
   virtual bool active(void);

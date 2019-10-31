@@ -34,11 +34,12 @@
 
 class sound_processor
 {
-public:
+protected:
   // Construct / destroy:
   sound_processor(soundtouch::FIFOSamplePipe& conveyer);
   ~sound_processor(void);
 
+public:
   // Background processing control:
   void start_processing(unsigned int reserve = 0);
   void stop_processing(void);
