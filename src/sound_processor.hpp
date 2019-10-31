@@ -35,9 +35,8 @@
 class sound_processor
 {
 protected:
-  // Construct / destroy:
+  // Object constructor:
   sound_processor(soundtouch::FIFOSamplePipe& conveyer);
-  ~sound_processor(void);
 
 public:
   // Background processing control:
