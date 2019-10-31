@@ -44,7 +44,7 @@ class sound_manager
 {
 public:
   // Constructing / destroying.
-  sound_manager(const configuration& conf);
+  explicit sound_manager(const configuration& conf);
   ~sound_manager(void);
 
   // Submit a job to the queue. If some job is executing already
@@ -112,7 +112,7 @@ private:
   {
   public:
     // Object constructor.
-    agent(sound_manager* job_holder);
+    explicit agent(sound_manager* job_holder);
 
     // The thread execution loop.
     void operator()(void);

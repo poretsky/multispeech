@@ -91,7 +91,7 @@ private:
   {
   public:
     // Object constructor.
-    agent(exec_queue<task_description>* owner):
+    explicit agent(exec_queue<task_description>* owner):
       holder(owner)
     {
     }
