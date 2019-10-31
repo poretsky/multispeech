@@ -42,14 +42,14 @@
 template <typename task_description>
 class exec_queue: private std::queue<task_description>
 {
-public:
+protected:
   // construct / destroy:
   exec_queue(void):
     alive(true),
     service(agent(this))
   {
   }
-  virtual ~exec_queue(void)
+  ~exec_queue(void)
   {
     {
       boost::mutex::scoped_lock lock(access);
@@ -60,6 +60,7 @@ public:
     service.join();
   }
 
+public:
   // Run or queue a new task:
   void submit(const task_description& task)
   {
