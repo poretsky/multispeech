@@ -24,16 +24,12 @@ using namespace boost;
 using namespace soundtouch;
 
 
-// Construct / destroy:
+// Object constructor:
 
 sound_processor::sound_processor(FIFOSamplePipe& conveyer):
   fifo(conveyer),
   state(inactive),
   capacity(0)
-{
-}
-
-sound_processor::~sound_processor(void)
 {
 }
 
