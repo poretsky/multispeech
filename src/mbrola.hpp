@@ -28,7 +28,7 @@
 
 class mbrola: public speech_engine
 {
-public:
+protected:
   // Constructing the object:
   mbrola(const configuration& conf,
          const std::string& backend,
