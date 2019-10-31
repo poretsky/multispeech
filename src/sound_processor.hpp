@@ -59,7 +59,7 @@ private:
   {
   public:
     // Object constructor.
-    soundmaster(sound_processor* owner);
+    explicit soundmaster(sound_processor* owner);
 
     // The thread execution loop.
     void operator()(void);
