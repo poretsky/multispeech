@@ -66,7 +66,7 @@ protected:
   class spell
   {
   public:
-    spell(language_description* owner);
+    explicit spell(language_description* owner);
 
     std::wstring operator()(const boost::iterator_range<std::wstring::const_iterator>& s);
 

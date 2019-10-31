@@ -57,7 +57,7 @@ class tone_generator:
 {
 public:
   // Construct / destroy:
-  tone_generator(const configuration& conf);
+  explicit tone_generator(const configuration& conf);
   ~tone_generator(void);
 
   // Start task execution. If there is a task executing already

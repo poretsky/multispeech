@@ -29,7 +29,7 @@ class ru_tts: public speech_engine
 {
 public:
   // Object construction:
-  ru_tts(const configuration& conf);
+  explicit ru_tts(const configuration& conf);
 
 private:
   // Make up voice parameters for backend:
