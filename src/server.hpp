@@ -35,7 +35,7 @@
 #include "polyglot.hpp"
 #include "sound_manager.hpp"
 
-class server
+class server: private sound_manager::callback
 {
 protected:
   // Object constructor:
@@ -69,6 +69,10 @@ protected:
   sound_manager soundmaster;
 
 private:
+  // Implement this method to take over queue done events.
+  // Default implementation does nothing.
+  void queue_done(void);
+
   // Get command from the source and parse it placing the command itself
   // and accompanying data into the cmd and data fields respectively.
   virtual void get_command(void) = 0;

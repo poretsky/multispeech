@@ -30,13 +30,14 @@ using namespace boost;
 
 // Constructing / destroying:
 
-sound_manager::sound_manager(const configuration& conf):
+sound_manager::sound_manager(const configuration& conf, callback* host):
   state(idle),
   business(nothing),
   jobs(new jobs_queue),
   sounds(conf),
   tones(conf),
   speech(conf),
+  events(host),
   service(agent(this))
 {
 }
@@ -302,5 +303,7 @@ sound_manager::agent::operator()(void)
         holder->next_job();
       while (holder->working())
         audioplayer::complete.wait(lock);
+      if (holder->jobs->empty())
+        holder->events->queue_done();
     }
 }
