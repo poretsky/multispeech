@@ -173,14 +173,3 @@ pipeline::parentRedirections(void)
     }
   else input->open(feeder);
 }
-
-
-// The pipeline::consumer class members:
-
-pipeline::consumer::consumer(void)
-{
-}
-
-pipeline::consumer::~consumer(void)
-{
-}
