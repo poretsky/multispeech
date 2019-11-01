@@ -202,46 +202,43 @@ sound_manager::die(void)
 void
 sound_manager::next_job(void)
 {
-  if ((state == running) && !jobs->empty())
+  if (jobs->front().empty())
+    business = nothing;
+  else if (jobs->front().type() == typeid(sound_task))
     {
-      if (jobs->front().empty())
-        business = nothing;
-      else if (jobs->front().type() == typeid(sound_task))
+      if (!file_player::asynchronous)
         {
-          if (!file_player::asynchronous)
-            {
-              if (!tone_generator::asynchronous)
-                tones.stop();
-              speech.stop();
-            }
-          sounds.start(any_cast<sound_task>(jobs->front()),
-                       !file_player::asynchronous || (business != playing));
-          business = playing;
-        }
-      else if (jobs->front().type() == typeid(tone_task))
-        {
-          if (!tone_generator::asynchronous)
-            {
-              if (!file_player::asynchronous)
-                sounds.stop();
-              speech.stop();
-            }
-          tones.start(any_cast<tone_task>(jobs->front()),
-                      !tone_generator::asynchronous || (business != beeping));
-          business = beeping;
-        }
-      else if (jobs->front().type() == typeid(speech_task))
-        {
-          if (!file_player::asynchronous)
-            sounds.stop();
           if (!tone_generator::asynchronous)
             tones.stop();
           speech.stop();
-          speech.start(any_cast<speech_task>(jobs->front()));
-          business = speaking;
         }
-      else business = nothing;
+      sounds.start(any_cast<sound_task>(jobs->front()),
+                   !file_player::asynchronous || (business != playing));
+      business = playing;
     }
+  else if (jobs->front().type() == typeid(tone_task))
+    {
+      if (!tone_generator::asynchronous)
+        {
+          if (!file_player::asynchronous)
+            sounds.stop();
+          speech.stop();
+        }
+      tones.start(any_cast<tone_task>(jobs->front()),
+                  !tone_generator::asynchronous || (business != beeping));
+      business = beeping;
+    }
+  else if (jobs->front().type() == typeid(speech_task))
+    {
+      if (!file_player::asynchronous)
+        sounds.stop();
+      if (!tone_generator::asynchronous)
+        tones.stop();
+      speech.stop();
+      speech.start(any_cast<speech_task>(jobs->front()));
+      business = speaking;
+    }
+  else business = nothing;
 }
 
 bool
@@ -301,7 +298,8 @@ sound_manager::agent::operator()(void)
       mutex::scoped_lock lock(holder->access);
       while (holder->state == idle)
         holder->event.wait(lock);
-      holder->next_job();
+      if ((holder->state == running) && !holder->jobs->empty())
+        holder->next_job();
       while (holder->working())
         audioplayer::complete.wait(lock);
     }
