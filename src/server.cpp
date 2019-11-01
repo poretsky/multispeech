@@ -45,7 +45,7 @@ server::server(const configuration& conf):
                 locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
                 locale("")),
   speechmaster(conf),
-  soundmaster(conf)
+  soundmaster(conf, this)
 {
 }
 
@@ -74,4 +74,12 @@ server::run(void)
       }
   while (perform_command());
   soundmaster.stop();
+}
+
+
+// Private methods:
+
+void
+server::queue_done(void)
+{
 }
