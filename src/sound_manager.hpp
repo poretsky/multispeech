@@ -43,8 +43,15 @@
 class sound_manager
 {
 public:
+  // Callback interface to report events:
+  class callback
+  {
+  public:
+    virtual void queue_done(void) = 0;
+  };
+
   // Constructing / destroying.
-  explicit sound_manager(const configuration& conf);
+  sound_manager(const configuration& conf, callback* host);
   ~sound_manager(void);
 
   // Submit a job to the queue. If some job is executing already
@@ -137,6 +144,9 @@ private:
   file_player sounds;
   tone_generator tones;
   loudspeaker speech;
+
+  // Events consumer:
+  callback* events;
 
   // Critical data access control means.
   boost::mutex access;
