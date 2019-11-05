@@ -344,24 +344,38 @@ string configuration::stage;
 configuration::configuration(int argc, char* argv[])
 {
   options_description conf, cl_desc("Available options");
+  positional_options_description args;
   variables_map cl_opt;
   bool noconf = true;
   ostringstream info;
 
+  // Check invocation type:
+  spd_backend = (basename(path(argv[0])) == "sd_multispeech");
+
   // Declare command line options:
-  cl_desc.add_options()
-    ("help,h", "produce help message and exit")
-    ("list-devices,l", "print list of available audio output devices and exit")
-    ("config,c", value<string>(), "read configuration from specified file")
-    ("debug,d", "log debug information")
-    ("verbose,v", "print diagnostic messages on stderr")
-    ("version,V", "print program version and exit");
+  if (spd_backend)
+    {
+      cl_desc.add_options()
+        ("config", value<string>());
+      args.add("config", 1);
+    }
+  else
+    {
+      cl_desc.add_options()
+        ("help,h", "produce help message and exit")
+        ("list-devices,l", "print list of available audio output devices and exit")
+        ("config,c", value<string>(), "read configuration from specified file")
+        ("debug,d", "log debug information")
+        ("verbose,v", "print diagnostic messages on stderr")
+        ("version,V", "print program version and exit");
+    }
 
   // Parse command line:
   stage = " in command line";
-  store(parse_command_line(argc, argv, cl_desc), cl_opt);
+  store(command_line_parser(argc, argv).options(cl_desc).positional(args).run(), cl_opt);
   stage.erase();
   notify(cl_opt);
+
   if (cl_opt.count("version"))
     info << package::string << endl;
   if (cl_opt.count("help"))
@@ -559,6 +573,15 @@ configuration::configuration(int argc, char* argv[])
   if (noconf)
     throw configuration::error("No configuration files found");
   notify(option_value);
+}
+
+
+// Public members:
+
+bool
+configuration::is_spd_backend(void)
+{
+  return spd_backend;
 }
 
 
