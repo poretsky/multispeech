@@ -308,6 +308,9 @@ public:
   // The constructor reads and parses configuration by the way
   configuration(int argc, char* argv[]);
 
+  // Check if it is Speech Dispatcher backend:
+  bool is_spd_backend(void);
+
   // Options value container:
   boost::program_options::variables_map option_value;
 
@@ -325,6 +328,9 @@ private:
   // Read configuration file:
   void read(const boost::filesystem::path& config_file,
             const boost::program_options::options_description& conf);
+
+  // Set when called as Speech Dispatcher backend:
+  bool spd_backend;
 
   // Configuration files:
   static const boost::filesystem::path global_conf, local_conf;
