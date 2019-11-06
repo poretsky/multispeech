@@ -49,7 +49,7 @@ extern_string::extern_string(const wstring& s, const locale& charset_holder)
   size_t size = s.length();
   if (size)
     {
-      code_converter< back_insert_device<string> > sink(boost::iostreams::back_inserter(*reinterpret_cast<string*>(this)));
+      code_converter< back_insert_device<string> > sink(boost::iostreams::back_inserter(*static_cast<string*>(this)));
       sink.imbue(charset_holder);
       sink.write(s.c_str(), size);
     }
