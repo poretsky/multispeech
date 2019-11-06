@@ -33,6 +33,7 @@
 #include "config.hpp"
 #include "server.hpp"
 #include "frontend.hpp"
+#include "spd_backend.hpp"
 
 using namespace std;
 using namespace boost;
@@ -56,7 +57,9 @@ int main(int argc, char* argv[])
       audio.initialize();
       if (server::verbose)
         cerr << "Audio system initialization complete." << endl;
-      multispeech.reset(new frontend(conf));
+      multispeech.reset(conf.is_spd_backend() ?
+                        static_cast<server*>(new spd_backend(conf)) :
+                        static_cast<server*>(new frontend(conf)));
     }
   catch (const string& info)
     {
