@@ -69,8 +69,8 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
   devidx = use_pa ? find_device("pulse") : paNoDevice;
   if ((devidx == paNoDevice) || ((device.index() != system.defaultOutputDevice().index()) && (device.index() != devidx)))
     stream = async ?
-      reinterpret_cast<Stream*>(new InterfaceCallbackStream) :
-      reinterpret_cast<Stream*>(new BlockingStream);
+      static_cast<Stream*>(new InterfaceCallbackStream) :
+      static_cast<Stream*>(new BlockingStream);
   if (stream)
     {
       PaTime latency = (suggested_latency > 0.0) ?
@@ -271,7 +271,7 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
   int result = paContinue;
   if (!(statusFlags & paOutputOverflow))
     {
-      float* buffer = reinterpret_cast<float*>(outputBuffer);
+      float* buffer = static_cast<float*>(outputBuffer);
       unsigned int obtained = source_read(buffer, numFrames);
       if (stream_time_available)
         {
@@ -301,9 +301,10 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
 void
 audioplayer::release(void* handle)
 {
-  reinterpret_cast<audioplayer*>(handle)->source_release();
-  mutex::scoped_lock lock(reinterpret_cast<audioplayer*>(handle)->access);
-  reinterpret_cast<audioplayer*>(handle)->playing = false;
+  audioplayer* player = static_cast<audioplayer*>(handle);
+  player->source_release();
+  mutex::scoped_lock lock(player->access);
+  player->playing = false;
   complete.notify_all();
 }
 
