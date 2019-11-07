@@ -46,7 +46,7 @@ protected:
   // construct / destroy:
   exec_queue(void):
     alive(true),
-    service(agent(this))
+    service(boost::ref(*this))
   {
   }
   ~exec_queue(void)
@@ -85,42 +85,25 @@ public:
     return this->empty() && !busy();
   }
 
-private:
-  // The functor to be executed in a separate thread.
-  class agent
+  // The thread execution loop.
+  void operator()(void)
   {
-  public:
-    // Object constructor.
-    explicit agent(exec_queue<task_description>* owner):
-      holder(owner)
-    {
-    }
+    while (alive)
+      {
+        boost::mutex::scoped_lock lock(access);
+        while (alive && this->empty())
+          event.wait(lock);
+        while (alive && busy())
+          audioplayer::complete.wait(lock);
+        if (!this->empty())
+          {
+            execute(this->front());
+            this->pop();
+          }
+      }
+  }
 
-    // The thread execution loop.
-    void operator()(void)
-    {
-      while (holder->alive)
-        {
-          boost::mutex::scoped_lock lock(holder->access);
-          while (holder->alive && holder->empty())
-            holder->event.wait(lock);
-          while (holder->alive && holder->busy())
-            audioplayer::complete.wait(lock);
-          if (!holder->empty())
-            {
-              holder->execute(holder->front());
-              holder->pop();
-            }
-        }
-    }
-
-  private:
-    // the parent class pointer.
-    exec_queue<task_description>* holder;
-  };
-
-  friend class agent;
-
+private:
   // Clearing this flag causes execution thread termination.
   bool alive;
 
