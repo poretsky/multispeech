@@ -39,7 +39,7 @@ using namespace boost::assign;
 
 
 // Supported languages:
-const vector<string> polyglot::langs = list_of
+static const vector<string> langs = list_of
   // Follow detection order
   (lang_id::ru)
   (lang_id::br)
