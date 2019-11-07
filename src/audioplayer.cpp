@@ -33,14 +33,31 @@ using namespace boost;
 using namespace portaudio;
 
 
+// Internal data:
+static const regex devname_pattern("\\((.+)\\)");
+static mutex control;
+
+
+// Internal routines:
+
+static PaDeviceIndex
+find_device(const string& device_name)
+{
+  System& system = System::instance();
+  System::DeviceIterator found;
+  for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
+    if (audioplayer::canonical_name(*found) == device_name)
+      return found->isInputOnlyDevice() ? paNoDevice : found->index();
+  return paNoDevice;
+}
+
+
 // Static data:
 condition audioplayer::complete;
-mutex audioplayer::control;
 PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
 bool audioplayer::async = false;
 bool audioplayer::use_pa = true;
-const regex audioplayer::devname_pattern("\\((.+)\\)");
 
 
 // Construct / destroy:
@@ -303,17 +320,6 @@ audioplayer::close_stream(void)
       pa_simple_free(paStream);
       paStream = NULL;
     }
-}
-
-PaDeviceIndex
-audioplayer::find_device(const string& device_name)
-{
-  System& system = System::instance();
-  System::DeviceIterator found;
-  for (found = system.devicesBegin(); found != system.devicesEnd(); ++found)
-    if (canonical_name(*found) == device_name)
-      return found->isInputOnlyDevice() ? paNoDevice : found->index();
-  return paNoDevice;
 }
 
 int

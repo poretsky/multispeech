@@ -147,12 +147,6 @@ protected:
   static const std::string novoice;
 
 private:
-  // Common voice and speech parameters.
-  // It is assumed that normal value is 1.0.
-  static double persistent_volume, persistent_pitch;
-  static double persistent_rate, persistent_deviation;
-  static double persistent_char_pitch, persistent_char_rate;
-
   // Instance specific voice parameters that are set up
   // from configuration at the object construction time:
   double volume_factor, rate_factor, pitch_factor, caps_factor;

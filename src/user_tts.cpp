@@ -26,6 +26,30 @@ using namespace std;
 using namespace boost;
 
 
+// Extract sound format specification from the configuration:
+
+static soundfile::format
+sound_format(const configuration& conf)
+{
+  soundfile::format result = soundfile::autodetect;
+  if (conf.option_value.count(options::compose(speaker::user, option_name::format)))
+    {
+      string fmt(conf.option_value[options::compose(speaker::user, option_name::format)].as<string>());
+      if (!fmt.empty())
+        {
+          if ("s8" == fmt)
+            result = soundfile::s8;
+          else if ("u8" == fmt)
+            result = soundfile::u8;
+          else if ("s16" == fmt)
+            result = soundfile::s16;
+          else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
+        }
+    }
+  return result;
+}
+
+
 // Object construction:
 
 user_tts::user_tts(const configuration& conf, const string& lang):
@@ -49,25 +73,4 @@ user_tts::voicify(double rate, double pitch)
 {
   format_macros["%pitch"] = lexical_cast<string>(pitch);
   format_macros["%rate"] = lexical_cast<string>(rate);
-}
-
-soundfile::format
-user_tts::sound_format(const configuration& conf)
-{
-  soundfile::format result = soundfile::autodetect;
-  if (conf.option_value.count(options::compose(speaker::user, option_name::format)))
-    {
-      string fmt(conf.option_value[options::compose(speaker::user, option_name::format)].as<string>());
-      if (!fmt.empty())
-        {
-          if ("s8" == fmt)
-            result = soundfile::s8;
-          else if ("u8" == fmt)
-            result = soundfile::u8;
-          else if ("s16" == fmt)
-            result = soundfile::s16;
-          else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
-        }
-    }
-  return result;
 }
