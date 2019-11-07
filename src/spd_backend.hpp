@@ -30,6 +30,9 @@ public:
   explicit spd_backend(const configuration& conf);
 
 private:
+  // Module state:
+  bool initialized;
+
   // Serving queue done events:
   void queue_done(void);
 
