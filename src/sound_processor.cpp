@@ -42,7 +42,7 @@ sound_processor::start_processing(unsigned int reserve)
   stop_processing();
   capacity = reserve;
   state = hungry;
-  thread(soundmaster(this));
+  thread(ref(*this));
   if (reserve)
     {
       mutex::scoped_lock lock(access);
@@ -90,49 +90,41 @@ sound_processor::read_result(float* buffer, unsigned int nframes)
   return obtained;
 }
 
+void
+sound_processor::operator()(void)
+{
+  float buffer[chunk_size * nChannels()];
+  unsigned int obtained;
+  mutex::scoped_lock lock(access);
+  while (state != quit)
+    {
+      while (state == replete)
+        event.wait(lock);
+      if (state == hungry)
+        {
+          obtained = get_source(buffer, chunk_size);
+          if (obtained)
+            fifo.putSamples(buffer, obtained);
+          if (obtained < chunk_size)
+            {
+              flush();
+              state = quit;
+            }
+          else if (fifo.numSamples() >= capacity)
+            {
+              state = replete;
+              event.notify_all();
+            }
+        }
+    }
+  state = inactive;
+  event.notify_all();
+}
+
 
 // Private methods:
 
 void
 sound_processor::flush(void)
 {
-}
-
-
-// The soundmaster class methods:
-
-sound_processor::soundmaster::soundmaster(sound_processor* owner):
-  holder(owner)
-{
-}
-
-void
-sound_processor::soundmaster::operator()(void)
-{
-  float buffer[chunk_size * holder->nChannels()];
-  unsigned int obtained;
-  mutex::scoped_lock lock(holder->access);
-  while (holder->state != quit)
-    {
-      while (holder->state == replete)
-        holder->event.wait(lock);
-      if (holder->state == hungry)
-        {
-          obtained = holder->get_source(buffer, chunk_size);
-          if (obtained)
-            holder->fifo.putSamples(buffer, obtained);
-          if (obtained < chunk_size)
-            {
-              holder->flush();
-              holder->state = quit;
-            }
-          else if (holder->fifo.numSamples() >= holder->capacity)
-            {
-              holder->state = replete;
-              holder->event.notify_all();
-            }
-        }
-    }
-  holder->state = inactive;
-  holder->event.notify_all();
 }

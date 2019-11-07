@@ -93,6 +93,9 @@ public:
   // Return true if any sound is currently playing.
   bool active(void);
 
+  // The thread execution loop.
+  void operator()(void);
+
 private:
   // Jobs queue container.
   typedef std::queue<boost::any> jobs_queue;
@@ -113,23 +116,6 @@ private:
     beeping,
     speaking
   };
-
-  // The functor to be executed in a separate thread.
-  class agent
-  {
-  public:
-    // Object constructor.
-    explicit agent(sound_manager* job_holder);
-
-    // The thread execution loop.
-    void operator()(void);
-
-  private:
-    // the parent class pointer.
-    sound_manager* holder;
-  };
-
-  friend class agent;
 
   // Child thread state.
   status state;
