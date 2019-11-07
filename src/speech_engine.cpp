@@ -43,14 +43,16 @@
 using namespace std;
 using namespace boost;
 
+// Internal data:
+static double persistent_volume = 1.0;
+static double persistent_pitch = 1.0;
+static double persistent_rate = 1.0;
+static double persistent_deviation = 1.0;
+static double persistent_char_pitch = 1.0;
+static double persistent_char_rate = 1.0;
+
 
 // Common voice and speech parameters:
-double speech_engine::persistent_volume = 1.0;
-double speech_engine::persistent_pitch = 1.0;
-double speech_engine::persistent_rate = 1.0;
-double speech_engine::persistent_deviation = 1.0;
-double speech_engine::persistent_char_pitch = 1.0;
-double speech_engine::persistent_char_rate = 1.0;
 bool speech_engine::split_caps = false;
 bool speech_engine::capitalize = false;
 bool speech_engine::space_special_chars = false;

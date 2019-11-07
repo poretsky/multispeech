@@ -37,9 +37,6 @@ public:
 private:
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
-
-  // Extract sound format specification from the configuration:
-  static soundfile::format sound_format(const configuration& conf);
 };
 
 #endif
