@@ -55,19 +55,7 @@ protected:
 
 private:
   // Private data:
-  static const char* internal_charset;
   iconv_t m_in_cd, m_out_cd;
-
-  // Iconv wrapper:
-  template<typename source_type, typename target_type>
-  codecvt_base::result
-  static convert(const iconv_t& m_cd,
-                 const source_type* from,
-                 const source_type* from_end,
-                 const source_type*& from_next,
-                 target_type* to,
-                 target_type* to_end,
-                 target_type*& to_next);
 };
 
 #endif

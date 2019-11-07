@@ -31,7 +31,48 @@ using namespace std;
 
 
 // Internal representation charset:
-const char* iconv_codecvt::internal_charset = "WCHAR_T";
+static const char* internal_charset = "WCHAR_T";
+
+
+// Iconv wrapper:
+
+template<typename source_type, typename target_type>
+static codecvt_base::result
+convert(const iconv_t& m_cd,
+                       const source_type* from,
+                       const source_type* from_end,
+                       const source_type*& from_next,
+                       target_type* to,
+                       target_type* to_end,
+                       target_type*& to_next)
+{
+  codecvt_base::result retval = codecvt_base::error;
+  size_t src_length = (from_end - from) * sizeof(source_type);
+  size_t dest_maxsize = (to_end - to) * sizeof(target_type);
+  from_next=from;
+  to_next=to;
+  if (m_cd && (m_cd != reinterpret_cast<iconv_t>(-1)))
+    {
+      errno=0;
+      if (iconv(m_cd, (char**)&from_next, &src_length,
+                (char**)&to_next, &dest_maxsize)
+          == (size_t)-1)
+        switch (errno)
+          {
+          case EINVAL:
+            retval = codecvt_base::partial;
+            break;
+          case E2BIG:
+            retval = codecvt_base::partial;
+            break;
+          default:
+            retval = codecvt_base::error;
+            break;
+          }
+      else retval = codecvt_base::ok;
+    }
+  return retval;
+}
 
 
 // Constructing and destroying:
@@ -104,45 +145,4 @@ iconv_codecvt::do_unshift(mbstate_t& state,
 {
   const wchar_t* dummy = NULL;
   return convert(m_out_cd, dummy, dummy, dummy, to, to_end, to_next);
-}
-
-
-// Iconv wrapper:
-
-template<typename source_type, typename target_type>
-codecvt_base::result
-iconv_codecvt::convert(const iconv_t& m_cd,
-                       const source_type* from,
-                       const source_type* from_end,
-                       const source_type*& from_next,
-                       target_type* to,
-                       target_type* to_end,
-                       target_type*& to_next)
-{
-  codecvt_base::result retval = codecvt_base::error;
-  size_t src_length = (from_end - from) * sizeof(source_type);
-  size_t dest_maxsize = (to_end - to) * sizeof(target_type);
-  from_next=from;
-  to_next=to;
-  if (m_cd && (m_cd != reinterpret_cast<iconv_t>(-1)))
-    {
-      errno=0;
-      if (iconv(m_cd, (char**)&from_next, &src_length,
-                (char**)&to_next, &dest_maxsize)
-          == (size_t)-1)
-        switch (errno)
-          {
-          case EINVAL:
-            retval = codecvt_base::partial;
-            break;
-          case E2BIG:
-            retval = codecvt_base::partial;
-            break;
-          default:
-            retval = codecvt_base::error;
-            break;
-          }
-      else retval = codecvt_base::ok;
-    }
-  return retval;
 }

@@ -59,15 +59,16 @@ using namespace portaudio;
 
 // Configuration files:
 
-const path configuration::global_conf(complete("multispeech.conf", SYSCONF_DIR));
-const path configuration::local_conf(complete(".multispeechrc", getenv("HOME")));
+static const path global_conf(complete("multispeech.conf", SYSCONF_DIR));
+static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 
 
 // Hardcoded default paths:
 
-const path configuration::mbrola_voices_default(complete("mbrola", DATA_DIR));
-const path configuration::enlex_default(complete("freespeech/enlex.db", DATA_DIR));
-const path configuration::rulex_default(complete("freespeech/rulex.db", DATA_DIR));
+static const path mbrola_voices_default(complete("mbrola", DATA_DIR));
+static const path enlex_default(complete("freespeech/enlex.db", DATA_DIR));
+static const path rulex_default(complete("freespeech/rulex.db", DATA_DIR));
+
 
 // Language id strings:
 namespace lang_id
