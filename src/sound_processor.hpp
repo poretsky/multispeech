@@ -44,6 +44,9 @@ public:
   void stop_processing(void);
   unsigned int read_result(float* buffer, unsigned int nframes);
 
+  // The thread execution loop.
+  void operator()(void);
+
 private:
   // Processing thread states:
   enum status
@@ -54,25 +57,8 @@ private:
     inactive // Already complete or not started yet
   };
 
-  // The functor to be executed in a separate thread.
-  class soundmaster
-  {
-  public:
-    // Object constructor.
-    explicit soundmaster(sound_processor* owner);
-
-    // The thread execution loop.
-    void operator()(void);
-
-  private:
-    // the parent class pointer.
-    sound_processor* holder;
-
-    // Chunk size for data input:
-    static const unsigned int chunk_size = 128;
-  };
-
-  friend class soundmaster;
+  // Chunk size for data input:
+  static const unsigned int chunk_size = 128;
 
   // Actual production line:
   soundtouch::FIFOSamplePipe& fifo;

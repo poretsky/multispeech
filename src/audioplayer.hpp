@@ -73,6 +73,9 @@ public:
   static bool async;
   static bool use_pa;
 
+  // Playback thread execution loop.
+  void operator()(void);
+
 protected:
   // Internal buffer size in samples for specified rate:
   unsigned int bufsize(unsigned int rate);
@@ -81,23 +84,6 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
-  // The functor to be executed in a separate thread to perform synchronous playback.
-  class playback
-  {
-  public:
-    // Object constructor.
-    playback(audioplayer* owner);
-
-    // The thread execution loop.
-    void operator()(void);
-
-  private:
-    // the parent class pointer.
-    audioplayer* master;
-  };
-
-  friend class playback;
-
   // Device name canonicalizer:
   static const boost::regex devname_pattern;
 
