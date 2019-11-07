@@ -38,7 +38,7 @@ sound_manager::sound_manager(const configuration& conf, callback* host):
   tones(conf),
   speech(conf),
   events(host),
-  service(agent(this))
+  service(ref(*this))
 {
 }
 
@@ -180,6 +180,23 @@ sound_manager::active(void)
   return sounds.active() || tones.active() || speech.active();
 }
 
+void
+sound_manager::operator()(void)
+{
+  while (state != dead)
+    {
+      mutex::scoped_lock lock(access);
+      while (state == idle)
+        event.wait(lock);
+      if ((state == running) && !jobs->empty())
+        next_job();
+      while (working())
+        audioplayer::complete.wait(lock);
+      if (jobs->empty())
+        events->queue_done();
+    }
+}
+
 
 // Private methods:
 
@@ -281,29 +298,4 @@ sound_manager::working(void)
         }
     }
   return result;
-}
-
-
-// Agent subclass members:
-
-sound_manager::agent::agent(sound_manager* job_holder):
-  holder(job_holder)
-{
-}
-
-void
-sound_manager::agent::operator()(void)
-{
-  while (holder->state != dead)
-    {
-      mutex::scoped_lock lock(holder->access);
-      while (holder->state == idle)
-        holder->event.wait(lock);
-      if ((holder->state == running) && !holder->jobs->empty())
-        holder->next_job();
-      while (holder->working())
-        audioplayer::complete.wait(lock);
-      if (holder->jobs->empty())
-        holder->events->queue_done();
-    }
 }
