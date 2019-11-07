@@ -82,9 +82,6 @@ private:
 
   // Language autodetection enabling flag:
   bool autolanguage;
-
-  // Supported languages:
-  static const std::vector<std::string> langs;
 };
 
 #endif

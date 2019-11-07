@@ -84,9 +84,6 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
-  // Device name canonicalizer:
-  static const boost::regex devname_pattern;
-
   // Indicate that playback is in progress:
   bool playing;
   boost::mutex access;
@@ -94,7 +91,6 @@ private:
 
   // Audio playing stream:
   portaudio::Stream* stream;
-  static boost::mutex control;
 
   // Audio stream parameters:
   portaudio::StreamParameters params;
@@ -116,9 +112,6 @@ private:
   bool stream_is_active(void);
   bool stream_is_over(void);
   void close_stream(void);
-
-  // Find device by it's name:
-  static PaDeviceIndex find_device(const std::string& device_name);
 
   // Audio playing callback function:
   int paCallbackFun(const void *inputBuffer, void *outputBuffer,
