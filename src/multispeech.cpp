@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
   scoped_ptr<server> multispeech;
   AutoSystem audio(false);
   int efd = dup(STDERR_FILENO);
+  bool spd = false;
 
   try
     {
@@ -57,8 +58,9 @@ int main(int argc, char* argv[])
       audio.initialize();
       if (server::verbose)
         cerr << "Audio system initialization complete." << endl;
-      multispeech.reset(conf.is_spd_backend() ?
-                        static_cast<server*>(new spd_backend(conf)) :
+      spd = conf.is_spd_backend();
+      multispeech.reset(spd ?
+                        static_cast<server*>(spd_backend::instantiate(conf)) :
                         static_cast<server*>(new frontend(conf)));
     }
   catch (const string& info)
@@ -76,7 +78,14 @@ int main(int argc, char* argv[])
           dup2(efd, STDERR_FILENO);
           close(efd);
         }
-      cerr << "Configuration error: " << error.what() << endl;
+      string msg("ERROR: ");
+      msg += error.what();
+      if (spd)
+        {
+          cout << "399-" << msg << endl;
+          cout << "399 ERR CANT INIT MODULE" << endl;
+        }
+      else cerr << msg << endl;
       return EXIT_FAILURE;
     }
   catch (const std::exception& error)
@@ -87,7 +96,7 @@ int main(int argc, char* argv[])
           dup2(efd, STDERR_FILENO);
           close(efd);
         }
-      cerr << "Error" << configuration::stage << ": " << error.what() << endl;
+      cerr << "ERROR" << configuration::stage << ": " << error.what() << endl;
       return EXIT_FAILURE;
     }
 
