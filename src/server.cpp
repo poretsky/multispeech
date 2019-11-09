@@ -18,6 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <cstdlib>
 #include <iostream>
 #include <exception>
 
@@ -45,7 +46,8 @@ server::server(const configuration& conf):
                 locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
                 locale("")),
   speechmaster(conf),
-  soundmaster(conf, this)
+  soundmaster(conf, this),
+  exit_status(EXIT_SUCCESS)
 {
 }
 
@@ -56,7 +58,7 @@ server::~server(void)
 
 // Public methods:
 
-void
+int
 server::run(void)
 {
   do
@@ -74,6 +76,7 @@ server::run(void)
       }
   while (perform_command());
   soundmaster.stop();
+  return exit_status;
 }
 
 
