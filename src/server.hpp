@@ -46,7 +46,7 @@ public:
   virtual ~server(void);
 
   // General execution loop:
-  void run(void);
+  int run(void);
 
   // Logging stream:
   static FBB::SyslogStream log;
@@ -67,6 +67,9 @@ protected:
   // Speech and sounds:
   polyglot speechmaster;
   sound_manager soundmaster;
+
+  // Exit status:
+  int exit_status;
 
 private:
   // Implement this method to take over queue done events.

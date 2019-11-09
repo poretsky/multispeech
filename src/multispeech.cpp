@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
       efd = -1;
     }
 
-  multispeech->run();
+  int exit_status = multispeech->run();
 
-  return EXIT_SUCCESS;
+  return exit_status;
 }
