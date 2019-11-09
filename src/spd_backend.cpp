@@ -20,6 +20,7 @@
 
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 #include "spd_backend.hpp"
 
@@ -30,7 +31,7 @@ using namespace std;
 
 
 // Speech Dispatcher module commands:
-static const wstring cmd_init = L"INIT";
+static const string cmd_init = "INIT";
 static const wstring cmd_speak = L"SPEAK";
 static const wstring cmd_sound_icon = L"SOUND_ICON";
 static const wstring cmd_char = L"CHAR";
@@ -48,11 +49,28 @@ static const wstring cmd_quit = L"QUIT";
 static const wstring cmd_abort = L"ABORT";
 
 
+// Object instantiation:
+
+spd_backend*
+spd_backend::instantiate(const configuration& conf)
+{
+  string cmd;
+  getline(cin, cmd);
+  if (cin.eof() || cin.fail())
+    throw logic_error("Broken pipe when reading INIT");
+  if (cmd_init != cmd)
+    throw logic_error("Wrong communication from module client: didn't call INIT");
+  spd_backend* instance = new spd_backend(conf);
+  cout << "299-" << package::name << ": Initialized successfully." << endl;
+  cout << "299 OK LOADED SUCCESSFULLY" << endl;
+  return instance;
+}
+
+
 // Object construction:
 
 spd_backend::spd_backend(const configuration& conf):
-  server(conf),
-  initialized(false)
+  server(conf)
 {
 }
 
@@ -81,27 +99,13 @@ spd_backend::get_command(void)
 bool
 spd_backend::perform_command(void)
 {
-  if (initialized)
+  if (cmd_quit == cmd)
     {
-      if (cmd_quit == cmd)
-        {
-          cout << "210 OK QUIT" << endl;
-          return false;
-        }
-      else if (cmd_abort == cmd)
-        return false;
-      else cout << "300 ERR UNKNOWN COMMAND" << endl;
-    }
-  else if (cmd_init == cmd)
-    {
-      initialized = true;
-      cout << "299-" << package::name << ": Initialized successfully." << endl;
-      cout << "299 OK LOADED SUCCESSFULLY" << endl;
-    }
-  else
-    {
-      cerr << "ERROR: Wrong communication from module client: didn't call INIT" << endl;
+      cout << "210 OK QUIT" << endl;
       return false;
     }
+  else if (cmd_abort == cmd)
+    return false;
+  else cout << "300 ERR UNKNOWN COMMAND" << endl;
   return true;
 }
