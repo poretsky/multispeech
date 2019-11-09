@@ -31,22 +31,22 @@ using namespace std;
 
 
 // Speech Dispatcher module commands:
-static const string cmd_init = "INIT";
-static const wstring cmd_speak = L"SPEAK";
-static const wstring cmd_sound_icon = L"SOUND_ICON";
-static const wstring cmd_char = L"CHAR";
-static const wstring cmd_key = L"KEY";
-static const wstring cmd_stop = L"STOP";
-static const wstring cmd_pause = L"PAUSE";
-static const wstring cmd_list_voices = L"LIST VOICES";
-static const wstring cmd_set = L"SET";
-static const wstring cmd_audio = L"AUDIO";
-static const wstring cmd_loglevel = L"LOGLEVEL";
-static const wstring cmd_debug = L"DEBUG";
-static const wstring cmd_quit = L"QUIT";
+static const string cmd_init("INIT");
+static const wstring cmd_speak(L"SPEAK");
+static const wstring cmd_sound_icon(L"SOUND_ICON");
+static const wstring cmd_char(L"CHAR");
+static const wstring cmd_key(L"KEY");
+static const wstring cmd_stop(L"STOP");
+static const wstring cmd_pause(L"PAUSE");
+static const wstring cmd_list_voices(L"LIST VOICES");
+static const wstring cmd_set(L"SET");
+static const wstring cmd_audio(L"AUDIO");
+static const wstring cmd_loglevel(L"LOGLEVEL");
+static const wstring cmd_debug(L"DEBUG");
+static const wstring cmd_quit(L"QUIT");
 
 // Pseudocommand:
-static const wstring cmd_abort = L"ABORT";
+static const wstring cmd_abort(L"ABORT");
 
 
 // Object instantiation:
