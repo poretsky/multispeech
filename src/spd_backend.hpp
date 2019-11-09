@@ -26,12 +26,12 @@
 class spd_backend: public server
 {
 public:
-  // Construct the object:
-  explicit spd_backend(const configuration& conf);
+  // Object instantiation:
+  static spd_backend* instantiate(const configuration& conf);
 
 private:
-  // Module state:
-  bool initialized;
+  // Construct the object:
+  spd_backend(const configuration& conf);
 
   // Serving queue done events:
   void queue_done(void);

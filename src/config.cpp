@@ -571,7 +571,7 @@ configuration::configuration(int argc, char* argv[])
       read(global_conf, conf);
       noconf = false;
     }
-  if (noconf)
+  if (noconf && !spd_backend)
     throw configuration::error("No configuration files found");
   notify(option_value);
 }
