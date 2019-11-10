@@ -23,6 +23,8 @@
 
 #include <sstream>
 
+#include <boost/thread/mutex.hpp>
+
 #include "server.hpp"
 
 class spd_backend: public server
@@ -41,6 +43,9 @@ private:
   // Data reception control, returns true when everything is acquired:
   bool extra_data(void);
 
+  // Queue execution start:
+  void start_queue(void);
+
   // Serving queue done events:
   void queue_done(void);
 
@@ -53,6 +58,10 @@ private:
 
   // Additional data lines number;
   int lines;
+
+  // Synchronization means:
+  boost::mutex access;
+  bool speaking;
 };
 
 #endif
