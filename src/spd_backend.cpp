@@ -29,6 +29,7 @@
 #include "config.hpp"
 
 using namespace std;
+using namespace boost;
 
 
 // Speech Dispatcher module commands:
@@ -69,7 +70,8 @@ spd_backend::instantiate(const configuration& conf)
 
 spd_backend::spd_backend(const configuration& conf):
   server(conf),
-  lines(0)
+  lines(0),
+  speaking(false)
 {
 }
 
@@ -97,11 +99,25 @@ spd_backend::extra_data(void)
 }
 
 
+// Start queue execution:
+
+void
+spd_backend::start_queue(void)
+{
+  speaking = true;
+  soundmaster.proceed();
+  cout << "701 BEGIN" << endl;
+}
+
+
 // Events serving:
 
 void
 spd_backend::queue_done(void)
 {
+  mutex::scoped_lock lock(access);
+  speaking = false;
+  cout << "702 END" << endl;
 }
 
 
@@ -158,6 +174,21 @@ spd_backend::perform_command(void)
       cout << "401 ERROR INTERNAL" <<endl;
       reset();
       exit_status = EXIT_SUCCESS;
+    }
+  else if (cmd_speak == cmd)
+    {
+      if (extra_data())
+        {
+          mutex::scoped_lock lock(access);
+          if (!(speaking || data.empty()))
+            {
+              cout << "200 OK SPEAKING" << endl;
+              soundmaster.enqueue(speechmaster.text_task(data));
+              start_queue();
+            }
+          else cout << "301 ERROR CANT SPEAK" << endl;
+          reset();
+        }
     }
   else
     {
