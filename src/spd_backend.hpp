@@ -26,6 +26,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include "server.hpp"
+#include "text_filter.hpp"
 
 class spd_backend: public server
 {
@@ -62,6 +63,9 @@ private:
   // Synchronization means:
   boost::mutex access;
   bool speaking;
+
+  // SSML tags stripper:
+  text_filter stripper;
 };
 
 #endif
