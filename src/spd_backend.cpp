@@ -68,8 +68,32 @@ spd_backend::instantiate(const configuration& conf)
 // Object construction:
 
 spd_backend::spd_backend(const configuration& conf):
-  server(conf)
+  server(conf),
+  lines(0)
 {
+}
+
+
+// Prepare to the next command reception cycle:
+
+void
+spd_backend::reset(void)
+{
+  cmd.erase();
+  data.erase();
+  accumulator.str("");
+  lines = 0;
+}
+
+
+// Extra data reception control:
+
+bool
+spd_backend::extra_data(void)
+{
+  if (!lines)
+    cout << "202 OK RECEIVING MESSAGE" << endl;
+  return (lines < 0) || !data.empty();
 }
 
 
@@ -90,10 +114,31 @@ spd_backend::get_command(void)
   getline(cin, s);
   if (cin.eof() || cin.fail())
     {
+      if (cmd.empty())
+        cmd = cmd_quit;
       exit_status = EXIT_FAILURE;
-      cmd = cmd_quit;
     }
-  else cmd = intern_string(s, input_charset);
+  else if (cmd.empty())
+    cmd = intern_string(s, input_charset);
+  else if (s == ".")
+    {
+      if (lines)
+        {
+          data = intern_string(accumulator.str(), input_charset);
+          accumulator.str("");
+        }
+      else lines = -1;
+    }
+  else if (s == "..")
+    {
+      accumulator << "." << endl;
+      lines++;
+    }
+  else
+    {
+      accumulator << s << endl;
+      lines++;
+    }
 }
 
 
@@ -108,6 +153,16 @@ spd_backend::perform_command(void)
         cout << "210 OK QUIT" << endl;
       return false;
     }
-  else cout << "300 ERR UNKNOWN COMMAND" << endl;
+  else if (exit_status != EXIT_SUCCESS)
+    {
+      cout << "401 ERROR INTERNAL" <<endl;
+      reset();
+      exit_status = EXIT_SUCCESS;
+    }
+  else
+    {
+      cout << "300 ERR UNKNOWN COMMAND" << endl;
+      reset();
+    }
   return true;
 }
