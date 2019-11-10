@@ -20,6 +20,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -73,6 +74,13 @@ spd_backend::spd_backend(const configuration& conf):
   lines(0),
   speaking(false)
 {
+  stripper.setup()
+    (L"<[^<>]+>", L"")
+    (L"&lt;", L"<")
+    (L"&gt;", L">")
+    (L"&amp;", L"&")
+    (L"&quot;", L"\"")
+    (L"&apos;", L"'");
 }
 
 
@@ -183,7 +191,11 @@ spd_backend::perform_command(void)
           if (!(speaking || data.empty()))
             {
               cout << "200 OK SPEAKING" << endl;
-              soundmaster.enqueue(speechmaster.text_task(data));
+              wostringstream text;
+              stripper.push(text);
+              stripper << data;
+              stripper.pop();
+              soundmaster.enqueue(speechmaster.text_task(text.str()));
               start_queue();
             }
           else cout << "301 ERROR CANT SPEAK" << endl;
