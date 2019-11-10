@@ -21,6 +21,8 @@
 #ifndef MULTISPEECH_SPD_BACKEND_HPP
 #define MULTISPEECH_SPD_BACKEND_HPP
 
+#include <sstream>
+
 #include "server.hpp"
 
 class spd_backend: public server
@@ -33,12 +35,24 @@ private:
   // Construct the object:
   spd_backend(const configuration& conf);
 
+  // Clear temporary data in order to start command reception cycle:
+  void reset(void);
+
+  // Data reception control, returns true when everything is acquired:
+  bool extra_data(void);
+
   // Serving queue done events:
   void queue_done(void);
 
   // Input method and command syntax definition (see base class):
   void get_command(void);
   bool perform_command(void);
+
+  // Additional data accumulator:
+  std::ostringstream accumulator;
+
+  // Additional data lines number;
+  int lines;
 };
 
 #endif
