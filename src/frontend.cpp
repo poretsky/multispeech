@@ -18,6 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <cstdlib>
 #include <string>
 #include <iostream>
 
@@ -71,7 +72,10 @@ frontend::get_command(void)
     {
       getline(cin, s);
       if (cin.eof() || cin.fail())
-        s = "exit";
+        {
+          s = "exit";
+          exit_status = EXIT_FAILURE;
+        }
       data = intern_string(s, input_charset);
       if (count)
         cmd += L' ';
