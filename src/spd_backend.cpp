@@ -107,6 +107,28 @@ spd_backend::extra_data(void)
 }
 
 
+// State checking:
+
+bool
+spd_backend::can_speak(void)
+{
+  bool ok = !(speaking || data.empty());
+  if (ok)
+    cout << "200 OK SPEAKING" << endl;
+  else cout << "301 ERROR CANT SPEAK" << endl;
+  return ok;
+}
+
+bool
+spd_backend::single_line(void)
+{
+  if (lines < 2)
+    return true;
+  cout << "305 DATA MORE THAN ONE LINE" << endl;
+  return false;
+}
+
+
 // Start queue execution:
 
 void
@@ -188,9 +210,8 @@ spd_backend::perform_command(void)
       if (extra_data())
         {
           mutex::scoped_lock lock(access);
-          if (!(speaking || data.empty()))
+          if (can_speak())
             {
-              cout << "200 OK SPEAKING" << endl;
               wostringstream text;
               stripper.push(text);
               stripper << data;
@@ -198,7 +219,22 @@ spd_backend::perform_command(void)
               soundmaster.enqueue(speechmaster.text_task(text.str()));
               start_queue();
             }
-          else cout << "301 ERROR CANT SPEAK" << endl;
+          reset();
+        }
+    }
+  else if ((cmd_char == cmd) || (cmd_key == cmd))
+    {
+      if (extra_data())
+        {
+          if (single_line())
+            {
+              mutex::scoped_lock lock(access);
+              if (can_speak())
+                {
+                  soundmaster.enqueue(speechmaster.letter_task(data));
+                  start_queue();
+                }
+            }
           reset();
         }
     }
