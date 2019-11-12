@@ -44,6 +44,10 @@ private:
   // Data reception control, returns true when everything is acquired:
   bool extra_data(void);
 
+  // Check if it is possible to speak:
+  bool can_speak(void);
+  bool single_line(void);
+
   // Queue execution start:
   void start_queue(void);
 
