@@ -72,7 +72,7 @@ spd_backend::instantiate(const configuration& conf)
 spd_backend::spd_backend(const configuration& conf):
   server(conf),
   lines(0),
-  speaking(false)
+  state(idle)
 {
   stripper.setup()
     (L"<[^<>]+>", L"")
@@ -112,7 +112,7 @@ spd_backend::extra_data(void)
 bool
 spd_backend::can_speak(void)
 {
-  bool ok = !(speaking || data.empty());
+  bool ok = (state == idle) && !data.empty();
   if (ok)
     cout << "200 OK SPEAKING" << endl;
   else cout << "301 ERROR CANT SPEAK" << endl;
@@ -134,7 +134,7 @@ spd_backend::single_line(void)
 void
 spd_backend::start_queue(void)
 {
-  speaking = true;
+  state = speaking;
   soundmaster.proceed();
   cout << "701 BEGIN" << endl;
 }
@@ -146,8 +146,18 @@ void
 spd_backend::queue_done(void)
 {
   mutex::scoped_lock lock(access);
-  speaking = false;
-  cout << "702 END" << endl;
+  switch (state)
+    {
+    case speaking:
+      cout << "702 END" << endl;
+      break;
+    case stopping:
+      cout << "703 STOP" << endl;
+      break;
+    default:
+      break;
+    }
+  state = idle;
 }
 
 
@@ -237,6 +247,16 @@ spd_backend::perform_command(void)
             }
           reset();
         }
+    }
+  else if (cmd_stop == cmd)
+    {
+      mutex::scoped_lock lock(access);
+      if (state == speaking)
+        {
+          state = stopping;
+          soundmaster.stop();
+        }
+      reset();
     }
   else
     {
