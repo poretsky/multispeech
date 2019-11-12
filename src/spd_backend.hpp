@@ -35,6 +35,14 @@ public:
   static spd_backend* instantiate(const configuration& conf);
 
 private:
+  // Server states:
+  enum status
+  {
+    idle,
+    speaking,
+    stopping
+  };
+
   // Construct the object:
   spd_backend(const configuration& conf);
 
@@ -66,7 +74,7 @@ private:
 
   // Synchronization means:
   boost::mutex access;
-  bool speaking;
+  status state;
 
   // SSML tags stripper:
   text_filter stripper;
