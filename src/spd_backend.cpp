@@ -180,20 +180,19 @@ spd_backend::get_command(void)
     {
       if (lines)
         {
+          accumulator << flush;
           data = intern_string(accumulator.str(), input_charset);
           accumulator.str("");
         }
       else lines = -1;
     }
-  else if (s == "..")
-    {
-      accumulator << "." << endl;
-      lines++;
-    }
   else
     {
-      accumulator << s << endl;
-      lines++;
+      if (lines++)
+        accumulator << endl;
+      if (s == "..")
+        accumulator << ".";
+      else accumulator << s;
     }
 }
 
