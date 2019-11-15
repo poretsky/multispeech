@@ -130,6 +130,12 @@ namespace options
     extern const char* const fallback;
   };
 
+  // Speech Dispatcher backend options:
+  namespace spd
+  {
+    extern const char* const sound_icons;
+  };
+
   // The next options are declared as strings to be dynamically constructable.
 
   // English speech section:
