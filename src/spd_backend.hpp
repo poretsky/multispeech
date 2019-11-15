@@ -21,6 +21,7 @@
 #ifndef MULTISPEECH_SPD_BACKEND_HPP
 #define MULTISPEECH_SPD_BACKEND_HPP
 
+#include <string>
 #include <sstream>
 
 #include <boost/thread/mutex.hpp>
@@ -65,6 +66,9 @@ private:
   // Input method and command syntax definition (see base class):
   void get_command(void);
   bool perform_command(void);
+
+  // Sound icons directory path:
+  std::string sound_icons;
 
   // Additional data accumulator:
   std::ostringstream accumulator;
