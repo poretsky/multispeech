@@ -24,13 +24,17 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <boost/filesystem.hpp>
+
 #include "spd_backend.hpp"
 
 #include "strcvt.hpp"
 #include "config.hpp"
+#include "file_player.hpp"
 
 using namespace std;
 using namespace boost;
+using namespace boost::filesystem;
 
 
 // Speech Dispatcher module commands:
@@ -71,6 +75,10 @@ spd_backend::instantiate(const configuration& conf)
 
 spd_backend::spd_backend(const configuration& conf):
   server(conf),
+  sound_icons((conf.option_value.count(options::spd::sound_icons) &&
+               !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
+              conf.option_value[options::spd::sound_icons].as<string>() :
+              string("")),
   lines(0),
   state(idle)
 {
@@ -241,6 +249,30 @@ spd_backend::perform_command(void)
               if (can_speak())
                 {
                   soundmaster.enqueue(speechmaster.letter_task(data));
+                  start_queue();
+                }
+            }
+          reset();
+        }
+    }
+  else if (cmd_sound_icon == cmd)
+    {
+      if (extra_data())
+        {
+          if (single_line())
+            {
+              mutex::scoped_lock lock(access);
+              if (can_speak())
+                {
+                  if (sound_icons.empty())
+                    soundmaster.enqueue(speechmaster.text_task(data));
+                  else
+                    {
+                      path icon_file(complete(extern_string(data, locale("")), sound_icons));
+                      if (exists(icon_file))
+                        soundmaster.enqueue(sound_task(icon_file));
+                      else soundmaster.enqueue(speechmaster.text_task(data));
+                    }
                   start_queue();
                 }
             }

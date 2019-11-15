@@ -165,6 +165,12 @@ namespace options
     const char* const fallback = "speech.fallback";
   };
 
+  // Speech Dispatcher backend options:
+  namespace spd
+  {
+    const char* const sound_icons = "spd.sound_icons";
+  };
+
   // English speech section:
   namespace en
   {
@@ -550,6 +556,11 @@ configuration::configuration(int argc, char* argv[])
     (user::stereo.c_str(), bool_switch()->default_value(false))
     (user::freq_control.c_str(), bool_switch()->default_value(false))
     (user::charset.c_str(), value<string>()->default_value(""));
+
+  // Registering Speech Dispatcher backend options if necessary:
+  if (spd_backend)
+    conf.add_options()
+      (spd::sound_icons,value<string>());
 
   // Parse config files and store values
   if (cl_opt.count("config"))
