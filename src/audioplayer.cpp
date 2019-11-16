@@ -252,7 +252,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
                 buffer_time = clock_time() + stream->outputLatency();
               stream->start();
               if (!async)
-                thread(ref(*this));
+                thread(boost::ref(*this));
             }
           else source_release();
         }
@@ -271,7 +271,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
               playing = true;
               paActive = true;
               buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
-              thread(ref(*this));
+              thread(boost::ref(*this));
             }
           else source_release();
         }
