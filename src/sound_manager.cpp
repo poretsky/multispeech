@@ -38,7 +38,7 @@ sound_manager::sound_manager(const configuration& conf, callback* host):
   tones(conf),
   speech(conf),
   events(host),
-  service(ref(*this))
+  service(boost::ref(*this))
 {
 }
 
