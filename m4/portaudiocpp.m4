@@ -15,11 +15,19 @@ AC_DEFUN([AM_PATH_PORTAUDIOCPP], [
 		[  --with-portaudio-prefix=DIR   Prefix where PortAudio library was installed (optional)],
 		[portaudio_prefix="$withval"], [portaudio_prefix=""])
 
+	PORTAUDIOCPP_CPPFLAGS=""
+	PORTAUDIOCPP_LIBS="-lportaudiocpp"
+
+	if test "x$portaudio_prefix" != "x" ; then
+		PORTAUDIOCPP_CPPFLAGS="-I$portaudio_prefix/include"
+		PORTAUDIOCPP_LIBS="-L$portaudio_prefix/lib $PORTAUDIOCPP_LIBS"
+	fi
+
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -I$portaudio_prefix/include"
-		LIBS="$LIBS -L$portaudio_prefix/lib -lportaudiocpp"
+	CPPFLAGS="$CPPFLAGS $PORTAUDIOCPP_CPPFLAGS"
+		LIBS="$LIBS $PORTAUDIOCPP_LIBS"
 
 	dnl make sure PortaudioCpp.hxx header file exists
 	AC_CHECK_HEADER([portaudiocpp/PortAudioCpp.hxx], [
@@ -30,8 +38,8 @@ AC_DEFUN([AM_PATH_PORTAUDIOCPP], [
 				[[portaudio::AutoSystem audio;]])], [
 
 			dnl libportaudiocpp found
-			AC_SUBST(PORTAUDIOCPP_CPPFLAGS, [-I$portaudio_prefix/include])
-			AC_SUBST(PORTAUDIOCPP_LIBS, ["-L$portaudio_prefix/lib -lportaudiocpp"])
+			AC_SUBST(PORTAUDIOCPP_CPPFLAGS)
+			AC_SUBST(PORTAUDIOCPP_LIBS)
 		], [
 			AC_MSG_FAILURE([incomplete or broken PortAudio installation])])
 	], [
