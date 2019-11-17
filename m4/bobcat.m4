@@ -15,11 +15,19 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 		[  --with-bobcat-prefix=DIR   Prefix where Bobcat library was installed (optional)],
 		[bobcat_prefix="$withval"], [bobcat_prefix=""])
 
+	BOBCAT_CPPFLAGS=""
+	BOBCAT_LIBS="-lbobcat"
+
+	if test "x$bobcat_prefix" != "x" ; then
+		BOBCAT_CPPFLAGS="-I$bobcat_prefix/include"
+		BOBCAT_LIBS="-L$bobcat_prefix/lib $BOBCAT_LIBS"
+	fi
+
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -I$bobcat_prefix/include"
-		LIBS="$LIBS -L$bobcat_prefix/lib -lbobcat"
+	CPPFLAGS="$CPPFLAGS $BOBCAT_CPPFLAGS"
+	LIBS="$LIBS $BOBCAT_LIBS"
 
 	dnl make sure all necessary header files exist
 	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream bobcat/cmdfinder], [
@@ -30,8 +38,8 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 				[[FBB::OFdStreambuf stream(1);]])], [
 
 			dnl libbobcat found
-			AC_SUBST(BOBCAT_CPPFLAGS, [-I$bobcat_prefix/include])
-			AC_SUBST(BOBCAT_LIBS, ["-L$bobcat_prefix/lib -lbobcat"])
+			AC_SUBST(BOBCAT_CPPFLAGS)
+			AC_SUBST(BOBCAT_LIBS)
 		], [
 			AC_MSG_FAILURE([invalid Bobcat installation])])
 	], [
