@@ -24,10 +24,14 @@
 #include <boost/regex.hpp>
 #include <boost/scoped_ptr.hpp>
 
+#include <bobcat/cmdfinder>
+
 #include "server.hpp"
 #include "inline_parser.hpp"
 
-class frontend: public server
+class frontend:
+  public server,
+  private FBB::CmdFinder<bool (frontend::*)(void)>
 {
 public:
   // Construct the object:
@@ -40,6 +44,34 @@ private:
 
   // Additional parsers for inline parameters extraction:
   boost::scoped_ptr<inline_parser> native_params, dtk_params;
+
+  // Recognized command performers:
+  bool do_exit(void);
+  bool do_proceed_queue(void);
+  bool do_enqueue_voice_code(void);
+  bool do_enqueue_speech(void);
+  bool do_say_letter(void);
+  bool do_enqueue_sound(void);
+  bool do_play_sound(void);
+  bool do_reset(void);
+  bool do_say_message(void);
+  bool do_set_char_scale(void);
+  bool do_set_punctuations(void);
+  bool do_set_speech_rate(void);
+  bool do_split_caps(void);
+  bool do_capitalize(void);
+  bool do_stop(void);
+  bool do_pause(void);
+  bool do_resume(void);
+  bool do_enqueue_tone(void);
+  bool do_enqueue_silence(void);
+  bool do_set_language(void);
+  bool do_next_language(void);
+  bool do_prev_language(void);
+  bool do_sync_state(void);
+  bool do_say_version(void);
+  bool do_nothing(void);
+  bool do_unknown(void);
 
   // Default voice for subsequent speech queue: 
   boost::scoped_ptr<voice_params> queue_voice;
@@ -56,6 +88,9 @@ private:
 
   // Working area for regex match result representation:
   boost::wsmatch parse_result;
+
+  // Recognized commands table:
+  static const Entry command_table[];
 
   // Reference value:
   static BOOST_CONSTEXPR_OR_CONST double rate_scale = 200.0;

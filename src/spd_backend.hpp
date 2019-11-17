@@ -26,10 +26,14 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include <bobcat/cmdfinder>
+
 #include "server.hpp"
 #include "text_filter.hpp"
 
-class spd_backend: public server
+class spd_backend:
+  public server,
+  private FBB::CmdFinder<bool (spd_backend::*)(void)>
 {
 public:
   // Object instantiation:
@@ -67,6 +71,18 @@ private:
   void get_command(void);
   bool perform_command(void);
 
+  // Check for internal error:
+  bool state_ok(void);
+
+  // Command executors:
+  bool do_speak(void);
+  bool do_sound_icon(void);
+  bool do_char(void);
+  bool do_key(void);
+  bool do_stop(void);
+  bool do_quit(void);
+  bool do_unknown(void);
+
   // Sound icons directory path:
   std::string sound_icons;
 
@@ -82,6 +98,9 @@ private:
 
   // SSML tags stripper:
   text_filter stripper;
+
+  // Recognized commands table:
+  static const Entry command_table[];
 };
 
 #endif
