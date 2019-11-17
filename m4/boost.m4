@@ -14,13 +14,21 @@ AC_DEFUN([AM_PATH_BOOST], [
 		[  --with-boost-prefix=DIR   Prefix where Boost library was installed (optional)],
 		[boost_prefix="$withval"], [boost_prefix=""])
 
+	BOOST_CPPFLAGS=""
+	BOOST_LIBS=""
+
+	if test "x$boost_prefix" != "x" ; then
+		BOOST_CPPFLAGS="-I$boost_prefix/include"
+		BOOST_LIBS="-L$boost_prefix/lib"
+	fi
+
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_CXXFLAGS="$CXXFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -I$boost_prefix/include"
+	CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 	CXXFLAGS="$CXXFLAGS -pthread"
-	LIBS="$LIBS -L$boost_prefix/lib"
+	LIBS="$LIBS $BOOST_LIBS"
 
 	dnl make sure all necessary header files exist
 	AC_CHECK_HEADERS([ \
@@ -116,8 +124,9 @@ AC_DEFUN([AM_PATH_BOOST], [
 			AC_MSG_ERROR([no program options support found in current Boost library installation])])
 
 		dnl libboost found
-		AC_SUBST(BOOST_CPPFLAGS, [-I$boost_prefix/include])
-		AC_SUBST(BOOST_LIBS, ["-L$boost_prefix/lib $BOOST_LIBTHREAD -lboost_regex -lboost_program_options -lboost_filesystem -lboost_system"])
+		BOOST_LIBS="$BOOST_LIBS $BOOST_LIBTHREAD -lboost_regex -lboost_program_options -lboost_filesystem -lboost_system"
+		AC_SUBST(BOOST_CPPFLAGS)
+		AC_SUBST(BOOST_LIBS)
 	], [
 		AC_MSG_ERROR([incomplete or broken Boost library installation])])
 
