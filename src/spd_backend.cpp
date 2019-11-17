@@ -33,24 +33,29 @@
 #include "file_player.hpp"
 
 using namespace std;
+using namespace FBB;
 using namespace boost;
 using namespace boost::filesystem;
 
 
 // Speech Dispatcher module commands:
+const spd_backend::Entry spd_backend::command_table[] =
+  {
+    Entry("SPEAK", &spd_backend::do_speak),
+    Entry("SOUND_ICON", &spd_backend::do_sound_icon),
+    Entry("CHAR", &spd_backend::do_char),
+    Entry("KEY", &spd_backend::do_key),
+    Entry("STOP", &spd_backend::do_stop),
+    Entry("PAUSE", &spd_backend::do_unknown),
+    Entry("LIST VOICES", &spd_backend::do_unknown),
+    Entry("SET", &spd_backend::do_unknown),
+    Entry("AUDIO", &spd_backend::do_unknown),
+    Entry("LOGLEVEL", &spd_backend::do_unknown),
+    Entry("DEBUG", &spd_backend::do_unknown),
+    Entry("QUIT", &spd_backend::do_quit),
+    Entry("", &spd_backend::do_unknown)
+  };
 static const string cmd_init("INIT");
-static const wstring cmd_speak(L"SPEAK");
-static const wstring cmd_sound_icon(L"SOUND_ICON");
-static const wstring cmd_char(L"CHAR");
-static const wstring cmd_key(L"KEY");
-static const wstring cmd_stop(L"STOP");
-static const wstring cmd_pause(L"PAUSE");
-static const wstring cmd_list_voices(L"LIST VOICES");
-static const wstring cmd_set(L"SET");
-static const wstring cmd_audio(L"AUDIO");
-static const wstring cmd_loglevel(L"LOGLEVEL");
-static const wstring cmd_debug(L"DEBUG");
-static const wstring cmd_quit(L"QUIT");
 
 
 // Object instantiation:
@@ -75,6 +80,8 @@ spd_backend::instantiate(const configuration& conf)
 
 spd_backend::spd_backend(const configuration& conf):
   server(conf),
+  CmdFinder<FunctionPtr>(command_table, command_table +
+                         (sizeof(command_table) / sizeof(Entry))),
   sound_icons((conf.option_value.count(options::spd::sound_icons) &&
                !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
               conf.option_value[options::spd::sound_icons].as<string>() :
@@ -97,7 +104,7 @@ spd_backend::spd_backend(const configuration& conf):
 void
 spd_backend::reset(void)
 {
-  cmd.erase();
+  server::cmd.erase();
   data.erase();
   accumulator.str("");
   lines = 0;
@@ -178,12 +185,12 @@ spd_backend::get_command(void)
   getline(cin, s);
   if (cin.eof() || cin.fail())
     {
-      if (cmd.empty())
-        cmd = cmd_quit;
+      if (server::cmd.empty())
+        server::cmd = L"QUIT";
       exit_status = EXIT_FAILURE;
     }
-  else if (cmd.empty())
-    cmd = intern_string(s, input_charset);
+  else if (server::cmd.empty())
+    server::cmd = intern_string(s, input_charset);
   else if (s == ".")
     {
       if (lines)
@@ -210,76 +217,106 @@ spd_backend::get_command(void)
 bool
 spd_backend::perform_command(void)
 {
-  if (cmd_quit == cmd)
-    {
-      if (exit_status == EXIT_SUCCESS)
-        cout << "210 OK QUIT" << endl;
-      return false;
-    }
-  else if (exit_status != EXIT_SUCCESS)
+  return (this->*findCmd(extern_string(server::cmd, locale(""))))();
+}
+
+bool
+spd_backend::state_ok(void)
+{
+  if (exit_status != EXIT_SUCCESS)
     {
       cout << "401 ERROR INTERNAL" <<endl;
       reset();
       exit_status = EXIT_SUCCESS;
+      return false;
     }
-  else if (cmd_speak == cmd)
+  return true;
+}
+
+bool
+spd_backend::do_quit(void)
+{
+  if (exit_status == EXIT_SUCCESS)
+    cout << "210 OK QUIT" << endl;
+  return false;
+}
+
+bool
+spd_backend::do_speak(void)
+{
+  if (state_ok() && extra_data())
     {
-      if (extra_data())
+      mutex::scoped_lock lock(access);
+      if (can_speak())
+        {
+          wostringstream text;
+          stripper.push(text);
+          stripper << data;
+          stripper.pop();
+          soundmaster.enqueue(speechmaster.text_task(text.str()));
+          start_queue();
+        }
+      reset();
+    }
+  return true;
+}
+
+bool
+spd_backend::do_char(void)
+{
+  if (state_ok() && extra_data())
+    {
+      if (single_line())
         {
           mutex::scoped_lock lock(access);
           if (can_speak())
             {
-              wostringstream text;
-              stripper.push(text);
-              stripper << data;
-              stripper.pop();
-              soundmaster.enqueue(speechmaster.text_task(text.str()));
+              soundmaster.enqueue(speechmaster.letter_task(data));
               start_queue();
             }
-          reset();
         }
+      reset();
     }
-  else if ((cmd_char == cmd) || (cmd_key == cmd))
+  return true;
+}
+
+bool
+spd_backend::do_key(void)
+{
+  return do_char();
+}
+
+bool
+spd_backend::do_sound_icon(void)
+{
+  if (state_ok() && extra_data())
     {
-      if (extra_data())
+      if (single_line())
         {
-          if (single_line())
+          mutex::scoped_lock lock(access);
+          if (can_speak())
             {
-              mutex::scoped_lock lock(access);
-              if (can_speak())
+              if (sound_icons.empty())
+                soundmaster.enqueue(speechmaster.text_task(data));
+              else
                 {
-                  soundmaster.enqueue(speechmaster.letter_task(data));
-                  start_queue();
+                  path icon_file(complete(extern_string(data, locale("")), sound_icons));
+                  if (exists(icon_file))
+                    soundmaster.enqueue(sound_task(icon_file));
+                  else soundmaster.enqueue(speechmaster.text_task(data));
                 }
+              start_queue();
             }
-          reset();
         }
+      reset();
     }
-  else if (cmd_sound_icon == cmd)
-    {
-      if (extra_data())
-        {
-          if (single_line())
-            {
-              mutex::scoped_lock lock(access);
-              if (can_speak())
-                {
-                  if (sound_icons.empty())
-                    soundmaster.enqueue(speechmaster.text_task(data));
-                  else
-                    {
-                      path icon_file(complete(extern_string(data, locale("")), sound_icons));
-                      if (exists(icon_file))
-                        soundmaster.enqueue(sound_task(icon_file));
-                      else soundmaster.enqueue(speechmaster.text_task(data));
-                    }
-                  start_queue();
-                }
-            }
-          reset();
-        }
-    }
-  else if (cmd_stop == cmd)
+  return true;
+}
+
+bool
+spd_backend::do_stop(void)
+{
+  if (state_ok())
     {
       mutex::scoped_lock lock(access);
       if (state == speaking)
@@ -289,7 +326,13 @@ spd_backend::perform_command(void)
         }
       reset();
     }
-  else
+  return true;
+}
+
+bool
+spd_backend::do_unknown(void)
+{
+  if (state_ok())
     {
       cout << "300 ERR UNKNOWN COMMAND" << endl;
       reset();

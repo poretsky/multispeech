@@ -18,6 +18,7 @@ AC_CANONICAL_BUILD
 
 # Language choice.
 AC_LANG([C++])
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
 
 # Checks for programs.
 AC_PROG_CC
