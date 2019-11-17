@@ -15,11 +15,19 @@ AC_DEFUN([AM_PATH_SNDFILE], [
 		[  --with-sndfile-prefix=DIR   Prefix where Sndfile library was installed (optional)],
 		[sndfile_prefix="$withval"], [sndfile_prefix=""])
 
+	SNDFILE_CPPFLAGS=""
+	SNDFILE_LIBS="-lsndfile"
+
+	if test "x$sndfile_prefix" != "x" ; then
+		SNDFILE_CPPFLAGS="-I$sndfile_prefix/include"
+		SNDFILE_LIBS="-L$sndfile_prefix/lib $SNDFILE_LIBS"
+	fi
+
 	saved_CPPFLAGS="$CPPFLAGS"
 	saved_LIBS="$LIBS"
 
-	CPPFLAGS="$CPPFLAGS -I$sndfile_prefix/include"
-		LIBS="$LIBS -L$sndfile_prefix/lib -lsndfile"
+	CPPFLAGS="$CPPFLAGS $SNDFILE_CPPFLAGS"
+		LIBS="$LIBS $SNDFILE_LIBS"
 
 	dnl make sure sndfile.h header file exists
 	AC_CHECK_HEADER([sndfile.h], [
@@ -30,8 +38,8 @@ AC_DEFUN([AM_PATH_SNDFILE], [
 				[[SF_INFO info; sf_format_check(&info);]])], [
 
 			dnl libsndfile found
-			AC_SUBST(SNDFILE_CPPFLAGS, [-I$sndfile_prefix/include])
-			AC_SUBST(SNDFILE_LIBS, ["-L$sndfile_prefix/lib -lsndfile"])
+			AC_SUBST(SNDFILE_CPPFLAGS)
+			AC_SUBST(SNDFILE_LIBS)
 		], [
 			AC_MSG_FAILURE([invalid Sndfile installation])])
 	], [
