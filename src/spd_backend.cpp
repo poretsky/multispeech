@@ -102,11 +102,10 @@ spd_backend::spd_backend(const configuration& conf):
 // Prepare to the next command reception cycle:
 
 void
-spd_backend::reset(void)
+spd_backend::communication_reset(void)
 {
-  server::cmd.erase();
+  server::communication_reset();
   data.erase();
-  accumulator.str("");
   lines = 0;
 }
 
@@ -186,17 +185,17 @@ spd_backend::get_command(void)
   if (cin.eof() || cin.fail())
     {
       if (server::cmd.empty())
-        server::cmd = L"QUIT";
+        server::cmd = "QUIT";
       exit_status = EXIT_FAILURE;
     }
   else if (server::cmd.empty())
-    server::cmd = intern_string(s, input_charset);
+    server::cmd = s;
   else if (s == ".")
     {
       if (lines)
         {
           accumulator << flush;
-          data = intern_string(accumulator.str(), input_charset);
+          data = accumulator.str();
           accumulator.str("");
         }
       else lines = -1;
@@ -217,7 +216,7 @@ spd_backend::get_command(void)
 bool
 spd_backend::perform_command(void)
 {
-  return (this->*findCmd(extern_string(server::cmd, locale(""))))();
+  return (this->*findCmd(server::cmd))();
 }
 
 bool
@@ -226,7 +225,7 @@ spd_backend::state_ok(void)
   if (exit_status != EXIT_SUCCESS)
     {
       cout << "401 ERROR INTERNAL" <<endl;
-      reset();
+      communication_reset();
       exit_status = EXIT_SUCCESS;
       return false;
     }
@@ -251,12 +250,12 @@ spd_backend::do_speak(void)
         {
           wostringstream text;
           stripper.push(text);
-          stripper << data;
+          stripper << intern_string(data, input_charset);
           stripper.pop();
           soundmaster.enqueue(speechmaster.text_task(text.str()));
           start_queue();
         }
-      reset();
+      communication_reset();
     }
   return true;
 }
@@ -271,11 +270,11 @@ spd_backend::do_char(void)
           mutex::scoped_lock lock(access);
           if (can_speak())
             {
-              soundmaster.enqueue(speechmaster.letter_task(data));
+              soundmaster.enqueue(speechmaster.letter_task(intern_string(data, input_charset)));
               start_queue();
             }
         }
-      reset();
+      communication_reset();
     }
   return true;
 }
@@ -297,18 +296,18 @@ spd_backend::do_sound_icon(void)
           if (can_speak())
             {
               if (sound_icons.empty())
-                soundmaster.enqueue(speechmaster.text_task(data));
+                soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset)));
               else
                 {
-                  path icon_file(complete(extern_string(data, locale("")), sound_icons));
+                  path icon_file(complete(data, sound_icons));
                   if (exists(icon_file))
                     soundmaster.enqueue(sound_task(icon_file));
-                  else soundmaster.enqueue(speechmaster.text_task(data));
+                  else soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset)));
                 }
               start_queue();
             }
         }
-      reset();
+      communication_reset();
     }
   return true;
 }
@@ -324,7 +323,7 @@ spd_backend::do_stop(void)
           state = stopping;
           soundmaster.stop();
         }
-      reset();
+      communication_reset();
     }
   return true;
 }
@@ -335,7 +334,7 @@ spd_backend::do_unknown(void)
   if (state_ok())
     {
       cout << "300 ERR UNKNOWN COMMAND" << endl;
-      reset();
+      communication_reset();
     }
   return true;
 }

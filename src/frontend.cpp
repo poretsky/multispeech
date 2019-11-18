@@ -21,11 +21,13 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <bobcat/syslogstream>
+#include <bobcat/string>
 
 #include "frontend.hpp"
 
@@ -78,8 +80,8 @@ const frontend::Entry frontend::command_table[] =
 frontend::frontend(const configuration& conf):
   server(conf),
   CmdFinder<FunctionPtr>(command_table, command_table +
-                         (sizeof(command_table) / sizeof(Entry))),
-  command_separator(L"^\\s*(\\S+)(\\s+(.*\\S))?\\s*$"),
+                         (sizeof(command_table) / sizeof(Entry)),
+                         USE_FIRST),
   validate_float(L"^\\d+(\\.\\d*)?$"),
   validate_integer(L"^\\d+$"),
   beep_parameters(L"^(\\d+)?(\\s+(\\d+))?$"),
@@ -100,41 +102,35 @@ void
 frontend::get_command(void)
 {
   string s;
-  int count = 0;
-  server::cmd.erase();
-  while (server::cmd.empty() || count)
+  getline(cin, s);
+  if (cin.eof() || cin.fail())
     {
-      getline(cin, s);
-      if (cin.eof() || cin.fail())
-        {
-          s = "exit";
-          exit_status = EXIT_FAILURE;
-        }
-      data = intern_string(s, input_charset);
-      if (count)
-        server::cmd += L' ';
+      server::cmd = "exit";
+      exit_status = EXIT_FAILURE;
+    }
+  else
+    {
+      accumulator << s << endl;
+      data = intern_string(accumulator.str(), input_charset);
+      int disbalance = 0;
       for (unsigned int i = 0; i < data.length(); i++)
         switch (data[i])
           {
           case L'{':
-            count++;
+            disbalance++;
             data[i] = L' ';
             break;
           case L'}':
-            count--;
+            disbalance--;
+          case L'\n':
             data[i] = L' ';
           default:
             break;
           }
-      server::cmd += data;
-    }
-  if (regex_match(server::cmd, parse_result, command_separator))
-    {
-      if (parse_result[3].matched)
-        data = wstring(parse_result[3].first, parse_result[3].second);
-      else data = L"";
-      if (parse_result[1].matched)
-        server::cmd = wstring(parse_result[1].first, parse_result[1].second);
+      if (!disbalance)
+        server::cmd = extern_string(data, locale(""));
+      else if (disbalance < 0)
+        communication_reset();
     }
 }
 
@@ -144,9 +140,15 @@ frontend::get_command(void)
 bool
 frontend::perform_command(void)
 {
-  return server::cmd.empty() ?
-    do_nothing() :
-    (this->*findCmd(extern_string(server::cmd, locale(""))))();
+  bool done = true;
+  if (!server::cmd.empty())
+    {
+      FunctionPtr action = findCmd(server::cmd);
+      data = intern_string(String::trim(beyond()), input_charset);
+      done = (this->*action)();
+      communication_reset();
+    }
+  return done;
 }
 
 bool
@@ -395,24 +397,15 @@ frontend::do_say_version(void)
 }
 
 bool
-frontend::do_nothing(void)
-{
-  return true;
-}
-
-bool
 frontend::do_unknown(void)
 {
   if (debug)
     {
-      string message("Unrecognized command");
-      message += " \"" + extern_string(server::cmd, locale(""));
-      if (!data.empty())
-        message += " " + extern_string(data, locale(""));
-      message += '\"';
-      log << SyslogStream::debug << message << endl;
+      ostringstream message;
+      message << "Unrecognized command \"" << server::cmd << '\"' << flush;
+      log << SyslogStream::debug << message.str() << endl;
       if (verbose)
-        cerr << message << endl;
+        cerr << message.str() << endl;
     }
   return true;
 }

@@ -27,6 +27,7 @@
 #define MULTISPEECH_SERVER_HPP
 
 #include <string>
+#include <sstream>
 #include <locale>
 
 #include <bobcat/syslogstream>
@@ -58,8 +59,15 @@ public:
   static bool debug;
 
 protected:
+  // Prepare for new command reception cycle:
+  virtual void communication_reset(void);
+
+  // Dummy command executor:
+  bool do_nothing(void);
+
   // Data read from input:
-  std::wstring cmd, data;
+  std::string cmd;
+  std::ostringstream accumulator;
 
   // Input charset holder:
   const std::locale input_charset;
