@@ -22,7 +22,6 @@
 #define MULTISPEECH_SPD_BACKEND_HPP
 
 #include <string>
-#include <sstream>
 
 #include <boost/thread/mutex.hpp>
 
@@ -52,7 +51,7 @@ private:
   spd_backend(const configuration& conf);
 
   // Clear temporary data in order to start command reception cycle:
-  void reset(void);
+  void communication_reset(void);
 
   // Data reception control, returns true when everything is acquired:
   bool extra_data(void);
@@ -86,8 +85,8 @@ private:
   // Sound icons directory path:
   std::string sound_icons;
 
-  // Additional data accumulator:
-  std::ostringstream accumulator;
+  // Additional data provided with some commands:
+  std::string data;
 
   // Additional data lines number;
   int lines;
