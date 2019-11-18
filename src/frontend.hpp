@@ -70,7 +70,6 @@ private:
   bool do_prev_language(void);
   bool do_sync_state(void);
   bool do_say_version(void);
-  bool do_nothing(void);
   bool do_unknown(void);
 
   // Default voice for subsequent speech queue: 
@@ -83,8 +82,11 @@ private:
   void set_punctuations_mode(wchar_t mode);
 
   // Regular expressions for commands parsing:
-  const boost::wregex command_separator, validate_float, validate_integer,
+  const boost::wregex validate_float, validate_integer,
     beep_parameters, lang_parameters, tts_parameters, garbage;
+
+  // Additional data provided with some commands:
+  std::wstring data;
 
   // Working area for regex match result representation:
   boost::wsmatch parse_result;

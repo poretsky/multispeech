@@ -56,6 +56,22 @@ server::~server(void)
 }
 
 
+// Protected methods:
+
+void
+server::communication_reset(void)
+{
+  cmd.erase();
+  accumulator.str("");
+}
+
+bool
+server::do_nothing(void)
+{
+  return true;
+}
+
+
 // Public methods:
 
 int
@@ -68,8 +84,7 @@ server::run(void)
       }
     catch (std::exception& failure)
       {
-        cmd.erase();
-        data.erase();
+        communication_reset();
         log << failure.what() << endl;
         if (verbose)
           cerr << failure.what() << endl;
