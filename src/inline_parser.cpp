@@ -1,6 +1,6 @@
 // inline_parser.cpp -- Inline voice parameters parser common implementation
 /*
-   Copyright (C) 2010 Igor B. Poretsky <poretsky@mlbox.ru>
+   Copyright (C) 2019 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
 
    Multispeech is free software; you can redistribute it and/or modify
@@ -30,19 +30,6 @@ using namespace boost;
 
 
 // Object construction / destruction:
-
-voice_params::voice_params(void)
-{
-}
-
-voice_params::voice_params(voice_params* other):
-  volume(other->volume),
-  rate(other->rate),
-  pitch(other->pitch),
-  deviation(other->deviation),
-  punctuations_mode(other->punctuations_mode)
-{
-}
 
 inline_parser::inline_parser(const wstring& detector,
                              const wstring& precleaner,
