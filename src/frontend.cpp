@@ -181,16 +181,7 @@ frontend::do_enqueue_speech(void)
   if (!voice)
     voice = queue_voice.get();
   if (voice)
-    {
-      punctuations::mode preserve = punctuations::verbosity;
-      set_punctuations_mode(voice->punctuations_mode);
-      soundmaster.enqueue(speechmaster.text_task(data,
-                                                 voice->volume,
-                                                 voice->rate,
-                                                 voice->pitch,
-                                                 voice->deviation));
-      punctuations::verbosity = preserve;
-    }
+    soundmaster.enqueue(speechmaster.text_task(data, voice));
   else soundmaster.enqueue(speechmaster.text_task(data));
   return true;
 }
@@ -239,17 +230,7 @@ frontend::do_say_message(void)
   soundmaster.stop();
   voice_params* voice = extract_parameters();
   if (voice)
-    {
-      punctuations::mode preserve = punctuations::verbosity;
-      set_punctuations_mode(voice->punctuations_mode);
-      soundmaster.execute(speechmaster.text_task(data,
-                                                 voice->volume,
-                                                 voice->rate,
-                                                 voice->pitch,
-                                                 voice->deviation,
-                                                 true));
-      punctuations::verbosity = preserve;
-    }
+    soundmaster.execute(speechmaster.text_task(data, voice, true));
   else soundmaster.execute(speechmaster.text_task(data, true));
   return true;
 }
@@ -266,7 +247,7 @@ bool
 frontend::do_set_punctuations(void)
 {
   if (!data.empty())
-    set_punctuations_mode(data[0]);
+    punctuations::set_mode(data[0]);
   return true;
 }
 
@@ -377,7 +358,7 @@ frontend::do_sync_state(void)
 {
   if (regex_search(data, parse_result, tts_parameters))
     {
-      set_punctuations_mode(data[0]);
+      punctuations::set_mode(data[0]);
       if (parse_result[1].matched)
         speech_engine::capitalize_mode(lexical_cast<int>(wstring(parse_result[1].first, parse_result[1].second)));
       if (parse_result[2].matched)
@@ -420,22 +401,4 @@ frontend::extract_parameters(void)
   else if (dtk_params.get() && dtk_params->parse(data))
     voice = dtk_params.get();
   return voice;
-}
-
-void
-frontend::set_punctuations_mode(wchar_t mode)
-{
-  switch (mode)
-    {
-    case L'n':
-      punctuations::verbosity = punctuations::none;
-      break;
-    case L's':
-      punctuations::verbosity = punctuations::some;
-      break;
-    case L'a':
-      punctuations::verbosity = punctuations::all;
-    default:
-      break;
-    }
 }

@@ -98,6 +98,13 @@ public:
 
   explicit punctuations(const std::vector<const wchar_t*>& pronunciations_list);
 
+  // Get punctuations mode corresponding to identifying character:
+  static mode from_char(char c);
+  static mode from_wchar(wchar_t wc);
+
+  // set current mode according to identifying character:
+  static void set_mode(wchar_t wc);
+
   static mode verbosity;
 
 private:

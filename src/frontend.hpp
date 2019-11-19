@@ -78,9 +78,6 @@ private:
   // Extract embedded parameters:
   voice_params* extract_parameters(void);
 
-  // Set punctuations mode according to identifying character:
-  void set_punctuations_mode(wchar_t mode);
-
   // Regular expressions for commands parsing:
   const boost::wregex validate_float, validate_integer,
     beep_parameters, lang_parameters, tts_parameters, garbage;
