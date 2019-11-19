@@ -69,6 +69,35 @@ punctuations::punctuations(const vector<const wchar_t*>& pronunciations_list):
 {
 }
 
+punctuations::mode
+punctuations::from_char(char c)
+{
+  return from_wchar(static_cast<wchar_t>(c));
+}
+
+punctuations::mode
+punctuations::from_wchar(wchar_t wc)
+{
+  switch (wc)
+    {
+    case L'n':
+      return punctuations::none;
+    case L's':
+      return punctuations::some;
+    case L'a':
+      return punctuations::all;
+    default:
+      break;
+    }
+  return punctuations::verbosity;
+}
+
+void
+punctuations::set_mode(wchar_t wc)
+{
+  verbosity = from_wchar(wc);
+}
+
 wstring
 punctuations::do_filter(const wstring& s)
 {

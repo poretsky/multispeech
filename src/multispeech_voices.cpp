@@ -51,8 +51,8 @@ multispeech_voices::extract_parameters(wstring& data)
   rate = get_value(data, rate_extractor) / rate_scale;
   pitch = get_value(data, pitch_extractor);
   deviation = get_value(data, freq_extractor) / ref_freq;
-  punctuations_mode = (regex_search(data, parse_result, mode_extractor) &&
-                       parse_result[2].matched) ?
-    parse_result[2].first[0] :
-    L' ';
+  set_punctuations_mode((regex_search(data, parse_result, mode_extractor) &&
+                         parse_result[2].matched) ?
+                        parse_result[2].first[0] :
+                        L' ');
 }
