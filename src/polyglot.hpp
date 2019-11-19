@@ -32,6 +32,7 @@
 
 #include "config.hpp"
 #include "speech_engine.hpp"
+#include "voice_params.hpp"
 
 class polyglot
 {
@@ -43,8 +44,7 @@ public:
   speech_task text_task(const std::wstring& s,
                         bool use_translation = false);
   speech_task text_task(const std::wstring& s,
-                        double volume, double rate,
-                        double pitch, double deviation,
+                        voice_params* voice,
                         bool use_translation = false);
   speech_task letter_task(const std::wstring& s);
 
