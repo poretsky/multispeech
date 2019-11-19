@@ -183,6 +183,55 @@ speech_engine::text_task(const wstring& s, bool use_translation)
 
 speech_task
 speech_engine::text_task(const wstring& s,
+                         voice_params* voice,
+                         bool use_translation,
+                         bool allpuncts)
+{
+  return text_task(s, voice->volume, voice->rate, voice->pitch, voice->deviation, use_translation, allpuncts);
+}
+
+speech_task
+speech_engine::letter_task(wstring s)
+{
+  double pitch = char_pitch * persistent_char_pitch * pitch_factor;
+  double rate = char_rate * persistent_char_rate * rate_factor;
+  if (s.length() == 1)
+    {
+      if (isupper(s[0], locale("")))
+        pitch *= caps_factor;
+      else s[0] = toupper(s[0], locale(""));
+    }
+  return text_task(s, -1.0, rate, pitch, 0.0, true, true);
+}
+
+speech_task
+speech_engine::silence(double duration)
+{
+  return speech_task(native_sampling,
+                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(native_sampling) * duration)));
+}
+
+
+// Protected methods:
+
+void
+speech_engine::command(const string& pattern)
+{
+  if (!pattern.empty())
+    command_patterns.push_front(pattern);
+}
+
+void
+speech_engine::sampling(unsigned int value)
+{
+  native_sampling = value;
+}
+
+
+// Private methods:
+
+speech_task
+speech_engine::text_task(const wstring& s,
                          double volume, double rate,
                          double pitch, double deviation,
                          bool use_translation,
@@ -245,41 +294,4 @@ speech_engine::text_task(const wstring& s,
                      commands, format, playing_params,
                      ((volume > 0) ? volume : persistent_volume) * volume_factor,
                      acceleration);
-}
-
-speech_task
-speech_engine::letter_task(wstring s)
-{
-  double pitch = char_pitch * persistent_char_pitch * pitch_factor;
-  double rate = char_rate * persistent_char_rate * rate_factor;
-  if (s.length() == 1)
-    {
-      if (isupper(s[0], locale("")))
-        pitch *= caps_factor;
-      else s[0] = toupper(s[0], locale(""));
-    }
-  return text_task(s, -1.0, rate, pitch, 0.0, true, true);
-}
-
-speech_task
-speech_engine::silence(double duration)
-{
-  return speech_task(native_sampling,
-                     numeric_cast<unsigned int>(nearbyint(numeric_cast<double>(native_sampling) * duration)));
-}
-
-
-// Protected methods:
-
-void
-speech_engine::command(const string& pattern)
-{
-  if (!pattern.empty())
-    command_patterns.push_front(pattern);
-}
-
-void
-speech_engine::sampling(unsigned int value)
-{
-  native_sampling = value;
 }

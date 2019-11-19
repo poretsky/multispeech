@@ -1,6 +1,6 @@
 // inline_parser.hpp -- Inline voice parameters parser framework
 /*
-   Copyright (C) 2010 Igor B. Poretsky <poretsky@mlbox.ru>
+   Copyright (C) 2019 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
 
    Multispeech is free software; you can redistribute it and/or modify
@@ -25,19 +25,8 @@
 
 #include <boost/regex.hpp>
 
+#include "voice_params.hpp"
 
-class voice_params
-{
-protected:
-  voice_params(void);
-
-public:
-  voice_params(voice_params* other);
-
-  // Parameter values:
-  double volume, rate, pitch, deviation;
-  wchar_t punctuations_mode;
-};
 
 class inline_parser: public voice_params
 {

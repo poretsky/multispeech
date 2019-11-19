@@ -31,6 +31,7 @@
 #include "ru_tts.hpp"
 #include "espeak.hpp"
 #include "user_tts.hpp"
+#include "text_filter.hpp"
 
 using namespace std;
 using namespace FBB;
@@ -107,15 +108,19 @@ polyglot::text_task(const wstring& s, bool use_translation)
 
 speech_task
 polyglot::text_task(const wstring& s,
-                double volume, double rate,
-                double pitch, double deviation,
-                bool use_translation)
+                    voice_params* voice,
+                    bool use_translation)
 {
   if (autolanguage)
     detect_language(s, use_translation);
   if (talker[lang].get())
-    return talker[lang]->text_task(s, volume, rate, pitch, deviation,
-                                   use_translation);
+    {
+      punctuations::mode preserve = punctuations::verbosity;
+      punctuations::verbosity = voice->punctuations_mode;
+      speech_task task = talker[lang]->text_task(s, voice, use_translation);
+      punctuations::verbosity = preserve;
+      return task;
+    }
   return speech_task();
 }
 

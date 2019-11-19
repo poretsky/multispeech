@@ -77,6 +77,7 @@
 #include "soundfile.hpp"
 #include "loudspeaker.hpp"
 #include "language_description.hpp"
+#include "voice_params.hpp"
 
 class speech_engine
 {
@@ -117,8 +118,7 @@ public:
   speech_task text_task(const std::wstring& s,
                         bool use_translation = false);
   speech_task text_task(const std::wstring& s,
-                        double volume, double rate,
-                        double pitch, double deviation,
+                        voice_params* voice,
                         bool use_translation = false,
                         bool allpuncts = false);
   speech_task letter_task(std::wstring s);
@@ -169,6 +169,13 @@ private:
 
   // Shell command patterns to make up a TTS script:
   std::list<std::string> command_patterns;
+
+  // Construct speech task according to specified parameters:
+  speech_task text_task(const std::wstring& s,
+                        double volume, double rate,
+                        double pitch, double deviation,
+                        bool use_translation = false,
+                        bool allpuncts = false);
 
   // Make up voice parameters for backend.
   // Should be defined in derived classes for particular speech engines.
