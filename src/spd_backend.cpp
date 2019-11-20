@@ -115,9 +115,13 @@ spd_backend::communication_reset(void)
 bool
 spd_backend::extra_data(void)
 {
-  if (!lines)
-    cout << "202 OK RECEIVING MESSAGE" << endl;
-  return (lines < 0) || !data.empty();
+  if (state_ok())
+    {
+      if (!lines)
+        cout << "202 OK RECEIVING MESSAGE" << endl;
+      return (lines < 0) || !data.empty();
+    }
+  return false;
 }
 
 
@@ -243,7 +247,7 @@ spd_backend::do_quit(void)
 bool
 spd_backend::do_speak(void)
 {
-  if (state_ok() && extra_data())
+  if (extra_data())
     {
       mutex::scoped_lock lock(access);
       if (can_speak())
@@ -263,7 +267,7 @@ spd_backend::do_speak(void)
 bool
 spd_backend::do_char(void)
 {
-  if (state_ok() && extra_data())
+  if (extra_data())
     {
       if (single_line())
         {
@@ -288,7 +292,7 @@ spd_backend::do_key(void)
 bool
 spd_backend::do_sound_icon(void)
 {
-  if (state_ok() && extra_data())
+  if (extra_data())
     {
       if (single_line())
         {
