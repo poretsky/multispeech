@@ -98,6 +98,11 @@ server::run(void)
 // Private methods:
 
 void
+server::index_mark(const string& name)
+{
+}
+
+void
 server::queue_done(void)
 {
 }
