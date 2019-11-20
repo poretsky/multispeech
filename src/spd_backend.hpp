@@ -29,6 +29,7 @@
 
 #include "server.hpp"
 #include "text_filter.hpp"
+#include "spd_settings.hpp"
 
 class spd_backend:
   public server,
@@ -79,8 +80,12 @@ private:
   bool do_char(void);
   bool do_key(void);
   bool do_stop(void);
+  bool do_set(void);
   bool do_quit(void);
   bool do_unknown(void);
+
+  // Settings interpreter:
+  spd_settings settings;
 
   // Sound icons directory path:
   std::string sound_icons;
