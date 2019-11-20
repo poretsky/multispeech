@@ -256,6 +256,8 @@ sound_manager::next_job(void)
       speech.start(any_cast<speech_task>(jobs->front()));
       business = speaking;
     }
+  else if (jobs->front().type() == typeid(string))
+    events->index_mark(any_cast<string>(jobs->front()));
   else business = nothing;
 }
 
