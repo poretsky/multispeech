@@ -48,7 +48,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("STOP", &spd_backend::do_stop),
     Entry("PAUSE", &spd_backend::do_unknown),
     Entry("LIST VOICES", &spd_backend::do_unknown),
-    Entry("SET", &spd_backend::do_unknown),
+    Entry("SET", &spd_backend::do_set),
     Entry("AUDIO", &spd_backend::do_unknown),
     Entry("LOGLEVEL", &spd_backend::do_unknown),
     Entry("DEBUG", &spd_backend::do_unknown),
@@ -324,6 +324,22 @@ spd_backend::do_stop(void)
           soundmaster.stop();
         }
       communication_reset();
+    }
+  return true;
+}
+
+bool
+spd_backend::do_set(void)
+{
+  if (state_ok())
+    {
+      if (!lines)
+        cout << "203 OK RECEIVING SETTINGS" << endl;
+      if ((lines < 0) || !data.empty())
+        {
+          settings.parse(data);
+          communication_reset();
+        }
     }
   return true;
 }
