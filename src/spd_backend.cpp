@@ -161,6 +161,13 @@ spd_backend::start_queue(void)
 // Events serving:
 
 void
+spd_backend::index_mark(const string& name)
+{
+  cout << "700-" << name << endl;
+  cout << "700 INDEX MARK" << endl;
+}
+
+void
 spd_backend::queue_done(void)
 {
   mutex::scoped_lock lock(access);
