@@ -12,7 +12,8 @@ LDADD = @BOOST_LIBS@ @BOBCAT_LIBS@ @SNDFILE_LIBS@ \
 
 multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	config.cpp config.hpp frontend.cpp frontend.hpp \
-	spd_backend.cpp spd_backend.hpp voice_params.cpp voice_params.hpp \
+	spd_backend.cpp spd_backend.hpp spd_settings.cpp spd_settings.hpp \
+	voice_params.cpp voice_params.hpp \
 	iconv_codecvt.cpp iconv_codecvt.hpp strcvt.cpp strcvt.hpp \
 	text_filter.cpp text_filter.hpp \
 	language_description.cpp language_description.hpp \
