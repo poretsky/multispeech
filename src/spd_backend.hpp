@@ -64,7 +64,8 @@ private:
   // Queue execution start:
   void start_queue(void);
 
-  // Serving queue done events:
+  // Serving events:
+  void index_mark(const std::string& name);
   void queue_done(void);
 
   // Input method and command syntax definition (see base class):

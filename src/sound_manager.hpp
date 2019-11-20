@@ -27,6 +27,7 @@
 #ifndef MULTISPEECH_SOUND_MANAGER_HPP
 #define MULTISPEECH_SOUND_MANAGER_HPP
 
+#include <string>
 #include <queue>
 
 #include <boost/any.hpp>
@@ -47,6 +48,7 @@ public:
   class callback
   {
   public:
+    virtual void index_mark(const std::string& name) = 0;
     virtual void queue_done(void) = 0;
   };
 

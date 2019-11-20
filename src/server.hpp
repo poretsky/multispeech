@@ -80,8 +80,9 @@ protected:
   int exit_status;
 
 private:
-  // Implement this method to take over queue done events.
+  // Implement these methods to take over queue events.
   // Default implementation does nothing.
+  void index_mark(const std::string& name);
   void queue_done(void);
 
   // Get command from the source and parse it placing the command itself
