@@ -359,11 +359,9 @@ spd_backend::do_stop(void)
   if (state_ok())
     {
       mutex::scoped_lock lock(access);
-      if (state == speaking)
-        {
-          state = stopping;
-          soundmaster.stop();
-        }
+      if (state != idle)
+        state = stopping;
+      soundmaster.stop();
       communication_reset();
     }
   return true;
