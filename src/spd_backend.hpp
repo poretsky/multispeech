@@ -78,7 +78,7 @@ private:
   bool state_ok(void);
 
   // Place text chunk into the speech queue stripping SSML tags by the way:
-  void enqueue_text_chunk(std::wstring::const_iterator start, std::wstring::const_iterator end);
+  void enqueue_text_chunk(std::string::const_iterator start, std::string::const_iterator end);
 
   // Command executors:
   bool do_speak(void);
@@ -104,7 +104,7 @@ private:
   int lines;
 
   // SSML mark pattern:
-  boost::wregex mark_pattern;
+  boost::regex mark_pattern;
 
   // SSML tags stripper:
   text_filter stripper;
