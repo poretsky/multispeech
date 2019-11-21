@@ -24,6 +24,7 @@
 #include <string>
 
 #include <boost/thread/mutex.hpp>
+#include <boost/regex.hpp>
 
 #include <bobcat/cmdfinder>
 
@@ -75,6 +76,9 @@ private:
   // Check for internal error:
   bool state_ok(void);
 
+  // Place text chunk into the speech queue stripping SSML tags by the way:
+  void enqueue_text_chunk(std::wstring::const_iterator start, std::wstring::const_iterator end);
+
   // Command executors:
   bool do_speak(void);
   bool do_sound_icon(void);
@@ -97,12 +101,15 @@ private:
   // Additional data lines number;
   int lines;
 
-  // Synchronization means:
-  boost::mutex access;
-  status state;
+  // SSML mark pattern:
+  boost::wregex mark_pattern;
 
   // SSML tags stripper:
   text_filter stripper;
+
+  // Synchronization means:
+  boost::mutex access;
+  status state;
 
   // Recognized commands table:
   static const Entry command_table[];
