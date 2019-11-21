@@ -87,6 +87,7 @@ spd_backend::spd_backend(const configuration& conf):
               conf.option_value[options::spd::sound_icons].as<string>() :
               string("")),
   lines(0),
+  mark_pattern(L"<mark\\s+name=\"([^\"]*)\"\\s*/>"),
   state(idle)
 {
   stripper.setup()
@@ -222,6 +223,22 @@ spd_backend::get_command(void)
 }
 
 
+// Place text chunk into the speech queue:
+
+void
+spd_backend::enqueue_text_chunk(wstring::const_iterator start, wstring::const_iterator end)
+{
+  if (start != end)
+    {
+      wostringstream text;
+      stripper.push(text);
+      stripper << wstring(start, end);
+      stripper.pop();
+      soundmaster.enqueue(speechmaster.text_task(text.str()));
+    }
+}
+
+
 // Command set and syntax implementation:
 
 bool
@@ -259,11 +276,18 @@ spd_backend::do_speak(void)
       mutex::scoped_lock lock(access);
       if (can_speak())
         {
-          wostringstream text;
-          stripper.push(text);
-          stripper << intern_string(data, input_charset);
-          stripper.pop();
-          soundmaster.enqueue(speechmaster.text_task(text.str()));
+          wstring ssml = intern_string(data, input_charset);
+          wstring::const_iterator start = ssml.begin();
+          wstring::const_iterator end = ssml.end();
+          wsmatch found;
+          while (regex_search(start, end, found, mark_pattern))
+            {
+              string mark = extern_string(wstring(found[1].first, found[1].second), locale(""));
+              enqueue_text_chunk(start, found[0].first);
+              soundmaster.enqueue(mark);
+              start = found[0].second;
+            }
+          enqueue_text_chunk(start, end);
           start_queue();
         }
       communication_reset();
