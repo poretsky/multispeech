@@ -33,7 +33,7 @@
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/condition.hpp>
 
 #include "config.hpp"
@@ -64,7 +64,7 @@ public:
   template <typename task_description>
   void enqueue(const task_description& task)
   {
-    boost::mutex::scoped_lock lock(access);
+    boost::recursive_mutex::scoped_lock lock(access);
     jobs->push(boost::any(task));
   }
 
@@ -137,7 +137,7 @@ private:
   callback* events;
 
   // Critical data access control means.
-  boost::mutex access;
+  boost::recursive_mutex access;
   boost::condition event;
 
   // Thread handler.
