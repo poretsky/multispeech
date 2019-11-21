@@ -46,7 +46,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("CHAR", &spd_backend::do_char),
     Entry("KEY", &spd_backend::do_key),
     Entry("STOP", &spd_backend::do_stop),
-    Entry("PAUSE", &spd_backend::do_unknown),
+    Entry("PAUSE", &spd_backend::do_pause),
     Entry("LIST VOICES", &spd_backend::do_unknown),
     Entry("SET", &spd_backend::do_set),
     Entry("AUDIO", &spd_backend::do_unknown),
@@ -164,6 +164,9 @@ spd_backend::start_queue(void)
 void
 spd_backend::index_mark(const string& name)
 {
+  mutex::scoped_lock lock(access);
+  if (state == pausing)
+    soundmaster.stop();
   cout << "700-" << name << endl;
   cout << "700 INDEX MARK" << endl;
 }
@@ -179,6 +182,9 @@ spd_backend::queue_done(void)
       break;
     case stopping:
       cout << "703 STOP" << endl;
+      break;
+    case pausing:
+      cout << "704 PAUSE" << endl;
       break;
     default:
       break;
@@ -358,6 +364,19 @@ spd_backend::do_stop(void)
           state = stopping;
           soundmaster.stop();
         }
+      communication_reset();
+    }
+  return true;
+}
+
+bool
+spd_backend::do_pause(void)
+{
+  if (state_ok())
+    {
+      mutex::scoped_lock lock(access);
+      if (state == speaking)
+        state = pausing;
       communication_reset();
     }
   return true;

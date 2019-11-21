@@ -46,6 +46,7 @@ private:
   {
     idle,
     speaking,
+    pausing,
     stopping
   };
 
@@ -85,6 +86,7 @@ private:
   bool do_char(void);
   bool do_key(void);
   bool do_stop(void);
+  bool do_pause(void);
   bool do_set(void);
   bool do_quit(void);
   bool do_unknown(void);
