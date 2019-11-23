@@ -193,8 +193,8 @@ speech_engine::text_task(const wstring& s,
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  double pitch = char_pitch * persistent_char_pitch * pitch_factor;
-  double rate = char_rate * persistent_char_rate * rate_factor;
+  double pitch = char_pitch * persistent_char_pitch;
+  double rate = char_rate * persistent_char_rate;
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))
