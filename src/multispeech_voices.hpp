@@ -26,6 +26,7 @@
 
 #include <string>
 
+#include <boost/config.hpp>
 #include <boost/regex.hpp>
 
 #include "inline_parser.hpp"
