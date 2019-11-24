@@ -47,6 +47,7 @@ public:
                         voice_params* voice,
                         bool use_translation = false);
   speech_task letter_task(const std::wstring& s);
+  speech_task letter_task(const std::wstring& s, voice_params* voice);
 
   // Make up special task to produce silence for the time
   // duration specified in seconds:
