@@ -122,6 +122,7 @@ public:
                         bool use_translation = false,
                         bool allpuncts = false);
   speech_task letter_task(std::wstring s);
+  speech_task letter_task(std::wstring s, voice_params* voice);
 
   // Make up special task to produce silence for the time
   // duration specified in seconds:
@@ -176,6 +177,9 @@ private:
                         double pitch, double deviation,
                         bool use_translation = false,
                         bool allpuncts = false);
+  speech_task letter_task(std::wstring s,
+                          double volume, double rate,
+                          double pitch, double deviation);
 
   // Make up voice parameters for backend.
   // Should be defined in derived classes for particular speech engines.

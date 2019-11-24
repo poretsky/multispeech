@@ -135,6 +135,16 @@ polyglot::letter_task(const wstring& s)
 }
 
 speech_task
+polyglot::letter_task(const wstring& s, voice_params* voice)
+{
+  if (autolanguage)
+    detect_language(s, true);
+  if (talker[lang].get())
+    return talker[lang]->letter_task(s, voice);
+  return speech_task();
+}
+
+speech_task
 polyglot::silence(double duration)
 {
   if (talker[lang].get())
