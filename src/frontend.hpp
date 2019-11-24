@@ -21,6 +21,7 @@
 #ifndef MULTISPEECH_FRONTEND_HPP
 #define MULTISPEECH_FRONTEND_HPP
 
+#include <boost/config.hpp>
 #include <boost/regex.hpp>
 #include <boost/scoped_ptr.hpp>
 
