@@ -23,32 +23,68 @@
 
 #include <string>
 
+#include <boost/config.hpp>
 #include <boost/regex.hpp>
 
 #include <bobcat/cmdfinder>
 
-class spd_settings: private FBB::CmdFinder<bool (spd_settings::*)(void)>
+#include "voice_params.hpp"
+
+
+class spd_settings:
+  public voice_params,
+  private FBB::CmdFinder<bool (spd_settings::*)(void)>
 {
 public:
   // Object construction:
   spd_settings(void);
 
-  void parse(const std::string& message);
+  void apply(const std::string& message);
 
 private:
+  // State saver:
+  class preserve: private voice_params
+  {
+  public:
+    preserve(spd_settings* orig);
+
+    void restore(void);
+
+  private:
+    spd_settings* master;
+    double voice_pitch, pitch_factor;
+  };
+
+  friend class preserve;
+
   // Executors:
   bool apply_volume(void);
   bool apply_rate(void);
   bool apply_pitch(void);
+  bool apply_pitch_range(void);
+  bool apply_punctuation_mode(void);
+  bool apply_spelling_mode(void);
+  bool apply_cap_let_recogn(void);
+  bool apply_voice(void);
+  bool apply_synthesis_voice(void);
+  bool apply_language(void);
   bool apply_unknown(void);
 
   // Extract numeric value:
   double get_value(void);
 
+  // Pitch forming parameters:
+  double voice_pitch, pitch_factor;
+
   // Value validation data:
   const boost::regex validate_integer;
   static const int min_value = -100;
   static const int max_value = 100;
+  static const int normal_value = 0;
+
+  // Numeric parameters variation:
+  static BOOST_CONSTEXPR_OR_CONST double min_factor = 0.25;
+  static BOOST_CONSTEXPR_OR_CONST double max_factor = 4.0;
 
   // Execution table:
   static const Entry settings_table[];
