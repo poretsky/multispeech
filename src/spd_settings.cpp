@@ -26,8 +26,6 @@
 
 #include "spd_settings.hpp"
 
-#include "speech_engine.hpp"
-
 using namespace std;
 using namespace boost;
 using namespace FBB;
@@ -39,6 +37,13 @@ const spd_settings::Entry spd_settings::settings_table[] =
     Entry("volume", &spd_settings::apply_volume),
     Entry("rate", &spd_settings::apply_rate),
     Entry("pitch", &spd_settings::apply_pitch),
+    Entry("pitch_range", &spd_settings::apply_pitch_range),
+    Entry("punctuation_mode", &spd_settings::apply_punctuation_mode),
+    Entry("spelling_mode", &spd_settings::apply_spelling_mode),
+    Entry("cap_let_recogn", &spd_settings::apply_cap_let_recogn),
+    Entry("voice", &spd_settings::apply_voice),
+    Entry("synthesis_voice", &spd_settings::apply_synthesis_voice),
+    Entry("language", &spd_settings::apply_language),
     Entry("", &spd_settings::apply_unknown)
   };
 
@@ -49,6 +54,8 @@ spd_settings::spd_settings(void):
   CmdFinder<FunctionPtr>(settings_table, settings_table +
                          (sizeof(settings_table) / sizeof(Entry)),
                          USE_FIRST),
+  voice_pitch(1.0),
+  pitch_factor(1.0),
   validate_integer("^[+-]?\\d+$")
 {
 }
@@ -57,8 +64,9 @@ spd_settings::spd_settings(void):
 // Public methods:
 
 void
-spd_settings::parse(const string& message)
+spd_settings::apply(const string& message)
 {
+  preserve state(this);
   istringstream content(message);
   string option;
   while (getline(content, option))
@@ -70,14 +78,17 @@ spd_settings::parse(const string& message)
       if (beyond().empty())
         {
           cout << "302 ERROR BAD SYNTAX" << endl;
+          state.restore();
           return;
         }
       else if ((this->*action)())
         {
           cout << "303 ERROR INVALID PARAMETER OR VALUE" << endl;
+          state.restore();
           return;
         }
     }
+  pitch = voice_pitch * pitch_factor;
   cout << "203 OK SETTINGS RECEIVED" << endl;
 }
 
@@ -90,7 +101,7 @@ spd_settings::apply_volume(void)
   double value = get_value();
   if (value < 0.0)
     return true;
-  speech_engine::volume(value);
+  volume = value;
   return false;
 }
 
@@ -100,7 +111,7 @@ spd_settings::apply_rate(void)
   double value = get_value();
   if (value < 0.0)
     return true;
-  speech_engine::speech_rate(value);
+  rate = value;
   return false;
 }
 
@@ -110,7 +121,96 @@ spd_settings::apply_pitch(void)
   double value = get_value();
   if (value < 0.0)
     return true;
-  speech_engine::voice_pitch(value);
+  pitch_factor = value;
+  return false;
+}
+
+bool
+spd_settings::apply_pitch_range(void)
+{
+  // Only parameter validity check, no actual implementation.
+  return get_value() < 0.0;
+}
+
+bool
+spd_settings::apply_punctuation_mode(void)
+{
+  set_punctuations_mode(static_cast<wchar_t>(beyond()[0]));
+  return false;
+}
+
+bool
+spd_settings::apply_spelling_mode(void)
+{
+  // Dummy, is not actually implemented.
+  return false;
+}
+
+bool
+spd_settings::apply_cap_let_recogn(void)
+{
+  // Dummy, is not actually implemented.
+  return false;
+}
+
+bool
+spd_settings::apply_voice(void)
+{
+  if (beyond() == "male1") // Paul
+    {
+      voice_pitch = 1.0;
+      deviation = 1.0;
+    }
+  else if (beyond() == "male2") // Harry
+    {
+      voice_pitch = 0.5;
+      deviation = 1.0;
+    }
+  else if (beyond() == "male3") // Dennis
+    {
+      voice_pitch = 0.7;
+      deviation = 0.875;
+    }
+  else if (beyond() == "female1") // Betty
+    {
+      voice_pitch = 1.4;
+      deviation = 1.0625;
+    }
+  else if (beyond() == "female2") // Ursula
+    {
+      voice_pitch = 1.3;
+      deviation = 1.0;
+    }
+  else if (beyond() == "female3") // Rita
+    {
+      voice_pitch = 1.4;
+      deviation = 1.125;
+    }
+  else if (beyond() == "child_male") // Kit
+    {
+      voice_pitch = 2.0;
+      deviation = 1.25;
+    }
+  else if (beyond() == "child_female")
+    {
+      voice_pitch = 2.0;
+      deviation = 1.75;
+    }
+  else return true;
+  return false;
+}
+
+bool
+spd_settings::apply_synthesis_voice(void)
+{
+  // Should be implemented.
+  return false;
+}
+
+bool
+spd_settings::apply_language(void)
+{
+  // Should be implemented.
   return false;
 }
 
@@ -129,9 +229,34 @@ spd_settings::get_value(void)
       int value = lexical_cast<int>(beyond());
       if ((value >= min_value) && (value <= max_value))
         {
-          value -= min_value;
-          result = static_cast<double>(value) / static_cast<double>(max_value - min_value);
+          result = (value < normal_value) ?
+            ((1.0 - min_factor) / static_cast<double>(normal_value - min_value)) :
+            ((max_factor - 1.0) / static_cast<double>(max_value - normal_value));
+          result *= static_cast<double>(value - normal_value);
+          result += 1.0;
         }
     }
   return result;
+}
+
+
+// State saving and restoring:
+
+spd_settings::preserve::preserve(spd_settings* orig):
+  voice_params(orig),
+  master(orig),
+  voice_pitch(orig->voice_pitch),
+  pitch_factor(orig->pitch_factor)
+{
+}
+
+void
+spd_settings::preserve::restore(void)
+{
+  master->volume = this->volume;
+  master->rate = this->rate;
+  master->pitch = this->pitch;
+  master->deviation = this->deviation;
+  master->voice_pitch = this->voice_pitch;
+  master->pitch_factor = this->pitch_factor;
 }

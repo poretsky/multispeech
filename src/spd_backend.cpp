@@ -240,7 +240,7 @@ spd_backend::enqueue_text_chunk(string::const_iterator start, string::const_iter
       stripper.push(text);
       stripper << intern_string(string(start, end), input_charset);
       stripper.pop();
-      soundmaster.enqueue(speechmaster.text_task(text.str()));
+      soundmaster.enqueue(speechmaster.text_task(text.str(), &settings));
     }
 }
 
@@ -309,7 +309,7 @@ spd_backend::do_char(void)
           mutex::scoped_lock lock(access);
           if (can_speak())
             {
-              soundmaster.enqueue(speechmaster.letter_task(intern_string(data, input_charset)));
+              soundmaster.enqueue(speechmaster.letter_task(intern_string(data, input_charset), &settings));
               start_queue();
             }
         }
@@ -335,13 +335,13 @@ spd_backend::do_sound_icon(void)
           if (can_speak())
             {
               if (sound_icons.empty())
-                soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset)));
+                soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
               else
                 {
                   path icon_file(complete(data, sound_icons));
                   if (exists(icon_file))
                     soundmaster.enqueue(sound_task(icon_file));
-                  else soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset)));
+                  else soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
                 }
               start_queue();
             }
@@ -387,7 +387,7 @@ spd_backend::do_set(void)
         cout << "203 OK RECEIVING SETTINGS" << endl;
       if ((lines < 0) || !data.empty())
         {
-          settings.parse(data);
+          settings.apply(data);
           communication_reset();
         }
     }
