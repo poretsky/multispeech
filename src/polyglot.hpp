@@ -63,6 +63,9 @@ public:
   // true -- forward, false -- backward.
   void lang_switch(bool direction);
 
+  // Multilingual speech engine:
+  std::vector< boost::shared_ptr<speech_engine> > talker;
+
 private:
   // Detect language from text content:
   void detect_language(const std::wstring& s, bool check_translation = false);
@@ -71,9 +74,6 @@ private:
   speech_engine* speech_backend(const std::string& name,
                                 const std::string& lang,
                                 const configuration& conf);
-
-  // Multilingual speech engine:
-  std::vector< boost::shared_ptr<speech_engine> > talker;
 
   // Currently used language:
   unsigned int lang;
