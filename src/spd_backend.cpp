@@ -47,7 +47,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("KEY", &spd_backend::do_key),
     Entry("STOP", &spd_backend::do_stop),
     Entry("PAUSE", &spd_backend::do_pause),
-    Entry("LIST VOICES", &spd_backend::do_unknown),
+    Entry("LIST VOICES", &spd_backend::do_list_voices),
     Entry("SET", &spd_backend::do_set),
     Entry("AUDIO", &spd_backend::do_unknown),
     Entry("LOGLEVEL", &spd_backend::do_unknown),
@@ -373,6 +373,33 @@ spd_backend::do_pause(void)
       mutex::scoped_lock lock(access);
       if (state == speaking)
         state = pausing;
+      communication_reset();
+    }
+  return true;
+}
+
+bool
+spd_backend::do_list_voices(void)
+{
+  if (state_ok())
+    {
+      for (int i = 0; i < speechmaster.talker.size(); i++)
+        {
+          speech_engine* talker = speechmaster.talker[i].get();
+          if (talker)
+            {
+              cout << "200-" << talker->name;
+              if (!talker->voice.empty())
+                cout << '-' << talker->voice;
+              string lang(talker->language->id());
+              cout << ' ';
+              if (lang != "br")
+                cout << lang << " none";
+              else cout << "pt br";
+              cout << endl;
+            }
+        }
+      cout << "200 OK VOICE LIST SENT" << endl;
       communication_reset();
     }
   return true;
