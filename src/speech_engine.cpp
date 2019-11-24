@@ -193,15 +193,13 @@ speech_engine::text_task(const wstring& s,
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  double pitch = char_pitch * persistent_char_pitch;
-  double rate = char_rate * persistent_char_rate;
-  if (s.length() == 1)
-    {
-      if (isupper(s[0], locale("")))
-        pitch *= caps_factor;
-      else s[0] = toupper(s[0], locale(""));
-    }
-  return text_task(s, -1.0, rate, pitch, 0.0, true, true);
+  return letter_task(s, -1.0, persistent_char_rate, persistent_char_pitch, 0.0);
+}
+
+speech_task
+speech_engine::letter_task(wstring s, voice_params* voice)
+{
+  return letter_task(s, voice->volume, voice->rate, voice->pitch, voice->deviation);
 }
 
 speech_task
@@ -294,4 +292,18 @@ speech_engine::text_task(const wstring& s,
                      commands, format, playing_params,
                      ((volume > 0) ? volume : persistent_volume) * volume_factor,
                      acceleration);
+}
+
+speech_task
+speech_engine::letter_task(wstring s,
+                           double volume, double rate,
+                           double pitch, double deviation)
+{
+  if (s.length() == 1)
+    {
+      if (isupper(s[0], locale("")))
+        pitch *= caps_factor;
+      else s[0] = toupper(s[0], locale(""));
+    }
+  return text_task(s, volume, rate * char_rate, pitch * char_pitch, deviation, true, true);
 }
