@@ -88,7 +88,6 @@ spd_settings::apply(const string& message)
           return;
         }
     }
-  pitch = voice_pitch * pitch_factor;
   cout << "203 OK SETTINGS RECEIVED" << endl;
 }
 
@@ -122,6 +121,7 @@ spd_settings::apply_pitch(void)
   if (value < 0.0)
     return true;
   pitch_factor = value;
+  pitch = voice_pitch * pitch_factor;
   return false;
 }
 
@@ -197,6 +197,7 @@ spd_settings::apply_voice(void)
       deviation = 1.125;
     }
   else return true;
+  pitch = voice_pitch * pitch_factor;
   return false;
 }
 
