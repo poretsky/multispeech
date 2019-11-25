@@ -23,7 +23,12 @@
 
 // Object construction:
 
-voice_params::voice_params(void)
+voice_params::voice_params(void):
+  volume(-1.0),
+  rate(-1.0),
+  pitch(-1.0),
+  deviation(-1.0),
+  punctuations_mode(punctuations::verbosity)
 {
 }
 
