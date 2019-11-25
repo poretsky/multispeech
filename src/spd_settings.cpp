@@ -193,8 +193,8 @@ spd_settings::apply_voice(void)
     }
   else if (beyond() == "child_female")
     {
-      voice_pitch = 2.0;
-      deviation = 1.75;
+      voice_pitch = 2.25;
+      deviation = 1.125;
     }
   else return true;
   return false;
