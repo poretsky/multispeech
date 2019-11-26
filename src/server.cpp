@@ -18,6 +18,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <cstdlib>
 #include <iostream>
 #include <exception>
@@ -92,6 +97,21 @@ server::run(void)
   while (perform_command());
   soundmaster.stop();
   return exit_status;
+}
+
+bool
+server::redirect_stderr(const char* file)
+{
+  int fd = file ?
+    open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR) :
+    open("/dev/null", O_WRONLY);
+  if (fd >= 0)
+    {
+      dup2(fd, STDERR_FILENO);
+      close(fd);
+      return true;
+    }
+  return false;
 }
 
 

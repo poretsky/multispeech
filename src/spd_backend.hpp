@@ -40,6 +40,9 @@ public:
   // Object instantiation:
   static spd_backend* instantiate(const configuration& conf);
 
+  // Common message:
+  static const std::string bad_syntax;
+
 private:
   // Server states:
   enum status
@@ -91,6 +94,7 @@ private:
   bool do_set(void);
   bool do_audio(void);
   bool do_loglevel(void);
+  bool do_debug(void);
   bool do_quit(void);
   bool do_unknown(void);
 
