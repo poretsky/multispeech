@@ -385,21 +385,18 @@ spd_backend::do_list_voices(void)
   if (state_ok())
     {
       for (int i = 0; i < speechmaster.talker.size(); i++)
-        {
-          speech_engine* talker = speechmaster.talker[i].get();
-          if (talker)
-            {
-              cout << "200-" << talker->name;
-              if (!talker->voice.empty())
-                cout << '-' << talker->voice;
-              string lang(talker->language->id());
-              cout << ' ';
-              if (lang != lang_id::br)
-                cout << lang << " none";
-              else cout << "pt br";
-              cout << endl;
-            }
-        }
+        if (speechmaster.talker[i].get())
+          {
+            cout << "200-" << speechmaster.talker[i]->name;
+            if (!speechmaster.talker[i]->voice.empty())
+              cout << '-' << speechmaster.talker[i]->voice;
+            string lang(speechmaster.talker[i]->language->id());
+            cout << ' ';
+            if (lang != lang_id::br)
+              cout << lang << " none";
+            else cout << "pt br";
+            cout << endl;
+          }
       cout << "200 OK VOICE LIST SENT" << endl;
       communication_reset();
     }
