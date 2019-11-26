@@ -89,6 +89,7 @@ private:
   bool do_pause(void);
   bool do_list_voices(void);
   bool do_set(void);
+  bool do_audio(void);
   bool do_quit(void);
   bool do_unknown(void);
 
