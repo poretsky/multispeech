@@ -90,6 +90,7 @@ private:
   bool do_list_voices(void);
   bool do_set(void);
   bool do_audio(void);
+  bool do_loglevel(void);
   bool do_quit(void);
   bool do_unknown(void);
 
