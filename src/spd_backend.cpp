@@ -115,12 +115,12 @@ spd_backend::communication_reset(void)
 // Extra data reception control:
 
 bool
-spd_backend::extra_data(void)
+spd_backend::extra_data(const char* msg)
 {
   if (state_ok())
     {
       if (!lines)
-        cout << "202 OK RECEIVING MESSAGE" << endl;
+        cout << (msg ? msg : "202 OK RECEIVING MESSAGE") << endl;
       return (lines < 0) || !data.empty();
     }
   return false;
@@ -406,15 +406,10 @@ spd_backend::do_list_voices(void)
 bool
 spd_backend::do_set(void)
 {
-  if (state_ok())
+  if (extra_data("203 OK RECEIVING SETTINGS"))
     {
-      if (!lines)
-        cout << "203 OK RECEIVING SETTINGS" << endl;
-      if ((lines < 0) || !data.empty())
-        {
-          settings.apply(data);
-          communication_reset();
-        }
+      settings.apply(data);
+      communication_reset();
     }
   return true;
 }
@@ -422,15 +417,10 @@ spd_backend::do_set(void)
 bool
 spd_backend::do_audio(void)
 {
-  if (state_ok())
+  if (extra_data("207 OK RECEIVING AUDIO SETTINGS"))
     {
-      if (!lines)
-        cout << "207 OK RECEIVING AUDIO SETTINGS" << endl;
-      if ((lines < 0) || !data.empty())
-        {
-          cout << "203 OK AUDIO INITIALIZED" << endl;
-          communication_reset();
-        }
+      cout << "203 OK AUDIO INITIALIZED" << endl;
+      communication_reset();
     }
   return true;
 }
@@ -438,15 +428,10 @@ spd_backend::do_audio(void)
 bool
 spd_backend::do_loglevel(void)
 {
-  if (state_ok())
+  if (extra_data("207 OK RECEIVING LOGLEVEL SETTINGS"))
     {
-      if (!lines)
-        cout << "207 OK RECEIVING LOGLEVEL SETTINGS" << endl;
-      if ((lines < 0) || !data.empty())
-        {
-          cout << "203 OK LOG LEVEL SET" << endl;
-          communication_reset();
-        }
+      cout << "203 OK LOG LEVEL SET" << endl;
+      communication_reset();
     }
   return true;
 }
