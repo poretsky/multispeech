@@ -22,7 +22,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <vector>
 #include <stdexcept>
+
+#include <bobcat/string>
 
 #include <boost/filesystem.hpp>
 
@@ -38,6 +41,9 @@ using namespace boost;
 using namespace boost::filesystem;
 
 
+// Common message:
+const string spd_backend::bad_syntax("302 ERROR BAD SYNTAX");
+
 // Speech Dispatcher module commands:
 const spd_backend::Entry spd_backend::command_table[] =
   {
@@ -51,7 +57,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("SET", &spd_backend::do_set),
     Entry("AUDIO", &spd_backend::do_audio),
     Entry("LOGLEVEL", &spd_backend::do_loglevel),
-    Entry("DEBUG", &spd_backend::do_unknown),
+    Entry("DEBUG", &spd_backend::do_debug),
     Entry("QUIT", &spd_backend::do_quit),
     Entry("", &spd_backend::do_unknown)
   };
@@ -81,7 +87,8 @@ spd_backend::instantiate(const configuration& conf)
 spd_backend::spd_backend(const configuration& conf):
   server(conf),
   CmdFinder<FunctionPtr>(command_table, command_table +
-                         (sizeof(command_table) / sizeof(Entry))),
+                         (sizeof(command_table) / sizeof(Entry)),
+                         USE_FIRST),
   settings(speechmaster),
   sound_icons((conf.option_value.count(options::spd::sound_icons) &&
                !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
@@ -431,6 +438,39 @@ spd_backend::do_loglevel(void)
   if (extra_data("207 OK RECEIVING LOGLEVEL SETTINGS"))
     {
       cout << "203 OK LOG LEVEL SET" << endl;
+      communication_reset();
+    }
+  return true;
+}
+
+bool
+spd_backend::do_debug(void)
+{
+  if (state_ok())
+    {
+      if (beyond() == "OFF")
+        {
+          if (verbose)
+            {
+              redirect_stderr();
+              verbose = false;
+            }
+          cout << "200 OK DEBUGGING OFF" << endl;
+        }
+      else
+        {
+          vector<string> args;
+          if ((String::split(&args, beyond()) == 2) && (args[0] == "ON"))
+            {
+              if (redirect_stderr(args[1].c_str()))
+                {
+                  verbose = true;
+                  cout << "200 OK DEBUGGING ON" << endl;
+                }
+              else cout << "303 CANT OPEN CUSTOM DEBUG FILE" << endl;
+            }
+          else cout << bad_syntax << endl;
+        }
       communication_reset();
     }
   return true;
