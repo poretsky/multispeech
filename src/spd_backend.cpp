@@ -394,7 +394,7 @@ spd_backend::do_list_voices(void)
                 cout << '-' << talker->voice;
               string lang(talker->language->id());
               cout << ' ';
-              if (lang != "br")
+              if (lang != lang_id::br)
                 cout << lang << " none";
               else cout << "pt br";
               cout << endl;
