@@ -53,7 +53,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("KEY", &spd_backend::do_key),
     Entry("STOP", &spd_backend::do_stop),
     Entry("PAUSE", &spd_backend::do_pause),
-    Entry("LIST VOICES", &spd_backend::do_list_voices),
+    Entry("LIST", &spd_backend::do_list_voices),
     Entry("SET", &spd_backend::do_set),
     Entry("AUDIO", &spd_backend::do_audio),
     Entry("LOGLEVEL", &spd_backend::do_loglevel),
@@ -389,6 +389,8 @@ spd_backend::do_pause(void)
 bool
 spd_backend::do_list_voices(void)
 {
+  if (beyond() != "VOICES")
+    return do_unknown();
   if (state_ok())
     {
       for (int i = 0; i < speechmaster.talker.size(); i++)
