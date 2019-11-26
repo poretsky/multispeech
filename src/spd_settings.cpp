@@ -50,10 +50,11 @@ const spd_settings::Entry spd_settings::settings_table[] =
 
 // Object construction:
 
-spd_settings::spd_settings(void):
+spd_settings::spd_settings(polyglot& linguist):
   CmdFinder<FunctionPtr>(settings_table, settings_table +
                          (sizeof(settings_table) / sizeof(Entry)),
                          USE_FIRST),
+  speechmaster(linguist),
   voice_pitch(1.0),
   pitch_factor(1.0),
   validate_integer("^[+-]?\\d+$")
@@ -204,14 +205,31 @@ spd_settings::apply_voice(void)
 bool
 spd_settings::apply_synthesis_voice(void)
 {
-  // Should be implemented.
+  if (beyond() != "NULL")
+    {
+      ostringstream voice(ios::app);
+      for (int i = 0; i < speechmaster.talker.size(); i++)
+        if (speechmaster.talker[i].get())
+          {
+            voice.str(speechmaster.talker[i]->name);
+            if (!speechmaster.talker[i]->voice.empty())
+              voice << '-' << speechmaster.talker[i]->voice << flush;
+            if (beyond() == voice.str())
+              {
+                speechmaster.language(speechmaster.talker[i]->language->id());
+                break;
+              }
+          }
+    }
+  else speechmaster.language("autodetect");
   return false;
 }
 
 bool
 spd_settings::apply_language(void)
 {
-  // Should be implemented.
+  string lang((beyond() == "NULL") ? "autodetect" : ((beyond() == "pt") ? "br" : beyond().c_str()));
+  speechmaster.language(lang);
   return false;
 }
 
@@ -246,6 +264,7 @@ spd_settings::get_value(void)
 spd_settings::preserve::preserve(spd_settings* orig):
   voice_params(orig),
   master(orig),
+  language(orig->speechmaster.language()),
   voice_pitch(orig->voice_pitch),
   pitch_factor(orig->pitch_factor)
 {
@@ -260,4 +279,5 @@ spd_settings::preserve::restore(void)
   master->deviation = this->deviation;
   master->voice_pitch = this->voice_pitch;
   master->pitch_factor = this->pitch_factor;
+  master->speechmaster.language(this->language);
 }

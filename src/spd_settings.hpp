@@ -29,6 +29,7 @@
 #include <bobcat/cmdfinder>
 
 #include "voice_params.hpp"
+#include "polyglot.hpp"
 
 
 class spd_settings:
@@ -37,7 +38,7 @@ class spd_settings:
 {
 public:
   // Object construction:
-  spd_settings(void);
+  explicit spd_settings(polyglot& linguist);
 
   void apply(const std::string& message);
 
@@ -52,6 +53,7 @@ private:
 
   private:
     spd_settings* master;
+    std::string language;
     double voice_pitch, pitch_factor;
   };
 
@@ -72,6 +74,9 @@ private:
 
   // Extract numeric value:
   double get_value(void);
+
+  // Speech language control:
+  polyglot& speechmaster;
 
   // Pitch forming parameters:
   double voice_pitch, pitch_factor;
