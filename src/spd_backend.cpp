@@ -49,7 +49,7 @@ const spd_backend::Entry spd_backend::command_table[] =
     Entry("PAUSE", &spd_backend::do_pause),
     Entry("LIST VOICES", &spd_backend::do_list_voices),
     Entry("SET", &spd_backend::do_set),
-    Entry("AUDIO", &spd_backend::do_unknown),
+    Entry("AUDIO", &spd_backend::do_audio),
     Entry("LOGLEVEL", &spd_backend::do_unknown),
     Entry("DEBUG", &spd_backend::do_unknown),
     Entry("QUIT", &spd_backend::do_quit),
@@ -413,6 +413,22 @@ spd_backend::do_set(void)
       if ((lines < 0) || !data.empty())
         {
           settings.apply(data);
+          communication_reset();
+        }
+    }
+  return true;
+}
+
+bool
+spd_backend::do_audio(void)
+{
+  if (state_ok())
+    {
+      if (!lines)
+        cout << "207 OK RECEIVING AUDIO SETTINGS" << endl;
+      if ((lines < 0) || !data.empty())
+        {
+          cout << "203 OK AUDIO INITIALIZED" << endl;
           communication_reset();
         }
     }
