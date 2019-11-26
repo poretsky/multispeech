@@ -28,11 +28,6 @@ namespace package
   extern const char* const version = PACKAGE_VERSION;
 };
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
 #include <cstdlib>
 #include <string>
 #include <sstream>
@@ -389,15 +384,7 @@ configuration::configuration(int argc, char* argv[])
     info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
   if (cl_opt.count("verbose"))
     server::verbose = true;
-  else
-    {
-      int fd = open("/dev/null", O_WRONLY);
-      if (fd >= 0)
-        {
-          dup2(fd, STDERR_FILENO);
-          close(fd);
-        }
-    }
+  else server::redirect_stderr();
   if (cl_opt.count("list-devices"))
     {
       AutoSystem audio;
