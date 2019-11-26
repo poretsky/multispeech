@@ -26,6 +26,8 @@
 
 #include "spd_settings.hpp"
 
+#include "config.hpp"
+
 using namespace std;
 using namespace boost;
 using namespace FBB;
@@ -221,14 +223,14 @@ spd_settings::apply_synthesis_voice(void)
               }
           }
     }
-  else speechmaster.language("autodetect");
+  else speechmaster.language(lang_id::autodetect);
   return false;
 }
 
 bool
 spd_settings::apply_language(void)
 {
-  string lang((beyond() == "NULL") ? "autodetect" : ((beyond() == "pt") ? "br" : beyond().c_str()));
+  string lang((beyond() == "NULL") ? lang_id::autodetect : ((beyond() == "pt") ? lang_id::br : beyond().c_str()));
   speechmaster.language(lang);
   return false;
 }
