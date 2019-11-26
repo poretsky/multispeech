@@ -57,7 +57,7 @@ private:
   void communication_reset(void);
 
   // Data reception control, returns true when everything is acquired:
-  bool extra_data(void);
+  bool extra_data(const char* msg = 0);
 
   // Check if it is possible to speak:
   bool can_speak(void);
