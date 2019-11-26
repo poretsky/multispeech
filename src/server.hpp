@@ -49,6 +49,10 @@ public:
   // General execution loop:
   int run(void);
 
+  // Redirect standard error output to the specified file or to /dev/null.
+  // Return true on success.
+  static bool redirect_stderr(const char* file = 0);
+
   // Logging stream:
   static FBB::SyslogStream log;
 
