@@ -164,6 +164,9 @@ namespace options
   namespace spd
   {
     const char* const sound_icons = "spd.sound_icons";
+    const char* const use_voice_language = "spd.use_voice_language";
+    const char* const accept_explicit_language = "spd.accept_explicit_language";
+    const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
   };
 
   // English speech section:
@@ -547,7 +550,10 @@ configuration::configuration(int argc, char* argv[])
   // Registering Speech Dispatcher backend options if necessary:
   if (spd_backend)
     conf.add_options()
-      (spd::sound_icons,value<string>());
+      (spd::sound_icons,value<string>())
+      (spd::use_voice_language, bool_switch()->default_value(true))
+      (spd::accept_explicit_language, bool_switch()->default_value(true))
+      (spd::ignore_unknown_voice, bool_switch()->default_value(false));
 
   // Parse config files and store values
   if (cl_opt.count("config"))

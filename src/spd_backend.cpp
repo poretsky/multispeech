@@ -89,7 +89,7 @@ spd_backend::spd_backend(const configuration& conf):
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
-  settings(speechmaster),
+  settings(conf, speechmaster),
   sound_icons((conf.option_value.count(options::spd::sound_icons) &&
                !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
               conf.option_value[options::spd::sound_icons].as<string>() :
