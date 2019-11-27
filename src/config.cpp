@@ -546,30 +546,48 @@ configuration::configuration(int argc, char* argv[])
     (user::sampling.c_str(), value<unsigned int>()->default_value(22050))
     (user::stereo.c_str(), bool_switch()->default_value(false))
     (user::freq_control.c_str(), bool_switch()->default_value(false))
-    (user::charset.c_str(), value<string>()->default_value(""));
+    (user::charset.c_str(), value<string>()->default_value(""))
 
-  // Registering Speech Dispatcher backend options if necessary:
-  if (spd_backend)
-    conf.add_options()
-      (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
-      (spd::use_voice_language, bool_switch()->default_value(true))
-      (spd::accept_explicit_language, bool_switch()->default_value(true))
-      (spd::ignore_unknown_voice, bool_switch()->default_value(false));
+    // Registering Speech Dispatcher backend options if necessary:
+    (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
+    (spd::use_voice_language, bool_switch()->default_value(true))
+    (spd::accept_explicit_language, bool_switch()->default_value(true))
+    (spd::ignore_unknown_voice, bool_switch()->default_value(false));
 
   // Parse config files and store values
-  if (cl_opt.count("config"))
+  if (spd_backend)
     {
-      path extra_conf(cl_opt["config"].as<string>());
-      if (exists(extra_conf))
+      if (exists(local_conf))
         {
-          read(extra_conf, conf);
+          read(local_conf, conf);
           noconf = false;
         }
+      if (cl_opt.count("config"))
+        {
+          path extra_conf(cl_opt["config"].as<string>());
+          if (exists(extra_conf))
+            {
+              read(extra_conf, conf);
+              noconf = false;
+            }
+        }
     }
-  if (exists(local_conf))
+  else
     {
-      read(local_conf, conf);
-      noconf = false;
+      if (cl_opt.count("config"))
+        {
+          path extra_conf(cl_opt["config"].as<string>());
+          if (exists(extra_conf))
+            {
+              read(extra_conf, conf);
+              noconf = false;
+            }
+        }
+      if (exists(local_conf))
+        {
+          read(local_conf, conf);
+          noconf = false;
+        }
     }
   if (exists(global_conf))
     {
