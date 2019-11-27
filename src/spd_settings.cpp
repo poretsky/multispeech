@@ -101,30 +101,20 @@ spd_settings::apply(const string& message)
 bool
 spd_settings::apply_volume(void)
 {
-  double value = get_value();
-  if (value < 0.0)
-    return true;
-  volume = value;
-  return false;
+  return set(volume, min_volume, max_volume, normal_volume);
 }
 
 bool
 spd_settings::apply_rate(void)
 {
-  double value = get_value();
-  if (value < 0.0)
-    return true;
-  rate = value;
-  return false;
+  return set(rate, min_rate, max_rate, normal_rate);
 }
 
 bool
 spd_settings::apply_pitch(void)
 {
-  double value = get_value();
-  if (value < 0.0)
+  if (set(pitch_factor, min_pitch, max_pitch, normal_pitch))
     return true;
-  pitch_factor = value;
   pitch = voice_pitch * pitch_factor;
   return false;
 }
@@ -133,7 +123,8 @@ bool
 spd_settings::apply_pitch_range(void)
 {
   // Only parameter validity check, no actual implementation.
-  return get_value() < 0.0;
+  int value;
+  return !check(value);
 }
 
 bool
@@ -242,23 +233,31 @@ spd_settings::apply_unknown(void)
   return true;
 }
 
-double
-spd_settings::get_value(void)
+bool
+spd_settings::check(int& value)
 {
-  double result = -1.0;
   if (regex_match(beyond(), validate_integer))
     {
-      int value = lexical_cast<int>(beyond());
-      if ((value >= min_value) && (value <= max_value))
-        {
-          result = (value < normal_value) ?
-            ((1.0 - min_factor) / static_cast<double>(normal_value - min_value)) :
-            ((max_factor - 1.0) / static_cast<double>(max_value - normal_value));
-          result *= static_cast<double>(value - normal_value);
-          result += 1.0;
-        }
+      value = lexical_cast<int>(beyond());
+      return (value >= min_value) && (value <= max_value);
     }
-  return result;
+  return false;
+}
+
+bool
+spd_settings::set(double& result, double lowest, double highest, double normal)
+{
+  int value;
+  if (check(value))
+    {
+      result = (value < normal_value) ?
+        ((normal - lowest) / static_cast<double>(normal_value - min_value)) :
+        ((highest - normal) / static_cast<double>(max_value - normal_value));
+      result *= static_cast<double>(value - normal_value);
+      result += normal;
+      return false;
+    }
+  return true;
 }
 
 
