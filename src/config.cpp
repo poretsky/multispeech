@@ -63,6 +63,7 @@ static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 static const path mbrola_voices_default(complete("mbrola", DATA_DIR));
 static const path enlex_default(complete("freespeech/enlex.db", DATA_DIR));
 static const path rulex_default(complete("freespeech/rulex.db", DATA_DIR));
+static const path spd_sound_icons_default(complete("sounds/sound-icons", DATA_DIR));
 
 
 // Language id strings:
@@ -550,7 +551,7 @@ configuration::configuration(int argc, char* argv[])
   // Registering Speech Dispatcher backend options if necessary:
   if (spd_backend)
     conf.add_options()
-      (spd::sound_icons,value<string>())
+      (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
       (spd::use_voice_language, bool_switch()->default_value(true))
       (spd::accept_explicit_language, bool_switch()->default_value(true))
       (spd::ignore_unknown_voice, bool_switch()->default_value(false));
