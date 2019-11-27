@@ -72,8 +72,11 @@ private:
   bool apply_language(void);
   bool apply_unknown(void);
 
-  // Extract numeric value:
-  double get_value(void);
+  // check numeric value validity and return true when it fits:
+  bool check(int& value);
+
+  // Try to set numeric parameter and return true on failure:
+  bool set(double& result, double lowest, double highest, double normal);
 
   // Speech language control:
   polyglot& speechmaster;
@@ -88,8 +91,15 @@ private:
   static const int normal_value = 0;
 
   // Numeric parameters variation:
-  static BOOST_CONSTEXPR_OR_CONST double min_factor = 0.25;
-  static BOOST_CONSTEXPR_OR_CONST double max_factor = 4.0;
+  static BOOST_CONSTEXPR_OR_CONST double min_volume = 0.0;
+  static BOOST_CONSTEXPR_OR_CONST double max_volume = 1.0;
+  static BOOST_CONSTEXPR_OR_CONST double normal_volume = 0.5;
+  static BOOST_CONSTEXPR_OR_CONST double min_rate = 0.25;
+  static BOOST_CONSTEXPR_OR_CONST double max_rate = 4.0;
+  static BOOST_CONSTEXPR_OR_CONST double normal_rate = 1.0;
+  static BOOST_CONSTEXPR_OR_CONST double min_pitch = 0.5;
+  static BOOST_CONSTEXPR_OR_CONST double max_pitch = 2.0;
+  static BOOST_CONSTEXPR_OR_CONST double normal_pitch = 1.0;
 
   // Execution table:
   static const Entry settings_table[];
