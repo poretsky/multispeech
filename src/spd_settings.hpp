@@ -28,6 +28,7 @@
 
 #include <bobcat/cmdfinder>
 
+#include "config.hpp"
 #include "voice_params.hpp"
 #include "polyglot.hpp"
 
@@ -38,7 +39,7 @@ class spd_settings:
 {
 public:
   // Object construction:
-  explicit spd_settings(polyglot& linguist);
+  spd_settings(const configuration& conf, polyglot& linguist);
 
   void apply(const std::string& message);
 
@@ -78,11 +79,19 @@ private:
   // Try to set numeric parameter and return true on failure:
   bool set(double& result, double lowest, double highest, double normal);
 
+  // Flags from configuration:
+  const bool use_voice_language;
+  const bool accept_explicit_language;
+  const bool ignore_unknown_voice;
+
   // Speech language control:
   polyglot& speechmaster;
 
   // Pitch forming parameters:
   double voice_pitch, pitch_factor;
+
+  // Allows explicit language choice:
+  bool accept_language;
 
   // Value validation data:
   const boost::regex validate_integer;
