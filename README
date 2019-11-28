@@ -3,6 +3,7 @@
 Multispeech was primarily designed as a multilingual speech server
 for Emacspeak, but it can be useful in some other circumstances
 as well, when multilingual speech feedback is needed.
+For instance, it can serve as a backend module for Speech Dispatcher.
 Multispeech produces audible speech, sounds and tone signals
 according to the commands passed by client. It utilizes third party
 speech synthesis software to perform actual TTS transformation.
