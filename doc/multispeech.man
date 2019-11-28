@@ -35,6 +35,8 @@ multispeech \- Multilingual speech server
 \fBMultispeech\fP was primarily designed as a multilingual speech server
 for \fBemacspeak\fP, but it can be useful in some other circumstances
 as well, when multilingual speech feedback is needed.
+For instance, being started with the name \fBsd_multispeech\fP
+it serves as a backend module for \fBSpeech Dispatcher\fP.
 \fBMultispeech\fP produces audible speech, sounds and tone signals
 according to the commands passed by it's client. It utilizes third
 party speech synthesis software to perform actual TTS transformation.
@@ -78,10 +80,23 @@ Show summary of options and exit.
 .B \-V, \-\-version
 .br
 Show program version and exit.
+.SH "COOPERATION WITH SPEECH DISPATCHER"
+.TP
+To use \fBmultispeech\fP as a backend module for
+\fBSpeech Dispatcher\fP create a symlink \fBsd_multispeech\fP
+pointing to the \fBmultispeech\fP executable in the directory where
+\fBSpeech Dispatcher\fP searches its modules. See
+\fBSpeech dispatcher\fP documentation for further information
+about adding modules.
 .SH "FILES"
 .TP
 .B <sysconfdir>/multispeech.conf
 provides system\-wide configuration.
+.PP
+When \fBmultispeech\fP is used as a backend module for
+\fBSpeech Dispatcher\fP an additional configuration file can be
+passed to it via command line. See \fBSpeech Dispatcher\fP
+documentation for details about modules connection.
 .TP
 .B ~/.multispeechrc
 provides user configuration.
@@ -91,6 +106,7 @@ provides user configuration.
 .BR mbrola(1),
 .BR multispeech.conf(5),
 .BR ru_tts(1),
+.BR speech-dispatcher(1),
 .BR syslog.conf(5).
 .SH AUTHOR
 Igor B. Poretsky <poretsky@mlbox.ru>.
