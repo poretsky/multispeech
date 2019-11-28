@@ -8,8 +8,12 @@
 # always take precedence over the system-wide ones
 # from "<sysconfdir>/multispeech.conf". And all these settings in turn
 # can be overridden by an extra configuration file specified via the
-# command line. Some configuration options are mandatory, so at least
-# one of these files must exist.
+# command line. Being started as Speech Dispatcher module, Multispeech
+# treats the file specified in command line as an extension of global
+# configuration. Options specified there override ones from the main
+# configuration file, but "~/.multispeechrc" takes precedence over the
+# both. Some options are mandatory, so at least one of these files
+# must exist.
 
 # The syntax is quite simple.
 
@@ -588,3 +592,32 @@ engine = espeak
 # Available charset names can be found in "/usr/share/i18n/SUPPORTED"
 # or wherever else it is on your system. By default this option
 # is not set so current locale setting is used.
+
+[spd]
+# Speech Dispatcher module related options.
+#
+#sound_icons = <datadir>/sounds/sound-icons
+# Path to the directory where Multispeech will search sound icon files
+# when acting as Speech Dispatcher module.
+#
+#use_voice_language = yes
+# This option defines Multispeech behaviour when synthesis_voice and
+# language settings are passed by Speech Dispatcher in a single request.
+# If it is "yes" or "on", language will be chosen according to the
+# specified voice, otherwise, when it is "no" or "off", the last
+# setting in packet will take precedence.
+#
+#accept_explicit_language = yes
+# This option enables or disables explicit language choice by
+# Speech Dispatcher. When disabled, language can be chosen only
+# via synthesis_voice. Use the word "yes" or "on" to enable
+# and the word "no" or "off" to disable.
+#
+#ignore_unknown_voice = no
+# When this option is "yes" or "on", Speech Dispatcher requests
+# to set synthesis_voice with unknown name are ignored. Otherwise,
+# when it is "no" or "off", such requests are treated as if the
+# voice name was "NULL". This special name is used for so-called
+# default voice that allows Multispeech to utilize language
+# autodetection mechanism. Though language still can be changed
+# explicitly by Speech Dispatcher if enabled.
