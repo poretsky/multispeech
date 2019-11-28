@@ -35,7 +35,12 @@ The user settings provided by \fI~/.multispeechrc\fP
 always take precedence over the system\-wide ones
 from \fI<sysconfdir>/multispeech.conf\fP. And all these settings in turn
 can be overridden by an extra configuration file specified via the
-command line. Some configuration options are mandatory, so at least
+command line. Being started as \fBSpeech Dispatcher\fP module,
+\fBmultispeech\fP treats the file specified in command line
+as an extension of global configuration. Options specified there
+override ones from the main system configuration file, but
+\fI~/.multispeechrc takes precedence over the\fP both.
+ Some configuration options are mandatory, so at least
 one of these files must exist.
 .SH "SYNTAX"
 The syntax is quite simple.
@@ -473,11 +478,50 @@ Character set in which the TTS engine accepts  it's input.
 Available charset names can be found in \fI/usr/share/i18n/SUPPORTED\fP
 or wherever else it is on your system. By default this option
 is not set so current locale setting is used.
+.SH "SPEECH DISPATCHER MODULE RELATED OPTIONS"
+The section name is \(oqspd\(cq. The following options are grouped
+here:
+.TP
+.B sound_icons
+.br
+Path to the directory where \fBmultispeech\fP will search sound icon
+files when acting as \fBSpeech Dispatcher\fP module.
+By default \(oq<datadir>/sounds/sound\-icons\(cq is suggested.
+.TP
+.B use_voice_language
+.br
+This option defines \fBmultispeech\fP behaviour when
+\fBsynthesis_voice\fP and \fBlanguage\fP settings are passed by
+ \fBSpeech Dispatcher\fP in a single request. If it is \(oqyes\(cq
+or \(oqon\(cq, language will be chosen according to the specified
+voice, otherwise, when it is \(oqno\(cq or \(oqoff\(cq, the last
+setting in packet will take precedence. By default this option
+is \(oqyes\(cq.
+.TP
+.B accept_explicit_language
+.br
+This option enables or disables explicit language choice by
+\fBSpeech Dispatcher\fP. When disabled, language can be chosen only
+via \fBsynthesis_voice\fP. Use the word \(oqyes\(cq or \(oqon\(cq
+to enable and the word \(oqno\(cq or \(oqoff\(cq to disable.
+By default this option is enabled.
+.TP
+.B ignore_unknown_voice
+.br
+When this option is \(oqyes\(cq or \(oqon\(cq, \fBSpeech Dispatcher\fP
+ requests to set \fBsynthesis_voice\fP with unknown name are ignored.
+Otherwise, when it is \(oqno\(cq or \(oqoff\(cq, such requests are
+treated as if the voice name was \(oqNULL\(cq. This special name
+is used for so-called default voice that allows \fBmultispeech\fP
+to utilize language autodetection mechanism. Though language still
+can be changed explicitly by \fBSpeech Dispatcher\fP if enabled.
+This option is \(oqno\(cq by default.
 .SH "SEE ALSO"
 .BR espeak(1),
 .BR freephone(1),
 .BR mbrola(1),
 .BR multispeech(1),
-.BR ru_tts(1).
+.BR ru_tts(1),
+.BR speech-dispatcher(1).
 .SH AUTHOR
 Igor B. Poretsky <poretsky@mlbox.ru>.
