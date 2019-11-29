@@ -23,6 +23,8 @@
 
 #include <map>
 
+#include <boost/regex.hpp>
+
 #include "language_description.hpp"
 
 class Russian: public language_description
