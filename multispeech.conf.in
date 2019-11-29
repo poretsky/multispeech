@@ -161,11 +161,13 @@ dtk_voices = on
 # Language related sections. These sections contain quite the same
 # collection of options that affect speech on a specific language.
 # Actual speech engine is chosen by the key option "engine".
-# This option has no default. If it is not set then the language
-# will not be available in Multispeech. It is not necessary to define
-# speech engine for each language, but at least one must be defined.
-# It is wise to define speech engine for only those languages
-# that are actually to be used.
+# This option has no default. If it is not set or set as "disabled"
+# then the language will not be available in Multispeech. It is not
+# necessary to define speech engine for each language, but at least
+# one must be defined. It is wise to define speech engine for only
+# those languages that are actually to be used or define speech
+# engine for all languages in global configuration and then
+# locally disable some of them that are not needed.
 
 [en]
 # English language related speech options.

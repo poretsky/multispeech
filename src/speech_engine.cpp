@@ -57,7 +57,8 @@ bool speech_engine::split_caps = false;
 bool speech_engine::capitalize = false;
 bool speech_engine::space_special_chars = false;
 
-// "No voice" string:
+// string constants:
+const string speech_engine::disabled("disabled");
 const string speech_engine::novoice("no voice");
 
 
