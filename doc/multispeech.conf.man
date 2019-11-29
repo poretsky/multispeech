@@ -216,11 +216,13 @@ There is a separate section for each supported language named
 Brazilian and \(oqit\(cq for Italian. These sections contain quite the
 same collection of options that affect speech on a specific
 language. Actual speech engine is chosen by the key option
-\(oqengine\(cq. This option has no default. If it is not set then the
-language will not be available in Multispeech. It is not necessary to
-define speech engine for each language, but at least one must be
-defined. It is wise to define speech engine for only those languages
-that are actually to be used.
+\(oqengine\(cq. This option has no default. If it is not set or set as
+\(oqdisabled\(cq then the language will not be available in
+Multispeech. It is not necessary to define speech engine for each
+language, but at least one must be defined. It is wise to define
+speech engine for only those languages that are actually to be used
+or define speech engine for all languages in global configuration
+and then locally disable some of them that are not needed.
 .PP
 Each language specific section consists of the following options:
 .TP
