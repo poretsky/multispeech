@@ -42,6 +42,17 @@ esac
 
 
 if pidof multispeech >/dev/null; then
+    if pidof speech-dispatcher >/dev/null; then
+        if [ -f /etc/default/speech-dispatcher ] ; then
+            RUN=no
+            . /etc/default/speech-dispatcher
+            if [ "x$RUN" != "xyes" ] ; then
+                killall speech-dispatcher
+            else
+                service speech-dispatcher restart
+            fi
+        fi
+    fi
     echo "Please restart all running multispeech instances"
     echo "for changes to take effect."
 fi
