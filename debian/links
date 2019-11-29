@@ -1,1 +1,2 @@
 usr/bin/multispeech usr/share/emacs/site-lisp/emacspeak/servers/multispeech
+usr/bin/multispeech usr/lib/speech-dispatcher-modules/sd_multispeech
