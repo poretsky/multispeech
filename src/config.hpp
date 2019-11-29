@@ -93,6 +93,15 @@ namespace options
     extern const char* const dtk_voices;
   };
 
+  // Speech Dispatcher backend options:
+  namespace spd
+  {
+    extern const char* const sound_icons;
+    extern const char* const use_voice_language;
+    extern const char* const accept_explicit_language;
+    extern const char* const ignore_unknown_voice;
+  };
+
   // General audio output:
   namespace audio
   {
@@ -128,15 +137,6 @@ namespace options
     extern const char* const volume;
     extern const char* const language;
     extern const char* const fallback;
-  };
-
-  // Speech Dispatcher backend options:
-  namespace spd
-  {
-    extern const char* const sound_icons;
-    extern const char* const use_voice_language;
-    extern const char* const accept_explicit_language;
-    extern const char* const ignore_unknown_voice;
   };
 
   // The next options are declared as strings to be dynamically constructable.

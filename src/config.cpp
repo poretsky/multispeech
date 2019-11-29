@@ -124,6 +124,15 @@ namespace options
     const char* const dtk_voices = "frontend.dtk_voices";
   };
 
+  // Speech Dispatcher backend options:
+  namespace spd
+  {
+    const char* const sound_icons = "spd.sound_icons";
+    const char* const use_voice_language = "spd.use_voice_language";
+    const char* const accept_explicit_language = "spd.accept_explicit_language";
+    const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
+  };
+
   // General audio output options:
   namespace audio
   {
@@ -159,15 +168,6 @@ namespace options
     const char* const volume = "speech.volume";
     const char* const language = "speech.language";
     const char* const fallback = "speech.fallback";
-  };
-
-  // Speech Dispatcher backend options:
-  namespace spd
-  {
-    const char* const sound_icons = "spd.sound_icons";
-    const char* const use_voice_language = "spd.use_voice_language";
-    const char* const accept_explicit_language = "spd.accept_explicit_language";
-    const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
   };
 
   // English speech section:
