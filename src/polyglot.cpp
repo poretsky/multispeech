@@ -61,7 +61,8 @@ polyglot::polyglot(const configuration& conf):
 {
   bool initialized = false;
   for (unsigned int i = 0; i < langs.size(); i++)
-    if (conf.option_value.count(options::compose(langs[i], option_name::engine)))
+    if (conf.option_value.count(options::compose(langs[i], option_name::engine)) &&
+        (conf.option_value[options::compose(langs[i], option_name::engine)].as<string>() != speech_engine::disabled))
       {
         talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(),
                                        langs[i], conf));
