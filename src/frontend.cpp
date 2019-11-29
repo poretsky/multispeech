@@ -129,7 +129,7 @@ frontend::get_command(void)
           }
       if (!disbalance)
         server::cmd = extern_string(data, locale(""));
-      else if (disbalance < 0)
+      else if ((disbalance < 0) || (disbalance > 1))
         communication_reset();
     }
 }
