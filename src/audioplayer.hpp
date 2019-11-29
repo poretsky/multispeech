@@ -41,7 +41,6 @@
 #include <string>
 #include <memory>
 
-#include <boost/regex.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
 
