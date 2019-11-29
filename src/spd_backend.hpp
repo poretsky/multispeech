@@ -111,7 +111,7 @@ private:
   int lines;
 
   // SSML mark pattern:
-  boost::regex mark_pattern;
+  const boost::regex mark_pattern;
 
   // SSML tags stripper:
   text_filter stripper;
