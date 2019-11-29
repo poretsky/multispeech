@@ -22,6 +22,7 @@
 #include <ctime>
 #include <exception>
 
+#include <boost/regex.hpp>
 #include <boost/thread/thread.hpp>
 
 #include "audioplayer.hpp"
