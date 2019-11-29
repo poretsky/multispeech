@@ -131,6 +131,9 @@ public:
   // Language specific stuff:
   boost::scoped_ptr<language_description> language;
 
+  // Special value for disabling language:
+  static const std::string disabled;
+
 protected:
   // Add a new command pattern to the beginning of the list:
   void command(const std::string& pattern);
