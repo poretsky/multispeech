@@ -10,7 +10,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak, espeak-data
 Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
-Enhances: emacspeak
+Enhances: emacspeak, speech-dispatcher
 Description: Multilingual speech server for emacspeak
  This speech server provides multilingual speech output for emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
@@ -24,5 +24,6 @@ Description: Multilingual speech server for emacspeak
   - online voice control means.
  .
  Though Multispeech was primarily designed for use in conjunction
- with Emacspeak, now it can easily be employed as a full featured
- speech service for Orca screenreader as well.
+ with Emacspeak, but being capable to work with Speech Dispatcher
+ as its backend module, it can provide multilingual speech output
+ for Orca screenreader as well.
