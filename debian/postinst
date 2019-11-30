@@ -42,12 +42,13 @@ esac
 
 
 if pidof multispeech >/dev/null; then
-    if pidof speech-dispatcher >/dev/null; then
+    SPD=`pidof speech-dispatcher`
+    if [ -n "$SPD" ] ; then
         if [ -f /etc/default/speech-dispatcher ] ; then
             RUN=no
             . /etc/default/speech-dispatcher
             if [ "x$RUN" != "xyes" ] ; then
-                killall speech-dispatcher
+                kill $SPD
             else
                 service speech-dispatcher restart
             fi
