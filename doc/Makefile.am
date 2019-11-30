@@ -2,6 +2,7 @@
 
 man_MANS = multispeech.1 multispeech.conf.5
 CLEANFILES = multispeech.1 multispeech.conf.5
+MAINTAINERCLEANFILES = Makefile.in
 dist_doc_DATA = interface.txt prehistory.ChangeLog
 EXTRA_DIST = multispeech.man multispeech.conf.man
 
