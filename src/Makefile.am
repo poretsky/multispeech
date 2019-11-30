@@ -40,3 +40,5 @@ multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	inline_parser.cpp inline_parser.hpp \
 	multispeech_voices.cpp multispeech_voices.hpp \
 	dtk_voices.cpp dtk_voices.hpp
+
+MAINTAINERCLEANFILES = Makefile.in
