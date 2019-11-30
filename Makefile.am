@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src doc
-doc_DATA = AUTHORS README TODO
+doc_DATA = AUTHORS README
 sysconf_DATA = multispeech.conf
 EXTRA_DIST = bootstrap multispeech.conf.in debian
 CLEANFILES = multispeech.conf
