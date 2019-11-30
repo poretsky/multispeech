@@ -1,3 +1,12 @@
+multispeech (3.0.0stretch1) stretch; urgency=low
+
+  * Implemented Speech Dispatcher module functionality.
+  * Introduced capability to disable languages on local configuration
+    level.
+  * Some minor fixes and enhancements.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 30 Nov 2019 04:43:06 +0300
+
 multispeech (2.8.0stretch1) stretch; urgency=low
 
   * Implemented queue voice change facility.
