@@ -58,8 +58,6 @@ private:
     double voice_pitch, pitch_factor;
   };
 
-  friend class preserve;
-
   // Executors:
   bool apply_volume(void);
   bool apply_rate(void);
