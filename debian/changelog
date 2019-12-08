@@ -1,3 +1,9 @@
+multispeech (3.0.0bionic1) bionic; urgency=low
+
+  * Distribution specific build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Dec 2019 17:18:54 +0300
+
 multispeech (3.0.0) unstable; urgency=low
 
   * Implemented Speech Dispatcher module functionality.
