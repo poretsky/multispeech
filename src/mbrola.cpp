@@ -19,8 +19,8 @@
 */
 
 #include <string>
-#include <boost/filesystem.hpp>
 
+#include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "mbrola.hpp"
