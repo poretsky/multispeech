@@ -19,7 +19,7 @@ To bootstrap the project do the following:
 ```bash
 $ git clone https://github.com/poretsky/multispeech.git
 $ cd multispeech
-$ ./bootstrap
+$ autoreconf -if
 ```
 
 GNU [Automake](https://www.gnu.org/software/automake/)
