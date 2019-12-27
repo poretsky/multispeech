@@ -43,7 +43,7 @@ using namespace boost::assign;
 static const vector<string> langs = list_of
   // Follow detection order
   (lang_id::ru)
-  (lang_id::br)
+  (lang_id::pt)
   (lang_id::it)
   (lang_id::fr)
   (lang_id::de)

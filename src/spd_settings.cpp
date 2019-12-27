@@ -239,7 +239,7 @@ spd_settings::apply_language(void)
 {
   if (accept_language)
     {
-      string lang((beyond() == "NULL") ? lang_id::autodetect : ((beyond() == "pt") ? lang_id::br : beyond().c_str()));
+      string lang((beyond() == "NULL") ? lang_id::autodetect : beyond().c_str());
       speechmaster.language(lang);
     }
   return false;

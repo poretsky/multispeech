@@ -33,7 +33,7 @@ multispeech_SOURCES = multispeech.cpp exec_queue.hpp \
 	English.cpp English.hpp Russian.cpp Russian.hpp \
 	German.cpp German.hpp French.cpp French.hpp \
 	Spanish.cpp Spanish.hpp Italian.cpp Italian.hpp \
-	Brazilian.cpp Brazilian.hpp \
+	Portuguese.cpp Portuguese.hpp \
 	mbrola.cpp mbrola.hpp espeak.cpp espeak.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
 	user_tts.cpp user_tts.hpp \
