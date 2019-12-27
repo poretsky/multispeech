@@ -181,6 +181,11 @@ engine = freephone
 # espeak.mbrola -- English speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
 #
+#priority = 0
+# English language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
+#
 #volume = 1.0
 # English voice loudness relatively to the general speech volume
 # level. It is 1.0 by default.
@@ -220,6 +225,11 @@ engine = ru_tts
 # ru_tts -- Russian speech with Ru_tts speech synthesizer;
 # espeak -- Russian speech with Espeak speech synthesizer;
 # user -- User defined TTS engine.
+#
+#priority = 0
+# Russian language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
 #
 #volume = 1.0
 # Russian voice loudness relatively to the general speech volume
@@ -261,6 +271,11 @@ engine = espeak
 # espeak.mbrola -- German speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
 #
+#priority = 0
+# German language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
+#
 #volume = 1.0
 # German voice loudness relatively to the general speech volume
 # level. It is 1.0 by default.
@@ -300,6 +315,11 @@ engine = espeak
 # espeak -- French speech with Espeak TTS engine;
 # espeak.mbrola -- French speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
+#
+#priority = 0
+# French language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
 #
 #volume = 1.0
 # French voice loudness relatively to the general speech volume
@@ -341,6 +361,11 @@ engine = espeak
 # espeak.mbrola -- Spanish speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
 #
+#priority = 0
+# Spanish language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
+#
 #volume = 1.0
 # Spanish voice loudness relatively to the general speech volume
 # level. It is 1.0 by default.
@@ -381,6 +406,11 @@ engine = espeak
 # espeak.mbrola -- Portuguese speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
 #
+#priority = 0
+# Portuguese language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
+#
 #volume = 1.0
 # Portuguese voice loudness relatively to the general speech volume
 # level. It is 1.0 by default.
@@ -420,6 +450,11 @@ engine = espeak
 # espeak -- Italian speech with Espeak TTS engine;
 # espeak.mbrola -- Italian speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
+#
+#priority = 0
+# Italian language priority. Any integer value is allowed.
+# During autodetection languages are probed in the ascending order
+# of their priority values. It is 0 by default.
 #
 #volume = 1.0
 # Italian voice loudness relatively to the general speech volume
