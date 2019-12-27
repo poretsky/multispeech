@@ -137,7 +137,7 @@ Russian::Russian(void):
     (L"comma", L"запятая")
     (L"semi", L"точка с запятой")
     (L"colon", L"двоеточие")
-    (L"apostrophe", L"	апостроф")
+    (L"apostrophe", L"апостроф")
     (L"quotes", L"кавычка")
     (L"question mark", L"вопросительный знак")
     (L"backquote", L"одинарная кавычка")
