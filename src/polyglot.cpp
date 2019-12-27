@@ -19,6 +19,7 @@
 */
 
 #include <iostream>
+#include <algorithm>
 
 #include <bobcat/syslogstream>
 
@@ -40,8 +41,8 @@ using namespace boost::assign;
 
 
 // Supported languages:
-static const vector<string> langs = list_of
-  // Follow detection order
+static vector<string> langs = list_of
+  // Default detection order
   (lang_id::ru)
   (lang_id::pt)
   (lang_id::it)
@@ -60,6 +61,7 @@ polyglot::polyglot(const configuration& conf):
   autolanguage(false)
 {
   bool initialized = false;
+  stable_sort(langs.begin(), langs.end(), conf);
   for (unsigned int i = 0; i < langs.size(); i++)
     if (conf.option_value.count(options::compose(langs[i], option_name::engine)) &&
         (conf.option_value[options::compose(langs[i], option_name::engine)].as<string>() != speech_engine::disabled))

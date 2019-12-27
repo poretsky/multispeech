@@ -92,6 +92,7 @@ namespace speaker
 // Various option names used in sections:
 namespace option_name
 {
+  const char* const priority = "priority";
   const char* const engine = "engine";
   const char* const executable = "executable";
   const char* const command = "command";
@@ -174,6 +175,7 @@ namespace options
   namespace en
   {
     const string engine(compose(lang_id::en, option_name::engine));
+    const string priority(compose(lang_id::en, option_name::priority));
     const string volume(compose(lang_id::en, option_name::volume));
     const string pitch(compose(lang_id::en, option_name::pitch));
     const string rate(compose(lang_id::en, option_name::rate));
@@ -188,7 +190,8 @@ namespace options
   // Russian speech section:
   namespace ru
   {
-    const std::string engine(compose(lang_id::ru, option_name::engine));
+    const string engine(compose(lang_id::ru, option_name::engine));
+    const string priority(compose(lang_id::ru, option_name::priority));
     const string volume(compose(lang_id::ru, option_name::volume));
     const string pitch(compose(lang_id::ru, option_name::pitch));
     const string rate(compose(lang_id::ru, option_name::rate));
@@ -204,6 +207,7 @@ namespace options
   namespace de
   {
     const string engine(compose(lang_id::de, option_name::engine));
+    const string priority(compose(lang_id::de, option_name::priority));
     const string volume(compose(lang_id::de, option_name::volume));
     const string pitch(compose(lang_id::de, option_name::pitch));
     const string rate(compose(lang_id::de, option_name::rate));
@@ -219,6 +223,7 @@ namespace options
   namespace fr
   {
     const string engine(compose(lang_id::fr, option_name::engine));
+    const string priority(compose(lang_id::fr, option_name::priority));
     const string volume(compose(lang_id::fr, option_name::volume));
     const string pitch(compose(lang_id::fr, option_name::pitch));
     const string rate(compose(lang_id::fr, option_name::rate));
@@ -234,6 +239,7 @@ namespace options
   namespace es
   {
     const string engine(compose(lang_id::es, option_name::engine));
+    const string priority(compose(lang_id::es, option_name::priority));
     const string volume(compose(lang_id::es, option_name::volume));
     const string pitch(compose(lang_id::es, option_name::pitch));
     const string rate(compose(lang_id::es, option_name::rate));
@@ -249,6 +255,7 @@ namespace options
   namespace pt
   {
     const string engine(compose(lang_id::pt, option_name::engine));
+    const string priority(compose(lang_id::pt, option_name::priority));
     const string volume(compose(lang_id::pt, option_name::volume));
     const string pitch(compose(lang_id::pt, option_name::pitch));
     const string rate(compose(lang_id::pt, option_name::rate));
@@ -264,6 +271,7 @@ namespace options
   namespace it
   {
     const string engine(compose(lang_id::it, option_name::engine));
+    const string priority(compose(lang_id::it, option_name::priority));
     const string volume(compose(lang_id::it, option_name::volume));
     const string pitch(compose(lang_id::it, option_name::pitch));
     const string rate(compose(lang_id::it, option_name::rate));
@@ -439,6 +447,7 @@ configuration::configuration(int argc, char* argv[])
 
     // English speech options:
     (en::engine.c_str(), value<string>())
+    (en::priority.c_str(), value<int>()->default_value(0))
     (en::volume.c_str(), value<double>()->default_value(1.0))
     (en::pitch.c_str(), value<double>()->default_value(1.0))
     (en::rate.c_str(), value<double>()->default_value(1.0))
@@ -449,6 +458,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Russian speech options:
     (ru::engine.c_str(), value<string>())
+    (ru::priority.c_str(), value<int>()->default_value(0))
     (ru::volume.c_str(), value<double>()->default_value(1.0))
     (ru::pitch.c_str(), value<double>()->default_value(1.0))
     (ru::rate.c_str(), value<double>()->default_value(1.0))
@@ -459,6 +469,7 @@ configuration::configuration(int argc, char* argv[])
 
     // German speech options:
     (de::engine.c_str(), value<string>())
+    (de::priority.c_str(), value<int>()->default_value(0))
     (de::volume.c_str(), value<double>()->default_value(1.0))
     (de::pitch.c_str(), value<double>()->default_value(1.0))
     (de::rate.c_str(), value<double>()->default_value(1.0))
@@ -469,6 +480,7 @@ configuration::configuration(int argc, char* argv[])
 
     // French speech options:
     (fr::engine.c_str(), value<string>())
+    (fr::priority.c_str(), value<int>()->default_value(0))
     (fr::volume.c_str(), value<double>()->default_value(1.0))
     (fr::pitch.c_str(), value<double>()->default_value(1.0))
     (fr::rate.c_str(), value<double>()->default_value(1.0))
@@ -479,6 +491,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Spanish speech options:
     (es::engine.c_str(), value<string>())
+    (es::priority.c_str(), value<int>()->default_value(0))
     (es::volume.c_str(), value<double>()->default_value(1.0))
     (es::pitch.c_str(), value<double>()->default_value(1.0))
     (es::rate.c_str(), value<double>()->default_value(1.0))
@@ -489,6 +502,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Portuguese speech options:
     (pt::engine.c_str(), value<string>())
+    (pt::priority.c_str(), value<int>()->default_value(0))
     (pt::volume.c_str(), value<double>()->default_value(1.0))
     (pt::pitch.c_str(), value<double>()->default_value(1.0))
     (pt::rate.c_str(), value<double>()->default_value(1.0))
@@ -499,6 +513,7 @@ configuration::configuration(int argc, char* argv[])
 
     // Italian speech options:
     (it::engine.c_str(), value<string>())
+    (it::priority.c_str(), value<int>()->default_value(0))
     (it::volume.c_str(), value<double>()->default_value(1.0))
     (it::pitch.c_str(), value<double>()->default_value(1.0))
     (it::rate.c_str(), value<double>()->default_value(1.0))
@@ -606,6 +621,12 @@ bool
 configuration::is_spd_backend(void)
 {
   return spd_backend;
+}
+
+bool
+configuration::operator()(const string& lang1, const string& lang2)
+{
+  return option_value[options::compose(lang1, option_name::priority)].as<int>() < option_value[options::compose(lang2, option_name::priority)].as<int>();
 }
 
 
