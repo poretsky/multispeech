@@ -74,7 +74,7 @@ namespace lang_id
   const char* const de = "de";
   const char* const fr = "fr";
   const char* const es = "es";
-  const char* const br = "br";
+  const char* const pt = "pt";
   const char* const it = "it";
   const char* const autodetect = "autodetect";
 };
@@ -245,19 +245,19 @@ namespace options
     const string caps_factor(compose(lang_id::es, option_name::caps_factor));
   };
 
-  // Brazilian speech section:
-  namespace br
+  // Portuguese speech section:
+  namespace pt
   {
-    const string engine(compose(lang_id::br, option_name::engine));
-    const string volume(compose(lang_id::br, option_name::volume));
-    const string pitch(compose(lang_id::br, option_name::pitch));
-    const string rate(compose(lang_id::br, option_name::rate));
-    const string acceleration(compose(lang_id::br, option_name::acceleration));
+    const string engine(compose(lang_id::pt, option_name::engine));
+    const string volume(compose(lang_id::pt, option_name::volume));
+    const string pitch(compose(lang_id::pt, option_name::pitch));
+    const string rate(compose(lang_id::pt, option_name::rate));
+    const string acceleration(compose(lang_id::pt, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::br, option_name::char_pitch));
-    const string char_rate(compose(lang_id::br, option_name::char_rate));
-    const string caps_factor(compose(lang_id::br, option_name::caps_factor));
+    const string char_pitch(compose(lang_id::pt, option_name::char_pitch));
+    const string char_rate(compose(lang_id::pt, option_name::char_rate));
+    const string caps_factor(compose(lang_id::pt, option_name::caps_factor));
   };
 
   // Italian speech section:
@@ -294,7 +294,7 @@ namespace options
     const string de(compose(speaker::espeak, lang_id::de));
     const string fr(compose(speaker::espeak, lang_id::fr));
     const string es(compose(speaker::espeak, lang_id::es));
-    const string br(compose(speaker::espeak, lang_id::br));
+    const string pt(compose(speaker::espeak, lang_id::pt));
     const string it(compose(speaker::espeak, lang_id::it));
 
     // Mbrola voices assignment:
@@ -304,7 +304,7 @@ namespace options
       const string de(compose(speaker::espeak, compose(speaker::mbrola, lang_id::de)));
       const string fr(compose(speaker::espeak, compose(speaker::mbrola, lang_id::fr)));
       const string es(compose(speaker::espeak, compose(speaker::mbrola, lang_id::es)));
-      const string br(compose(speaker::espeak, compose(speaker::mbrola, lang_id::br)));
+      const string pt(compose(speaker::espeak, compose(speaker::mbrola, lang_id::pt)));
       const string it(compose(speaker::espeak, compose(speaker::mbrola, lang_id::it)));
     };
   };
@@ -487,15 +487,15 @@ configuration::configuration(int argc, char* argv[])
     (es::char_rate.c_str(), value<double>()->default_value(1.0))
     (es::caps_factor.c_str(), value<double>()->default_value(1.2))
 
-    // Brazilian speech options:
-    (br::engine.c_str(), value<string>())
-    (br::volume.c_str(), value<double>()->default_value(1.0))
-    (br::pitch.c_str(), value<double>()->default_value(1.0))
-    (br::rate.c_str(), value<double>()->default_value(1.0))
-    (br::acceleration.c_str(), value<double>()->default_value(0.0))
-    (br::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (br::char_rate.c_str(), value<double>()->default_value(1.0))
-    (br::caps_factor.c_str(), value<double>()->default_value(1.2))
+    // Portuguese speech options:
+    (pt::engine.c_str(), value<string>())
+    (pt::volume.c_str(), value<double>()->default_value(1.0))
+    (pt::pitch.c_str(), value<double>()->default_value(1.0))
+    (pt::rate.c_str(), value<double>()->default_value(1.0))
+    (pt::acceleration.c_str(), value<double>()->default_value(0.0))
+    (pt::char_pitch.c_str(), value<double>()->default_value(1.0))
+    (pt::char_rate.c_str(), value<double>()->default_value(1.0))
+    (pt::caps_factor.c_str(), value<double>()->default_value(1.2))
 
     // Italian speech options:
     (it::engine.c_str(), value<string>())
@@ -520,7 +520,7 @@ configuration::configuration(int argc, char* argv[])
     (espeak::de.c_str(), value<string>()->default_value(lang_id::de))
     (espeak::fr.c_str(), value<string>()->default_value(lang_id::fr))
     (espeak::es.c_str(), value<string>()->default_value(lang_id::es))
-    (espeak::br.c_str(), value<string>()->default_value("pt"))
+    (espeak::pt.c_str(), value<string>()->default_value(lang_id::pt))
     (espeak::it.c_str(), value<string>()->default_value(lang_id::it))
 
     // Mbrola voices assignment:
@@ -528,7 +528,7 @@ configuration::configuration(int argc, char* argv[])
     (espeak::mbrola::de.c_str(), value<string>()->default_value("de6"))
     (espeak::mbrola::fr.c_str(), value<string>()->default_value("fr4"))
     (espeak::mbrola::es.c_str(), value<string>()->default_value("es1"))
-    (espeak::mbrola::br.c_str(), value<string>()->default_value("br3"))
+    (espeak::mbrola::pt.c_str(), value<string>()->default_value("br3"))
     (espeak::mbrola::it.c_str(), value<string>()->default_value("it3"))
 
     // Freephone backend options:

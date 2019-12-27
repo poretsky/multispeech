@@ -196,8 +196,8 @@ Relative volume level for speech output. It is 1.0 by default.
 .br
 This option specifies the language to speak. Allowed values are:
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
-\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqbr\(cq for
-Brazilian, \(oqit\(cq for Italian or \(oqautodetect\(cq for automatic
+\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqpt\(cq for
+Portuguese, \(oqit\(cq for Italian or \(oqautodetect\(cq for automatic
 detection from the text nature. By default language is
 autodetected. The language then may be changed on the fly during
 runtime by respective commands.
@@ -212,8 +212,8 @@ below about language related options.
 .SH "LANGUAGE RELATED SPEECH CONTROL OPTIONS"
 There is a separate section for each supported language named
 \(oqen\(cq for English, \(oqru\(cq for Russian, \(oqde\(cq for German,
-\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqbr\(cq for
-Brazilian and \(oqit\(cq for Italian. These sections contain quite the
+\(oqfr\(cq for French, \(oqes\(cq for Spanish, \(oqpt\(cq for
+Portuguese and \(oqit\(cq for Italian. These sections contain quite the
 same collection of options that affect speech on a specific
 language. Actual speech engine is chosen by the key option
 \(oqengine\(cq. This option has no default. If it is not set or set as
@@ -237,7 +237,7 @@ TTS engine specification. Allowed values are as follows:
 .br
 \fBespeak\fP \- all supported languages with Espeak TTS engine;
 .br
-\fBespeak.mbrola\fP \- English, German, French, Spanish, Brazilian and
+\fBespeak.mbrola\fP \- English, German, French, Spanish, Portuguese and
 Italian speech with Espeak and Mbrola voices;
 .br
 \fBuser\fP \- user defined TTS engine.
@@ -369,9 +369,9 @@ Spanish voice specification. By default \(oqes\(cq is
 suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
 alternatives.
 .TP
-.B br
+.B pt
 .br
-Brazilian voice specification. By default \(oqpt\(cq is
+Portuguese voice specification. By default \(oqpt\(cq is
 suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
 alternatives.
 .TP
@@ -406,9 +406,9 @@ French voice. By default \(oqfr4\(cq is used.
 .br
 Spanish voice. By default \(oqes1\(cq is used.
 .TP
-.B br
+.B pt
 .br
-Brazilian voice. By default \(oqbr3\(cq is used.
+Portuguese voice. By default \(oqbr3\(cq is used.
 .TP
 .B it
 .br
