@@ -242,6 +242,12 @@ Italian speech with Espeak and Mbrola voices;
 .br
 \fBuser\fP \- user defined TTS engine.
 .TP
+.B priority
+.br
+Language detection priority. Any integer value is allowed.
+During autodetection languages are probed in the ascending order
+of their priority values. It is 0 by default.
+.TP
 .B volume
 .br
 Specific voice loudness relatively to the general speech volume
