@@ -1,4 +1,4 @@
-// Brazilian.hpp -- Brazilian language description
+// Portuguese.hpp -- Portuguese language description
 /*
    Copyright (C) 2012 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -18,16 +18,16 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef MULTISPEECH_BRAZILIAN_HPP
-#define MULTISPEECH_BRAZILIAN_HPP
+#ifndef MULTISPEECH_PORTUGUESE_HPP
+#define MULTISPEECH_PORTUGUESE_HPP
 
 #include "language_description.hpp"
 
-class Brazilian: public language_description
+class Portuguese: public language_description
 {
 public:
   // Object construction:
-  Brazilian(void);
+  Portuguese(void);
 };
 
 #endif

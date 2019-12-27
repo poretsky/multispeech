@@ -399,12 +399,7 @@ spd_backend::do_list_voices(void)
             cout << "200-" << speechmaster.talker[i]->name;
             if (!speechmaster.talker[i]->voice.empty())
               cout << '-' << speechmaster.talker[i]->voice;
-            string lang(speechmaster.talker[i]->language->id());
-            cout << ' ';
-            if (lang != lang_id::br)
-              cout << lang << " none";
-            else cout << "pt br";
-            cout << endl;
+            cout << ' ' << speechmaster.talker[i]->language->id() << " none" << endl;
           }
       cout << "200 OK VOICE LIST SENT" << endl;
       communication_reset();

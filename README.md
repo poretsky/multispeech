@@ -11,8 +11,8 @@ as its backend module.
 Multispeech utilizes third party speech synthesis software to perform
 actual TTS transformation. Being capable to detect language by text
 nature it can automatically choose an appropriate TTS for each one.
-For the moment English, German, French, Italian, Spanish, Brazilian
-Portuguese and Russian languages are supported.
+For the moment English, German, French, Italian, Spanish, Portuguese
+and Russian languages are supported.
 
 To bootstrap the project do the following:
 
