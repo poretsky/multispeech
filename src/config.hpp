@@ -62,6 +62,7 @@ namespace speaker
 // Various option names used in sections:
 namespace option_name
 {
+  extern const char* const priority;
   extern const char* const engine;
   extern const char* const executable;
   extern const char* const command;
@@ -145,6 +146,7 @@ namespace options
   namespace en
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -160,6 +162,7 @@ namespace options
   namespace ru
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -175,6 +178,7 @@ namespace options
   namespace de
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -190,6 +194,7 @@ namespace options
   namespace fr
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -205,6 +210,7 @@ namespace options
   namespace es
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -220,6 +226,7 @@ namespace options
   namespace pt
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -235,6 +242,7 @@ namespace options
   namespace it
   {
     extern const std::string engine;
+    extern const std::string priority;
     extern const std::string volume;
     extern const std::string pitch;
     extern const std::string rate;
@@ -319,6 +327,9 @@ public:
 
   // Check if it is Speech Dispatcher backend:
   bool is_spd_backend(void);
+
+  // Language detection order:
+  bool operator()(const std::string& lang1, const std::string& lang2);
 
   // Options value container:
   boost::program_options::variables_map option_value;
