@@ -1,4 +1,4 @@
-// Brazilian.cpp -- Brazilian language implementation
+// Portuguese.cpp -- Portuguese language implementation
 /*
    Copyright (C) 2012 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -21,7 +21,7 @@
 #include <boost/assign.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "Brazilian.hpp"
+#include "Portuguese.hpp"
 
 #include "config.hpp"
 #include "strcvt.hpp"
@@ -34,8 +34,8 @@ using namespace boost::algorithm;
 
 // Object construction:
 
-Brazilian::Brazilian(void):
-  language_description(lang_id::br, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
+Portuguese::Portuguese(void):
+  language_description(lang_id::pt, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of

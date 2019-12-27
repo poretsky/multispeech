@@ -44,7 +44,7 @@ namespace lang_id
   extern const char* const de;
   extern const char* const fr;
   extern const char* const es;
-  extern const char* const br;
+  extern const char* const pt;
   extern const char* const it;
   extern const char* const autodetect;
 };
@@ -216,8 +216,8 @@ namespace options
     extern const std::string caps_factor;
   };
 
-  // Brazilian speech section:
-  namespace br
+  // Portuguese speech section:
+  namespace pt
   {
     extern const std::string engine;
     extern const std::string volume;
@@ -264,7 +264,7 @@ namespace options
     extern const std::string de;
     extern const std::string fr;
     extern const std::string es;
-    extern const std::string br;
+    extern const std::string pt;
     extern const std::string it;
 
     // Mbrola voices assignment:
@@ -274,7 +274,7 @@ namespace options
       extern const std::string de;
       extern const std::string fr;
       extern const std::string es;
-      extern const std::string br;
+      extern const std::string pt;
       extern const std::string it;
     };
   };

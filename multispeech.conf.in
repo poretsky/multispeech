@@ -150,7 +150,7 @@ dtk_voices = on
 #language = autodetect
 # This option specifies the language to speak. Allowed values are:
 # "en" for English, "ru" for Russian, "de" for German, "fr" for French,
-# "es" for Spanish, "br" for Brazilian, "it" for Italian or "autodetect"
+# "es" for Spanish, "pt" for Portuguese, "it" for Italian or "autodetect"
 # for automatic detection from the text nature.
 # By default language is autodetected.
 #
@@ -370,27 +370,27 @@ engine = espeak
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
 
-[br]
-# Brazilian language related speech options.
+[pt]
+# Portuguese language related speech options.
 #
 engine = espeak
-# Brazilian TTS engine. This option has no default. If it is not set
-# then Brazilian speech output will be unavailable in Multispeech.
+# Portuguese TTS engine. This option has no default. If it is not set
+# then Portuguese speech output will be unavailable in Multispeech.
 # The alternatives are as follows:
-# espeak -- Brazilian speech with Espeak TTS engine;
-# espeak.mbrola -- Brazilian speech with Espeak and Mbrola voices;
+# espeak -- Portuguese speech with Espeak TTS engine;
+# espeak.mbrola -- Portuguese speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
 #
 #volume = 1.0
-# Brazilian voice loudness relatively to the general speech volume
+# Portuguese voice loudness relatively to the general speech volume
 # level. It is 1.0 by default.
 #
 #pitch = 1.0
-# Brazilian voice pitch adjustment relative to it's normal level.
+# Portuguese voice pitch adjustment relative to it's normal level.
 # It is 1.0 by default. Greater value causes higher pitch.
 #
 #rate = 1.0
-# Relative speech rate for Brazilian voice. It is 1.0 by default.
+# Relative speech rate for Portuguese voice. It is 1.0 by default.
 # Higher value causes quicker speech.
 #
 #acceleration = 0
@@ -511,7 +511,7 @@ engine = espeak
 #de = de
 #fr = fr
 #es = es
-#br = pt
+#pt = pt
 #it = it
 # These are the default settings for supported languages.
 # Invoke "espeak --voices" to see all available alternatives.
@@ -537,8 +537,8 @@ engine = espeak
 #es = es1
 # Spanish voice. By default es1 is used.
 #
-#br = br3
-# Brazilian voice. By default br3 is used.
+#pt = br3
+# Portuguese voice. By default br3 is used.
 #
 #it = it3
 # Italian voice. By default it3 is used.
