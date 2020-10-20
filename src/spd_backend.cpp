@@ -172,7 +172,7 @@ spd_backend::start_queue(void)
 void
 spd_backend::index_mark(const string& name)
 {
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   if (state == pausing)
     soundmaster.stop();
   cout << "700-" << name << endl;
@@ -182,7 +182,7 @@ spd_backend::index_mark(const string& name)
 void
 spd_backend::queue_done(void)
 {
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   switch (state)
     {
     case speaking:
@@ -287,7 +287,7 @@ spd_backend::do_speak(void)
 {
   if (extra_data())
     {
-      mutex::scoped_lock lock(access);
+      boost::mutex::scoped_lock lock(access);
       if (can_speak())
         {
           string::const_iterator start = data.begin();
@@ -314,7 +314,7 @@ spd_backend::do_char(void)
     {
       if (single_line())
         {
-          mutex::scoped_lock lock(access);
+          boost::mutex::scoped_lock lock(access);
           if (can_speak())
             {
               soundmaster.enqueue(speechmaster.letter_task(intern_string(data, input_charset), &settings));
@@ -339,7 +339,7 @@ spd_backend::do_sound_icon(void)
     {
       if (single_line())
         {
-          mutex::scoped_lock lock(access);
+          boost::mutex::scoped_lock lock(access);
           if (can_speak())
             {
               if (sound_icons.empty())
@@ -364,7 +364,7 @@ spd_backend::do_stop(void)
 {
   if (state_ok())
     {
-      mutex::scoped_lock lock(access);
+      boost::mutex::scoped_lock lock(access);
       if (state != idle)
         state = stopping;
       soundmaster.stop();
@@ -378,7 +378,7 @@ spd_backend::do_pause(void)
 {
   if (state_ok())
     {
-      mutex::scoped_lock lock(access);
+      boost::mutex::scoped_lock lock(access);
       if (state == speaking)
         state = pausing;
       communication_reset();

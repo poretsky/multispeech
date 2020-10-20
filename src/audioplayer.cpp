@@ -36,7 +36,7 @@ using namespace portaudio;
 
 // Internal data:
 static const regex devname_pattern("\\((.+)\\)");
-static mutex control;
+static boost::mutex control;
 
 
 // Internal routines:
@@ -126,7 +126,7 @@ audioplayer::stop(void)
 {
   if (stream_is_active())
     {
-      mutex::scoped_lock lock(access);
+      boost::mutex::scoped_lock lock(access);
       playing = false;
       if (!(async && stream))
         abandon.notify_all();
@@ -145,7 +145,7 @@ audioplayer::active(void)
         thread::yield();
       close_stream();
     }
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   return playing;
 }
 
@@ -189,7 +189,7 @@ audioplayer::operator()(void)
       thread::yield();
     }
   source_release();
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   while (playing)
     if (!abandon.timed_wait(lock, posix_time::milliseconds(static_cast<int>((buffer_time - clock_time()) * 1000))))
       break;
@@ -207,7 +207,7 @@ audioplayer::operator()(void)
     blockingStream->abort();
   if (!blockingStream)
     {
-      mutex::scoped_lock exclusive(control);
+      boost::mutex::scoped_lock exclusive(control);
       paActive = false;
     }
   complete.notify_all();
@@ -225,7 +225,7 @@ audioplayer::bufsize(unsigned int rate)
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
-  mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock exclusive(control);
   volume_level = volume * general_volume;
   frame_size = channels;
   sampling_rate = static_cast<double>(rate);
@@ -294,7 +294,7 @@ audioplayer::clock_time(void)
 bool
 audioplayer::stream_is_active(void)
 {
-  mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock exclusive(control);
   if (stream)
     return stream->isOpen() && stream->isActive();
   return paStream && paActive;
@@ -303,14 +303,14 @@ audioplayer::stream_is_active(void)
 bool
 audioplayer::stream_is_over(void)
 {
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   return !playing;
 }
 
 void
 audioplayer::close_stream(void)
 {
-  mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock exclusive(control);
   if (stream)
     {
       if (stream->isOpen())
@@ -353,7 +353,7 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       if (!stream_time_available)
         buffer_time += static_cast<double>(numFrames) / sampling_rate;
     }
-  mutex::scoped_lock lock(access);
+  boost::mutex::scoped_lock lock(access);
   if (!playing)
     result = paAbort;
   return result;
@@ -364,7 +364,7 @@ audioplayer::release(void* handle)
 {
   audioplayer* player = static_cast<audioplayer*>(handle);
   player->source_release();
-  mutex::scoped_lock lock(player->access);
+  boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
   complete.notify_all();
 }
