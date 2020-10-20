@@ -30,11 +30,19 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 	LIBS="$LIBS $BOBCAT_LIBS"
 
 	dnl make sure all necessary header files exist
-	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/ofdstreambuf bobcat/syslogstream bobcat/cmdfinder], [
+	AC_CHECK_HEADERS([bobcat/ofdstreambuf bobcat/ofdbuf], [BOBCAT_HEADERS_OK=yes])
+	AC_CHECK_HEADERS([bobcat/string bobcat/redirector bobcat/fork bobcat/pipe bobcat/syslogstream bobcat/cmdfinder], [], [BOBCAT_HEADERS_OK=no])
+
+	if test "x$BOBCAT_HEADERS_OK" = "xyes" ; then
 
 		dnl make sure libbobcat is linkable
 		AC_LINK_IFELSE([
-			AC_LANG_PROGRAM([[#include <bobcat/ofdstreambuf>]],
+			AC_LANG_PROGRAM([[#if HAVE_BOBCAT_OFDSTREAMBUF
+					#include <bobcat/ofdstreambuf>
+					#elif HAVE_BOBCAT_OFDBUF
+					#include <bobcat/ofdbuf>
+					#define OFdStreambuf OFdBuf
+					#endif]],
 				[[FBB::OFdStreambuf stream(1);]])], [
 
 			dnl libbobcat found
@@ -42,8 +50,10 @@ AC_DEFUN([AM_PATH_BOBCAT], [
 			AC_SUBST(BOBCAT_LIBS)
 		], [
 			AC_MSG_FAILURE([invalid Bobcat installation])])
-	], [
-		AC_MSG_ERROR([incomplete or broken Bobcat installation])])
+
+	else
+		AC_MSG_ERROR([incomplete or broken Bobcat installation])
+	fi
 
 	CPPFLAGS="$saved_CPPFLAGS"
 	LIBS="$saved_LIBS"
