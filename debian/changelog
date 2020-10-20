@@ -1,3 +1,9 @@
+multispeech (3.1.0focal1) focal; urgency=low
+
+  * Distribution specific build.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 20 Oct 2020 06:38:46 +0300
+
 multispeech (3.1.0) unstable; urgency=low
 
   * Conventional language designation.
