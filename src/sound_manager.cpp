@@ -55,7 +55,7 @@ sound_manager::~sound_manager(void)
 void
 sound_manager::execute(const sound_task& task)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   if (!file_player::asynchronous)
     {
       if ((state == running) && !jobs->empty())
@@ -72,7 +72,7 @@ sound_manager::execute(const sound_task& task)
 void
 sound_manager::execute(const tone_task& task)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   if (!tone_generator::asynchronous)
     {
       if ((state == running) && !jobs->empty())
@@ -89,7 +89,7 @@ sound_manager::execute(const tone_task& task)
 void
 sound_manager::execute(const speech_task& task)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   if ((state == running) && !jobs->empty())
     business = speaking;
   if (!file_player::asynchronous)
@@ -104,7 +104,7 @@ void
 sound_manager::proceed(void)
 {
   {
-    recursive_mutex::scoped_lock lock(access);
+    boost::recursive_mutex::scoped_lock lock(access);
     if ((state == idle) && !jobs->empty())
       {
         state = running;
@@ -117,7 +117,7 @@ sound_manager::proceed(void)
 void
 sound_manager::suspend(void)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   mute();
   backup = jobs;
   jobs.reset(new jobs_queue);
@@ -130,7 +130,7 @@ sound_manager::resume(void)
 {
   if (backup.get() && !backup->empty())
     {
-      recursive_mutex::scoped_lock lock(access);
+      boost::recursive_mutex::scoped_lock lock(access);
       mute();
       jobs = backup;
       switch (state)
@@ -152,7 +152,7 @@ sound_manager::resume(void)
 void
 sound_manager::stop(void)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   mute();
   switch (state)
     {
@@ -170,7 +170,7 @@ sound_manager::stop(void)
 unsigned int
 sound_manager::capacity(void)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   return jobs->size();
 }
 
@@ -185,7 +185,7 @@ sound_manager::operator()(void)
 {
   while (state != dead)
     {
-      recursive_mutex::scoped_lock lock(access);
+      boost::recursive_mutex::scoped_lock lock(access);
       while (state == idle)
         event.wait(lock);
       if ((state == running) && !jobs->empty())
@@ -211,7 +211,7 @@ sound_manager::mute(void)
 void
 sound_manager::die(void)
 {
-  recursive_mutex::scoped_lock lock(access);
+  boost::recursive_mutex::scoped_lock lock(access);
   mute();
   state = dead;
   event.notify_one();
