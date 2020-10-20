@@ -33,11 +33,37 @@
 #include <queue>
 #include <stack>
 
+#include <sysconfig.h>
+
 #include <boost/scoped_ptr.hpp>
 
 #include <bobcat/fork>
 #include <bobcat/pipe>
+
+#if HAVE_BOBCAT_OFDSTREAMBUF
 #include <bobcat/ofdstreambuf>
+#elif HAVE_BOBCAT_OFDBUF
+#include <bobcat/ofdbuf>
+
+namespace FBB
+{
+
+  class OFdStreambuf: public OFdBuf
+  {
+  public:
+    OFdStreambuf(int fd, Mode mode):
+      OFdBuf(fd, mode)
+    {}
+
+    void open(int fd)
+    {
+      reset(fd);
+    }
+  };
+
+}
+#endif
+
 
 class pipeline:
   public std::ostream,
