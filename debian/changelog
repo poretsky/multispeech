@@ -1,3 +1,11 @@
+multispeech (3.1.0xenial1) xenial; urgency=low
+
+  * Conventional language designation.
+  * Language detection order control facility.
+  * Some minor fixes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 20 Oct 2020 06:27:16 +0300
+
 multispeech (3.0.0xenial1) xenial; urgency=low
 
   * Implemented Speech Dispatcher module functionality.
