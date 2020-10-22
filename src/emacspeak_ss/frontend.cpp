@@ -78,7 +78,7 @@ const frontend::Entry frontend::command_table[] =
 // Object construction:
 
 frontend::frontend(const configuration& conf):
-  server(conf),
+  speech_server(conf),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
@@ -105,7 +105,7 @@ frontend::get_command(void)
   getline(cin, s);
   if (cin.eof() || cin.fail())
     {
-      server::cmd = "exit";
+      speech_server::cmd = "exit";
       exit_status = EXIT_FAILURE;
     }
   else
@@ -128,7 +128,7 @@ frontend::get_command(void)
             break;
           }
       if (!disbalance)
-        server::cmd = extern_string(data, locale(""));
+        speech_server::cmd = extern_string(data, locale(""));
       else if ((disbalance < 0) || (disbalance > 1))
         communication_reset();
     }
@@ -141,9 +141,9 @@ bool
 frontend::perform_command(void)
 {
   bool done = true;
-  if (!server::cmd.empty())
+  if (!speech_server::cmd.empty())
     {
-      FunctionPtr action = findCmd(server::cmd);
+      FunctionPtr action = findCmd(speech_server::cmd);
       data = intern_string(String::trim(beyond()), input_charset);
       done = (this->*action)();
       communication_reset();
@@ -383,7 +383,7 @@ frontend::do_unknown(void)
   if (debug)
     {
       ostringstream message;
-      message << "Unrecognized command \"" << server::cmd << '\"' << flush;
+      message << "Unrecognized command \"" << speech_server::cmd << '\"' << flush;
       log << SyslogStream::debug << message.str() << endl;
       if (verbose)
         cerr << message.str() << endl;

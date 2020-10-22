@@ -1,4 +1,4 @@
-// server.hpp -- Speech server engine framework
+// speech_server.hpp -- Speech server engine framework
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -18,13 +18,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// The class server is designed as common ancestor for all speech server
-// interfaces. It comprises common functionality. The derived classes
-// should define actual command set and input method by implementing
-// virtual methods declared in private section.
+// The class speech_server is designed as common ancestor for all
+// speech server interfaces. It comprises common functionality.
+// The derived classes should define actual command set and input
+// method by implementing virtual methods declared in private section.
 
-#ifndef MULTISPEECH_SERVER_HPP
-#define MULTISPEECH_SERVER_HPP
+#ifndef MULTISPEECH_SPEECH_SERVER_HPP
+#define MULTISPEECH_SPEECH_SERVER_HPP
 
 #include <string>
 #include <sstream>
@@ -36,15 +36,15 @@
 #include "polyglot.hpp"
 #include "sound_manager.hpp"
 
-class server: private sound_manager::callback
+class speech_server: private sound_manager::callback
 {
 protected:
   // Object constructor:
-  server(const configuration& conf);
+  speech_server(const configuration& conf);
 
 public:
   // Destructor is made public to accommodate smart pointers:
-  virtual ~server(void);
+  virtual ~speech_server(void);
 
   // General execution loop:
   int run(void);
