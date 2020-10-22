@@ -3,15 +3,12 @@
 bin_PROGRAMS = multispeech
 
 AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
-	-I$(top_srcdir)/src/core @BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @SNDFILE_CPPFLAGS@ \
-	@PORTAUDIOCPP_CPPFLAGS@ @PULSEAUDIO_CPPFLAGS@ @SOUNDTOUCH_CXXFLAGS@
+	-I$(top_srcdir)/src/core @BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @PORTAUDIOCPP_CPPFLAGS@
 AM_CXXFLAGS = -Wall -Wno-sign-compare
 AM_LDFLAGS = -pthread @BOOST_LDFLAGS@
-multispeech_LDADD = $(top_srcdir)/src/core/libmultispeech.la @BOOST_FILESYSTEM_LIB@ @BOOST_IOSTREAMS_LIB@ \
-	@BOOST_PROGRAM_OPTIONS_LIB@ @BOOST_REGEX_LIB@ \
-	@BOOST_SYSTEM_LIB@ @BOOST_THREAD_LIB@ \
-	@BOBCAT_LIBS@ @SNDFILE_LIBS@ @PORTAUDIOCPP_LIBS@ \
-	@PULSEAUDIO_LIBS@ @SOUNDTOUCH_LIBS@ -lrt -lm
+multispeech_LDADD = $(top_srcdir)/src/core/libmultispeech.la \
+	@BOOST_REGEX_LIB@ @BOOST_SYSTEM_LIB@ @BOOST_PROGRAM_OPTIONS_LIB@ \
+	@BOBCAT_LIBS@ @PORTAUDIOCPP_LIBS@ -lrt -lm
 
 multispeech_SOURCES = multispeech.cpp frontend.cpp frontend.hpp \
 	inline_parser.cpp inline_parser.hpp \
