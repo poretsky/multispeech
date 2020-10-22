@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
   try
     {
-      configuration conf(argc, argv);
+      configuration conf(argc, argv, true);
 
       if (speech_server::verbose)
         cerr << "Initializing audio system..." << endl;

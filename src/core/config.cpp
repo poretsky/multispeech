@@ -355,16 +355,14 @@ namespace options
 
 string configuration::stage;
 
-configuration::configuration(int argc, char* argv[])
+configuration::configuration(int argc, char* argv[], bool is_spd_backend):
+  spd_backend(is_spd_backend)
 {
   options_description conf, cl_desc("Available options");
   positional_options_description args;
   variables_map cl_opt;
   bool noconf = true;
   ostringstream info;
-
-  // Check invocation type:
-  spd_backend = (basename(path(argv[0])) == "sd_multispeech");
 
   // Declare command line options:
   if (spd_backend)
@@ -616,12 +614,6 @@ configuration::configuration(int argc, char* argv[])
 
 
 // Public members:
-
-bool
-configuration::is_spd_backend(void)
-{
-  return spd_backend;
-}
 
 bool
 configuration::operator()(const string& lang1, const string& lang2)
