@@ -3,9 +3,12 @@
 AC_PREREQ(2.61)
 
 AC_INIT([Multispeech], [3.1.0buster1])
-AC_CONFIG_SRCDIR([src/multispeech.cpp])
+AC_CONFIG_SRCDIR([src/core/server.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
-                            AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign])
+
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 AC_SUBST(VERSION)
 
@@ -79,5 +82,5 @@ then AC_MSG_ERROR([Boost thread support is mandatory])
 fi
 
 # Output results.
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/core/Makefile src/emacspeak_ss/Makefile src/ssip/Makefile doc/Makefile])
 AC_OUTPUT
