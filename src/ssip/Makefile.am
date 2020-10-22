@@ -13,7 +13,7 @@ sd_multispeech_LDADD = $(top_srcdir)/src/core/libmultispeech.la \
 	@BOBCAT_LIBS@ @PORTAUDIOCPP_LIBS@ -lrt -lm
 
 sd_multispeech_SOURCES = sd_multispeech.cpp \
-	spd_backend.cpp spd_backend.hpp \
+	frontend.cpp frontend.hpp \
 	spd_settings.cpp spd_settings.hpp
 
 MAINTAINERCLEANFILES = Makefile.in

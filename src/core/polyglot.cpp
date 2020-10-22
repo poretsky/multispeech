@@ -27,7 +27,7 @@
 
 #include "polyglot.hpp"
 
-#include "server.hpp"
+#include "speech_server.hpp"
 #include "freephone.hpp"
 #include "ru_tts.hpp"
 #include "espeak.hpp"
@@ -166,22 +166,22 @@ polyglot::language(const string& id)
             lang = i;
             autolanguage = false;
           }
-        else if (server::debug)
+        else if (speech_server::debug)
           {
             string message("Language \"" + id + "\" is not configured");
-            server::log << SyslogStream::debug << message << endl;
-            if (server::verbose)
+            speech_server::log << SyslogStream::debug << message << endl;
+            if (speech_server::verbose)
               cerr << message << endl;
           }
         return;
       }
   if (id == lang_id::autodetect)
     autolanguage = true;
-  else if (server::debug)
+  else if (speech_server::debug)
     {
       string message("Unknown language \"" + id + '\"');
-      server::log << SyslogStream::debug << message << endl;
-      if (server::verbose)
+      speech_server::log << SyslogStream::debug << message << endl;
+      if (speech_server::verbose)
         cerr << message << endl;
     }
 }

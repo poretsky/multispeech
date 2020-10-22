@@ -1,4 +1,4 @@
-// spd_backend.cpp -- Speech Dispatcher module interface implementation
+// frontend.cpp -- Speech Dispatcher module interface implementation
 /*
    Copyright (C) 2019 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -29,7 +29,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "spd_backend.hpp"
+#include "frontend.hpp"
 
 #include "strcvt.hpp"
 #include "config.hpp"
@@ -42,32 +42,32 @@ using namespace boost::filesystem;
 
 
 // Common message:
-const string spd_backend::bad_syntax("302 ERROR BAD SYNTAX");
+const string frontend::bad_syntax("302 ERROR BAD SYNTAX");
 
 // Speech Dispatcher module commands:
-const spd_backend::Entry spd_backend::command_table[] =
+const frontend::Entry frontend::command_table[] =
   {
-    Entry("SPEAK", &spd_backend::do_speak),
-    Entry("SOUND_ICON", &spd_backend::do_sound_icon),
-    Entry("CHAR", &spd_backend::do_char),
-    Entry("KEY", &spd_backend::do_key),
-    Entry("STOP", &spd_backend::do_stop),
-    Entry("PAUSE", &spd_backend::do_pause),
-    Entry("LIST", &spd_backend::do_list_voices),
-    Entry("SET", &spd_backend::do_set),
-    Entry("AUDIO", &spd_backend::do_audio),
-    Entry("LOGLEVEL", &spd_backend::do_loglevel),
-    Entry("DEBUG", &spd_backend::do_debug),
-    Entry("QUIT", &spd_backend::do_quit),
-    Entry("", &spd_backend::do_unknown)
+    Entry("SPEAK", &frontend::do_speak),
+    Entry("SOUND_ICON", &frontend::do_sound_icon),
+    Entry("CHAR", &frontend::do_char),
+    Entry("KEY", &frontend::do_key),
+    Entry("STOP", &frontend::do_stop),
+    Entry("PAUSE", &frontend::do_pause),
+    Entry("LIST", &frontend::do_list_voices),
+    Entry("SET", &frontend::do_set),
+    Entry("AUDIO", &frontend::do_audio),
+    Entry("LOGLEVEL", &frontend::do_loglevel),
+    Entry("DEBUG", &frontend::do_debug),
+    Entry("QUIT", &frontend::do_quit),
+    Entry("", &frontend::do_unknown)
   };
 static const string cmd_init("INIT");
 
 
 // Object instantiation:
 
-spd_backend*
-spd_backend::instantiate(const configuration& conf)
+frontend*
+frontend::instantiate(const configuration& conf)
 {
   string cmd;
   getline(cin, cmd);
@@ -75,7 +75,7 @@ spd_backend::instantiate(const configuration& conf)
     throw logic_error("Broken pipe when reading INIT");
   if (cmd_init != cmd)
     throw logic_error("Wrong communication from module client: didn't call INIT");
-  spd_backend* instance = new spd_backend(conf);
+  frontend* instance = new frontend(conf);
   cout << "299-" << package::name << ": Initialized successfully." << endl;
   cout << "299 OK LOADED SUCCESSFULLY" << endl;
   return instance;
@@ -84,8 +84,8 @@ spd_backend::instantiate(const configuration& conf)
 
 // Object construction:
 
-spd_backend::spd_backend(const configuration& conf):
-  server(conf),
+frontend::frontend(const configuration& conf):
+  speech_server(conf),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
@@ -111,9 +111,9 @@ spd_backend::spd_backend(const configuration& conf):
 // Prepare to the next command reception cycle:
 
 void
-spd_backend::communication_reset(void)
+frontend::communication_reset(void)
 {
-  server::communication_reset();
+  speech_server::communication_reset();
   data.erase();
   lines = 0;
 }
@@ -122,7 +122,7 @@ spd_backend::communication_reset(void)
 // Extra data reception control:
 
 bool
-spd_backend::extra_data(const char* msg)
+frontend::extra_data(const char* msg)
 {
   if (state_ok())
     {
@@ -137,7 +137,7 @@ spd_backend::extra_data(const char* msg)
 // State checking:
 
 bool
-spd_backend::can_speak(void)
+frontend::can_speak(void)
 {
   bool ok = (state == idle) && !data.empty();
   if (ok)
@@ -147,7 +147,7 @@ spd_backend::can_speak(void)
 }
 
 bool
-spd_backend::single_line(void)
+frontend::single_line(void)
 {
   if (lines < 2)
     return true;
@@ -159,7 +159,7 @@ spd_backend::single_line(void)
 // Start queue execution:
 
 void
-spd_backend::start_queue(void)
+frontend::start_queue(void)
 {
   state = speaking;
   soundmaster.proceed();
@@ -170,7 +170,7 @@ spd_backend::start_queue(void)
 // Events serving:
 
 void
-spd_backend::index_mark(const string& name)
+frontend::index_mark(const string& name)
 {
   boost::mutex::scoped_lock lock(access);
   if (state == pausing)
@@ -180,7 +180,7 @@ spd_backend::index_mark(const string& name)
 }
 
 void
-spd_backend::queue_done(void)
+frontend::queue_done(void)
 {
   boost::mutex::scoped_lock lock(access);
   switch (state)
@@ -204,18 +204,18 @@ spd_backend::queue_done(void)
 // Input method:
 
 void
-spd_backend::get_command(void)
+frontend::get_command(void)
 {
   string s;
   getline(cin, s);
   if (cin.eof() || cin.fail())
     {
-      if (server::cmd.empty())
-        server::cmd = "QUIT";
+      if (speech_server::cmd.empty())
+        speech_server::cmd = "QUIT";
       exit_status = EXIT_FAILURE;
     }
-  else if (server::cmd.empty())
-    server::cmd = s;
+  else if (speech_server::cmd.empty())
+    speech_server::cmd = s;
   else if (s == ".")
     {
       if (lines)
@@ -240,7 +240,7 @@ spd_backend::get_command(void)
 // Place text chunk into the speech queue:
 
 void
-spd_backend::enqueue_text_chunk(string::const_iterator start, string::const_iterator end)
+frontend::enqueue_text_chunk(string::const_iterator start, string::const_iterator end)
 {
   if (start != end)
     {
@@ -256,13 +256,13 @@ spd_backend::enqueue_text_chunk(string::const_iterator start, string::const_iter
 // Command set and syntax implementation:
 
 bool
-spd_backend::perform_command(void)
+frontend::perform_command(void)
 {
-  return (this->*findCmd(server::cmd))();
+  return (this->*findCmd(speech_server::cmd))();
 }
 
 bool
-spd_backend::state_ok(void)
+frontend::state_ok(void)
 {
   if (exit_status != EXIT_SUCCESS)
     {
@@ -275,7 +275,7 @@ spd_backend::state_ok(void)
 }
 
 bool
-spd_backend::do_quit(void)
+frontend::do_quit(void)
 {
   if (exit_status == EXIT_SUCCESS)
     cout << "210 OK QUIT" << endl;
@@ -283,7 +283,7 @@ spd_backend::do_quit(void)
 }
 
 bool
-spd_backend::do_speak(void)
+frontend::do_speak(void)
 {
   if (extra_data())
     {
@@ -308,7 +308,7 @@ spd_backend::do_speak(void)
 }
 
 bool
-spd_backend::do_char(void)
+frontend::do_char(void)
 {
   if (extra_data())
     {
@@ -327,13 +327,13 @@ spd_backend::do_char(void)
 }
 
 bool
-spd_backend::do_key(void)
+frontend::do_key(void)
 {
   return do_char();
 }
 
 bool
-spd_backend::do_sound_icon(void)
+frontend::do_sound_icon(void)
 {
   if (extra_data())
     {
@@ -360,7 +360,7 @@ spd_backend::do_sound_icon(void)
 }
 
 bool
-spd_backend::do_stop(void)
+frontend::do_stop(void)
 {
   if (state_ok())
     {
@@ -374,7 +374,7 @@ spd_backend::do_stop(void)
 }
 
 bool
-spd_backend::do_pause(void)
+frontend::do_pause(void)
 {
   if (state_ok())
     {
@@ -387,7 +387,7 @@ spd_backend::do_pause(void)
 }
 
 bool
-spd_backend::do_list_voices(void)
+frontend::do_list_voices(void)
 {
   if (beyond() != "VOICES")
     return do_unknown();
@@ -408,7 +408,7 @@ spd_backend::do_list_voices(void)
 }
 
 bool
-spd_backend::do_set(void)
+frontend::do_set(void)
 {
   if (extra_data("203 OK RECEIVING SETTINGS"))
     {
@@ -419,7 +419,7 @@ spd_backend::do_set(void)
 }
 
 bool
-spd_backend::do_audio(void)
+frontend::do_audio(void)
 {
   if (extra_data("207 OK RECEIVING AUDIO SETTINGS"))
     {
@@ -430,7 +430,7 @@ spd_backend::do_audio(void)
 }
 
 bool
-spd_backend::do_loglevel(void)
+frontend::do_loglevel(void)
 {
   if (extra_data("207 OK RECEIVING LOGLEVEL SETTINGS"))
     {
@@ -441,7 +441,7 @@ spd_backend::do_loglevel(void)
 }
 
 bool
-spd_backend::do_debug(void)
+frontend::do_debug(void)
 {
   if (state_ok())
     {
@@ -474,7 +474,7 @@ spd_backend::do_debug(void)
 }
 
 bool
-spd_backend::do_unknown(void)
+frontend::do_unknown(void)
 {
   if (state_ok())
     {
