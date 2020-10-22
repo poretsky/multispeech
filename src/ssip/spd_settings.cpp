@@ -27,7 +27,7 @@
 #include "spd_settings.hpp"
 
 #include "config.hpp"
-#include "spd_backend.hpp"
+#include "frontend.hpp"
 
 using namespace std;
 using namespace boost;
@@ -85,7 +85,7 @@ spd_settings::apply(const string& message)
       FunctionPtr action = findCmd(option);
       if (beyond().empty())
         {
-          cout << spd_backend::bad_syntax << endl;
+          cout << frontend::bad_syntax << endl;
           state.restore();
           return;
         }

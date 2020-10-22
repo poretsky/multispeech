@@ -1,4 +1,4 @@
-// multispeech.cpp -- Multilingual speech server
+// sd_multispeech.cpp -- Multilingual speech server
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
 
@@ -31,8 +31,8 @@
 #include <portaudiocpp/PortAudioCpp.hxx>
 
 #include "config.hpp"
-#include "server.hpp"
-#include "spd_backend.hpp"
+#include "speech_server.hpp"
+#include "frontend.hpp"
 
 using namespace std;
 using namespace boost;
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 {
   unsetenv("DISPLAY");
 
-  scoped_ptr<server> multispeech;
+  scoped_ptr<speech_server> multispeech;
   AutoSystem audio(false);
   int efd = dup(STDERR_FILENO);
 
@@ -51,12 +51,12 @@ int main(int argc, char* argv[])
     {
       configuration conf(argc, argv);
 
-      if (server::verbose)
+      if (speech_server::verbose)
         cerr << "Initializing audio system..." << endl;
       audio.initialize();
-      if (server::verbose)
+      if (speech_server::verbose)
         cerr << "Audio system initialization complete." << endl;
-      multispeech.reset(spd_backend::instantiate(conf));
+      multispeech.reset(frontend::instantiate(conf));
     }
   catch (const string& info)
     {
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     }
   catch (const configuration::error& error)
     {
-      server::log << SyslogStream::err << error.what() << endl;
+      speech_server::log << SyslogStream::err << error.what() << endl;
       if (efd >= 0)
         {
           dup2(efd, STDERR_FILENO);
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     }
   catch (const std::exception& error)
     {
-      server::log << SyslogStream::err << error.what() << configuration::stage << endl;
+      speech_server::log << SyslogStream::err << error.what() << configuration::stage << endl;
       if (efd >= 0)
         {
           dup2(efd, STDERR_FILENO);
