@@ -1,4 +1,4 @@
-// server.cpp -- General speech server functionality implementation
+// speech_server.cpp -- General speech server functionality implementation
 /*
    Copyright (C) 2008 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -27,7 +27,7 @@
 #include <iostream>
 #include <exception>
 
-#include "server.hpp"
+#include "speech_server.hpp"
 
 #include "iconv_codecvt.hpp"
 #include "config.hpp"
@@ -38,14 +38,14 @@ using namespace FBB;
 
 
 // Open logging stream:
-SyslogStream server::log(package::name, NOTICE, USER, LOG_PID);
-bool server::verbose = false;
-bool server::debug = false;
+SyslogStream speech_server::log(package::name, NOTICE, USER, LOG_PID);
+bool speech_server::verbose = false;
+bool speech_server::debug = false;
 
 
 // Construct / destroy:
 
-server::server(const configuration& conf):
+speech_server::speech_server(const configuration& conf):
   input_charset((conf.option_value.count(options::frontend::charset) &&
                  !conf.option_value[options::frontend::charset].as<string>().empty()) ?
                 locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
@@ -56,7 +56,7 @@ server::server(const configuration& conf):
 {
 }
 
-server::~server(void)
+speech_server::~speech_server(void)
 {
 }
 
@@ -64,14 +64,14 @@ server::~server(void)
 // Protected methods:
 
 void
-server::communication_reset(void)
+speech_server::communication_reset(void)
 {
   cmd.erase();
   accumulator.str("");
 }
 
 bool
-server::do_nothing(void)
+speech_server::do_nothing(void)
 {
   return true;
 }
@@ -80,7 +80,7 @@ server::do_nothing(void)
 // Public methods:
 
 int
-server::run(void)
+speech_server::run(void)
 {
   do
     try
@@ -100,7 +100,7 @@ server::run(void)
 }
 
 bool
-server::redirect_stderr(const char* file)
+speech_server::redirect_stderr(const char* file)
 {
   int fd = file ?
     open(file, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR) :
@@ -118,11 +118,11 @@ server::redirect_stderr(const char* file)
 // Private methods:
 
 void
-server::index_mark(const string& name)
+speech_server::index_mark(const string& name)
 {
 }
 
 void
-server::queue_done(void)
+speech_server::queue_done(void)
 {
 }
