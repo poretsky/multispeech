@@ -25,7 +25,8 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	file_player.cpp file_player.hpp \
 	tone_generator.cpp tone_generator.hpp \
 	sound_manager.cpp sound_manager.hpp \
-	pipeline.cpp pipeline.hpp server.cpp server.hpp \
+	pipeline.cpp pipeline.hpp \
+	speech_server.cpp speech_server.hpp \
 	speech_engine.cpp speech_engine.hpp \
 	polyglot.cpp polyglot.hpp \
 	English.cpp English.hpp Russian.cpp Russian.hpp \
