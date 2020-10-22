@@ -44,7 +44,7 @@ namespace package
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 #include "speech_engine.hpp"
-#include "server.hpp"
+#include "speech_server.hpp"
 
 using namespace std;
 using namespace boost::filesystem;
@@ -395,8 +395,8 @@ configuration::configuration(int argc, char* argv[])
   if (cl_opt.count("help"))
     info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
   if (cl_opt.count("verbose"))
-    server::verbose = true;
-  else server::redirect_stderr();
+    speech_server::verbose = true;
+  else speech_server::redirect_stderr();
   if (cl_opt.count("list-devices"))
     {
       AutoSystem audio;
@@ -410,7 +410,7 @@ configuration::configuration(int argc, char* argv[])
   if (!info.str().empty())
     throw info.str();
   if (cl_opt.count("debug"))
-    server::debug = true;
+    speech_server::debug = true;
 
   // Declare configuration options:
   using namespace options;

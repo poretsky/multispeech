@@ -1,4 +1,4 @@
-// spd_backend.hpp -- Speech Dispatcher module interactions
+// frontend.hpp -- Speech Dispatcher module interactions
 /*
    Copyright (C) 2019 Igor B. Poretsky <poretsky@mlbox.ru>
    This file is part of Multispeech.
@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef MULTISPEECH_SPD_BACKEND_HPP
-#define MULTISPEECH_SPD_BACKEND_HPP
+#ifndef MULTISPEECH_SSIP_FRONTEND_HPP
+#define MULTISPEECH_SSIP_FRONTEND_HPP
 
 #include <string>
 
@@ -28,23 +28,23 @@
 
 #include <bobcat/cmdfinder>
 
-#include "server.hpp"
+#include "speech_server.hpp"
 #include "text_filter.hpp"
 #include "spd_settings.hpp"
 
-class spd_backend:
-  public server,
-  private FBB::CmdFinder<bool (spd_backend::*)(void)>
+class frontend:
+  public speech_server,
+  private FBB::CmdFinder<bool (frontend::*)(void)>
 {
 public:
   // Object instantiation:
-  static spd_backend* instantiate(const configuration& conf);
+  static frontend* instantiate(const configuration& conf);
 
   // Common message:
   static const std::string bad_syntax;
 
 private:
-  // Server states:
+  // Speech_Server states:
   enum status
   {
     idle,
@@ -54,7 +54,7 @@ private:
   };
 
   // Construct the object:
-  spd_backend(const configuration& conf);
+  frontend(const configuration& conf);
 
   // Clear temporary data in order to start command reception cycle:
   void communication_reset(void);

@@ -27,11 +27,11 @@
 
 #include <bobcat/cmdfinder>
 
-#include "server.hpp"
+#include "speech_server.hpp"
 #include "inline_parser.hpp"
 
 class frontend:
-  public server,
+  public speech_server,
   private FBB::CmdFinder<bool (frontend::*)(void)>
 {
 public:
