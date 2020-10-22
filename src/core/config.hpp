@@ -323,10 +323,7 @@ class configuration
 {
 public:
   // The constructor reads and parses configuration by the way
-  configuration(int argc, char* argv[]);
-
-  // Check if it is Speech Dispatcher backend:
-  bool is_spd_backend(void);
+  configuration(int argc, char* argv[], bool is_spd_backend = false);
 
   // Language detection order:
   bool operator()(const std::string& lang1, const std::string& lang2);
