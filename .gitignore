@@ -11,6 +11,8 @@ COPYING
 depcomp
 INSTALL
 install-sh
+libtool
+ltmain.sh
 Makefile
 Makefile.in
 missing

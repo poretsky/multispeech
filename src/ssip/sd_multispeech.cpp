@@ -32,7 +32,6 @@
 
 #include "config.hpp"
 #include "server.hpp"
-#include "frontend.hpp"
 #include "spd_backend.hpp"
 
 using namespace std;
@@ -47,7 +46,6 @@ int main(int argc, char* argv[])
   scoped_ptr<server> multispeech;
   AutoSystem audio(false);
   int efd = dup(STDERR_FILENO);
-  bool spd = false;
 
   try
     {
@@ -58,10 +56,7 @@ int main(int argc, char* argv[])
       audio.initialize();
       if (server::verbose)
         cerr << "Audio system initialization complete." << endl;
-      spd = conf.is_spd_backend();
-      multispeech.reset(spd ?
-                        static_cast<server*>(spd_backend::instantiate(conf)) :
-                        static_cast<server*>(new frontend(conf)));
+      multispeech.reset(spd_backend::instantiate(conf));
     }
   catch (const string& info)
     {
@@ -80,12 +75,8 @@ int main(int argc, char* argv[])
         }
       string msg("ERROR: ");
       msg += error.what();
-      if (spd)
-        {
-          cout << "399-" << msg << endl;
-          cout << "399 ERR CANT INIT MODULE" << endl;
-        }
-      else cerr << msg << endl;
+      cout << "399-" << msg << endl;
+      cout << "399 ERR CANT INIT MODULE" << endl;
       return EXIT_FAILURE;
     }
   catch (const std::exception& error)
