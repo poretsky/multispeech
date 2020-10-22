@@ -29,7 +29,7 @@
 
 #include "ru_tts.hpp"
 
-#include "server.hpp"
+#include "speech_server.hpp"
 
 using namespace std;
 using namespace boost;
@@ -55,8 +55,8 @@ ru_tts::ru_tts(const configuration& conf):
             cmd += " -s " + lexicon.generic_string();
           else
             {
-              server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
-              if (server::verbose)
+              speech_server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
+              if (speech_server::verbose)
                 cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
