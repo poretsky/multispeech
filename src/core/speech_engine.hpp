@@ -175,12 +175,12 @@ private:
   std::list<std::string> command_patterns;
 
   // Construct speech task according to specified parameters:
-  speech_task text_task(const std::wstring& s,
+  speech_task wrap_text(const std::wstring& s,
                         double volume, double rate,
                         double pitch, double deviation,
                         bool use_translation = false,
                         bool allpuncts = false);
-  speech_task letter_task(std::wstring s,
+  speech_task wrap_letter(std::wstring s,
                           double volume, double rate,
                           double pitch, double deviation);
 
