@@ -33,6 +33,7 @@ fi
 # Language choice.
 AC_LANG([C++])
 AX_CXX_COMPILE_STDCXX_11
+AX_CHECK_VSCRIPT
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T
