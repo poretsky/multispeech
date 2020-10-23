@@ -13,6 +13,10 @@ libmultispeech_la_LIBADD = @BOOST_FILESYSTEM_LIB@ @BOOST_IOSTREAMS_LIB@ \
 	@BOBCAT_LIBS@ @SNDFILE_LIBS@ @PORTAUDIOCPP_LIBS@ \
 	@PULSEAUDIO_LIBS@ @SOUNDTOUCH_LIBS@ -lrt -lm
 
+if HAVE_VSCRIPT
+libmultispeech_la_LDFLAGS = $(VSCRIPT_LDFLAGS),multispeech.vscript
+endif
+
 libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	voice_params.cpp voice_params.hpp \
 	iconv_codecvt.cpp iconv_codecvt.hpp strcvt.cpp strcvt.hpp \
