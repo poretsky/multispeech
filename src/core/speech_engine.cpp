@@ -179,7 +179,7 @@ speech_engine::space_special_chars_mode(bool value)
 speech_task
 speech_engine::text_task(const wstring& s, bool use_translation)
 {
-  return text_task(s, -1.0, -1.0, -1.0, -1.0, use_translation);
+  return wrap_text(s, -1.0, -1.0, -1.0, -1.0, use_translation);
 }
 
 speech_task
@@ -188,19 +188,19 @@ speech_engine::text_task(const wstring& s,
                          bool use_translation,
                          bool allpuncts)
 {
-  return text_task(s, voice->volume, voice->rate, voice->pitch, voice->deviation, use_translation, allpuncts);
+  return wrap_text(s, voice->volume, voice->rate, voice->pitch, voice->deviation, use_translation, allpuncts);
 }
 
 speech_task
 speech_engine::letter_task(wstring s)
 {
-  return letter_task(s, -1.0, persistent_char_rate, persistent_char_pitch, 0.0);
+  return wrap_letter(s, -1.0, persistent_char_rate, persistent_char_pitch, 0.0);
 }
 
 speech_task
 speech_engine::letter_task(wstring s, voice_params* voice)
 {
-  return letter_task(s, voice->volume, voice->rate, voice->pitch, voice->deviation);
+  return wrap_letter(s, voice->volume, voice->rate, voice->pitch, voice->deviation);
 }
 
 speech_task
@@ -230,7 +230,7 @@ speech_engine::sampling(unsigned int value)
 // Private methods:
 
 speech_task
-speech_engine::text_task(const wstring& s,
+speech_engine::wrap_text(const wstring& s,
                          double volume, double rate,
                          double pitch, double deviation,
                          bool use_translation,
@@ -296,7 +296,7 @@ speech_engine::text_task(const wstring& s,
 }
 
 speech_task
-speech_engine::letter_task(wstring s,
+speech_engine::wrap_letter(wstring s,
                            double volume, double rate,
                            double pitch, double deviation)
 {
@@ -306,5 +306,5 @@ speech_engine::letter_task(wstring s,
         pitch *= caps_factor;
       else s[0] = toupper(s[0], locale(""));
     }
-  return text_task(s, volume, rate * char_rate, pitch * char_pitch, deviation, true, true);
+  return wrap_text(s, volume, rate * char_rate, pitch * char_pitch, deviation, true, true);
 }
