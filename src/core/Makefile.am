@@ -41,4 +41,5 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
 	user_tts.cpp user_tts.hpp
 
+EXTRA_DIST = multispeech.vscript
 MAINTAINERCLEANFILES = Makefile.in
