@@ -1,3 +1,12 @@
+multispeech (4.0.0trusty1) trusty; urgency=low
+
+  * Core functionality is implemented as shared library.
+  * Separate executable for Speech Dispatcher backend.
+  * Separate packages for Emacspeak speech server, Speech Dispatcher
+    backend module, and common shared library.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 24 Oct 2020 16:25:46 +0300
+
 multispeech (3.1.0trusty1) trusty; urgency=low
 
   * Conventional language designation.
