@@ -1,3 +1,9 @@
+multispeech (4.0.1stretch1) stretch; urgency=low
+
+  * Package upgrade fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Oct 2020 02:03:21 +0300
+
 multispeech (4.0.0stretch1) stretch; urgency=low
 
   * Core functionality is implemented as shared library.
