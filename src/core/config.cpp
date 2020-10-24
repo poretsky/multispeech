@@ -18,7 +18,10 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#ifndef MULTISPEECH_SYSCONFIG_H
+#define MULTISPEECH_SYSCONFIG_H
 #include <sysconfig.h>
+#endif
 
 // Package configuration data:
 namespace package
