@@ -1,3 +1,9 @@
+multispeech (4.0.1jessie1) jessie; urgency=low
+
+  * Package upgrade fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Oct 2020 02:00:55 +0300
+
 multispeech (4.0.0jessie1) jessie; urgency=low
 
   * Core functionality is implemented as shared library.
