@@ -10,9 +10,9 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak (>= 1.44.01), espeak-data (>= 1.44.01)
 Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
-Enhances: emacspeak, speech-dispatcher
-Description: Multilingual speech server for emacspeak
- This speech server provides multilingual speech output for emacspeak
+Enhances: emacspeak
+Description: Multilingual speech server for Emacspeak
+ This speech server provides multilingual speech output for Emacspeak
  using software TTS engines such as mbrola, espeak, ru_tts, etc.
  At the moment English, German, French, Italian, Spanish,
  Portuguese and Russian languages are supported.
@@ -22,8 +22,35 @@ Description: Multilingual speech server for emacspeak
   - easy adaptation to various speech engines;
   - language autodetection capability;
   - online voice control means.
+
+Package: sd-multispeech
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: espeak, espeak-data
+Suggests: speech-dispatcher, mbrola, mbrola-en1, freephone, ru-tts
+Enhances: speech-dispatcher
+Description: Multilingual Speech Dispatcher backend
+ This module provides multilingual speech output for Speech Dispatcher
+ using software TTS engines such as mbrola, espeak, ru_tts, etc.
+ It is based on the Multispeech speech server.
+ At the moment English, German, French, Italian, Spanish,
+ Portuguese and Russian languages are supported.
  .
+ The most prominent features are as follows:
+  - flexible configuration;
+  - easy adaptation to various speech engines;
+  - language autodetection capability;
+  - online voice control means.
+
+Package: libmultispeech0
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: multispeech | sd-multispeech
+Description: Multilingual speech server
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, but being capable to work with Speech Dispatcher
  as its backend module, it can provide multilingual speech output
  for Orca screenreader as well.
+ .
+ This package provides common shared library and main
+ configuration file used by all Multispeech implementations.
