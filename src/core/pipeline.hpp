@@ -33,7 +33,18 @@
 #include <queue>
 #include <stack>
 
+#ifndef MULTISPEECH_SYSCONFIG_H
+#define MULTISPEECH_SYSCONFIG_H
+#undef PACKAGE
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+#undef VERSION
 #include <sysconfig.h>
+#endif
 
 #include <boost/scoped_ptr.hpp>
 
