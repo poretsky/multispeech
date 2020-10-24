@@ -1,5 +1,5 @@
 #! /bin/sh
-# postinst script for multispeech
+# postinst script for sd-multispeech
 #
 # see: dh_installdeb(1)
 
@@ -41,9 +41,17 @@ esac
 #DEBHELPER#
 
 
-if pidof multispeech >/dev/null; then
-    echo "Please restart all running multispeech instances"
-    echo "for changes to take effect."
+SPD=`pidof speech-dispatcher`
+if [ -n "$SPD" ] ; then
+    if [ -f /etc/default/speech-dispatcher ] ; then
+        RUN=no
+        . /etc/default/speech-dispatcher
+        if [ "x$RUN" != "xyes" ] ; then
+            kill $SPD
+        else
+            service speech-dispatcher restart
+        fi
+    fi
 fi
 
 exit 0
