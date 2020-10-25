@@ -1,3 +1,9 @@
+multispeech (4.0.2trusty1) trusty; urgency=low
+
+  * Missing autoconf declaration.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 25 Oct 2020 09:30:13 +0300
+
 multispeech (4.0.1trusty1) trusty; urgency=low
 
   * Package upgrade fix.
