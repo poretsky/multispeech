@@ -490,6 +490,12 @@ is not set so current locale setting is used.
 The section name is \(oqspd\(cq. The following options are grouped
 here:
 .TP
+.B version
+.br
+\fBSpeech Dispatcher\fP version. If it is unspecified, the default value
+defined at the compile time is used. But it may be specified
+ explicitly when compatibility issues take place.
+.TP
 .B sound_icons
 .br
 Path to the directory where \fBmultispeech\fP will search sound icon
