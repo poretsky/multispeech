@@ -1,3 +1,9 @@
+multispeech (4.0.3xenial1) xenial; urgency=medium
+
+  * Speech Dispatcher 0.9+ compatibility fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Jul 2021 01:35:06 +0300
+
 multispeech (4.0.2xenial1) xenial; urgency=low
 
   * Missing autoconf declaration.
