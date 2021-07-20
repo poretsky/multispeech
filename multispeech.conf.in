@@ -633,6 +633,11 @@ engine = espeak
 [spd]
 # Speech Dispatcher module related options.
 #
+#version = <major>[.<minor>[.<micro>]]
+# Speech Dispatcher version. If it is unspecified, the default value
+# defined at the compile time is used. But it may be specified
+# explicitly when compatibility issues take place.
+#
 #sound_icons = <datadir>/sounds/sound-icons
 # Path to the directory where Multispeech will search sound icon files
 # when acting as Speech Dispatcher module.
