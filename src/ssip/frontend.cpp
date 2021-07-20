@@ -28,6 +28,10 @@
 #include <bobcat/string>
 
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <libspeechd_version.h>
 
 #include "frontend.hpp"
 
@@ -105,6 +109,23 @@ frontend::frontend(const configuration& conf):
     (L"&amp;", L"&")
     (L"&quot;", L"\"")
     (L"&apos;", L"'");
+
+  int version_major = LIBSPEECHD_MAJOR_VERSION;
+  int version_minor = LIBSPEECHD_MINOR_VERSION;
+  if (conf.option_value.count(options::spd::version))
+    {
+      regex version_format("(\\d+)(\\.(\\d+))?.*");
+      smatch version;
+      if (regex_match( conf.option_value[options::spd::version].as<string>(), version, version_format))
+        {
+          if (version[1].matched)
+            {
+              version_major = lexical_cast<int>(string(version[1].first, version[1].second));
+              version_minor = version[3].matched ? lexical_cast<int>(string(version[3].first, version[3].second)) : 0;
+            }
+        }
+    }
+  atom_separator = ((version_major < 1) && (version_minor < 9)) ? ' ' : '\t';
 }
 
 
@@ -399,7 +420,7 @@ frontend::do_list_voices(void)
             cout << "200-" << speechmaster.talker[i]->name;
             if (!speechmaster.talker[i]->voice.empty())
               cout << '-' << speechmaster.talker[i]->voice;
-            cout << ' ' << speechmaster.talker[i]->language->id() << " none" << endl;
+            cout << atom_separator << speechmaster.talker[i]->language->id() << atom_separator << "none" << endl;
           }
       cout << "200 OK VOICE LIST SENT" << endl;
       communication_reset();

@@ -97,6 +97,7 @@ namespace options
   // Speech Dispatcher backend options:
   namespace spd
   {
+    extern const char* const version;
     extern const char* const sound_icons;
     extern const char* const use_voice_language;
     extern const char* const accept_explicit_language;
