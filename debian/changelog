@@ -1,3 +1,9 @@
+multispeech (4.0.3bionic1) bionic; urgency=medium
+
+  * Speech Dispatcher 0.9+ compatibility fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 21 Jul 2021 01:16:05 +0300
+
 multispeech (4.0.2bionic1) bionic; urgency=low
 
   * Missing autoconf declaration.
