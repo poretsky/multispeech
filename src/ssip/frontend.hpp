@@ -110,6 +110,9 @@ private:
   // Additional data lines number;
   int lines;
 
+  // API version dependent atom separator for voice list:
+  char atom_separator;
+
   // SSML mark pattern:
   const boost::regex mark_pattern;
 

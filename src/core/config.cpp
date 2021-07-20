@@ -131,6 +131,7 @@ namespace options
   // Speech Dispatcher backend options:
   namespace spd
   {
+    const char* const version = "spd.version";
     const char* const sound_icons = "spd.sound_icons";
     const char* const use_voice_language = "spd.use_voice_language";
     const char* const accept_explicit_language = "spd.accept_explicit_language";
@@ -564,7 +565,8 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (user::freq_control.c_str(), bool_switch()->default_value(false))
     (user::charset.c_str(), value<string>()->default_value(""))
 
-    // Registering Speech Dispatcher backend options if necessary:
+    // Registering Speech Dispatcher backend options:
+    (spd::version, value<string>())
     (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
     (spd::use_voice_language, bool_switch()->default_value(true))
     (spd::accept_explicit_language, bool_switch()->default_value(true))
