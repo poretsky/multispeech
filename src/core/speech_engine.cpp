@@ -21,6 +21,7 @@
 #include <cmath>
 #include <utility>
 
+#include <boost/regex.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -50,6 +51,9 @@ static double persistent_rate = 1.0;
 static double persistent_deviation = 1.0;
 static double persistent_char_pitch = 1.0;
 static double persistent_char_rate = 1.0;
+
+// Blank pattern:
+static const wregex blank_pattern(L"\\s+");
 
 
 // Common voice and speech parameters:
@@ -286,6 +290,12 @@ speech_engine::wrap_text(const wstring& s,
         }
       else prepared = language->filter(s);
       punctuations::verbosity = preserve;
+    }
+
+  if (!prepared.empty())
+    {
+      prepared = regex_replace(prepared, blank_pattern, L" ");
+      trim(prepared);
     }
 
   // Make up and return complete task description.
