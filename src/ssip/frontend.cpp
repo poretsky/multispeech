@@ -19,6 +19,7 @@
 */
 
 #include <cstdlib>
+#include <cstdio>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -112,13 +113,27 @@ frontend::frontend(const configuration& conf):
 
   int version_major = LIBSPEECHD_MAJOR_VERSION;
   int version_minor = LIBSPEECHD_MINOR_VERSION;
-  if (conf.option_value.count(options::spd::version))
+  regex version_format("(\\d+)(\\.(\\d+))?.*");
+  smatch version;
+  if (conf.option_value.count(options::spd::version)
+      && regex_match( conf.option_value[options::spd::version].as<string>(), version, version_format)
+      && version[1].matched)
     {
-      regex version_format("(\\d+)(\\.(\\d+))?.*");
-      smatch version;
-      if (regex_match( conf.option_value[options::spd::version].as<string>(), version, version_format))
+      version_major = lexical_cast<int>(string(version[1].first, version[1].second));
+      version_minor = version[3].matched ? lexical_cast<int>(string(version[3].first, version[3].second)) : 0;
+    }
+  else
+    {
+      FILE* spd = popen("speech-dispatcher -v", "r");
+      if (spd)
         {
-          if (version[1].matched)
+          char s[100];
+          ostringstream info;
+          while (fgets(s, 80, spd))
+            info << s;
+          pclose(spd);
+          if (regex_search(info.str(), version, version_format)
+              && version[1].matched)
             {
               version_major = lexical_cast<int>(string(version[1].first, version[1].second));
               version_minor = version[3].matched ? lexical_cast<int>(string(version[3].first, version[3].second)) : 0;
