@@ -12,7 +12,7 @@ libmultispeech_la_LIBADD = @BOOST_FILESYSTEM_LIB@ @BOOST_IOSTREAMS_LIB@ \
 	@BOOST_SYSTEM_LIB@ @BOOST_THREAD_LIB@ \
 	@BOBCAT_LIBS@ @SNDFILE_LIBS@ @PORTAUDIOCPP_LIBS@ \
 	@PULSEAUDIO_LIBS@ @SOUNDTOUCH_LIBS@ -lrt -lm
-libmultispeech_la_LDFLAGS = -version-info 1:1:1
+libmultispeech_la_LDFLAGS = -version-info 1:2:1
 
 if HAVE_VSCRIPT
 libmultispeech_la_LDFLAGS += $(VSCRIPT_LDFLAGS),multispeech.vscript
