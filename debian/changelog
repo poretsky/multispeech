@@ -1,3 +1,11 @@
+multispeech (4.0.4bionic1) bionic; urgency=medium
+
+  * Shared library dependency clarification.
+  * Runtime guessing of Speech Dispatcher version.
+  * Squeeze extra blanks in speech strings.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Aug 2021 16:23:11 +0300
+
 multispeech (4.0.3bionic1) bionic; urgency=medium
 
   * Speech Dispatcher 0.9+ compatibility fix.
