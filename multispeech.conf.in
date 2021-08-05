@@ -663,3 +663,11 @@ engine = espeak
 # default voice that allows Multispeech to utilize language
 # autodetection mechanism. Though language still can be changed
 # explicitly by Speech Dispatcher if enabled.
+#
+#index_marks = yes
+# This option enables or disables index marks support.
+# When it is "yes" or "on", index marks are reported correctly,
+# but it is necessary to split message at the point of index mark.
+# If such side effect is somewhat inconvenient, it may be better
+# to turn off index marks support by setting this option
+# to "no" or "off".
