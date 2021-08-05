@@ -98,6 +98,9 @@ private:
   bool do_quit(void);
   bool do_unknown(void);
 
+  // Whether index marks reporting is enabled:
+  bool index_marks_support;
+
   // Settings interpreter:
   spd_settings settings;
 

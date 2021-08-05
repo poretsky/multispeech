@@ -91,6 +91,7 @@ frontend::instantiate(const configuration& conf)
 
 frontend::frontend(const configuration& conf):
   speech_server(conf),
+  index_marks_support(conf.option_value[options::spd::index_marks].as<bool>()),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
@@ -328,12 +329,15 @@ frontend::do_speak(void)
         {
           string::const_iterator start = data.begin();
           string::const_iterator end = data.end();
-          smatch found;
-          while (regex_search(start, end, found, mark_pattern))
+          if (index_marks_support)
             {
-              enqueue_text_chunk(start, found[0].first);
-              soundmaster.enqueue(string(found[1].first, found[1].second));
-              start = found[0].second;
+              smatch found;
+              while (regex_search(start, end, found, mark_pattern))
+                {
+                  enqueue_text_chunk(start, found[0].first);
+                  soundmaster.enqueue(string(found[1].first, found[1].second));
+                  start = found[0].second;
+                }
             }
           enqueue_text_chunk(start, end);
           start_queue();
