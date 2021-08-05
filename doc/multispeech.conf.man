@@ -530,6 +530,15 @@ is used for so-called default voice that allows \fBmultispeech\fP
 to utilize language autodetection mechanism. Though language still
 can be changed explicitly by \fBSpeech Dispatcher\fP if enabled.
 This option is \(oqno\(cq by default.
+.TP
+.B index_marks
+.br
+This option enables or disables index marks support.
+When it is \(oqyes\(cq or \(oqon\(cq, index marks are reported
+correctly, but it is necessary to split message at the point of index
+mark. If such side effect is somewhat inconvenient, it may be better
+to turn off index marks support by setting this option to \(oqno\(cq
+or \(oqoff\(cq. By default index marks support is enabled.
 .SH "SEE ALSO"
 .BR espeak(1),
 .BR freephone(1),
