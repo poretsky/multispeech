@@ -136,6 +136,7 @@ namespace options
     const char* const use_voice_language = "spd.use_voice_language";
     const char* const accept_explicit_language = "spd.accept_explicit_language";
     const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
+    const char* const index_marks = "spd.index_marks";
   };
 
   // General audio output options:
@@ -570,7 +571,8 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
     (spd::use_voice_language, bool_switch()->default_value(true))
     (spd::accept_explicit_language, bool_switch()->default_value(true))
-    (spd::ignore_unknown_voice, bool_switch()->default_value(false));
+    (spd::ignore_unknown_voice, bool_switch()->default_value(false))
+    (spd::index_marks, bool_switch()->default_value(true));
 
   // Parse config files and store values
   if (spd_backend)

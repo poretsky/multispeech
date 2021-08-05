@@ -102,6 +102,7 @@ namespace options
     extern const char* const use_voice_language;
     extern const char* const accept_explicit_language;
     extern const char* const ignore_unknown_voice;
+    extern const char* const index_marks;
   };
 
   // General audio output:
