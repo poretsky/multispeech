@@ -1,3 +1,10 @@
+multispeech (4.0.5focal1) focal; urgency=medium
+
+  * Russian text preparation minor fix.
+  * Index marks support toggling facility in SD backend.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Thu, 05 Aug 2021 14:26:19 +0300
+
 multispeech (4.0.4focal1) focal; urgency=medium
 
   * Shared library dependency clarification.
