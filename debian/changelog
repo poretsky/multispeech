@@ -1,3 +1,9 @@
+multispeech (4.1.0buster1) buster; urgency=medium
+
+  * Ru_tts 6.0 compatibility.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 20 Aug 2021 22:56:16 +0300
+
 multispeech (4.0.5buster1) buster; urgency=medium
 
   * Russian text preparation minor fix.
