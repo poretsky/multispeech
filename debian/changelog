@@ -1,3 +1,9 @@
+multispeech (4.1.0xenial1) xenial; urgency=medium
+
+  * Ru_tts 6.0 compatibility.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 20 Aug 2021 22:56:16 +0300
+
 multispeech (4.0.5xenial1) xenial; urgency=medium
 
   * Russian text preparation minor fix.
