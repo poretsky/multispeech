@@ -91,10 +91,10 @@ frontend::instantiate(const configuration& conf)
 
 frontend::frontend(const configuration& conf):
   speech_server(conf),
-  index_marks_support(conf.option_value[options::spd::index_marks].as<bool>()),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
+  index_marks_support(conf.option_value[options::spd::index_marks].as<bool>()),
   settings(conf, speechmaster),
   sound_icons((conf.option_value.count(options::spd::sound_icons) &&
                !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
