@@ -21,9 +21,11 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <cstdio>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 #include <bobcat/syslogstream>
 
@@ -46,6 +48,24 @@ ru_tts::ru_tts(const configuration& conf):
       !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
     {
       string cmd(conf.option_value[options::compose(name, option_name::executable)].as<string>());
+      ostringstream info;
+      info << cmd << " -v 2>&1";
+      FILE* backend = popen(info.str().c_str(), "r");
+      version = 0.0;
+      if (backend)
+        {
+          regex version_format("[Vv]ersion +(\\d+\\.\\d+)");
+          smatch versioninfo;
+          char s[100];
+          info.str("");
+          info.clear();
+          while (fgets(s, 80, backend))
+            info << s;
+          pclose(backend);
+          if (regex_search(info.str(), versioninfo, version_format)
+              && versioninfo[1].matched)
+            version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
+        }
       cmd += " -r %rate -p %pitch";
       if (conf.option_value.count(options::compose(name, option_name::lexicon)) &&
           !conf.option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
@@ -74,15 +94,23 @@ ru_tts::ru_tts(const configuration& conf):
 void
 ru_tts::voicify(double rate, double pitch)
 {
-  double p = pitch * pitch;
-  double r = 0.5;
-  if (rate <= 0.0)
-    r = 1.0;
-  else if (rate >= 2.0)
-    r = 0.0;
-  else if (rate < 1.0)
-    r = 1.0 / (rate + 1.0);
-  else r = 1.0 / rate - 0.5;
-  format_macros["%pitch"] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
-  format_macros["%rate"] = lexical_cast<string>(r);
+  if (version < 6.0)
+    {
+      double p = pitch * pitch;
+      double r = 0.5;
+      if (rate <= 0.0)
+        r = 1.0;
+      else if (rate >= 2.0)
+        r = 0.0;
+      else if (rate < 1.0)
+        r = 1.0 / (rate + 1.0);
+      else r = 1.0 / rate - 0.5;
+      format_macros["%pitch"] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
+      format_macros["%rate"] = lexical_cast<string>(r);
+    }
+  else
+    {
+      format_macros["%pitch"] = lexical_cast<string>(pitch);
+      format_macros["%rate"] = lexical_cast<string>(rate);
+    }
 }
