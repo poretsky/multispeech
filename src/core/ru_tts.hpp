@@ -32,6 +32,9 @@ public:
   explicit ru_tts(const configuration& conf);
 
 private:
+  // Since version 6.0 parameters treatment has been changed.
+  double version;
+
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
 };
