@@ -1,3 +1,9 @@
+multispeech (4.1.1focal1) focal; urgency=medium
+
+  * Fixed crash when starting in some circumstances.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 22 Aug 2021 23:42:12 +0300
+
 multispeech (4.1.0focal1) focal; urgency=medium
 
   * Ru_tts 6.0 compatibility.
