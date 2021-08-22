@@ -33,7 +33,7 @@ public:
 
 private:
   // Since version 6.0 parameters treatment has been changed.
-  double version;
+  int version;
 
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
