@@ -51,10 +51,10 @@ ru_tts::ru_tts(const configuration& conf):
       ostringstream info;
       info << cmd << " -v 2>&1";
       FILE* backend = popen(info.str().c_str(), "r");
-      version = 0;
+      version = 0.0;
       if (backend)
         {
-          regex version_format("[Vv]ersion +(\\d+)");
+          regex version_format("[Vv]ersion +(\\d+\\.\\d+)");
           smatch versioninfo;
           char s[100];
           info.str("");
@@ -64,7 +64,7 @@ ru_tts::ru_tts(const configuration& conf):
           pclose(backend);
           if (regex_search(info.str(), versioninfo, version_format)
               && versioninfo[1].matched)
-            version = lexical_cast<int>(string(versioninfo[1].first, versioninfo[1].second));
+            version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
         }
       cmd += " -r %rate -p %pitch";
       if (conf.option_value.count(options::compose(name, option_name::lexicon)) &&
@@ -94,7 +94,7 @@ ru_tts::ru_tts(const configuration& conf):
 void
 ru_tts::voicify(double rate, double pitch)
 {
-  if (version < 6)
+  if (version < 6.0)
     {
       double p = pitch * pitch;
       double r = 0.5;
