@@ -62,7 +62,8 @@ ru_tts::ru_tts(const configuration& conf):
           while (fgets(s, 80, backend))
             info << s;
           pclose(backend);
-          if (regex_search(info.str(), versioninfo, version_format)
+          string response(info.str());
+          if (regex_search(response, versioninfo, version_format)
               && versioninfo[1].matched)
             version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
         }
