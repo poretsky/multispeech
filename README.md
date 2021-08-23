@@ -26,7 +26,7 @@ GNU [Automake](https://www.gnu.org/software/automake/)
 and [Autoconf](https://www.gnu.org/software/autoconf/)
 tools are necessary for this step along with additional macros from
 [Autoconf Archive](https://www.gnu.org/software/autoconf-archive/).
- Afterwards README and INSTALL files may be consulted for further
+Afterwards README and INSTALL files may be consulted for further
 instructions and full list of build dependencies.
 
 Or alternatively you can download ready to use bootstrapped
