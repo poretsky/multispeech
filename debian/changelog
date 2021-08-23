@@ -1,3 +1,9 @@
+multispeech (4.1.2focal1) focal; urgency=medium
+
+  * Real fix of startup crashes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 23 Aug 2021 11:28:18 +0300
+
 multispeech (4.1.1focal1) focal; urgency=medium
 
   * Fixed crash when starting in some circumstances.
