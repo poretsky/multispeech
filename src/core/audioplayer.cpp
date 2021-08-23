@@ -153,7 +153,7 @@ string
 audioplayer::canonical_name(Device& device)
 {
   smatch match_result;
-  string devname = device.name();
+  string devname(device.name());
   return regex_search(devname, match_result, devname_pattern) ?
     string(match_result[1].first, match_result[1].second) :
     devname;
