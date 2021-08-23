@@ -116,8 +116,11 @@ frontend::frontend(const configuration& conf):
   int version_minor = LIBSPEECHD_MINOR_VERSION;
   regex version_format("(\\d+)(\\.(\\d+))?.*");
   smatch version;
-  if (conf.option_value.count(options::spd::version)
-      && regex_match( conf.option_value[options::spd::version].as<string>(), version, version_format)
+  string vstr;
+  if (conf.option_value.count(options::spd::version))
+    vstr = conf.option_value[options::spd::version].as<string>();
+  if (!vstr.empty()
+      && regex_match(vstr, version, version_format)
       && version[1].matched)
     {
       version_major = lexical_cast<int>(string(version[1].first, version[1].second));
@@ -133,7 +136,8 @@ frontend::frontend(const configuration& conf):
           while (fgets(s, 80, spd))
             info << s;
           pclose(spd);
-          if (regex_search(info.str(), version, version_format)
+          vstr = info.str();
+          if (regex_search(vstr, version, version_format)
               && version[1].matched)
             {
               version_major = lexical_cast<int>(string(version[1].first, version[1].second));
