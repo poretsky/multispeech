@@ -335,6 +335,50 @@ Optional file to collect unknown words. This file must be writable
 for the Multispeech user. The collected data can be used later
 to improve lexical database. No such file is suggested by default
 so unknown words are not stored.
+.TP
+.B expressiveness
+.br
+Relative voice pitch variation level. The default value is 1.0.
+It is the normal intonation. Value 0.0 causes absolutely monotonic
+speech.
+.TP
+.B female_voice
+.br
+When this option is \(oqyes\(cq the alternative female voice is used
+instead of the default (male) one.
+.TP
+.B decimal_point
+.TQ
+.B decimal_comma
+.br
+These options enable or disable treating point and comma
+inside a number as decimal separator. By default both are enabled.
+Use \(oqyes\(cq or \(oqon\(cq to enable and \(oqno\(cq or \(oqoff\(cq
+to disable.
+.TP
+.B interclause_gap_factor
+.br
+The factor applied to all interclause gap durations.
+.TP
+.B comma_gap_factor
+.TQ
+.B dot_gap_factor
+.TQ
+.B semicolon_gap_factor
+.TQ
+.B colon_gap_factor
+.TQ
+.B question_gap_factor
+.TQ
+.B exclamation_gap_factor
+.br
+the factors applied to the durations of the gaps
+implied by the corresponding punctuations.
+.TP
+.B intonational_gap_factor
+.br
+The factor applied to the duration of intonational gaps
+not caused by punctuations.
 .SH "ESPEAK RELATED OPTIONS"
 Interaction with \fBespeak\fP TTS engine is controlled by the options
 grouped in section \(oqespeak\(cq:

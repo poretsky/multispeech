@@ -84,6 +84,55 @@ ru_tts::ru_tts(const configuration& conf):
       if (conf.option_value.count(options::compose(name, option_name::log)) &&
           !conf.option_value[options::compose(name, option_name::log)].as<string>().empty())
         cmd += " -l " + conf.option_value[options::compose(name, option_name::log)].as<string>();
+      if (conf.option_value.count(options::compose(name, option_name::female_voice)) &&
+          conf.option_value[options::compose(name, option_name::female_voice)].as<bool>())
+        cmd += " -a";
+      if (version >= 6.0)
+        {
+          if (conf.option_value.count(options::compose(name, option_name::decimal_point)) ||
+              conf.option_value.count(options::compose(name, option_name::decimal_comma)))
+            {
+              int flags = 0;
+              if (conf.option_value.count(options::compose(name, option_name::decimal_point)) &&
+                  !conf.option_value[options::compose(name, option_name::decimal_point)].as<bool>())
+                flags |= 1;
+              if (conf.option_value.count(options::compose(name, option_name::decimal_comma)) &&
+                  !conf.option_value[options::compose(name, option_name::decimal_comma)].as<bool>())
+                flags |= 2;
+              switch (flags)
+                {
+                case 1:
+                  cmd += " -d,";
+                  break;
+                case 2:
+                  cmd += " -d.";
+                  break;
+                case 3:
+                  cmd += " -d-";
+                  break;
+                default:
+                  break;
+                }
+            }
+          if (conf.option_value.count(options::compose(name, option_name::expressiveness)))
+            cmd += " -e " + lexical_cast<string>(conf.option_value[options::compose(name, option_name::expressiveness)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::interclause_gap_factor)))
+            cmd += " -g " + lexical_cast<string>(conf.option_value[options::compose(name, option_name::interclause_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::comma_gap_factor)))
+            cmd += " -g ," + lexical_cast<string>(conf.option_value[options::compose(name, option_name::comma_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::dot_gap_factor)))
+            cmd += " -g ." + lexical_cast<string>(conf.option_value[options::compose(name, option_name::dot_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::semicolon_gap_factor)))
+            cmd += " -g ;" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::semicolon_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::colon_gap_factor)))
+            cmd += " -g :" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::colon_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::question_gap_factor)))
+            cmd += " -g ?" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::question_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::exclamation_gap_factor)))
+            cmd += " -g !" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::exclamation_gap_factor)].as<double>());
+          if (conf.option_value.count(options::compose(name, option_name::intonational_gap_factor)))
+            cmd += " -g -" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::intonational_gap_factor)].as<double>());
+        }
       command(cmd);
     }
   else throw configuration::error("no path to " + name);
