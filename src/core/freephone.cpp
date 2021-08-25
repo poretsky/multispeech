@@ -38,14 +38,14 @@ using namespace FBB;
 freephone::freephone(const configuration& conf):
   mbrola(conf, speaker::freephone, "en1", lang_id::en)
 {
-  if (conf.option_value.count(options::compose(name, option_name::executable)) &&
-      !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  if (conf.option_value.count(options::freephone::executable) &&
+      !conf.option_value[options::freephone::executable].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(name, option_name::executable)].as<string>());
-      if (conf.option_value.count(options::compose(name, option_name::lexicon)) &&
-          !conf.option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
+      string cmd(conf.option_value[options::freephone::executable].as<string>());
+      if (conf.option_value.count(options::freephone::lexicon) &&
+          !conf.option_value[options::freephone::lexicon].as<string>().empty())
         {
-          path lexicon(conf.option_value[options::compose(name, option_name::lexicon)].as<string>());
+          path lexicon(conf.option_value[options::freephone::lexicon].as<string>());
           if (exists(lexicon))
             cmd += " -h " + lexicon.generic_string();
           else
