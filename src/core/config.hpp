@@ -81,6 +81,18 @@ namespace option_name
   extern const char* const char_rate;
   extern const char* const caps_factor;
   extern const char* const acceleration;
+  extern const char* const expressiveness;
+  extern const char* const female_voice;
+  extern const char* const decimal_point;
+  extern const char* const decimal_comma;
+  extern const char* const interclause_gap_factor;
+  extern const char* const comma_gap_factor;
+  extern const char* const dot_gap_factor;
+  extern const char* const semicolon_gap_factor;
+  extern const char* const colon_gap_factor;
+  extern const char* const question_gap_factor;
+  extern const char* const exclamation_gap_factor;
+  extern const char* const intonational_gap_factor;
 };
 
 // Options hierarchy:
@@ -302,6 +314,18 @@ namespace options
     extern const std::string executable;
     extern const std::string lexicon;
     extern const std::string log;
+    extern const std::string expressiveness;
+    extern const std::string female_voice;
+    extern const std::string decimal_point;
+    extern const std::string decimal_comma;
+    extern const std::string interclause_gap_factor;
+    extern const std::string comma_gap_factor;
+    extern const std::string dot_gap_factor;
+    extern const std::string semicolon_gap_factor;
+    extern const std::string colon_gap_factor;
+    extern const std::string question_gap_factor;
+    extern const std::string exclamation_gap_factor;
+    extern const std::string intonational_gap_factor;
   };
 
   // User defined TTS backend options:
