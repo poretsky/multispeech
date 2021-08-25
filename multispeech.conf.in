@@ -530,6 +530,37 @@ engine = espeak
 # for the Multispeech user. The collected data can be used later
 # to improve lexical database. No such file is suggested by default
 # so unknown words are not stored.
+#
+#expressiveness = 1.0
+# Relative voice pitch variation level. The default value is 1.0.
+# It is the normal intonation. Value 0.0 causes absolutely monotonic
+# speech.
+#
+#female_voice = no
+# When this option is "yes" the alternative female voice is used
+# instead of the default (male) one.
+#
+#decimal_point = yes
+#decimal_comma = yes
+# These options enable or disable treating point and comma
+# inside a number as decimal separator. By default both are enabled.
+# Use "yes" or "on" to enable and "no" or "off" to disable.
+#
+#interclause_gap_factor = 1.0
+# The factor applied to all interclause gap durations.
+#
+#comma_gap_factor = 1.0
+#dot_gap_factor = 1.0
+#semicolon_gap_factor = 1.0
+#colon_gap_factor = 1.0
+#question_gap_factor = 1.0
+#exclamation_gap_factor = 1.0
+# the factors applied to the durations of the gaps
+# implied by the corresponding punctuations.
+#
+#intonational_gap_factor = 1.0
+# The factor applied to the duration of intonational gaps
+# not caused by punctuations.
 
 [espeak]
 # Espeak based backends specific options.
