@@ -114,6 +114,18 @@ namespace option_name
   const char* const char_rate = "char_rate";
   const char* const caps_factor = "caps_factor";
   const char* const acceleration = "acceleration";
+  const char* const expressiveness = "expressiveness";
+  const char* const female_voice = "female_voice";
+  const char* const decimal_point = "decimal_point";
+  const char* const decimal_comma = "decimal_comma";
+  const char* const interclause_gap_factor = "interclause_gap_factor";
+  const char* const comma_gap_factor = "comma_gap_factor";
+  const char* const dot_gap_factor = "dot_gap_factor";
+  const char* const semicolon_gap_factor = "semicolon_gap_factor";
+  const char* const colon_gap_factor = "colon_gap_factor";
+  const char* const question_gap_factor = "question_gap_factor";
+  const char* const exclamation_gap_factor = "exclamation_gap_factor";
+  const char* const intonational_gap_factor = "intonational_gap_factor";
 };
 
 
@@ -335,6 +347,18 @@ namespace options
     const string executable(compose(speaker::ru_tts, option_name::executable));
     const string lexicon(compose(speaker::ru_tts, option_name::lexicon));
     const string log(compose(speaker::ru_tts, option_name::log));
+    const string expressiveness(compose(speaker::ru_tts, option_name::expressiveness));
+    const string female_voice(compose(speaker::ru_tts, option_name::female_voice));
+                                      const string decimal_point(compose(speaker::ru_tts, option_name::decimal_point));
+                                       const string decimal_comma(compose(speaker::ru_tts, option_name::decimal_comma));
+                                       const string interclause_gap_factor(compose(speaker::ru_tts, option_name::interclause_gap_factor));
+                                                const string comma_gap_factor(compose(speaker::ru_tts, option_name::comma_gap_factor));
+                                          const string dot_gap_factor(compose(speaker::ru_tts, option_name::dot_gap_factor));
+                                        const string semicolon_gap_factor(compose(speaker::ru_tts, option_name::semicolon_gap_factor));
+                                              const string colon_gap_factor(compose(speaker::ru_tts, option_name::colon_gap_factor));
+                                          const string question_gap_factor(compose(speaker::ru_tts, option_name::question_gap_factor));
+                                             const string exclamation_gap_factor(compose(speaker::ru_tts, option_name::exclamation_gap_factor));
+                                                const string intonational_gap_factor(compose(speaker::ru_tts, option_name::intonational_gap_factor));
   };
 
   // User defined TTS backend options:
@@ -557,6 +581,18 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
     (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.generic_string()))
     (ru_tts::log.c_str(), value<string>())
+    (ru_tts::expressiveness.c_str(), value<double>())
+    (ru_tts::female_voice.c_str(), bool_switch()->default_value(false))
+    (ru_tts::decimal_point.c_str(), bool_switch()->default_value(true))
+    (ru_tts::decimal_comma.c_str(), bool_switch()->default_value(true))
+    (ru_tts::interclause_gap_factor.c_str(), value<double>())
+    (ru_tts::comma_gap_factor.c_str(), value<double>())
+    (ru_tts::dot_gap_factor.c_str(), value<double>())
+    (ru_tts::semicolon_gap_factor.c_str(), value<double>())
+    (ru_tts::colon_gap_factor.c_str(), value<double>())
+    (ru_tts::question_gap_factor.c_str(), value<double>())
+    (ru_tts::exclamation_gap_factor.c_str(), value<double>())
+    (ru_tts::intonational_gap_factor.c_str(), value<double>())
 
     // User defined TTS backend options:
     (user::command.c_str(), value<string>())
