@@ -44,10 +44,10 @@ using namespace FBB;
 ru_tts::ru_tts(const configuration& conf):
   speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
-  if (conf.option_value.count(options::compose(name, option_name::executable)) &&
-      !conf.option_value[options::compose(name, option_name::executable)].as<string>().empty())
+  if (conf.option_value.count(options::ru_tts::executable) &&
+      !conf.option_value[options::ru_tts::executable].as<string>().empty())
     {
-      string cmd(conf.option_value[options::compose(name, option_name::executable)].as<string>());
+      string cmd(conf.option_value[options::ru_tts::executable].as<string>());
       ostringstream info;
       info << cmd << " -v 2>&1";
       FILE* backend = popen(info.str().c_str(), "r");
@@ -68,10 +68,10 @@ ru_tts::ru_tts(const configuration& conf):
             version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
         }
       cmd += " -r %rate -p %pitch";
-      if (conf.option_value.count(options::compose(name, option_name::lexicon)) &&
-          !conf.option_value[options::compose(name, option_name::lexicon)].as<string>().empty())
+      if (conf.option_value.count(options::ru_tts::lexicon) &&
+          !conf.option_value[options::ru_tts::lexicon].as<string>().empty())
         {
-          path lexicon(conf.option_value[options::compose(name, option_name::lexicon)].as<string>());
+          path lexicon(conf.option_value[options::ru_tts::lexicon].as<string>());
           if (exists(lexicon))
             cmd += " -s " + lexicon.generic_string();
           else
@@ -81,23 +81,23 @@ ru_tts::ru_tts(const configuration& conf):
                 cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
-      if (conf.option_value.count(options::compose(name, option_name::log)) &&
-          !conf.option_value[options::compose(name, option_name::log)].as<string>().empty())
-        cmd += " -l " + conf.option_value[options::compose(name, option_name::log)].as<string>();
-      if (conf.option_value.count(options::compose(name, option_name::female_voice)) &&
-          conf.option_value[options::compose(name, option_name::female_voice)].as<bool>())
+      if (conf.option_value.count(options::ru_tts::log) &&
+          !conf.option_value[options::ru_tts::log].as<string>().empty())
+        cmd += " -l " + conf.option_value[options::ru_tts::log].as<string>();
+      if (conf.option_value.count(options::ru_tts::female_voice) &&
+          conf.option_value[options::ru_tts::female_voice].as<bool>())
         cmd += " -a";
       if (version >= 6.0)
         {
-          if (conf.option_value.count(options::compose(name, option_name::decimal_point)) ||
-              conf.option_value.count(options::compose(name, option_name::decimal_comma)))
+          if (conf.option_value.count(options::ru_tts::decimal_point) ||
+              conf.option_value.count(options::ru_tts::decimal_comma))
             {
               int flags = 0;
-              if (conf.option_value.count(options::compose(name, option_name::decimal_point)) &&
-                  !conf.option_value[options::compose(name, option_name::decimal_point)].as<bool>())
+              if (conf.option_value.count(options::ru_tts::decimal_point) &&
+                  !conf.option_value[options::ru_tts::decimal_point].as<bool>())
                 flags |= 1;
-              if (conf.option_value.count(options::compose(name, option_name::decimal_comma)) &&
-                  !conf.option_value[options::compose(name, option_name::decimal_comma)].as<bool>())
+              if (conf.option_value.count(options::ru_tts::decimal_comma) &&
+                  !conf.option_value[options::ru_tts::decimal_comma].as<bool>())
                 flags |= 2;
               switch (flags)
                 {
@@ -114,24 +114,24 @@ ru_tts::ru_tts(const configuration& conf):
                   break;
                 }
             }
-          if (conf.option_value.count(options::compose(name, option_name::expressiveness)))
-            cmd += " -e " + lexical_cast<string>(conf.option_value[options::compose(name, option_name::expressiveness)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::interclause_gap_factor)))
-            cmd += " -g " + lexical_cast<string>(conf.option_value[options::compose(name, option_name::interclause_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::comma_gap_factor)))
-            cmd += " -g ," + lexical_cast<string>(conf.option_value[options::compose(name, option_name::comma_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::dot_gap_factor)))
-            cmd += " -g ." + lexical_cast<string>(conf.option_value[options::compose(name, option_name::dot_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::semicolon_gap_factor)))
-            cmd += " -g ;" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::semicolon_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::colon_gap_factor)))
-            cmd += " -g :" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::colon_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::question_gap_factor)))
-            cmd += " -g ?" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::question_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::exclamation_gap_factor)))
-            cmd += " -g !" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::exclamation_gap_factor)].as<double>());
-          if (conf.option_value.count(options::compose(name, option_name::intonational_gap_factor)))
-            cmd += " -g -" + lexical_cast<string>(conf.option_value[options::compose(name, option_name::intonational_gap_factor)].as<double>());
+          if (conf.option_value.count(options::ru_tts::expressiveness))
+            cmd += " -e " + lexical_cast<string>(conf.option_value[options::ru_tts::expressiveness].as<double>());
+          if (conf.option_value.count(options::ru_tts::interclause_gap_factor))
+            cmd += " -g " + lexical_cast<string>(conf.option_value[options::ru_tts::interclause_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::comma_gap_factor))
+            cmd += " -g ," + lexical_cast<string>(conf.option_value[options::ru_tts::comma_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::dot_gap_factor))
+            cmd += " -g ." + lexical_cast<string>(conf.option_value[options::ru_tts::dot_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::semicolon_gap_factor))
+            cmd += " -g ;" + lexical_cast<string>(conf.option_value[options::ru_tts::semicolon_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::colon_gap_factor))
+            cmd += " -g :" + lexical_cast<string>(conf.option_value[options::ru_tts::colon_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::question_gap_factor))
+            cmd += " -g ?" + lexical_cast<string>(conf.option_value[options::ru_tts::question_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::exclamation_gap_factor))
+            cmd += " -g !" + lexical_cast<string>(conf.option_value[options::ru_tts::exclamation_gap_factor].as<double>());
+          if (conf.option_value.count(options::ru_tts::intonational_gap_factor))
+            cmd += " -g -" + lexical_cast<string>(conf.option_value[options::ru_tts::intonational_gap_factor].as<double>());
         }
       command(cmd);
     }
