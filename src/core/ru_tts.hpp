@@ -23,6 +23,8 @@
 #ifndef MULTISPEECH_RU_TTS_HPP
 #define MULTISPEECH_RU_TTS_HPP
 
+#include <string>
+
 #include "speech_engine.hpp"
 
 class ru_tts: public speech_engine
@@ -30,6 +32,23 @@ class ru_tts: public speech_engine
 public:
   // Object construction:
   explicit ru_tts(const configuration& conf);
+
+  // Configurable parameters:
+  static std::string executable;
+  static std::string lexicon;
+  static std::string log_file;
+  static double expressiveness;
+  static bool female_voice;
+  static bool decimal_point;
+  static bool decimal_comma;
+  static double interclause_gap_factor;
+  static double comma_gap_factor;
+  static double dot_gap_factor;
+  static double semicolon_gap_factor;
+  static double colon_gap_factor;
+  static double question_gap_factor;
+  static double exclamation_gap_factor;
+  static double intonational_gap_factor;
 
 private:
   // Since version 6.0 parameters treatment has been changed.

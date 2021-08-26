@@ -30,16 +30,18 @@ using namespace boost;
 
 // Espeak backend.
 
+// Static data:
+string espeak::executable;
+
 // Object construction:
 espeak::espeak(const configuration& conf, const string& lang):
   speech_engine(conf, speaker::espeak, novoice, lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf.option_value.count(options::espeak::executable) &&
-      !conf.option_value[options::espeak::executable].as<string>().empty())
+  if (!executable.empty())
     {
-      string cmd(conf.option_value[options::espeak::executable].as<string>());
+      string cmd(executable);
       cmd += " --stdin --stdout -z -s %rate -p %pitch -v " + voice;
       command(cmd);
     }
@@ -61,10 +63,9 @@ espeak::voicify(double rate, double pitch)
 mbrespeak::mbrespeak(const configuration& conf, const string& lang):
   mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang)
 {
-  if (conf.option_value.count(options::espeak::executable) &&
-      !conf.option_value[options::espeak::executable].as<string>().empty())
+  if (!espeak::executable.empty())
     {
-      string cmd(conf.option_value[options::espeak::executable].as<string>());
+      string cmd(espeak::executable);
       cmd += " --stdin -q --pho -z -v mb-" + voice;
       command(cmd);
     }
