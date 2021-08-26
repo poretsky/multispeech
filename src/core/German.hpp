@@ -28,6 +28,9 @@ class German: public language_description
 public:
   // Object construction:
   German(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif

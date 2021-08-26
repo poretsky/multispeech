@@ -32,10 +32,25 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Static data:
+language_description::options German::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 German::German(void):
-  language_description(lang_id::de, L"[äöß]|(^| )(der|und|von|sich|eine?|auf|dieser?) ")
+  language_description(lang_id::de, settings, L"[äöß]|(^| )(der|und|von|sich|eine?|auf|dieser?) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of

@@ -29,7 +29,9 @@ using namespace boost;
 // Construct / destroy:
 
 language_description::language_description(const char* language_id,
+                                           const options& language_settings,
                                            const wchar_t* language_detector):
+  settings(language_settings),
   id_str(language_id),
   detector(language_detector, regex::normal | regex::icase)
 {

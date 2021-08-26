@@ -32,10 +32,25 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Static data:
+language_description::options French::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 French::French(void):
-  language_description(lang_id::fr, L"[ëîïœû]|(^| )(([cn]')?est|du) ")
+  language_description(lang_id::fr, settings, L"[ëîïœû]|(^| )(([cn]')?est|du) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
