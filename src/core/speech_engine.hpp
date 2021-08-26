@@ -138,6 +138,11 @@ protected:
   // Add a new command pattern to the beginning of the list:
   void command(const std::string& pattern);
 
+  // Make up voice parameters for backend. The base implementation
+  // passes them as is. If a backend needs some special treatment
+  // this method should be redefined in derived classes.
+  virtual void voicify(double rate, double pitch = 1.0);
+
   // Change native sampling frequency:
   void sampling(unsigned int value);
 
@@ -178,10 +183,6 @@ private:
   speech_task wrap_letter(std::wstring s,
                           double volume, double rate,
                           double pitch, double deviation);
-
-  // Make up voice parameters for backend.
-  // Should be defined in derived classes for particular speech engines.
-  virtual void voicify(double rate, double pitch = 1.0) = 0;
 };
 
 #endif
