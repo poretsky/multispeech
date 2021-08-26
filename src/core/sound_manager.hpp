@@ -36,7 +36,6 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/condition.hpp>
 
-#include "config.hpp"
 #include "file_player.hpp"
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
@@ -53,7 +52,7 @@ public:
   };
 
   // Constructing / destroying.
-  sound_manager(const configuration& conf, callback* host);
+  explicit sound_manager(callback* host);
   ~sound_manager(void);
 
   // Submit a job to the queue. If some job is executing already

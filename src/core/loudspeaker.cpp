@@ -24,11 +24,14 @@
 
 #include "loudspeaker.hpp"
 
+#include <audioplayer.hpp>
+
 using namespace std;
 using namespace boost;
 
 
 // Static data definition:
+string loudspeaker::device;
 float loudspeaker::relative_volume = 1.0;
 
 
@@ -74,11 +77,8 @@ speech_task::silence_params(unsigned int sampling, unsigned int length)
 
 // Construct / destroy:
 
-loudspeaker::loudspeaker(const configuration& conf):
-  soundfile(conf.option_value[options::speech::device].as<string>().empty() ?
-            conf.option_value[options::audio::device].as<string>() :
-            conf.option_value[options::speech::device].as<string>(),
-            "speech"),
+loudspeaker::loudspeaker(void):
+  soundfile(device.empty() ? audioplayer::device : device, "speech"),
   sound_processor(accelerator),
   silence_timer(0),
   need_processing(false)
