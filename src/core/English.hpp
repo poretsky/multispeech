@@ -28,6 +28,9 @@ class English: public language_description
 public:
   // Object construction:
   English(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif

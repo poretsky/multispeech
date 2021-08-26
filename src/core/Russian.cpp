@@ -36,10 +36,25 @@ using namespace boost;
 using namespace boost::assign;
 
 
+// Static data:
+language_description::options Russian::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 Russian::Russian(void):
-  language_description(lang_id::ru, L"[а-яёА-ЯЁ]"),
+  language_description(lang_id::ru, settings, L"[а-яёА-ЯЁ]"),
   foreign_chars(L"[a-zA-Z]")
 {
   // Punctuations pronunciation:

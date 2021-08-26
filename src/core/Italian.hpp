@@ -28,6 +28,9 @@ class Italian: public language_description
 public:
   // Object construction:
   Italian(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif

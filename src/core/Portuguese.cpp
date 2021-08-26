@@ -32,10 +32,25 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Static data:
+language_description::options Portuguese::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 Portuguese::Portuguese(void):
-  language_description(lang_id::pt, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
+  language_description(lang_id::pt, settings, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
