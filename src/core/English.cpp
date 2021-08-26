@@ -32,10 +32,25 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Static data:
+language_description::options English::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 English::English(void):
-  language_description(lang_id::en, L"th|wh[aeioy]|([abefhlmnrstw]i|[ao]u)ghts? ")
+  language_description(lang_id::en, settings, L"th|wh[aeioy]|([abefhlmnrstw]i|[ao]u)ghts? ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
