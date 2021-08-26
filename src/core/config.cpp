@@ -46,13 +46,23 @@ namespace package
 #include "file_player.hpp"
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
+
 #include "speech_engine.hpp"
 #include "speech_server.hpp"
+
 #include "mbrola.hpp"
 #include "freephone.hpp"
 #include "espeak.hpp"
 #include "ru_tts.hpp"
 #include "user_tts.hpp"
+
+#include "English.hpp"
+#include "German.hpp"
+#include "French.hpp"
+#include "Italian.hpp"
+#include "Spanish.hpp"
+#include "Portuguese.hpp"
+#include "Russian.hpp"
 
 using namespace std;
 using namespace boost::filesystem;
@@ -478,81 +488,81 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (speech::fallback, value<string>()->default_value(lang_id::en))
 
     // English speech options:
-    (en::engine.c_str(), value<string>())
-    (en::priority.c_str(), value<int>()->default_value(0))
-    (en::volume.c_str(), value<double>()->default_value(1.0))
-    (en::pitch.c_str(), value<double>()->default_value(1.0))
-    (en::rate.c_str(), value<double>()->default_value(1.0))
-    (en::acceleration.c_str(), value<double>()->default_value(0.0))
-    (en::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (en::char_rate.c_str(), value<double>()->default_value(1.0))
-    (en::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (en::engine.c_str(), value<string>(&English::settings.engine))
+    (en::priority.c_str(), value<int>(&English::settings.priority)->default_value(0))
+    (en::volume.c_str(), value<double>(&English::settings.volume)->default_value(1.0))
+    (en::pitch.c_str(), value<double>(&English::settings.pitch)->default_value(1.0))
+    (en::rate.c_str(), value<double>(&English::settings.rate)->default_value(1.0))
+    (en::acceleration.c_str(), value<double>(&English::settings.acceleration)->default_value(0.0))
+    (en::char_pitch.c_str(), value<double>(&English::settings.char_pitch)->default_value(1.0))
+    (en::char_rate.c_str(), value<double>(&English::settings.char_rate)->default_value(1.0))
+    (en::caps_factor.c_str(), value<double>(&English::settings.caps_factor)->default_value(1.2))
 
     // Russian speech options:
-    (ru::engine.c_str(), value<string>())
-    (ru::priority.c_str(), value<int>()->default_value(0))
-    (ru::volume.c_str(), value<double>()->default_value(1.0))
-    (ru::pitch.c_str(), value<double>()->default_value(1.0))
-    (ru::rate.c_str(), value<double>()->default_value(1.0))
-    (ru::acceleration.c_str(), value<double>()->default_value(0.0))
-    (ru::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (ru::char_rate.c_str(), value<double>()->default_value(1.0))
-    (ru::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (ru::engine.c_str(), value<string>(&Russian::settings.engine))
+    (ru::priority.c_str(), value<int>(&Russian::settings.priority)->default_value(0))
+    (ru::volume.c_str(), value<double>(&Russian::settings.volume)->default_value(1.0))
+    (ru::pitch.c_str(), value<double>(&Russian::settings.pitch)->default_value(1.0))
+    (ru::rate.c_str(), value<double>(&Russian::settings.rate)->default_value(1.0))
+    (ru::acceleration.c_str(), value<double>(&Russian::settings.acceleration)->default_value(0.0))
+    (ru::char_pitch.c_str(), value<double>(&Russian::settings.char_pitch)->default_value(1.0))
+    (ru::char_rate.c_str(), value<double>(&Russian::settings.char_rate)->default_value(1.0))
+    (ru::caps_factor.c_str(), value<double>(&Russian::settings.caps_factor)->default_value(1.2))
 
     // German speech options:
-    (de::engine.c_str(), value<string>())
-    (de::priority.c_str(), value<int>()->default_value(0))
-    (de::volume.c_str(), value<double>()->default_value(1.0))
-    (de::pitch.c_str(), value<double>()->default_value(1.0))
-    (de::rate.c_str(), value<double>()->default_value(1.0))
-    (de::acceleration.c_str(), value<double>()->default_value(0.0))
-    (de::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (de::char_rate.c_str(), value<double>()->default_value(1.0))
-    (de::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (de::engine.c_str(), value<string>(&German::settings.engine))
+    (de::priority.c_str(), value<int>(&German::settings.priority)->default_value(0))
+    (de::volume.c_str(), value<double>(&German::settings.volume)->default_value(1.0))
+    (de::pitch.c_str(), value<double>(&German::settings.pitch)->default_value(1.0))
+    (de::rate.c_str(), value<double>(&German::settings.rate)->default_value(1.0))
+    (de::acceleration.c_str(), value<double>(&German::settings.acceleration)->default_value(0.0))
+    (de::char_pitch.c_str(), value<double>(&German::settings.char_pitch)->default_value(1.0))
+    (de::char_rate.c_str(), value<double>(&German::settings.char_rate)->default_value(1.0))
+    (de::caps_factor.c_str(), value<double>(&German::settings.caps_factor)->default_value(1.2))
 
     // French speech options:
-    (fr::engine.c_str(), value<string>())
-    (fr::priority.c_str(), value<int>()->default_value(0))
-    (fr::volume.c_str(), value<double>()->default_value(1.0))
-    (fr::pitch.c_str(), value<double>()->default_value(1.0))
-    (fr::rate.c_str(), value<double>()->default_value(1.0))
-    (fr::acceleration.c_str(), value<double>()->default_value(0.0))
-    (fr::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (fr::char_rate.c_str(), value<double>()->default_value(1.0))
-    (fr::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (fr::engine.c_str(), value<string>(&French::settings.engine))
+    (fr::priority.c_str(), value<int>(&French::settings.priority)->default_value(0))
+    (fr::volume.c_str(), value<double>(&French::settings.volume)->default_value(1.0))
+    (fr::pitch.c_str(), value<double>(&French::settings.pitch)->default_value(1.0))
+    (fr::rate.c_str(), value<double>(&French::settings.rate)->default_value(1.0))
+    (fr::acceleration.c_str(), value<double>(&French::settings.acceleration)->default_value(0.0))
+    (fr::char_pitch.c_str(), value<double>(&French::settings.char_pitch)->default_value(1.0))
+    (fr::char_rate.c_str(), value<double>(&French::settings.char_rate)->default_value(1.0))
+    (fr::caps_factor.c_str(), value<double>(&French::settings.caps_factor)->default_value(1.2))
 
     // Spanish speech options:
-    (es::engine.c_str(), value<string>())
-    (es::priority.c_str(), value<int>()->default_value(0))
-    (es::volume.c_str(), value<double>()->default_value(1.0))
-    (es::pitch.c_str(), value<double>()->default_value(1.0))
-    (es::rate.c_str(), value<double>()->default_value(1.0))
-    (es::acceleration.c_str(), value<double>()->default_value(0.0))
-    (es::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (es::char_rate.c_str(), value<double>()->default_value(1.0))
-    (es::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (es::engine.c_str(), value<string>(&Spanish::settings.engine))
+    (es::priority.c_str(), value<int>(&Spanish::settings.priority)->default_value(0))
+    (es::volume.c_str(), value<double>(&Spanish::settings.volume)->default_value(1.0))
+    (es::pitch.c_str(), value<double>(&Spanish::settings.pitch)->default_value(1.0))
+    (es::rate.c_str(), value<double>(&Spanish::settings.rate)->default_value(1.0))
+    (es::acceleration.c_str(), value<double>(&Spanish::settings.acceleration)->default_value(0.0))
+    (es::char_pitch.c_str(), value<double>(&Spanish::settings.char_pitch)->default_value(1.0))
+    (es::char_rate.c_str(), value<double>(&Spanish::settings.char_rate)->default_value(1.0))
+    (es::caps_factor.c_str(), value<double>(&Spanish::settings.caps_factor)->default_value(1.2))
 
     // Portuguese speech options:
-    (pt::engine.c_str(), value<string>())
-    (pt::priority.c_str(), value<int>()->default_value(0))
-    (pt::volume.c_str(), value<double>()->default_value(1.0))
-    (pt::pitch.c_str(), value<double>()->default_value(1.0))
-    (pt::rate.c_str(), value<double>()->default_value(1.0))
-    (pt::acceleration.c_str(), value<double>()->default_value(0.0))
-    (pt::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (pt::char_rate.c_str(), value<double>()->default_value(1.0))
-    (pt::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (pt::engine.c_str(), value<string>(&Portuguese::settings.engine))
+    (pt::priority.c_str(), value<int>(&Portuguese::settings.priority)->default_value(0))
+    (pt::volume.c_str(), value<double>(&Portuguese::settings.volume)->default_value(1.0))
+    (pt::pitch.c_str(), value<double>(&Portuguese::settings.pitch)->default_value(1.0))
+    (pt::rate.c_str(), value<double>(&Portuguese::settings.rate)->default_value(1.0))
+    (pt::acceleration.c_str(), value<double>(&Portuguese::settings.acceleration)->default_value(0.0))
+    (pt::char_pitch.c_str(), value<double>(&Portuguese::settings.char_pitch)->default_value(1.0))
+    (pt::char_rate.c_str(), value<double>(&Portuguese::settings.char_rate)->default_value(1.0))
+    (pt::caps_factor.c_str(), value<double>(&Portuguese::settings.caps_factor)->default_value(1.2))
 
     // Italian speech options:
-    (it::engine.c_str(), value<string>())
-    (it::priority.c_str(), value<int>()->default_value(0))
-    (it::volume.c_str(), value<double>()->default_value(1.0))
-    (it::pitch.c_str(), value<double>()->default_value(1.0))
-    (it::rate.c_str(), value<double>()->default_value(1.0))
-    (it::acceleration.c_str(), value<double>()->default_value(0.0))
-    (it::char_pitch.c_str(), value<double>()->default_value(1.0))
-    (it::char_rate.c_str(), value<double>()->default_value(1.0))
-    (it::caps_factor.c_str(), value<double>()->default_value(1.2))
+    (it::engine.c_str(), value<string>(&Italian::settings.engine))
+    (it::priority.c_str(), value<int>(&Italian::settings.priority)->default_value(0))
+    (it::volume.c_str(), value<double>(&Italian::settings.volume)->default_value(1.0))
+    (it::pitch.c_str(), value<double>(&Italian::settings.pitch)->default_value(1.0))
+    (it::rate.c_str(), value<double>(&Italian::settings.rate)->default_value(1.0))
+    (it::acceleration.c_str(), value<double>(&Italian::settings.acceleration)->default_value(0.0))
+    (it::char_pitch.c_str(), value<double>(&Italian::settings.char_pitch)->default_value(1.0))
+    (it::char_rate.c_str(), value<double>(&Italian::settings.char_rate)->default_value(1.0))
+    (it::caps_factor.c_str(), value<double>(&Italian::settings.caps_factor)->default_value(1.2))
 
     // Mbrola based backends options:
     (mbrola::executable.c_str(), value<string>(&::mbrola::executable)->default_value(speaker::mbrola))

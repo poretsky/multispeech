@@ -28,6 +28,9 @@ class Spanish: public language_description
 public:
   // Object construction:
   Spanish(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif

@@ -151,11 +151,6 @@ protected:
   static const std::string novoice;
 
 private:
-  // Instance specific voice parameters that are set up
-  // from configuration at the object construction time:
-  double volume_factor, rate_factor, pitch_factor, caps_factor;
-  double char_pitch, char_rate, acceleration;
-
   // Generated sound stream sample format:
   soundfile::format format;
 

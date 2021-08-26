@@ -28,6 +28,9 @@ class French: public language_description
 public:
   // Object construction:
   French(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif

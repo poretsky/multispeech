@@ -28,6 +28,9 @@ class Portuguese: public language_description
 public:
   // Object construction:
   Portuguese(void);
+
+  // Configurable parameters container:
+  static options settings;
 };
 
 #endif
