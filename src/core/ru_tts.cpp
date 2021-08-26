@@ -166,9 +166,5 @@ ru_tts::voicify(double rate, double pitch)
       format_macros["%pitch"] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
       format_macros["%rate"] = lexical_cast<string>(r);
     }
-  else
-    {
-      format_macros["%pitch"] = lexical_cast<string>(pitch);
-      format_macros["%rate"] = lexical_cast<string>(rate);
-    }
+  else speech_engine::voicify(rate, pitch);
 }

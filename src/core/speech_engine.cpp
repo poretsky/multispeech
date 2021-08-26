@@ -218,6 +218,13 @@ speech_engine::command(const string& pattern)
 }
 
 void
+speech_engine::voicify(double rate, double pitch)
+{
+  format_macros["%pitch"] = lexical_cast<string>(pitch);
+  format_macros["%rate"] = lexical_cast<string>(rate);
+}
+
+void
 speech_engine::sampling(unsigned int value)
 {
   native_sampling = value;

@@ -18,12 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <boost/lexical_cast.hpp>
-
 #include "user_tts.hpp"
 
 using namespace std;
-using namespace boost;
 
 
 // Static data:
@@ -64,14 +61,4 @@ user_tts::user_tts(const configuration& conf, const string& lang):
   if (!command.empty())
     speech_engine::command(user_tts::command);
   else throw configuration::error("no command is specified for user defined backend");
-}
-
-
-// Private methods:
-
-void
-user_tts::voicify(double rate, double pitch)
-{
-  format_macros["%pitch"] = lexical_cast<string>(pitch);
-  format_macros["%rate"] = lexical_cast<string>(rate);
 }
