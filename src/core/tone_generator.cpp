@@ -26,6 +26,7 @@ using namespace std;
 
 
 // Static data definition:
+string tone_generator::device;
 bool tone_generator::asynchronous = true;
 unsigned int tone_generator::sampling = 44100;
 float tone_generator::relative_volume = 1.0;
@@ -44,11 +45,8 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 
 // Construct / destroy:
 
-tone_generator::tone_generator(const configuration& conf):
-  audioplayer(conf.option_value[options::tones::device].as<string>().empty() ?
-              conf.option_value[options::audio::device].as<string>() :
-              conf.option_value[options::tones::device].as<string>(),
-              "tones"),
+tone_generator::tone_generator(void):
+  audioplayer(device.empty() ? audioplayer::device : device, "tones"),
   sound_processor(fifo),
   fifo(1)
 {

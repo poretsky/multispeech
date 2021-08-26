@@ -449,25 +449,25 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (frontend::dtk_voices, bool_switch()->default_value(false))
 
     // General audio options:
-    (audio::device, value<string>()->default_value(""))
+    (audio::device, value<string>(&audioplayer::device)->default_value(""))
     (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
     (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.05))
     (audio::async_operation, bool_switch(&audioplayer::async)->default_value(false))
     (audio::pulseaudio_direct, bool_switch(&audioplayer::use_pa)->default_value(true))
 
     // Sound files playing section:
-    (sounds::device, value<string>()->default_value(""))
+    (sounds::device, value<string>(&file_player::device)->default_value(""))
     (sounds::volume, value<float>(&file_player::relative_volume)->default_value(1.0))
     (sounds::asynchronous, bool_switch(&file_player::asynchronous)->default_value(true))
 
     // tones producing section:
-    (tones::device, value<string>()->default_value(""))
+    (tones::device, value<string>(&tone_generator::device)->default_value(""))
     (tones::volume, value<float>(&tone_generator::relative_volume)->default_value(1.0))
     (tones::sampling, value<unsigned int>(&tone_generator::sampling)->default_value(44100))
     (tones::asynchronous, bool_switch(&tone_generator::asynchronous)->default_value(true))
 
     // General speech control options:
-    (speech::device, value<string>()->default_value(""))
+    (speech::device, value<string>(&loudspeaker::device)->default_value(""))
     (speech::volume, value<float>(&loudspeaker::relative_volume)->default_value(1.0))
     (speech::language, value<string>())
     (speech::fallback, value<string>()->default_value(lang_id::en))
