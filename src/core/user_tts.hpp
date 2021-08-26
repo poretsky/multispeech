@@ -34,6 +34,14 @@ public:
   // Object construction:
   user_tts(const configuration& conf, const std::string& lang);
 
+  // Configurable parameters:
+  static std::string command;
+  static std::string format;
+  static unsigned int sampling;
+  static bool stereo;
+  static bool freq_control;
+  static std::string charset;
+
 private:
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);

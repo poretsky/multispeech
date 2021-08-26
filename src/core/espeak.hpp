@@ -35,6 +35,9 @@ public:
   // Object construction:
   espeak(const configuration& conf, const std::string& lang);
 
+  // Configurable parameters:
+  static std::string executable;
+
 private:
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);

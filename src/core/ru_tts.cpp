@@ -39,15 +39,32 @@ using namespace boost::filesystem;
 using namespace FBB;
 
 
+// Static data:
+string ru_tts::executable;
+string ru_tts::lexicon;
+string ru_tts::log_file;
+double ru_tts::expressiveness = 1.0;
+bool ru_tts::female_voice = false;
+bool ru_tts::decimal_point = true;
+bool ru_tts::decimal_comma = true;
+double ru_tts::interclause_gap_factor = 1.0;
+double ru_tts::comma_gap_factor = 1.0;
+double ru_tts::dot_gap_factor = 1.0;
+double ru_tts::semicolon_gap_factor = 1.0;
+double ru_tts::colon_gap_factor = 1.0;
+double ru_tts::question_gap_factor = 1.0;
+double ru_tts::exclamation_gap_factor = 1.0;
+double ru_tts::intonational_gap_factor = 1.0;
+
+
 // Object construction:
 
 ru_tts::ru_tts(const configuration& conf):
   speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
-  if (conf.option_value.count(options::ru_tts::executable) &&
-      !conf.option_value[options::ru_tts::executable].as<string>().empty())
+  if (!executable.empty())
     {
-      string cmd(conf.option_value[options::ru_tts::executable].as<string>());
+      string cmd(executable);
       ostringstream info;
       info << cmd << " -v 2>&1";
       FILE* backend = popen(info.str().c_str(), "r");
@@ -68,10 +85,9 @@ ru_tts::ru_tts(const configuration& conf):
             version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
         }
       cmd += " -r %rate -p %pitch";
-      if (conf.option_value.count(options::ru_tts::lexicon) &&
-          !conf.option_value[options::ru_tts::lexicon].as<string>().empty())
+      if (!lexicon.empty())
         {
-          path lexicon(conf.option_value[options::ru_tts::lexicon].as<string>());
+          path lexicon(ru_tts::lexicon);
           if (exists(lexicon))
             cmd += " -s " + lexicon.generic_string();
           else
@@ -81,57 +97,49 @@ ru_tts::ru_tts(const configuration& conf):
                 cerr << "Warning: " << lexicon.generic_string() << " does not exist" << endl;
             }
         }
-      if (conf.option_value.count(options::ru_tts::log) &&
-          !conf.option_value[options::ru_tts::log].as<string>().empty())
-        cmd += " -l " + conf.option_value[options::ru_tts::log].as<string>();
-      if (conf.option_value.count(options::ru_tts::female_voice) &&
-          conf.option_value[options::ru_tts::female_voice].as<bool>())
+      if (!log_file.empty())
+        cmd += " -l " + log_file;
+      if (female_voice)
         cmd += " -a";
       if (version >= 6.0)
         {
-          if (conf.option_value.count(options::ru_tts::decimal_point) ||
-              conf.option_value.count(options::ru_tts::decimal_comma))
+          int flags = 0;
+          if (!decimal_point)
+            flags |= 1;
+          if (!decimal_comma)
+            flags |= 2;
+          switch (flags)
             {
-              int flags = 0;
-              if (conf.option_value.count(options::ru_tts::decimal_point) &&
-                  !conf.option_value[options::ru_tts::decimal_point].as<bool>())
-                flags |= 1;
-              if (conf.option_value.count(options::ru_tts::decimal_comma) &&
-                  !conf.option_value[options::ru_tts::decimal_comma].as<bool>())
-                flags |= 2;
-              switch (flags)
-                {
-                case 1:
-                  cmd += " -d,";
-                  break;
-                case 2:
-                  cmd += " -d.";
-                  break;
-                case 3:
-                  cmd += " -d-";
-                  break;
-                default:
-                  break;
-                }
+            case 1:
+              cmd += " -d,";
+              break;
+            case 2:
+              cmd += " -d.";
+              break;
+            case 3:
+              cmd += " -d-";
+              break;
+            default:
+              break;
             }
-          if (conf.option_value.count(options::ru_tts::expressiveness))
-            cmd += " -e " + lexical_cast<string>(conf.option_value[options::ru_tts::expressiveness].as<double>());
-          if (conf.option_value.count(options::ru_tts::interclause_gap_factor))
-            cmd += " -g " + lexical_cast<string>(conf.option_value[options::ru_tts::interclause_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::comma_gap_factor))
-            cmd += " -g ," + lexical_cast<string>(conf.option_value[options::ru_tts::comma_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::dot_gap_factor))
-            cmd += " -g ." + lexical_cast<string>(conf.option_value[options::ru_tts::dot_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::semicolon_gap_factor))
-            cmd += " -g ;" + lexical_cast<string>(conf.option_value[options::ru_tts::semicolon_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::colon_gap_factor))
-            cmd += " -g :" + lexical_cast<string>(conf.option_value[options::ru_tts::colon_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::question_gap_factor))
-            cmd += " -g ?" + lexical_cast<string>(conf.option_value[options::ru_tts::question_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::exclamation_gap_factor))
-            cmd += " -g !" + lexical_cast<string>(conf.option_value[options::ru_tts::exclamation_gap_factor].as<double>());
-          if (conf.option_value.count(options::ru_tts::intonational_gap_factor))
-            cmd += " -g -" + lexical_cast<string>(conf.option_value[options::ru_tts::intonational_gap_factor].as<double>());
+          if (expressiveness != 1.0)
+            cmd += " -e " + lexical_cast<string>(expressiveness);
+          if (interclause_gap_factor != 1.0)
+            cmd += " -g " + lexical_cast<string>(interclause_gap_factor);
+          if (comma_gap_factor != 1.0)
+            cmd += " -g ," + lexical_cast<string>(comma_gap_factor);
+          if (dot_gap_factor != 1.0)
+            cmd += " -g ." + lexical_cast<string>(dot_gap_factor);
+          if (semicolon_gap_factor != 1.0)
+            cmd += " -g ;" + lexical_cast<string>(semicolon_gap_factor);
+          if (colon_gap_factor != 1.0)
+            cmd += " -g :" + lexical_cast<string>(colon_gap_factor);
+          if (question_gap_factor != 1.0)
+            cmd += " -g ?" + lexical_cast<string>(question_gap_factor);
+          if (exclamation_gap_factor != 1.0)
+            cmd += " -g !" + lexical_cast<string>(exclamation_gap_factor);
+          if (intonational_gap_factor != 1.0)
+            cmd += " -g -" + lexical_cast<string>(intonational_gap_factor);
         }
       command(cmd);
     }

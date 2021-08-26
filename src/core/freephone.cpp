@@ -33,19 +33,22 @@ using namespace boost::filesystem;
 using namespace FBB;
 
 
+// Static data:
+string freephone::executable;
+string freephone::lexicon;
+
+
 // Object construction:
 
 freephone::freephone(const configuration& conf):
   mbrola(conf, speaker::freephone, "en1", lang_id::en)
 {
-  if (conf.option_value.count(options::freephone::executable) &&
-      !conf.option_value[options::freephone::executable].as<string>().empty())
+  if (!executable.empty())
     {
-      string cmd(conf.option_value[options::freephone::executable].as<string>());
-      if (conf.option_value.count(options::freephone::lexicon) &&
-          !conf.option_value[options::freephone::lexicon].as<string>().empty())
+      string cmd(executable);
+      if (!lexicon.empty())
         {
-          path lexicon(conf.option_value[options::freephone::lexicon].as<string>());
+          path lexicon(freephone::lexicon);
           if (exists(lexicon))
             cmd += " -h " + lexicon.generic_string();
           else
