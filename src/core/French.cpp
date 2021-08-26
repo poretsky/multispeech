@@ -141,7 +141,7 @@ French::French(void):
     (L"dot", L"point")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Français")
+    (intern_string(id, locale("")).c_str(), L"Français")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:

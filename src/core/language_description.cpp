@@ -31,8 +31,8 @@ using namespace boost;
 language_description::language_description(const char* language_id,
                                            const options& language_settings,
                                            const wchar_t* language_detector):
+  id(language_id),
   settings(language_settings),
-  id_str(language_id),
   detector(language_detector, regex::normal | regex::icase)
 {
   filter_chain.setup()
@@ -45,12 +45,6 @@ language_description::~language_description(void)
 
 
 // General actions:
-
-const char*
-language_description::id(void) const
-{
-  return id_str;
-}
 
 bool
 language_description::recognize(const wstring& s)
