@@ -27,7 +27,6 @@
 
 #include <soundtouch/FIFOSampleBuffer.h>
 
-#include "config.hpp"
 #include "audioplayer.hpp"
 #include "sound_processor.hpp"
 #include "exec_queue.hpp"
@@ -57,7 +56,7 @@ class tone_generator:
 {
 public:
   // Construct / destroy:
-  explicit tone_generator(const configuration& conf);
+  tone_generator(void);
   ~tone_generator(void);
 
   // Start task execution. If there is a task executing already
@@ -73,6 +72,7 @@ public:
   bool active(void);
 
   // Configurable parameters:
+  static std::string device;
   static bool asynchronous;
   static unsigned int sampling;
   static float relative_volume;
