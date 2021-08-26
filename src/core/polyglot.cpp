@@ -191,7 +191,7 @@ polyglot::language(void) const
 {
   if (autolanguage)
     return lang_id::autodetect;
-  return talker[lang]->language->id();
+  return talker[lang]->language->id;
 }
 
 void

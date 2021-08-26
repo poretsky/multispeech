@@ -171,7 +171,7 @@ Russian::Russian(void):
     (L"dot", L"точка")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"русский")
+    (intern_string(id, locale("")).c_str(), L"русский")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Transliteration table:

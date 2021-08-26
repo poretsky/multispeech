@@ -132,7 +132,7 @@ German::German(void):
     (L"dot", L"Punkt")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Deutsch")
+    (intern_string(id, locale("")).c_str(), L"Deutsch")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:

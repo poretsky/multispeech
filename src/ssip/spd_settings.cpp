@@ -215,7 +215,7 @@ spd_settings::apply_synthesis_voice(void)
               voice << '-' << speechmaster.talker[i]->voice << flush;
             if (beyond() == voice.str())
               {
-                speechmaster.language(speechmaster.talker[i]->language->id());
+                speechmaster.language(speechmaster.talker[i]->language->id);
                 accept_language = accept_language && !use_voice_language;
                 break;
               }

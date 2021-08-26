@@ -443,7 +443,7 @@ frontend::do_list_voices(void)
             cout << "200-" << speechmaster.talker[i]->name;
             if (!speechmaster.talker[i]->voice.empty())
               cout << '-' << speechmaster.talker[i]->voice;
-            cout << atom_separator << speechmaster.talker[i]->language->id() << atom_separator << "none" << endl;
+            cout << atom_separator << speechmaster.talker[i]->language->id << atom_separator << "none" << endl;
           }
       cout << "200 OK VOICE LIST SENT" << endl;
       communication_reset();
