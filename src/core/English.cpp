@@ -93,7 +93,7 @@ English::English(void):
     (L"newline", L"new line")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"English")
+    (intern_string(id, locale("")).c_str(), L"English")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
