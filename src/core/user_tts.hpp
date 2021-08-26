@@ -41,10 +41,6 @@ public:
   static bool stereo;
   static bool freq_control;
   static std::string charset;
-
-private:
-  // Make up voice parameters for backend:
-  void voicify(double rate, double pitch = 1.0);
 };
 
 #endif
