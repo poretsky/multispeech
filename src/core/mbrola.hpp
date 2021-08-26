@@ -28,6 +28,11 @@
 
 class mbrola: public speech_engine
 {
+public:
+  // Configurable parameters:
+  static std::string executable;
+  static std::string voices;
+
 protected:
   // Constructing the object:
   mbrola(const configuration& conf,

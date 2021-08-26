@@ -30,6 +30,11 @@ using namespace boost;
 using namespace boost::filesystem;
 
 
+// Static data:
+string mbrola::executable;
+string mbrola::voices;
+
+
 // Object construction:
 
 mbrola::mbrola(const configuration& conf,
@@ -40,18 +45,16 @@ mbrola::mbrola(const configuration& conf,
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
-  if (conf.option_value.count(options::mbrola::executable) &&
-      !conf.option_value[options::mbrola::executable].as<string>().empty())
+  if (!executable.empty())
     {
-      string cmd(conf.option_value[options::mbrola::executable].as<string>());
+      string cmd(executable);
       cmd += " -t %rate -f %pitch -l %freq -v ";
       // The en1 voice is especially quiet.
       cmd += (voice == "en1") ? "3.0" : "1.0";
       cmd += " -e ";
-      if (conf.option_value.count(options::mbrola::voices))
+      if (!voices.empty())
         {
-          path voice_path(complete(voice,
-                                   conf.option_value[options::mbrola::voices].as<string>()));
+          path voice_path(complete(voice, voices));
           path voice_file(complete(voice, voice_path));
           if (exists(voice_file))
             cmd += voice_file.generic_string();
