@@ -26,25 +26,31 @@ using namespace std;
 using namespace boost;
 
 
+// Static data:
+
+string user_tts::command;
+string user_tts::format;
+unsigned int user_tts::sampling = 22050;
+bool user_tts::stereo = false;
+bool user_tts::freq_control = false;
+string user_tts::charset;
+
+
 // Extract sound format specification from the configuration:
 
 static soundfile::format
-sound_format(const configuration& conf)
+sound_format(const string& fmt)
 {
   soundfile::format result = soundfile::autodetect;
-  if (conf.option_value.count(options::user::format))
+  if (!fmt.empty())
     {
-      string fmt(conf.option_value[options::user::format].as<string>());
-      if (!fmt.empty())
-        {
-          if ("s8" == fmt)
-            result = soundfile::s8;
-          else if ("u8" == fmt)
-            result = soundfile::u8;
-          else if ("s16" == fmt)
-            result = soundfile::s16;
-          else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
-        }
+      if ("s8" == fmt)
+        result = soundfile::s8;
+      else if ("u8" == fmt)
+        result = soundfile::u8;
+      else if ("s16" == fmt)
+        result = soundfile::s16;
+      else throw configuration::error("unknown sound format specification \"" + fmt + '\"');
     }
   return result;
 }
@@ -53,15 +59,10 @@ sound_format(const configuration& conf)
 // Object construction:
 
 user_tts::user_tts(const configuration& conf, const string& lang):
-  speech_engine(conf, speaker::user, "", lang, sound_format(conf),
-                conf.option_value[options::user::sampling].as<unsigned int>(),
-                conf.option_value[options::user::stereo].as<bool>() ? 2 : 1,
-                !conf.option_value[options::user::freq_control].as<bool>(),
-                conf.option_value[options::user::charset].as<string>())
+  speech_engine(conf, speaker::user, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
 {
-  if (conf.option_value.count(options::user::command) &&
-      !conf.option_value[options::user::command].as<string>().empty())
-    command(conf.option_value[options::user::command].as<string>());
+  if (!command.empty())
+    speech_engine::command(user_tts::command);
   else throw configuration::error("no command is specified for user defined backend");
 }
 

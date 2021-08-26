@@ -48,6 +48,11 @@ namespace package
 #include "loudspeaker.hpp"
 #include "speech_engine.hpp"
 #include "speech_server.hpp"
+#include "mbrola.hpp"
+#include "freephone.hpp"
+#include "espeak.hpp"
+#include "ru_tts.hpp"
+#include "user_tts.hpp"
 
 using namespace std;
 using namespace boost::filesystem;
@@ -550,11 +555,11 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (it::caps_factor.c_str(), value<double>()->default_value(1.2))
 
     // Mbrola based backends options:
-    (mbrola::executable.c_str(), value<string>()->default_value(speaker::mbrola))
-    (mbrola::voices.c_str(), value<string>()->default_value(mbrola_voices_default.generic_string()))
+    (mbrola::executable.c_str(), value<string>(&::mbrola::executable)->default_value(speaker::mbrola))
+    (mbrola::voices.c_str(), value<string>(&::mbrola::voices)->default_value(mbrola_voices_default.generic_string()))
 
     // Espeak based backends options:
-    (espeak::executable.c_str(), value<string>()->default_value(speaker::espeak))
+    (espeak::executable.c_str(), value<string>(&::espeak::executable)->default_value(speaker::espeak))
 
     // Espeak voices assignment:
     (espeak::en.c_str(), value<string>()->default_value(lang_id::en))
@@ -574,33 +579,33 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (espeak::mbrola::it.c_str(), value<string>()->default_value("it3"))
 
     // Freephone backend options:
-    (freephone::executable.c_str(), value<string>()->default_value(speaker::freephone))
-    (freephone::lexicon.c_str(), value<string>()->default_value(enlex_default.generic_string()))
+    (freephone::executable.c_str(), value<string>(&::freephone::executable)->default_value(speaker::freephone))
+    (freephone::lexicon.c_str(), value<string>(&::freephone::lexicon)->default_value(enlex_default.generic_string()))
 
     // Ru_tts backend options:
-    (ru_tts::executable.c_str(), value<string>()->default_value(speaker::ru_tts))
-    (ru_tts::lexicon.c_str(), value<string>()->default_value(rulex_default.generic_string()))
-    (ru_tts::log.c_str(), value<string>())
-    (ru_tts::expressiveness.c_str(), value<double>())
-    (ru_tts::female_voice.c_str(), bool_switch()->default_value(false))
-    (ru_tts::decimal_point.c_str(), bool_switch()->default_value(true))
-    (ru_tts::decimal_comma.c_str(), bool_switch()->default_value(true))
-    (ru_tts::interclause_gap_factor.c_str(), value<double>())
-    (ru_tts::comma_gap_factor.c_str(), value<double>())
-    (ru_tts::dot_gap_factor.c_str(), value<double>())
-    (ru_tts::semicolon_gap_factor.c_str(), value<double>())
-    (ru_tts::colon_gap_factor.c_str(), value<double>())
-    (ru_tts::question_gap_factor.c_str(), value<double>())
-    (ru_tts::exclamation_gap_factor.c_str(), value<double>())
-    (ru_tts::intonational_gap_factor.c_str(), value<double>())
+    (ru_tts::executable.c_str(), value<string>(&::ru_tts::executable)->default_value(speaker::ru_tts))
+    (ru_tts::lexicon.c_str(), value<string>(&::ru_tts::lexicon)->default_value(rulex_default.generic_string()))
+    (ru_tts::log.c_str(), value<string>(&::ru_tts::log_file))
+    (ru_tts::expressiveness.c_str(), value<double>(&::ru_tts::expressiveness)->default_value(1.0))
+    (ru_tts::female_voice.c_str(), bool_switch(&::ru_tts::female_voice)->default_value(false))
+    (ru_tts::decimal_point.c_str(), bool_switch(&::ru_tts::decimal_point)->default_value(true))
+    (ru_tts::decimal_comma.c_str(), bool_switch(&::ru_tts::decimal_comma)->default_value(true))
+    (ru_tts::interclause_gap_factor.c_str(), value<double>(&::ru_tts::interclause_gap_factor)->default_value(1.0))
+    (ru_tts::comma_gap_factor.c_str(), value<double>(&::ru_tts::comma_gap_factor)->default_value(1.0))
+    (ru_tts::dot_gap_factor.c_str(), value<double>(&::ru_tts::dot_gap_factor)->default_value(1.0))
+    (ru_tts::semicolon_gap_factor.c_str(), value<double>(&::ru_tts::semicolon_gap_factor)->default_value(1.0))
+    (ru_tts::colon_gap_factor.c_str(), value<double>(&::ru_tts::colon_gap_factor)->default_value(1.0))
+    (ru_tts::question_gap_factor.c_str(), value<double>(&::ru_tts::question_gap_factor)->default_value(1.0))
+    (ru_tts::exclamation_gap_factor.c_str(), value<double>(&::ru_tts::exclamation_gap_factor)->default_value(1.0))
+    (ru_tts::intonational_gap_factor.c_str(), value<double>(&::ru_tts::intonational_gap_factor)->default_value(1.0))
 
     // User defined TTS backend options:
-    (user::command.c_str(), value<string>())
-    (user::format.c_str(), value<string>())
-    (user::sampling.c_str(), value<unsigned int>()->default_value(22050))
-    (user::stereo.c_str(), bool_switch()->default_value(false))
-    (user::freq_control.c_str(), bool_switch()->default_value(false))
-    (user::charset.c_str(), value<string>()->default_value(""))
+    (user::command.c_str(), value<string>(&user_tts::command))
+    (user::format.c_str(), value<string>(&user_tts::format))
+    (user::sampling.c_str(), value<unsigned int>(&user_tts::sampling)->default_value(22050))
+    (user::stereo.c_str(), bool_switch(&user_tts::stereo)->default_value(false))
+    (user::freq_control.c_str(), bool_switch(&user_tts::freq_control)->default_value(false))
+    (user::charset.c_str(), value<string>(&user_tts::charset)->default_value(""))
 
     // Registering Speech Dispatcher backend options:
     (spd::version, value<string>())

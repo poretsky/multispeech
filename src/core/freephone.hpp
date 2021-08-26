@@ -23,6 +23,8 @@
 #ifndef MULTISPEECH_FREEPHONE_HPP
 #define MULTISPEECH_FREEPHONE_HPP
 
+#include <string>
+
 #include "mbrola.hpp"
 
 class freephone: public mbrola
@@ -30,6 +32,10 @@ class freephone: public mbrola
 public:
   // Object construction:
   explicit freephone(const configuration& conf);
+
+  // Configurable parameters:
+  static std::string executable;
+  static std::string lexicon;
 };
 
 #endif
