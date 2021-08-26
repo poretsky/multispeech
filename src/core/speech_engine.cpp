@@ -83,13 +83,6 @@ speech_engine::speech_engine(const configuration& conf,
          conf.option_value[options::compose(backend, lang)].as<string>() :
          "") :
         voice_id),
-  volume_factor(conf.option_value[options::compose(lang, option_name::volume)].as<double>()),
-  rate_factor(conf.option_value[options::compose(lang, option_name::rate)].as<double>()),
-  pitch_factor(conf.option_value[options::compose(lang, option_name::pitch)].as<double>()),
-  caps_factor(conf.option_value[options::compose(lang, option_name::caps_factor)].as<double>()),
-  char_pitch(conf.option_value[options::compose(lang, option_name::char_pitch)].as<double>()),
-  char_rate(conf.option_value[options::compose(lang, option_name::char_rate)].as<double>()),
-  acceleration(conf.option_value[options::compose(lang, option_name::acceleration)].as<double>()),
   format(fmt),
   native_sampling(sampling),
   sound_channels(channels),
@@ -265,8 +258,8 @@ speech_engine::wrap_text(const wstring& s,
       freq *= (deviation > 0.0) ? deviation : persistent_deviation;
       format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
     }
-  voicify(rate_factor * ((rate > 0.0) ? rate : persistent_rate),
-          pitch_factor * ((pitch > 0.0) ? pitch : persistent_pitch));
+  voicify(language->settings.rate * ((rate > 0.0) ? rate : persistent_rate),
+          language->settings.pitch * ((pitch > 0.0) ? pitch : persistent_pitch));
 
   // Make up the TTS script.
   BOOST_FOREACH(string cmd, command_patterns)
@@ -301,8 +294,8 @@ speech_engine::wrap_text(const wstring& s,
   // Make up and return complete task description.
   return speech_task(extern_string(prepared, backend_charset),
                      commands, format, playing_params,
-                     ((volume > 0) ? volume : persistent_volume) * volume_factor,
-                     acceleration);
+                     ((volume > 0) ? volume : persistent_volume) * language->settings.volume,
+                     language->settings.acceleration);
 }
 
 speech_task
@@ -313,8 +306,8 @@ speech_engine::wrap_letter(wstring s,
   if (s.length() == 1)
     {
       if (isupper(s[0], locale("")))
-        pitch *= caps_factor;
+        pitch *= language->settings.caps_factor;
       else s[0] = toupper(s[0], locale(""));
     }
-  return wrap_text(s, volume, rate * char_rate, pitch * char_pitch, deviation, true, true);
+  return wrap_text(s, volume, rate * language->settings.char_rate, pitch * language->settings.char_pitch, deviation, true, true);
 }
