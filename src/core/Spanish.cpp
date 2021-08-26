@@ -136,7 +136,7 @@ Spanish::Spanish(void):
     (L"dot", L"punto")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Español")
+    (intern_string(id, locale("")).c_str(), L"Español")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:

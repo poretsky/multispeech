@@ -146,7 +146,7 @@ Italian::Italian(void):
     (L"dot", L"Punto")
 
     // Language name:
-    (intern_string(id(), locale("")).c_str(), L"Italiano")
+    (intern_string(id, locale("")).c_str(), L"Italiano")
     .convert_to_container< map<const wstring, const wstring> >();
 
   // Text filtering chain:
