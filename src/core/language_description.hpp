@@ -38,8 +38,22 @@
 class language_description
 {
 protected:
+  // Language specific options container:
+  typedef struct
+  {
+    std::string engine;
+    int priority;
+    double volume;double pitch;
+    double rate;
+    double acceleration;
+    double char_pitch;
+    double char_rate;
+    double caps_factor;
+  } options;
+
   // Object constructor:
   language_description(const char* language_id,
+                       const options& language_settings,
                        const wchar_t* language_detector);
 
 public:
@@ -48,6 +62,9 @@ public:
 
   // Language id string:
   const char* id(void) const;
+
+  // Configured speech parameters:
+  const options& settings;
 
   // Native language presence recognition:
   bool recognize(const std::wstring& s);

@@ -32,10 +32,25 @@ using namespace boost::assign;
 using namespace boost::algorithm;
 
 
+// Static data:
+language_description::options Spanish::settings =
+  {
+    .engine = "",
+    .priority = 0,
+    .volume = 1.0,
+    .pitch = 1.0,
+    .rate = 1.0,
+    .acceleration = 0.0,
+    .char_pitch = 1.0,
+    .char_rate = 1.0,
+    .caps_factor = 1.2
+  };
+
+
 // Object construction:
 
 Spanish::Spanish(void):
-  language_description(lang_id::es, L"[ñóú¿¡]|(^| )(qu|los|el|ll[aeou][bcdfgmnprstv].*) ")
+  language_description(lang_id::es, settings, L"[ñóú¿¡]|(^| )(qu|los|el|ll[aeou][bcdfgmnprstv].*) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
