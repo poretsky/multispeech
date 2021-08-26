@@ -20,11 +20,14 @@
 
 #include "file_player.hpp"
 
+#include "audioplayer.hpp"
+
 using namespace std;
 using namespace boost::filesystem;
 
 
 // Static data definition:
+string file_player::device;
 bool file_player::asynchronous = true;
 float file_player::relative_volume = 1.0;
 
@@ -40,11 +43,8 @@ sound_task::sound_task(const path& sound_file, float sound_volume):
 
 // Object constructor:
 
-file_player::file_player(const configuration& conf):
-  soundfile(conf.option_value[options::sounds::device].as<string>().empty() ?
-            conf.option_value[options::audio::device].as<string>() :
-            conf.option_value[options::sounds::device].as<string>(),
-            "sounds")
+file_player::file_player(void):
+  soundfile(device.empty() ? audioplayer::device : device, "sounds")
 {
 }
 

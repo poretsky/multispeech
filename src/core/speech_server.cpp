@@ -51,7 +51,7 @@ speech_server::speech_server(const configuration& conf):
                 locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
                 locale("")),
   speechmaster(conf),
-  soundmaster(conf, this),
+  soundmaster(this),
   exit_status(EXIT_SUCCESS)
 {
 }

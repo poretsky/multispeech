@@ -55,6 +55,7 @@ find_device(const string& device_name)
 
 // Static data:
 condition audioplayer::complete;
+string audioplayer::device;
 PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
 bool audioplayer::async = false;
