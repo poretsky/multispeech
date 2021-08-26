@@ -25,9 +25,10 @@
 #ifndef MULTISPEECH_FILE_PLAYER_HPP
 #define MULTISPEECH_FILE_PLAYER_HPP
 
+#include <string>
+
 #include <boost/filesystem.hpp>
 
-#include "config.hpp"
 #include "soundfile.hpp"
 #include "exec_queue.hpp"
 
@@ -54,7 +55,7 @@ class file_player:
 {
 public:
   // Object constructor:
-  explicit file_player(const configuration& conf);
+  file_player(void);
 
   // Start task execution. If there is a task executing already
   // and the new one is started with the override option, then
@@ -69,6 +70,7 @@ public:
   bool active(void);
 
   // Configurable parameters:
+  static std::string device;
   static bool asynchronous;
   static float relative_volume;
 

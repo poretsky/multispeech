@@ -28,7 +28,6 @@
 
 #include <soundtouch/SoundTouch.h>
 
-#include "config.hpp"
 #include "soundfile.hpp"
 #include "sound_processor.hpp"
 #include "pipeline.hpp"
@@ -84,13 +83,14 @@ class loudspeaker:
 {
 public:
   // Construct / destroy:
-  explicit loudspeaker(const configuration& conf);
+  loudspeaker(void);
   ~loudspeaker(void);
 
   // Start task execution:
   void start(const speech_task& speech);
 
   // Configurable parameters:
+  static std::string device;
   static float relative_volume;
 
 private:

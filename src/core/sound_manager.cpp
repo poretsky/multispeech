@@ -30,13 +30,10 @@ using namespace boost;
 
 // Constructing / destroying:
 
-sound_manager::sound_manager(const configuration& conf, callback* host):
+sound_manager::sound_manager(callback* host):
   state(idle),
   business(nothing),
   jobs(new jobs_queue),
-  sounds(conf),
-  tones(conf),
-  speech(conf),
   events(host),
   service(boost::ref(*this))
 {

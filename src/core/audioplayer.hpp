@@ -67,6 +67,7 @@ public:
   static boost::condition complete;
 
   // Configurable parameters:
+  static std::string device;
   static PaTime suggested_latency;
   static float general_volume;
   static bool async;
