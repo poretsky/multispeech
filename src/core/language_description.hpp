@@ -61,7 +61,7 @@ public:
   virtual ~language_description(void);
 
   // Language id string:
-  const char* id(void) const;
+  const char* const id;
 
   // Configured speech parameters:
   const options& settings;
@@ -97,9 +97,6 @@ protected:
   text_filter filter_chain;
 
 private:
-  // Language id string:
-  const char* id_str;
-
   // Native language detector:
   const boost::wregex detector;
 };
