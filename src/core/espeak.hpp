@@ -33,10 +33,19 @@ class espeak: public speech_engine
 {
 public:
   // Object construction:
-  espeak(const configuration& conf, const std::string& lang);
+  explicit espeak(const std::string& lang);
 
   // Configurable parameters:
   static std::string executable;
+
+  // Voices assignment:
+  static std::string en;
+  static std::string de;
+  static std::string it;
+  static std::string fr;
+  static std::string es;
+  static std::string pt;
+  static std::string ru;
 
 private:
   // Make up voice parameters for backend:
@@ -48,7 +57,7 @@ class mbrespeak: public mbrola
 {
 public:
   // Object construction:
-  mbrespeak(const configuration& conf, const std::string& lang);
+  explicit mbrespeak(const std::string& lang);
 };
 
 #endif

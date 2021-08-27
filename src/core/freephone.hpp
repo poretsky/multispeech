@@ -31,7 +31,7 @@ class freephone: public mbrola
 {
 public:
   // Object construction:
-  explicit freephone(const configuration& conf);
+  freephone(void);
 
   // Configurable parameters:
   static std::string executable;

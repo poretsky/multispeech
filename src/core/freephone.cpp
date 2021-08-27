@@ -26,6 +26,7 @@
 
 #include "freephone.hpp"
 
+#include "config.hpp"
 #include "speech_server.hpp"
 
 using namespace std;
@@ -40,8 +41,8 @@ string freephone::lexicon;
 
 // Object construction:
 
-freephone::freephone(const configuration& conf):
-  mbrola(conf, speaker::freephone, "en1", lang_id::en)
+freephone::freephone(void):
+  mbrola(speaker::freephone, "en1", lang_id::en)
 {
   if (!executable.empty())
     {

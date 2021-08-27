@@ -32,7 +32,7 @@ class user_tts: public speech_engine
 {
 public:
   // Object construction:
-  user_tts(const configuration& conf, const std::string& lang);
+  explicit user_tts(const std::string& lang);
 
   // Configurable parameters:
   static std::string command;

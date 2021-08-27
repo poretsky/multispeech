@@ -25,6 +25,8 @@
 
 #include "mbrola.hpp"
 
+#include "config.hpp"
+
 using namespace std;
 using namespace boost;
 using namespace boost::filesystem;
@@ -33,15 +35,20 @@ using namespace boost::filesystem;
 // Static data:
 string mbrola::executable;
 string mbrola::voices;
+string mbrola::en;
+string mbrola::de;
+string mbrola::it;
+string mbrola::fr;
+string mbrola::es;
+string mbrola::pt;
 
 
 // Object construction:
 
-mbrola::mbrola(const configuration& conf,
-               const string& backend,
+mbrola::mbrola(const string& backend,
                const string& voice_id,
                const string& lang):
-  speech_engine(conf, backend, voice_id, lang, soundfile::s16, 16000, 1, false)
+  speech_engine(backend, voice_id, lang, soundfile::s16, 16000, 1, false)
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");

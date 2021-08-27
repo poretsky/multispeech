@@ -29,6 +29,7 @@
 
 #include "speech_engine.hpp"
 
+#include "config.hpp"
 #include "iconv_codecvt.hpp"
 #include "strcvt.hpp"
 #include "text_filter.hpp"
@@ -63,13 +64,11 @@ bool speech_engine::space_special_chars = false;
 
 // string constants:
 const string speech_engine::disabled("disabled");
-const string speech_engine::novoice("no voice");
 
 
 // Constructing and destroying:
 
-speech_engine::speech_engine(const configuration& conf,
-                             const string& backend,
+speech_engine::speech_engine(const string& backend,
                              const string& voice_id,
                              const string& lang,
                              soundfile::format fmt,
@@ -78,11 +77,7 @@ speech_engine::speech_engine(const configuration& conf,
                              bool deviate,
                              const string& charset):
   name(backend),
-  voice((voice_id == novoice) ?
-        (conf.option_value.count(options::compose(backend, lang)) ?
-         conf.option_value[options::compose(backend, lang)].as<string>() :
-         "") :
-        voice_id),
+  voice(voice_id),
   format(fmt),
   native_sampling(sampling),
   sound_channels(channels),

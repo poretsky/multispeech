@@ -20,6 +20,8 @@
 
 #include "user_tts.hpp"
 
+#include "config.hpp"
+
 using namespace std;
 
 
@@ -55,8 +57,8 @@ sound_format(const string& fmt)
 
 // Object construction:
 
-user_tts::user_tts(const configuration& conf, const string& lang):
-  speech_engine(conf, speaker::user, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
+user_tts::user_tts(const string& lang):
+  speech_engine(speaker::user, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
 {
   if (!command.empty())
     speech_engine::command(user_tts::command);
