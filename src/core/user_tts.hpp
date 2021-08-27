@@ -34,6 +34,9 @@ public:
   // Object construction:
   explicit user_tts(const std::string& lang);
 
+  // Constant data for reference:
+  static const std::string name;
+
   // Configurable parameters:
   static std::string command;
   static std::string format;

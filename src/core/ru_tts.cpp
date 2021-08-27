@@ -41,8 +41,10 @@ using namespace FBB;
 
 
 // Static data:
-string ru_tts::executable;
-string ru_tts::lexicon;
+const string ru_tts::name("ru_tts");
+const string ru_tts::lexicon_default_path(complete("freespeech/rulex.db", package::datadir).generic_string());
+string ru_tts::executable(ru_tts::name);
+string ru_tts::lexicon(ru_tts::lexicon_default_path);
 string ru_tts::log_file;
 double ru_tts::expressiveness = 1.0;
 bool ru_tts::female_voice = false;
@@ -61,7 +63,7 @@ double ru_tts::intonational_gap_factor = 1.0;
 // Object construction:
 
 ru_tts::ru_tts(void):
-  speech_engine(speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
+  speech_engine(name, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
   if (!executable.empty())
     {
