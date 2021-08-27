@@ -572,21 +572,21 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (espeak::executable.c_str(), value<string>(&::espeak::executable)->default_value(speaker::espeak))
 
     // Espeak voices assignment:
-    (espeak::en.c_str(), value<string>()->default_value(lang_id::en))
-    (espeak::ru.c_str(), value<string>()->default_value(lang_id::ru))
-    (espeak::de.c_str(), value<string>()->default_value(lang_id::de))
-    (espeak::fr.c_str(), value<string>()->default_value(lang_id::fr))
-    (espeak::es.c_str(), value<string>()->default_value(lang_id::es))
-    (espeak::pt.c_str(), value<string>()->default_value(lang_id::pt))
-    (espeak::it.c_str(), value<string>()->default_value(lang_id::it))
+    (espeak::en.c_str(), value<string>(&::espeak::en)->default_value(lang_id::en))
+    (espeak::ru.c_str(), value<string>(&::espeak::ru)->default_value(lang_id::ru))
+    (espeak::de.c_str(), value<string>(&::espeak::de)->default_value(lang_id::de))
+    (espeak::fr.c_str(), value<string>(&::espeak::fr)->default_value(lang_id::fr))
+    (espeak::es.c_str(), value<string>(&::espeak::es)->default_value(lang_id::es))
+    (espeak::pt.c_str(), value<string>(&::espeak::pt)->default_value(lang_id::pt))
+    (espeak::it.c_str(), value<string>(&::espeak::it)->default_value(lang_id::it))
 
     // Mbrola voices assignment:
-    (espeak::mbrola::en.c_str(), value<string>()->default_value("en1"))
-    (espeak::mbrola::de.c_str(), value<string>()->default_value("de6"))
-    (espeak::mbrola::fr.c_str(), value<string>()->default_value("fr4"))
-    (espeak::mbrola::es.c_str(), value<string>()->default_value("es1"))
-    (espeak::mbrola::pt.c_str(), value<string>()->default_value("br3"))
-    (espeak::mbrola::it.c_str(), value<string>()->default_value("it3"))
+    (espeak::mbrola::en.c_str(), value<string>(&::mbrola::en)->default_value("en1"))
+    (espeak::mbrola::de.c_str(), value<string>(&::mbrola::de)->default_value("de6"))
+    (espeak::mbrola::fr.c_str(), value<string>(&::mbrola::fr)->default_value("fr4"))
+    (espeak::mbrola::es.c_str(), value<string>(&::mbrola::es)->default_value("es1"))
+    (espeak::mbrola::pt.c_str(), value<string>(&::mbrola::pt)->default_value("br3"))
+    (espeak::mbrola::it.c_str(), value<string>(&::mbrola::it)->default_value("it3"))
 
     // Freephone backend options:
     (freephone::executable.c_str(), value<string>(&::freephone::executable)->default_value(speaker::freephone))
