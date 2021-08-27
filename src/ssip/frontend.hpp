@@ -28,7 +28,6 @@
 
 #include <bobcat/cmdfinder>
 
-#include "config.hpp"
 #include "speech_server.hpp"
 #include "text_filter.hpp"
 #include "spd_settings.hpp"
@@ -39,7 +38,7 @@ class frontend:
 {
 public:
   // Object instantiation:
-  static frontend* instantiate(const configuration& conf);
+  static frontend* instantiate(void);
 
   // Common message:
   static const std::string bad_syntax;
@@ -55,7 +54,7 @@ private:
   };
 
   // Construct the object:
-  frontend(const configuration& conf);
+  frontend(void);
 
   // Clear temporary data in order to start command reception cycle:
   void communication_reset(void);
@@ -99,14 +98,8 @@ private:
   bool do_quit(void);
   bool do_unknown(void);
 
-  // Whether index marks reporting is enabled:
-  bool index_marks_support;
-
   // Settings interpreter:
   spd_settings settings;
-
-  // Sound icons directory path:
-  std::string sound_icons;
 
   // Additional data provided with some commands:
   std::string data;

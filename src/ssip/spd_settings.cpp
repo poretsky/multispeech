@@ -27,6 +27,7 @@
 #include "spd_settings.hpp"
 
 #include "config.hpp"
+#include "speech_server.hpp"
 #include "frontend.hpp"
 
 using namespace std;
@@ -53,13 +54,10 @@ const spd_settings::Entry spd_settings::settings_table[] =
 
 // Object construction:
 
-spd_settings::spd_settings(const configuration& conf, polyglot& linguist):
+spd_settings::spd_settings(polyglot& linguist):
   CmdFinder<FunctionPtr>(settings_table, settings_table +
                          (sizeof(settings_table) / sizeof(Entry)),
                          USE_FIRST),
-  use_voice_language(conf.option_value[options::spd::use_voice_language].as<bool>()),
-  accept_explicit_language(conf.option_value[options::spd::accept_explicit_language].as<bool>()),
-  ignore_unknown_voice(conf.option_value[options::spd::ignore_unknown_voice].as<bool>()),
   speechmaster(linguist),
   voice_pitch(1.0),
   pitch_factor(1.0),
@@ -76,7 +74,7 @@ spd_settings::apply(const string& message)
   preserve state(this);
   istringstream content(message);
   string option;
-  accept_language = accept_explicit_language;
+  accept_language = speech_server::spd_accept_explicit_language;
   while (getline(content, option))
     {
       for (int i = 0; i < option.length(); i++)
@@ -216,20 +214,20 @@ spd_settings::apply_synthesis_voice(void)
             if (beyond() == voice.str())
               {
                 speechmaster.language(speechmaster.talker[i]->language->id);
-                accept_language = accept_language && !use_voice_language;
+                accept_language = accept_language && !speech_server::spd_use_voice_language;
                 break;
               }
           }
-      if ((!ignore_unknown_voice) && (i >= speechmaster.talker.size()))
+      if ((!speech_server::spd_ignore_unknown_voice) && (i >= speechmaster.talker.size()))
         {
           speechmaster.language(lang_id::autodetect);
-          accept_language = accept_language && !use_voice_language;
+          accept_language = accept_language && !speech_server::spd_use_voice_language;
         }
     }
   else
     {
       speechmaster.language(lang_id::autodetect);
-      accept_language = accept_language && !use_voice_language;
+      accept_language = accept_language && !speech_server::spd_use_voice_language;
     }
   return false;
 }

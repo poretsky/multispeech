@@ -62,6 +62,21 @@ public:
   // Whether to log debug information.
   static bool debug;
 
+  // Whether to accept embedded voice switching commands.
+  static bool support_native_voices;
+  static bool support_dtk_voices;
+
+  // Constant data for reference:
+  static const std::string spd_sound_icons_default_path;
+
+  // Speech dispatcher backend related options:
+  static std::string spd_version;
+  static std::string spd_sound_icons;
+  static bool spd_use_voice_language;
+  static bool spd_accept_explicit_language;
+  static bool spd_ignore_unknown_voice;
+  static bool spd_support_index_marks;
+
   // Redirect standard error output to the specified file or to /dev/null.
   // Return true on success.
   static bool redirect_stderr(const char* file = 0);
