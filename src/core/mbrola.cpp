@@ -33,14 +33,16 @@ using namespace boost::filesystem;
 
 
 // Static data:
-string mbrola::executable;
-string mbrola::voices;
-string mbrola::en;
-string mbrola::de;
-string mbrola::it;
-string mbrola::fr;
-string mbrola::es;
-string mbrola::pt;
+const string mbrola::name("mbrola");
+const string mbrola::voices_default_path(complete("mbrola", package::datadir).generic_string());
+string mbrola::executable(mbrola::name);
+string mbrola::voices(mbrola::voices_default_path);
+string mbrola::en("en1");
+string mbrola::de("de6");
+string mbrola::it("it3");
+string mbrola::fr("fr4");
+string mbrola::es("es1");
+string mbrola::pt("br3");
 
 
 // Object construction:
@@ -69,11 +71,11 @@ mbrola::mbrola(const string& backend,
             cmd += voice_path.generic_string();
           else throw configuration::error(voice_path.generic_string() + " does not exist");
         }
-      else throw configuration::error(string("no path to ") + speaker::mbrola + " voices");
+      else throw configuration::error(string("no path to ") + name + " voices");
       cmd += " - -A";
       command(cmd);
     }
-  else throw configuration::error(string("no path to ") + speaker::mbrola);
+  else throw configuration::error(string("no path to ") + name);
   // Take in account some especial voices sampling rate
   if ((voice == "de5") || (voice == "de6") ||
       (voice == "de7") || (voice == "es2"))

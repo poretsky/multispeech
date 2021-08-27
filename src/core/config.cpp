@@ -29,6 +29,7 @@ namespace package
   extern const char* const name = PACKAGE_NAME;
   extern const char* const string = PACKAGE_STRING;
   extern const char* const version = PACKAGE_VERSION;
+  extern const char* const datadir = DATA_DIR;
 };
 
 #include <cstdlib>
@@ -78,9 +79,6 @@ static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 
 // Hardcoded default paths:
 
-static const path mbrola_voices_default(complete("mbrola", DATA_DIR));
-static const path enlex_default(complete("freespeech/enlex.db", DATA_DIR));
-static const path rulex_default(complete("freespeech/rulex.db", DATA_DIR));
 static const path spd_sound_icons_default(complete("sounds/sound-icons", DATA_DIR));
 
 
@@ -95,16 +93,6 @@ namespace lang_id
   const char* const pt = "pt";
   const char* const it = "it";
   const char* const autodetect = "autodetect";
-};
-
-// Speech backend names:
-namespace speaker
-{
-  const char* const mbrola = "mbrola";
-  const char* const espeak = "espeak";
-  const char* const freephone = "freephone";
-  const char* const ru_tts = "ru_tts";
-  const char* const user = "user";
 };
 
 // Various option names used in sections:
@@ -319,72 +307,72 @@ namespace options
   // Mbrola based backends options:
   namespace mbrola
   {
-    const string executable(compose(speaker::mbrola, option_name::executable));
-    const string voices(compose(speaker::mbrola, option_name::voices));
+    const string executable(compose(::mbrola::name, option_name::executable));
+    const string voices(compose(::mbrola::name, option_name::voices));
   };
 
   // Espeak based backends options:
   namespace espeak
   {
-    const string executable(compose(speaker::espeak, option_name::executable));
+    const string executable(compose(::espeak::name, option_name::executable));
 
     // Espeak voices assignment:
-    const string en(compose(speaker::espeak, lang_id::en));
-    const string ru(compose(speaker::espeak, lang_id::ru));
-    const string de(compose(speaker::espeak, lang_id::de));
-    const string fr(compose(speaker::espeak, lang_id::fr));
-    const string es(compose(speaker::espeak, lang_id::es));
-    const string pt(compose(speaker::espeak, lang_id::pt));
-    const string it(compose(speaker::espeak, lang_id::it));
+    const string en(compose(::espeak::name, lang_id::en));
+    const string ru(compose(::espeak::name, lang_id::ru));
+    const string de(compose(::espeak::name, lang_id::de));
+    const string fr(compose(::espeak::name, lang_id::fr));
+    const string es(compose(::espeak::name, lang_id::es));
+    const string pt(compose(::espeak::name, lang_id::pt));
+    const string it(compose(::espeak::name, lang_id::it));
 
     // Mbrola voices assignment:
     namespace mbrola
     {
-      const string en(compose(speaker::espeak, compose(speaker::mbrola, lang_id::en)));
-      const string de(compose(speaker::espeak, compose(speaker::mbrola, lang_id::de)));
-      const string fr(compose(speaker::espeak, compose(speaker::mbrola, lang_id::fr)));
-      const string es(compose(speaker::espeak, compose(speaker::mbrola, lang_id::es)));
-      const string pt(compose(speaker::espeak, compose(speaker::mbrola, lang_id::pt)));
-      const string it(compose(speaker::espeak, compose(speaker::mbrola, lang_id::it)));
+      const string en(compose(::espeak::name, compose(::mbrola::name, lang_id::en)));
+      const string de(compose(::espeak::name, compose(::mbrola::name, lang_id::de)));
+      const string fr(compose(::espeak::name, compose(::mbrola::name, lang_id::fr)));
+      const string es(compose(::espeak::name, compose(::mbrola::name, lang_id::es)));
+      const string pt(compose(::espeak::name, compose(::mbrola::name, lang_id::pt)));
+      const string it(compose(::espeak::name, compose(::mbrola::name, lang_id::it)));
     };
   };
 
   // Freephone backend options:
   namespace freephone
   {
-    const string executable(compose(speaker::freephone, option_name::executable));
-    const string lexicon(compose(speaker::freephone, option_name::lexicon));
+    const string executable(compose(::freephone::name, option_name::executable));
+    const string lexicon(compose(::freephone::name, option_name::lexicon));
   };
 
   // Ru_tts backend options:
   namespace ru_tts
   {
-    const string executable(compose(speaker::ru_tts, option_name::executable));
-    const string lexicon(compose(speaker::ru_tts, option_name::lexicon));
-    const string log(compose(speaker::ru_tts, option_name::log));
-    const string expressiveness(compose(speaker::ru_tts, option_name::expressiveness));
-    const string female_voice(compose(speaker::ru_tts, option_name::female_voice));
-                                      const string decimal_point(compose(speaker::ru_tts, option_name::decimal_point));
-                                       const string decimal_comma(compose(speaker::ru_tts, option_name::decimal_comma));
-                                       const string interclause_gap_factor(compose(speaker::ru_tts, option_name::interclause_gap_factor));
-                                                const string comma_gap_factor(compose(speaker::ru_tts, option_name::comma_gap_factor));
-                                          const string dot_gap_factor(compose(speaker::ru_tts, option_name::dot_gap_factor));
-                                        const string semicolon_gap_factor(compose(speaker::ru_tts, option_name::semicolon_gap_factor));
-                                              const string colon_gap_factor(compose(speaker::ru_tts, option_name::colon_gap_factor));
-                                          const string question_gap_factor(compose(speaker::ru_tts, option_name::question_gap_factor));
-                                             const string exclamation_gap_factor(compose(speaker::ru_tts, option_name::exclamation_gap_factor));
-                                                const string intonational_gap_factor(compose(speaker::ru_tts, option_name::intonational_gap_factor));
+    const string executable(compose(::ru_tts::name, option_name::executable));
+    const string lexicon(compose(::ru_tts::name, option_name::lexicon));
+    const string log(compose(::ru_tts::name, option_name::log));
+    const string expressiveness(compose(::ru_tts::name, option_name::expressiveness));
+    const string female_voice(compose(::ru_tts::name, option_name::female_voice));
+    const string decimal_point(compose(::ru_tts::name, option_name::decimal_point));
+    const string decimal_comma(compose(::ru_tts::name, option_name::decimal_comma));
+    const string interclause_gap_factor(compose(::ru_tts::name, option_name::interclause_gap_factor));
+    const string comma_gap_factor(compose(::ru_tts::name, option_name::comma_gap_factor));
+    const string dot_gap_factor(compose(::ru_tts::name, option_name::dot_gap_factor));
+    const string semicolon_gap_factor(compose(::ru_tts::name, option_name::semicolon_gap_factor));
+    const string colon_gap_factor(compose(::ru_tts::name, option_name::colon_gap_factor));
+    const string question_gap_factor(compose(::ru_tts::name, option_name::question_gap_factor));
+    const string exclamation_gap_factor(compose(::ru_tts::name, option_name::exclamation_gap_factor));
+    const string intonational_gap_factor(compose(::ru_tts::name, option_name::intonational_gap_factor));
   };
 
   // User defined TTS backend options:
   namespace user
   {
-    const string command(compose(speaker::user, option_name::command));
-    const string format(compose(speaker::user, option_name::format));
-    const string sampling(compose(speaker::user, option_name::sampling));
-    const string stereo(compose(speaker::user, option_name::stereo));
-    const string freq_control(compose(speaker::user, option_name::freq_control));
-    const string charset(compose(speaker::user, option_name::charset));
+    const string command(compose(user_tts::name, option_name::command));
+    const string format(compose(user_tts::name, option_name::format));
+    const string sampling(compose(user_tts::name, option_name::sampling));
+    const string stereo(compose(user_tts::name, option_name::stereo));
+    const string freq_control(compose(user_tts::name, option_name::freq_control));
+    const string charset(compose(user_tts::name, option_name::charset));
   };
 
   // Dynamic options name composing:
@@ -565,11 +553,11 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (it::caps_factor.c_str(), value<double>(&Italian::settings.caps_factor)->default_value(1.2))
 
     // Mbrola based backends options:
-    (mbrola::executable.c_str(), value<string>(&::mbrola::executable)->default_value(speaker::mbrola))
-    (mbrola::voices.c_str(), value<string>(&::mbrola::voices)->default_value(mbrola_voices_default.generic_string()))
+    (mbrola::executable.c_str(), value<string>(&::mbrola::executable)->default_value(::mbrola::name))
+    (mbrola::voices.c_str(), value<string>(&::mbrola::voices)->default_value(::mbrola::voices_default_path))
 
     // Espeak based backends options:
-    (espeak::executable.c_str(), value<string>(&::espeak::executable)->default_value(speaker::espeak))
+    (espeak::executable.c_str(), value<string>(&::espeak::executable)->default_value(::espeak::name))
 
     // Espeak voices assignment:
     (espeak::en.c_str(), value<string>(&::espeak::en)->default_value(lang_id::en))
@@ -589,12 +577,12 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (espeak::mbrola::it.c_str(), value<string>(&::mbrola::it)->default_value("it3"))
 
     // Freephone backend options:
-    (freephone::executable.c_str(), value<string>(&::freephone::executable)->default_value(speaker::freephone))
-    (freephone::lexicon.c_str(), value<string>(&::freephone::lexicon)->default_value(enlex_default.generic_string()))
+    (freephone::executable.c_str(), value<string>(&::freephone::executable)->default_value(::freephone::name))
+    (freephone::lexicon.c_str(), value<string>(&::freephone::lexicon)->default_value(::freephone::lexicon_default_path))
 
     // Ru_tts backend options:
-    (ru_tts::executable.c_str(), value<string>(&::ru_tts::executable)->default_value(speaker::ru_tts))
-    (ru_tts::lexicon.c_str(), value<string>(&::ru_tts::lexicon)->default_value(rulex_default.generic_string()))
+    (ru_tts::executable.c_str(), value<string>(&::ru_tts::executable)->default_value(::ru_tts::name))
+    (ru_tts::lexicon.c_str(), value<string>(&::ru_tts::lexicon)->default_value(::ru_tts::lexicon_default_path))
     (ru_tts::log.c_str(), value<string>(&::ru_tts::log_file))
     (ru_tts::expressiveness.c_str(), value<double>(&::ru_tts::expressiveness)->default_value(1.0))
     (ru_tts::female_voice.c_str(), bool_switch(&::ru_tts::female_voice)->default_value(false))
