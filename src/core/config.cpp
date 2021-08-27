@@ -78,11 +78,6 @@ static const path global_conf(complete("multispeech.conf", SYSCONF_DIR));
 static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 
 
-// Hardcoded default paths:
-
-static const path spd_sound_icons_default(complete("sounds/sound-icons", DATA_DIR));
-
-
 // Language id strings:
 namespace lang_id
 {
@@ -449,8 +444,8 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
 
     // Frontend related options:
     (frontend::charset, value<string>(&speech_server::frontend_charset))
-    (frontend::native_voices, bool_switch()->default_value(true))
-    (frontend::dtk_voices, bool_switch()->default_value(false))
+    (frontend::native_voices, bool_switch(&speech_server::support_native_voices)->default_value(true))
+    (frontend::dtk_voices, bool_switch(&speech_server::support_dtk_voices)->default_value(false))
 
     // General audio options:
     (audio::device, value<string>(&audioplayer::device)->default_value(""))
@@ -607,12 +602,12 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (user::charset.c_str(), value<string>(&user_tts::charset)->default_value(""))
 
     // Registering Speech Dispatcher backend options:
-    (spd::version, value<string>())
-    (spd::sound_icons, value<string>()->default_value(spd_sound_icons_default.generic_string()))
-    (spd::use_voice_language, bool_switch()->default_value(true))
-    (spd::accept_explicit_language, bool_switch()->default_value(true))
-    (spd::ignore_unknown_voice, bool_switch()->default_value(false))
-    (spd::index_marks, bool_switch()->default_value(true));
+    (spd::version, value<string>(&speech_server::spd_version))
+    (spd::sound_icons, value<string>(&speech_server::spd_sound_icons)->default_value(speech_server::spd_sound_icons_default_path))
+    (spd::use_voice_language, bool_switch(&speech_server::spd_use_voice_language)->default_value(true))
+    (spd::accept_explicit_language, bool_switch(&speech_server::spd_accept_explicit_language)->default_value(true))
+    (spd::ignore_unknown_voice, bool_switch(&speech_server::spd_ignore_unknown_voice)->default_value(false))
+    (spd::index_marks, bool_switch(&speech_server::spd_support_index_marks)->default_value(true));
 
   // Parse config files and store values
   if (spd_backend)
