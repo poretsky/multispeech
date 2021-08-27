@@ -27,7 +27,6 @@
 
 #include <bobcat/cmdfinder>
 
-#include "config.hpp"
 #include "speech_server.hpp"
 #include "inline_parser.hpp"
 
@@ -37,7 +36,7 @@ class frontend:
 {
 public:
   // Construct the object:
-  explicit frontend(const configuration& conf);
+  frontend(void);
 
 private:
   // Input method and command syntax definition (see base class):

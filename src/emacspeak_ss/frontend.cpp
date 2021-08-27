@@ -77,7 +77,7 @@ const frontend::Entry frontend::command_table[] =
 
 // Object construction:
 
-frontend::frontend(const configuration& conf):
+frontend::frontend(void):
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
@@ -88,9 +88,9 @@ frontend::frontend(const configuration& conf):
   tts_parameters(L"^[a-z]+\\s+(\\d+)\\s+\\S+\\s+(\\d+)\\s+(\\d+)"),
   garbage(L"\\s*\\[\\*]\\s*")
 {
-  if (conf.option_value[options::frontend::native_voices].as<bool>())
+  if (support_native_voices)
     native_params.reset(new multispeech_voices);
-  if (conf.option_value[options::frontend::dtk_voices].as<bool>())
+  if (support_dtk_voices)
     dtk_params.reset(new dtk_voices);
 }
 

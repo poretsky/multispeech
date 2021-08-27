@@ -36,6 +36,7 @@
 
 #include "frontend.hpp"
 
+#include "config.hpp"
 #include "strcvt.hpp"
 #include "file_player.hpp"
 
@@ -71,7 +72,7 @@ static const string cmd_init("INIT");
 // Object instantiation:
 
 frontend*
-frontend::instantiate(const configuration& conf)
+frontend::instantiate(void)
 {
   string cmd;
   getline(cin, cmd);
@@ -79,7 +80,7 @@ frontend::instantiate(const configuration& conf)
     throw logic_error("Broken pipe when reading INIT");
   if (cmd_init != cmd)
     throw logic_error("Wrong communication from module client: didn't call INIT");
-  frontend* instance = new frontend(conf);
+  frontend* instance = new frontend;
   cout << "299-" << package::name << ": Initialized successfully." << endl;
   cout << "299 OK LOADED SUCCESSFULLY" << endl;
   return instance;
@@ -88,16 +89,11 @@ frontend::instantiate(const configuration& conf)
 
 // Object construction:
 
-frontend::frontend(const configuration& conf):
+frontend::frontend(void):
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),
-  index_marks_support(conf.option_value[options::spd::index_marks].as<bool>()),
-  settings(conf, speechmaster),
-  sound_icons((conf.option_value.count(options::spd::sound_icons) &&
-               !conf.option_value[options::spd::sound_icons].as<string>().empty()) ?
-              conf.option_value[options::spd::sound_icons].as<string>() :
-              string("")),
+  settings(speechmaster),
   lines(0),
   mark_pattern("<mark\\s+name=\"([^\"]*)\"\\s*/>"),
   state(idle)
@@ -114,11 +110,8 @@ frontend::frontend(const configuration& conf):
   int version_minor = LIBSPEECHD_MINOR_VERSION;
   regex version_format("(\\d+)(\\.(\\d+))?.*");
   smatch version;
-  string vstr;
-  if (conf.option_value.count(options::spd::version))
-    vstr = conf.option_value[options::spd::version].as<string>();
-  if (!vstr.empty()
-      && regex_match(vstr, version, version_format)
+  if (!spd_version.empty()
+      && regex_match(spd_version, version, version_format)
       && version[1].matched)
     {
       version_major = lexical_cast<int>(string(version[1].first, version[1].second));
@@ -134,7 +127,7 @@ frontend::frontend(const configuration& conf):
           while (fgets(s, 80, spd))
             info << s;
           pclose(spd);
-          vstr = info.str();
+          string vstr(info.str());
           if (regex_search(vstr, version, version_format)
               && version[1].matched)
             {
@@ -331,7 +324,7 @@ frontend::do_speak(void)
         {
           string::const_iterator start = data.begin();
           string::const_iterator end = data.end();
-          if (index_marks_support)
+          if (spd_support_index_marks)
             {
               smatch found;
               while (regex_search(start, end, found, mark_pattern))
@@ -384,11 +377,11 @@ frontend::do_sound_icon(void)
           boost::mutex::scoped_lock lock(access);
           if (can_speak())
             {
-              if (sound_icons.empty())
+              if (spd_sound_icons.empty())
                 soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
               else
                 {
-                  path icon_file(complete(data, sound_icons));
+                  path icon_file(complete(data, spd_sound_icons));
                   if (exists(icon_file))
                     soundmaster.enqueue(sound_task(icon_file));
                   else soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
