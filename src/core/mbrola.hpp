@@ -29,6 +29,10 @@
 class mbrola: public speech_engine
 {
 public:
+  // Constant data for references:
+  static const std::string name;
+  static const std::string voices_default_path;
+
   // Configurable parameters:
   static std::string executable;
   static std::string voices;
