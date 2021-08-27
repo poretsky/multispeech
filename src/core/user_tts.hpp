@@ -32,7 +32,7 @@ class user_tts: public speech_engine
 {
 public:
   // Object construction:
-  explicit user_tts(const std::string& lang);
+  explicit user_tts(const char* lang);
 
   // Constant data for reference:
   static const std::string name;
