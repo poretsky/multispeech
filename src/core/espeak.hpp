@@ -33,7 +33,7 @@ class espeak: public speech_engine
 {
 public:
   // Object construction:
-  explicit espeak(const std::string& lang);
+  explicit espeak(const char* lang);
 
   // Constant data for references:
   static const std::string name;
@@ -60,7 +60,7 @@ class mbrespeak: public mbrola
 {
 public:
   // Object construction:
-  explicit mbrespeak(const std::string& lang);
+  explicit mbrespeak(const char* lang);
 };
 
 #endif

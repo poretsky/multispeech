@@ -64,13 +64,14 @@ bool speech_engine::space_special_chars = false;
 
 // string constants:
 const string speech_engine::disabled("disabled");
+const string speech_engine::novoice;
 
 
 // Constructing and destroying:
 
 speech_engine::speech_engine(const string& backend,
                              const string& voice_id,
-                             const string& lang,
+                             const char* lang,
                              soundfile::format fmt,
                              unsigned int sampling,
                              unsigned int channels,
@@ -100,7 +101,7 @@ speech_engine::speech_engine(const string& backend,
     language.reset(new Portuguese);
   else if (lang_id::it == lang)
     language.reset(new Italian);
-  else throw configuration::error("unsupported language " + lang + " specified for " + backend);
+  else throw configuration::error("unsupported language " + string(lang) + " specified for " + backend);
   format_macros["%lang"] = lang;
 }
 

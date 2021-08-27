@@ -63,7 +63,7 @@ double ru_tts::intonational_gap_factor = 1.0;
 // Object construction:
 
 ru_tts::ru_tts(void):
-  speech_engine(name, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
+  speech_engine(name, novoice, lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
   if (!executable.empty())
     {

@@ -81,7 +81,7 @@ protected:
   // Object constructor:
   speech_engine(const std::string& backend,
                 const std::string& voice_id,
-                const std::string& lang,
+                const char* lang,
                 soundfile::format fmt,
                 unsigned int sampling,
                 unsigned int channels,
@@ -94,7 +94,7 @@ public:
 
   // General attributes:
   const std::string name;
-  const std::string voice;
+  const std::string& voice;
 
   // Voice and speech parameters control:
   static void volume(double value = 1.0);
@@ -128,6 +128,9 @@ public:
 
   // Special value for disabling language:
   static const std::string disabled;
+
+  // Empty string for no specific voice designation:
+  static const std::string novoice;
 
 protected:
   // Add a new command pattern to the beginning of the list:
