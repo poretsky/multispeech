@@ -32,7 +32,6 @@
 
 #include <bobcat/syslogstream>
 
-#include "config.hpp"
 #include "polyglot.hpp"
 #include "sound_manager.hpp"
 
@@ -40,7 +39,7 @@ class speech_server: private sound_manager::callback
 {
 protected:
   // Object constructor:
-  speech_server(const configuration& conf);
+  speech_server(void);
 
 public:
   // Destructor is made public to accommodate smart pointers:
@@ -49,18 +48,23 @@ public:
   // General execution loop:
   int run(void);
 
-  // Redirect standard error output to the specified file or to /dev/null.
-  // Return true on success.
-  static bool redirect_stderr(const char* file = 0);
-
   // Logging stream:
   static FBB::SyslogStream log;
+
+  // Configurable parameters:
+
+  // Input text charset name.
+  static std::string frontend_charset;
 
   // When true print messages on stderr.
   static bool verbose;
 
   // Whether to log debug information.
   static bool debug;
+
+  // Redirect standard error output to the specified file or to /dev/null.
+  // Return true on success.
+  static bool redirect_stderr(const char* file = 0);
 
 protected:
   // Prepare for new command reception cycle:

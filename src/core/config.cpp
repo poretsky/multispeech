@@ -57,6 +57,7 @@ namespace package
 #include "ru_tts.hpp"
 #include "user_tts.hpp"
 
+#include "polyglot.hpp"
 #include "English.hpp"
 #include "German.hpp"
 #include "French.hpp"
@@ -447,7 +448,7 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
   conf.add_options()
 
     // Frontend related options:
-    (frontend::charset, value<string>())
+    (frontend::charset, value<string>(&speech_server::frontend_charset))
     (frontend::native_voices, bool_switch()->default_value(true))
     (frontend::dtk_voices, bool_switch()->default_value(false))
 
@@ -472,8 +473,8 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     // General speech control options:
     (speech::device, value<string>(&loudspeaker::device)->default_value(""))
     (speech::volume, value<float>(&loudspeaker::relative_volume)->default_value(1.0))
-    (speech::language, value<string>())
-    (speech::fallback, value<string>()->default_value(lang_id::en))
+    (speech::language, value<string>(&polyglot::language_preference))
+    (speech::fallback, value<string>(&polyglot::fallback_language)->default_value(lang_id::en))
 
     // English speech options:
     (en::engine.c_str(), value<string>(&English::settings.engine))
@@ -656,15 +657,6 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
   if (noconf && !spd_backend)
     throw configuration::error("No configuration files found");
   notify(option_value);
-}
-
-
-// Public members:
-
-bool
-configuration::operator()(const string& lang1, const string& lang2)
-{
-  return option_value[options::compose(lang1, option_name::priority)].as<int>() < option_value[options::compose(lang2, option_name::priority)].as<int>();
 }
 
 

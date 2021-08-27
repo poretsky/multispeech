@@ -29,7 +29,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "config.hpp"
 #include "speech_engine.hpp"
 #include "voice_params.hpp"
 
@@ -37,7 +36,11 @@ class polyglot
 {
 public:
   // Construct the object:
-  explicit polyglot(const configuration& conf);
+  polyglot(void);
+
+  // Configurable parameters:
+  static std::string language_preference;
+  static std::string fallback_language;
 
   // Prepare speech task:
   speech_task text_task(const std::wstring& s,

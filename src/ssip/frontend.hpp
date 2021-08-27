@@ -28,6 +28,7 @@
 
 #include <bobcat/cmdfinder>
 
+#include "config.hpp"
 #include "speech_server.hpp"
 #include "text_filter.hpp"
 #include "spd_settings.hpp"
