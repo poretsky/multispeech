@@ -49,7 +49,7 @@ protected:
   // Constructing the object:
   mbrola(const std::string& backend,
          const std::string& voice_id,
-         const std::string& lang);
+         const char* lang);
 
 private:
   // Make up voice parameters for backend:

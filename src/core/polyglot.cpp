@@ -56,7 +56,7 @@ string polyglot::language_preference;
 string polyglot::fallback_language(lang_id::en);
 
 // Supported languages:
-static vector<string> langs = list_of
+static vector<const char*> langs = list_of
   // Default detection order
   (lang_id::ru)
   (lang_id::pt)
@@ -66,7 +66,7 @@ static vector<string> langs = list_of
   (lang_id::es)
   (lang_id::en);
 
-static const map<const string, const string*> backends = map_list_of
+static const map<const char*, const string*> backends = map_list_of
   (lang_id::en, &English::settings.engine)
   (lang_id::de, &German::settings.engine)
   (lang_id::it, &Italian::settings.engine)
@@ -74,9 +74,9 @@ static const map<const string, const string*> backends = map_list_of
   (lang_id::es, &Spanish::settings.engine)
   (lang_id::pt, &Portuguese::settings.engine)
   (lang_id::ru, &Russian::settings.engine)
-  .convert_to_container< map<const string, const string*> >();
+  .convert_to_container< map<const char*, const string*> >();
 
-static const map<const string, const int*> priorities = map_list_of
+static const map<const char*, const int*> priorities = map_list_of
   (lang_id::en, &English::settings.priority)
   (lang_id::de, &German::settings.priority)
   (lang_id::it, &Italian::settings.priority)
@@ -84,11 +84,11 @@ static const map<const string, const int*> priorities = map_list_of
   (lang_id::es, &Spanish::settings.priority)
   (lang_id::pt, &Portuguese::settings.priority)
   (lang_id::ru, &Russian::settings.priority)
-  .convert_to_container< map<const string, const int*> >();
+  .convert_to_container< map<const char*, const int*> >();
 
 // Language comparator:
 static bool
-order(const string& lang1, const string& lang2)
+order(const char* lang1, const char* lang2)
 {
   return *priorities.at(lang1) < *priorities.at(lang2);
 }
@@ -277,7 +277,7 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 
 speech_engine*
 polyglot::speech_backend(const string& name,
-                         const string& lang)
+                         const char* lang)
 {
   if (freephone::name == name)
     return new freephone;
