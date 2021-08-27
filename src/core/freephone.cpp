@@ -35,14 +35,16 @@ using namespace FBB;
 
 
 // Static data:
-string freephone::executable;
-string freephone::lexicon;
+const string freephone::name("freephone");
+const string freephone::lexicon_default_path(complete("freespeech/enlex.db", package::datadir).generic_string());
+string freephone::executable(freephone::name);
+string freephone::lexicon(freephone::lexicon_default_path);
 
 
 // Object construction:
 
 freephone::freephone(void):
-  mbrola(speaker::freephone, "en1", lang_id::en)
+  mbrola(name, "en1", lang_id::en)
 {
   if (!executable.empty())
     {

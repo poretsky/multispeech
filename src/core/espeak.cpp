@@ -36,14 +36,15 @@ using namespace boost::assign;
 // Espeak backend.
 
 // Static data:
-string espeak::executable;
-string espeak::en;
-string espeak::de;
-string espeak::it;
-string espeak::fr;
-string espeak::es;
-string espeak::pt;
-string espeak::ru;
+const string espeak::name("espeak");
+string espeak::executable(espeak::name);
+string espeak::en(lang_id::en);
+string espeak::de(lang_id::de);
+string espeak::it(lang_id::it);
+string espeak::fr(lang_id::fr);
+string espeak::es(lang_id::es);
+string espeak::pt(lang_id::pt);
+string espeak::ru(lang_id::ru);
 
 static const map<const string, const string*> espeak_voices = map_list_of
   (lang_id::en, &espeak::en)
@@ -76,7 +77,7 @@ getvoiceid(const string& lang, const map<const string, const string*>& voices)
 
 // Object construction:
 espeak::espeak(const string& lang):
-  speech_engine(speaker::espeak, getvoiceid(lang, espeak_voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
+  speech_engine(name, getvoiceid(lang, espeak_voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
@@ -102,7 +103,7 @@ espeak::voicify(double rate, double pitch)
 
 // Object construction:
 mbrespeak::mbrespeak(const string& lang):
-  mbrola(options::compose(speaker::espeak, speaker::mbrola), getvoiceid(lang, mbrola_voices), lang)
+  mbrola(espeak::name + '.' + mbrola::name, getvoiceid(lang, mbrola_voices), lang)
 {
   if (!espeak::executable.empty())
     {
@@ -110,5 +111,5 @@ mbrespeak::mbrespeak(const string& lang):
       cmd += " --stdin -q --pho -z -v mb-" + voice;
       command(cmd);
     }
-  else throw configuration::error(string("no path to ") + speaker::espeak);
+  else throw configuration::error(string("no path to ") + espeak::name);
 }

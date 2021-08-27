@@ -34,6 +34,7 @@ namespace package
   extern const char* const name;
   extern const char* const string;
   extern const char* const version;
+  extern const char* const datadir;
 };
 
 // Language id strings:
@@ -47,16 +48,6 @@ namespace lang_id
   extern const char* const pt;
   extern const char* const it;
   extern const char* const autodetect;
-};
-
-// Speech backend names:
-namespace speaker
-{
-  extern const char* const mbrola;
-  extern const char* const espeak;
-  extern const char* const freephone;
-  extern const char* const ru_tts;
-  extern const char* const user;
 };
 
 // Various option names used in sections:

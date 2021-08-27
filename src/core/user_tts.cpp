@@ -27,6 +27,7 @@ using namespace std;
 
 // Static data:
 
+const string user_tts::name("user");
 string user_tts::command;
 string user_tts::format;
 unsigned int user_tts::sampling = 22050;
@@ -58,7 +59,7 @@ sound_format(const string& fmt)
 // Object construction:
 
 user_tts::user_tts(const string& lang):
-  speech_engine(speaker::user, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
+  speech_engine(name, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
 {
   if (!command.empty())
     speech_engine::command(user_tts::command);
