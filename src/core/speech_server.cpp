@@ -27,6 +27,8 @@
 #include <iostream>
 #include <exception>
 
+#include <boost/filesystem/fstream.hpp>
+
 #include "speech_server.hpp"
 
 #include "iconv_codecvt.hpp"
@@ -34,6 +36,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace boost::filesystem;
 using namespace FBB;
 
 
@@ -44,6 +47,19 @@ string speech_server::frontend_charset;
 SyslogStream speech_server::log(package::name, NOTICE, USER, LOG_PID);
 bool speech_server::verbose = false;
 bool speech_server::debug = false;
+
+// Whether to accept embedded voice switching commands.
+bool speech_server::support_native_voices = true;
+bool speech_server::support_dtk_voices = false;
+
+// Speech dispatcher backend related data:
+const string speech_server::spd_sound_icons_default_path(complete("sounds/sound-icons", package::datadir).generic_string());
+string speech_server::spd_version;
+string speech_server::spd_sound_icons(speech_server::spd_sound_icons_default_path);
+bool speech_server::spd_use_voice_language = true;
+bool speech_server::spd_accept_explicit_language = true;
+bool speech_server::spd_ignore_unknown_voice = false;
+bool speech_server::spd_support_index_marks = true;
 
 
 // Construct / destroy:
