@@ -33,6 +33,10 @@ public:
   // Object construction:
   freephone(void);
 
+  // Constant data for references:
+  static const std::string name;
+  static const std::string lexicon_default_path;
+
   // Configurable parameters:
   static std::string executable;
   static std::string lexicon;

@@ -234,15 +234,15 @@ speech_engine*
 polyglot::speech_backend(const string& name,
                          const string& lang)
 {
-  if (speaker::freephone == name)
+  if (freephone::name == name)
     return new freephone;
-  else if (speaker::ru_tts == name)
+  else if (ru_tts::name == name)
     return new ru_tts;
-  else if (speaker::espeak == name)
+  else if (espeak::name == name)
     return new espeak(lang);
-  else if (options::compose(speaker::espeak, speaker::mbrola) == name)
+  else if (options::compose(espeak::name, mbrola::name) == name)
     return new mbrespeak(lang);
-  else if (speaker::user == name)
+  else if (user_tts::name == name)
     return new user_tts(lang);
   throw configuration::error("unknown speech backend " + name);
 }

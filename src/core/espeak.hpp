@@ -35,6 +35,9 @@ public:
   // Object construction:
   explicit espeak(const std::string& lang);
 
+  // Constant data for references:
+  static const std::string name;
+
   // Configurable parameters:
   static std::string executable;
 
