@@ -27,6 +27,7 @@
 
 #include <bobcat/cmdfinder>
 
+#include "config.hpp"
 #include "speech_server.hpp"
 #include "inline_parser.hpp"
 
