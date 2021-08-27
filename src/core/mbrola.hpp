@@ -33,10 +33,17 @@ public:
   static std::string executable;
   static std::string voices;
 
+  // Voices assignment:
+  static std::string en;
+  static std::string de;
+  static std::string it;
+  static std::string fr;
+  static std::string es;
+  static std::string pt;
+
 protected:
   // Constructing the object:
-  mbrola(const configuration& conf,
-         const std::string& backend,
+  mbrola(const std::string& backend,
          const std::string& voice_id,
          const std::string& lang);
 

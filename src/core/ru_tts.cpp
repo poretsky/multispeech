@@ -31,6 +31,7 @@
 
 #include "ru_tts.hpp"
 
+#include "config.hpp"
 #include "speech_server.hpp"
 
 using namespace std;
@@ -59,8 +60,8 @@ double ru_tts::intonational_gap_factor = 1.0;
 
 // Object construction:
 
-ru_tts::ru_tts(const configuration& conf):
-  speech_engine(conf, speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
+ru_tts::ru_tts(void):
+  speech_engine(speaker::ru_tts, "", lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
   if (!executable.empty())
     {
