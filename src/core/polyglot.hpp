@@ -74,7 +74,7 @@ private:
 
   // Construct speech backend by name:
   speech_engine* speech_backend(const std::string& name,
-                                const std::string& lang);
+                                const char* lang);
 
   // Currently used language:
   unsigned int lang;

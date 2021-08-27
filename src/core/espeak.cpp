@@ -46,7 +46,7 @@ string espeak::es(lang_id::es);
 string espeak::pt(lang_id::pt);
 string espeak::ru(lang_id::ru);
 
-static const map<const string, const string*> espeak_voices = map_list_of
+static const map<const char*, const string*> espeak_voices = map_list_of
   (lang_id::en, &espeak::en)
   (lang_id::de, &espeak::de)
   (lang_id::it, &espeak::it)
@@ -54,33 +54,30 @@ static const map<const string, const string*> espeak_voices = map_list_of
   (lang_id::es, &espeak::es)
   (lang_id::pt, &espeak::pt)
   (lang_id::ru, &espeak::ru)
-  .convert_to_container< map<const string, const string*> >();
+  .convert_to_container< map<const char*, const string*> >();
 
-static const map<const string, const string*> mbrola_voices = map_list_of
+static const map<const char*, const string*> mbrola_voices = map_list_of
   (lang_id::en, &mbrola::en)
   (lang_id::de, &mbrola::de)
   (lang_id::it, &mbrola::it)
   (lang_id::fr, &mbrola::fr)
   (lang_id::es, &mbrola::es)
   (lang_id::pt, &mbrola::pt)
-  .convert_to_container< map<const string, const string*> >();
-
-// Empty string returned when no voice is found:
-static const string novoice;
+  .convert_to_container< map<const char*, const string*> >();
 
 // Choose voice for language from provided map:
 static const string&
-getvoiceid(const string& lang, const map<const string, const string*>& voices)
+getvoiceid(const char* lang, const map<const char*, const string*>& voices)
 {
-  return voices.count(lang) ? *voices.at(lang) : novoice;
+  return voices.count(lang) ? *voices.at(lang) : speech_engine::novoice;
 }
 
 // Object construction:
-espeak::espeak(const string& lang):
+espeak::espeak(const char* lang):
   speech_engine(name, getvoiceid(lang, espeak_voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
-    throw configuration::error(lang + " voice for " + name + " is not specified");
+    throw configuration::error(string(lang) + " voice for " + name + " is not specified");
   if (!executable.empty())
     {
       string cmd(executable);
@@ -102,7 +99,7 @@ espeak::voicify(double rate, double pitch)
 // Espeak+Mbrola backend.
 
 // Object construction:
-mbrespeak::mbrespeak(const string& lang):
+mbrespeak::mbrespeak(const char* lang):
   mbrola(espeak::name + '.' + mbrola::name, getvoiceid(lang, mbrola_voices), lang)
 {
   if (!espeak::executable.empty())

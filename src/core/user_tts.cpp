@@ -58,8 +58,8 @@ sound_format(const string& fmt)
 
 // Object construction:
 
-user_tts::user_tts(const string& lang):
-  speech_engine(name, "", lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
+user_tts::user_tts(const char* lang):
+  speech_engine(name, novoice, lang, sound_format(format), sampling, stereo ? 2 : 1, !freq_control, charset)
 {
   if (!command.empty())
     speech_engine::command(user_tts::command);
