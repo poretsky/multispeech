@@ -37,6 +37,9 @@ using namespace boost;
 using namespace FBB;
 
 
+// Configured input charset:
+string speech_server::frontend_charset;
+
 // Open logging stream:
 SyslogStream speech_server::log(package::name, NOTICE, USER, LOG_PID);
 bool speech_server::verbose = false;
@@ -45,12 +48,10 @@ bool speech_server::debug = false;
 
 // Construct / destroy:
 
-speech_server::speech_server(const configuration& conf):
-  input_charset((conf.option_value.count(options::frontend::charset) &&
-                 !conf.option_value[options::frontend::charset].as<string>().empty()) ?
-                locale(locale(""), new iconv_codecvt(conf.option_value[options::frontend::charset].as<string>().c_str(), NULL)) :
-                locale("")),
-  speechmaster(conf),
+speech_server::speech_server(void):
+  input_charset(frontend_charset.empty() ?
+                locale("") :
+                locale(locale(""), new iconv_codecvt(frontend_charset.c_str(), NULL))),
   soundmaster(this),
   exit_status(EXIT_SUCCESS)
 {
