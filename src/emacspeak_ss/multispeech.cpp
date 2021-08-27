@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
       audio.initialize();
       if (speech_server::verbose)
         cerr << "Audio system initialization complete." << endl;
-      multispeech.reset(new frontend(conf));
+      multispeech.reset(new frontend);
     }
   catch (const string& info)
     {
