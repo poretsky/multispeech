@@ -49,11 +49,8 @@
 // data members placed in the protected section (accessible for descendants).
 //
 // The class constructor arguments are as follows:
-// conf -- reference to the current configuration;
 // backend -- TTS engine name;
-// voice_id -- voice name. Special protected identifier "novoice"
-// is used when actual name should be determined
-// from the configuration data;
+// voice_id -- voice name;
 // lang -- language id;
 // fmt -- generated sound stream format;
 // sampling -- generated sound stream native sampling frequency;
@@ -73,7 +70,6 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "config.hpp"
 #include "soundfile.hpp"
 #include "loudspeaker.hpp"
 #include "language_description.hpp"
@@ -83,8 +79,7 @@ class speech_engine
 {
 protected:
   // Object constructor:
-  speech_engine(const configuration& conf,
-                const std::string& backend,
+  speech_engine(const std::string& backend,
                 const std::string& voice_id,
                 const std::string& lang,
                 soundfile::format fmt,
@@ -151,9 +146,6 @@ protected:
 
   // General options:
   static bool split_caps, capitalize, space_special_chars;
-
-  // "No voice" string:
-  static const std::string novoice;
 
 private:
   // Generated sound stream sample format:

@@ -31,7 +31,7 @@ class ru_tts: public speech_engine
 {
 public:
   // Object construction:
-  explicit ru_tts(const configuration& conf);
+  ru_tts(void);
 
   // Configurable parameters:
   static std::string executable;

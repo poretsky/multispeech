@@ -66,8 +66,7 @@ polyglot::polyglot(const configuration& conf):
     if (conf.option_value.count(options::compose(langs[i], option_name::engine)) &&
         (conf.option_value[options::compose(langs[i], option_name::engine)].as<string>() != speech_engine::disabled))
       {
-        talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(),
-                                       langs[i], conf));
+        talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(), langs[i]));
         if (conf.option_value[options::speech::fallback].as<string>() == langs[i])
           fallback = i;
         initialized = true;
@@ -233,18 +232,17 @@ polyglot::detect_language(const wstring& s, bool check_translation)
 
 speech_engine*
 polyglot::speech_backend(const string& name,
-                         const string& lang,
-                         const configuration& conf)
+                         const string& lang)
 {
   if (speaker::freephone == name)
-    return new freephone(conf);
+    return new freephone;
   else if (speaker::ru_tts == name)
-    return new ru_tts(conf);
+    return new ru_tts;
   else if (speaker::espeak == name)
-    return new espeak(conf, lang);
+    return new espeak(lang);
   else if (options::compose(speaker::espeak, speaker::mbrola) == name)
-    return new mbrespeak(conf, lang);
+    return new mbrespeak(lang);
   else if (speaker::user == name)
-    return new user_tts(conf, lang);
+    return new user_tts(lang);
   throw configuration::error("unknown speech backend " + name);
 }
