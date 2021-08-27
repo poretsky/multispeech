@@ -20,6 +20,8 @@
 
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <map>
 
 #include <bobcat/syslogstream>
 
@@ -27,6 +29,7 @@
 
 #include "polyglot.hpp"
 
+#include "config.hpp"
 #include "speech_server.hpp"
 #include "freephone.hpp"
 #include "ru_tts.hpp"
@@ -34,11 +37,23 @@
 #include "user_tts.hpp"
 #include "text_filter.hpp"
 
+#include "English.hpp"
+#include "German.hpp"
+#include "Italian.hpp"
+#include "French.hpp"
+#include "Spanish.hpp"
+#include "Portuguese.hpp"
+#include "Russian.hpp"
+
 using namespace std;
 using namespace FBB;
 using namespace boost;
 using namespace boost::assign;
 
+
+// Static data:
+string polyglot::language_preference;
+string polyglot::fallback_language(lang_id::en);
 
 // Supported languages:
 static vector<string> langs = list_of
@@ -51,39 +66,69 @@ static vector<string> langs = list_of
   (lang_id::es)
   (lang_id::en);
 
+static const map<const string, const string*> backends = map_list_of
+  (lang_id::en, &English::settings.engine)
+  (lang_id::de, &German::settings.engine)
+  (lang_id::it, &Italian::settings.engine)
+  (lang_id::fr, &French::settings.engine)
+  (lang_id::es, &Spanish::settings.engine)
+  (lang_id::pt, &Portuguese::settings.engine)
+  (lang_id::ru, &Russian::settings.engine)
+  .convert_to_container< map<const string, const string*> >();
+
+static const map<const string, const int*> priorities = map_list_of
+  (lang_id::en, &English::settings.priority)
+  (lang_id::de, &German::settings.priority)
+  (lang_id::it, &Italian::settings.priority)
+  (lang_id::fr, &French::settings.priority)
+  (lang_id::es, &Spanish::settings.priority)
+  (lang_id::pt, &Portuguese::settings.priority)
+  (lang_id::ru, &Russian::settings.priority)
+  .convert_to_container< map<const string, const int*> >();
+
+// Language comparator:
+static bool
+order(const string& lang1, const string& lang2)
+{
+  return *priorities.at(lang1) < *priorities.at(lang2);
+}
+
 
 // Construct the object:
 
-polyglot::polyglot(const configuration& conf):
+polyglot::polyglot(void):
   talker(langs.size()),
   lang(langs.size()),
   fallback(langs.size()),
   autolanguage(false)
 {
   bool initialized = false;
-  stable_sort(langs.begin(), langs.end(), conf);
+  stable_sort(langs.begin(), langs.end(), order);
   for (unsigned int i = 0; i < langs.size(); i++)
-    if (conf.option_value.count(options::compose(langs[i], option_name::engine)) &&
-        (conf.option_value[options::compose(langs[i], option_name::engine)].as<string>() != speech_engine::disabled))
+    if (backends.count(langs[i]))
       {
-        talker[i].reset(speech_backend(conf.option_value[options::compose(langs[i], option_name::engine)].as<string>(), langs[i]));
-        if (conf.option_value[options::speech::fallback].as<string>() == langs[i])
-          fallback = i;
-        initialized = true;
+        const string& engine = *backends.at(langs[i]);
+        if ((engine != speech_engine::disabled) &&
+            !engine.empty())
+          {
+            talker[i].reset(speech_backend(engine, langs[i]));
+            if (langs[i] == fallback_language)
+              fallback = i;
+            initialized = true;
+          }
       }
   if (!initialized)
     throw configuration::error("no speech backends are defined");
   if (fallback >= langs.size())
     throw configuration::error("fallback language is unavailable");
-  if (conf.option_value.count(options::speech::language))
-    language(conf.option_value[options::speech::language].as<string>());
+  if (!language_preference.empty())
+    language(language_preference);
   else language(lang_id::autodetect);
   if (autolanguage)
     {
-      if (conf.option_value.count(options::speech::language) &&
-          (conf.option_value[options::speech::language].as<string>() != lang_id::autodetect))
-        throw configuration::error("unsupported language " +
-                                  conf.option_value[options::speech::language].as<string>());
+      if (!language_preference.empty() &&
+          (language_preference != lang_id::autodetect))
+        throw configuration::error("unsupported language " + language_preference);
       for (unsigned int i = 0; i < langs.size(); i++)
         {
           if ((lang < langs.size()) && talker[lang].get())
