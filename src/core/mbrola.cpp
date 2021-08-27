@@ -49,11 +49,11 @@ string mbrola::pt("br3");
 
 mbrola::mbrola(const string& backend,
                const string& voice_id,
-               const string& lang):
+               const char* lang):
   speech_engine(backend, voice_id, lang, soundfile::s16, 16000, 1, false)
 {
   if (voice.empty())
-    throw configuration::error(lang + " voice for " + name + " is not specified");
+    throw configuration::error(string(lang) + " voice for " + name + " is not specified");
   if (!executable.empty())
     {
       string cmd(executable);

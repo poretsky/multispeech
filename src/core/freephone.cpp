@@ -40,11 +40,13 @@ const string freephone::lexicon_default_path(complete("freespeech/enlex.db", pac
 string freephone::executable(freephone::name);
 string freephone::lexicon(freephone::lexicon_default_path);
 
+static const string mbrola_en1("en1");
+
 
 // Object construction:
 
 freephone::freephone(void):
-  mbrola(name, "en1", lang_id::en)
+  mbrola(name, mbrola_en1, lang_id::en)
 {
   if (!executable.empty())
     {
