@@ -19,23 +19,64 @@
 */
 
 #include <cmath>
+#include <map>
 
+#include <boost/assign.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "espeak.hpp"
 
+#include "config.hpp"
+
 using namespace std;
 using namespace boost;
+using namespace boost::assign;
 
 
 // Espeak backend.
 
 // Static data:
 string espeak::executable;
+string espeak::en;
+string espeak::de;
+string espeak::it;
+string espeak::fr;
+string espeak::es;
+string espeak::pt;
+string espeak::ru;
+
+static const map<const string, const string*> espeak_voices = map_list_of
+  (lang_id::en, &espeak::en)
+  (lang_id::de, &espeak::de)
+  (lang_id::it, &espeak::it)
+  (lang_id::fr, &espeak::fr)
+  (lang_id::es, &espeak::es)
+  (lang_id::pt, &espeak::pt)
+  (lang_id::ru, &espeak::ru)
+  .convert_to_container< map<const string, const string*> >();
+
+static const map<const string, const string*> mbrola_voices = map_list_of
+  (lang_id::en, &mbrola::en)
+  (lang_id::de, &mbrola::de)
+  (lang_id::it, &mbrola::it)
+  (lang_id::fr, &mbrola::fr)
+  (lang_id::es, &mbrola::es)
+  (lang_id::pt, &mbrola::pt)
+  .convert_to_container< map<const string, const string*> >();
+
+// Empty string returned when no voice is found:
+static const string novoice;
+
+// Choose voice for language from provided map:
+static const string&
+getvoiceid(const string& lang, const map<const string, const string*>& voices)
+{
+  return voices.count(lang) ? *voices.at(lang) : novoice;
+}
 
 // Object construction:
-espeak::espeak(const configuration& conf, const string& lang):
-  speech_engine(conf, speaker::espeak, novoice, lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
+espeak::espeak(const string& lang):
+  speech_engine(speaker::espeak, getvoiceid(lang, espeak_voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
     throw configuration::error(lang + " voice for " + name + " is not specified");
@@ -60,8 +101,8 @@ espeak::voicify(double rate, double pitch)
 // Espeak+Mbrola backend.
 
 // Object construction:
-mbrespeak::mbrespeak(const configuration& conf, const string& lang):
-  mbrola(conf, options::compose(speaker::espeak, speaker::mbrola), novoice, lang)
+mbrespeak::mbrespeak(const string& lang):
+  mbrola(options::compose(speaker::espeak, speaker::mbrola), getvoiceid(lang, mbrola_voices), lang)
 {
   if (!espeak::executable.empty())
     {
