@@ -37,7 +37,6 @@
 #include "frontend.hpp"
 
 #include "strcvt.hpp"
-#include "config.hpp"
 #include "file_player.hpp"
 
 using namespace std;
@@ -90,7 +89,6 @@ frontend::instantiate(const configuration& conf)
 // Object construction:
 
 frontend::frontend(const configuration& conf):
-  speech_server(conf),
   CmdFinder<FunctionPtr>(command_table, command_table +
                          (sizeof(command_table) / sizeof(Entry)),
                          USE_FIRST),

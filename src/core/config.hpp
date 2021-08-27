@@ -342,9 +342,6 @@ public:
   // The constructor reads and parses configuration by the way
   configuration(int argc, char* argv[], bool is_spd_backend = false);
 
-  // Language detection order:
-  bool operator()(const std::string& lang1, const std::string& lang2);
-
   // Options value container:
   boost::program_options::variables_map option_value;
 
