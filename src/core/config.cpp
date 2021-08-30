@@ -388,7 +388,7 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
 {
   options_description conf, cl_desc("Available options");
   positional_options_description args;
-  variables_map cl_opt;
+  variables_map option_value;
   bool noconf = true;
   ostringstream info;
 
@@ -412,18 +412,18 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
 
   // Parse command line:
   stage = " in command line";
-  store(command_line_parser(argc, argv).options(cl_desc).positional(args).run(), cl_opt);
+  store(command_line_parser(argc, argv).options(cl_desc).positional(args).run(), option_value);
   stage.erase();
-  notify(cl_opt);
+  notify(option_value);
 
-  if (cl_opt.count("version"))
+  if (option_value.count("version"))
     info << package::string << endl;
-  if (cl_opt.count("help"))
+  if (option_value.count("help"))
     info << "Usage: " << argv[0] << " [options]" << endl << cl_desc;
-  if (cl_opt.count("verbose"))
+  if (option_value.count("verbose"))
     speech_server::verbose = true;
   else speech_server::redirect_stderr();
-  if (cl_opt.count("list-devices"))
+  if (option_value.count("list-devices"))
     {
       AutoSystem audio;
       System& system = System::instance();
@@ -435,7 +435,7 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     }
   if (!info.str().empty())
     throw info.str();
-  if (cl_opt.count("debug"))
+  if (option_value.count("debug"))
     speech_server::debug = true;
 
   // Declare configuration options:
@@ -610,43 +610,39 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     (spd::index_marks, bool_switch(&speech_server::spd_support_index_marks)->default_value(true));
 
   // Parse config files and store values
+  path extra_conf;
+  if (option_value.count("config"))
+    extra_conf = option_value["config"].as<string>();
+  option_value.clear();
   if (spd_backend)
     {
       if (exists(local_conf))
         {
-          read(local_conf, conf);
+          read(local_conf, conf, option_value);
           noconf = false;
         }
-      if (cl_opt.count("config"))
+      if (exists(extra_conf))
         {
-          path extra_conf(cl_opt["config"].as<string>());
-          if (exists(extra_conf))
-            {
-              read(extra_conf, conf);
-              noconf = false;
-            }
+          read(extra_conf, conf, option_value);
+          noconf = false;
         }
     }
   else
     {
-      if (cl_opt.count("config"))
+      if (exists(extra_conf))
         {
-          path extra_conf(cl_opt["config"].as<string>());
-          if (exists(extra_conf))
-            {
-              read(extra_conf, conf);
-              noconf = false;
-            }
+          read(extra_conf, conf, option_value);
+          noconf = false;
         }
       if (exists(local_conf))
         {
-          read(local_conf, conf);
+          read(local_conf, conf, option_value);
           noconf = false;
         }
     }
   if (exists(global_conf))
     {
-      read(global_conf, conf);
+      read(global_conf, conf, option_value);
       noconf = false;
     }
   if (noconf && !spd_backend)
@@ -666,7 +662,7 @@ configuration::error::error(const string& message):
 // Private members:
 
 void
-configuration::read(const path& config_file, const options_description& conf)
+configuration::read(const path& config_file, const options_description& conf, variables_map& option_value)
 {
   boost::filesystem::ifstream source(config_file);
   stage = " in " + config_file.generic_string();
