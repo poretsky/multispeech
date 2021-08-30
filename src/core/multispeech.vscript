@@ -11,8 +11,6 @@ MULTISPEECH_0 {
       options::spd::*;
       configuration::configuration*;
       configuration::error::*;
-      configuration::operator*;
-      configuration::option_value;
       configuration::stage*;
       speech_engine::name*;
       speech_engine::voice*;
