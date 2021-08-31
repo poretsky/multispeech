@@ -94,288 +94,289 @@ namespace lang_id
 // Various option names used in sections:
 namespace option_name
 {
-  const char* const priority = "priority";
-  const char* const engine = "engine";
-  const char* const executable = "executable";
-  const char* const command = "command";
-  const char* const format = "format";
-  const char* const sampling = "sampling";
-  const char* const stereo = "stereo";
-  const char* const freq_control = "freq_control";
-  const char* const charset = "charset";
-  const char* const voices = "voices";
-  const char* const lexicon = "lexicon";
-  const char* const log = "log";
-  const char* const volume = "volume";
-  const char* const pitch = "pitch";
-  const char* const rate = "rate";
-  const char* const char_pitch = "char_pitch";
-  const char* const char_rate = "char_rate";
-  const char* const caps_factor = "caps_factor";
-  const char* const acceleration = "acceleration";
-  const char* const expressiveness = "expressiveness";
-  const char* const female_voice = "female_voice";
-  const char* const decimal_point = "decimal_point";
-  const char* const decimal_comma = "decimal_comma";
-  const char* const interclause_gap_factor = "interclause_gap_factor";
-  const char* const comma_gap_factor = "comma_gap_factor";
-  const char* const dot_gap_factor = "dot_gap_factor";
-  const char* const semicolon_gap_factor = "semicolon_gap_factor";
-  const char* const colon_gap_factor = "colon_gap_factor";
-  const char* const question_gap_factor = "question_gap_factor";
-  const char* const exclamation_gap_factor = "exclamation_gap_factor";
-  const char* const intonational_gap_factor = "intonational_gap_factor";
+  static const char* const priority = "priority";
+  static const char* const engine = "engine";
+  static const char* const executable = "executable";
+  static const char* const command = "command";
+  static const char* const format = "format";
+  static const char* const sampling = "sampling";
+  static const char* const stereo = "stereo";
+  static const char* const freq_control = "freq_control";
+  static const char* const charset = "charset";
+  static const char* const voices = "voices";
+  static const char* const lexicon = "lexicon";
+  static const char* const log = "log";
+  static const char* const volume = "volume";
+  static const char* const pitch = "pitch";
+  static const char* const rate = "rate";
+  static const char* const char_pitch = "char_pitch";
+  static const char* const char_rate = "char_rate";
+  static const char* const caps_factor = "caps_factor";
+  static const char* const acceleration = "acceleration";
+  static const char* const expressiveness = "expressiveness";
+  static const char* const female_voice = "female_voice";
+  static const char* const decimal_point = "decimal_point";
+  static const char* const decimal_comma = "decimal_comma";
+  static const char* const interclause_gap_factor = "interclause_gap_factor";
+  static const char* const comma_gap_factor = "comma_gap_factor";
+  static const char* const dot_gap_factor = "dot_gap_factor";
+  static const char* const semicolon_gap_factor = "semicolon_gap_factor";
+  static const char* const colon_gap_factor = "colon_gap_factor";
+  static const char* const question_gap_factor = "question_gap_factor";
+  static const char* const exclamation_gap_factor = "exclamation_gap_factor";
+  static const char* const intonational_gap_factor = "intonational_gap_factor";
 };
 
 
 // Option names definition
 namespace options
 {
+
+  // Dynamic options name composing:
+  static const string compose(const string& section, const string& option)
+  {
+    return section + '.' + option;
+  }
+
   // Frontend related options:
   namespace frontend
   {
-    const char* const charset = "frontend.charset";
-    const char* const native_voices = "frontend.native_voices";
-    const char* const dtk_voices = "frontend.dtk_voices";
+    static const char* const charset = "frontend.charset";
+    static const char* const native_voices = "frontend.native_voices";
+    static const char* const dtk_voices = "frontend.dtk_voices";
   };
 
   // Speech Dispatcher backend options:
   namespace spd
   {
-    const char* const version = "spd.version";
-    const char* const sound_icons = "spd.sound_icons";
-    const char* const use_voice_language = "spd.use_voice_language";
-    const char* const accept_explicit_language = "spd.accept_explicit_language";
-    const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
-    const char* const index_marks = "spd.index_marks";
+    static const char* const version = "spd.version";
+    static const char* const sound_icons = "spd.sound_icons";
+    static const char* const use_voice_language = "spd.use_voice_language";
+    static const char* const accept_explicit_language = "spd.accept_explicit_language";
+    static const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
+    static const char* const index_marks = "spd.index_marks";
   };
 
   // General audio output options:
   namespace audio
   {
-    const char* const device = "audio.device";
-    const char* const general_volume = "audio.general_volume";
-    const char* const latency = "audio.latency";
-    const char* const async_operation = "audio.async_operation";
-    const char* const pulseaudio_direct = "audio.pulseaudio_direct";
+    static const char* const device = "audio.device";
+    static const char* const general_volume = "audio.general_volume";
+    static const char* const latency = "audio.latency";
+    static const char* const async_operation = "audio.async_operation";
+    static const char* const pulseaudio_direct = "audio.pulseaudio_direct";
   };
 
   // Sound files playing section:
   namespace sounds
   {
-    const char* const device = "sounds.device";
-    const char* const volume = "sounds.volume";
-    const char* const asynchronous = "sounds.asynchronous";
+    static const char* const device = "sounds.device";
+    static const char* const volume = "sounds.volume";
+    static const char* const asynchronous = "sounds.asynchronous";
   };
 
   // tones producing section:
   namespace tones
   {
-    const char* const device = "tones.device";
-    const char* const volume = "tones.volume";
-    const char* const sampling = "tones.sampling";
-    const char* const asynchronous = "tones.asynchronous";
+    static const char* const device = "tones.device";
+    static const char* const volume = "tones.volume";
+    static const char* const sampling = "tones.sampling";
+    static const char* const asynchronous = "tones.asynchronous";
   };
 
   // Speech section:
   namespace speech
   {
     // General speech control options:
-    const char* const device = "speech.device";
-    const char* const volume = "speech.volume";
-    const char* const language = "speech.language";
-    const char* const fallback = "speech.fallback";
+    static const char* const device = "speech.device";
+    static const char* const volume = "speech.volume";
+    static const char* const language = "speech.language";
+    static const char* const fallback = "speech.fallback";
   };
 
   // English speech section:
   namespace en
   {
-    const string engine(compose(lang_id::en, option_name::engine));
-    const string priority(compose(lang_id::en, option_name::priority));
-    const string volume(compose(lang_id::en, option_name::volume));
-    const string pitch(compose(lang_id::en, option_name::pitch));
-    const string rate(compose(lang_id::en, option_name::rate));
-    const string acceleration(compose(lang_id::en, option_name::acceleration));
+    static const string engine(compose(lang_id::en, option_name::engine));
+    static const string priority(compose(lang_id::en, option_name::priority));
+    static const string volume(compose(lang_id::en, option_name::volume));
+    static const string pitch(compose(lang_id::en, option_name::pitch));
+    static const string rate(compose(lang_id::en, option_name::rate));
+    static const string acceleration(compose(lang_id::en, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::en, option_name::char_pitch));
-    const string char_rate(compose(lang_id::en, option_name::char_rate));
-    const string caps_factor(compose(lang_id::en, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::en, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::en, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::en, option_name::caps_factor));
   };
 
   // Russian speech section:
   namespace ru
   {
-    const string engine(compose(lang_id::ru, option_name::engine));
-    const string priority(compose(lang_id::ru, option_name::priority));
-    const string volume(compose(lang_id::ru, option_name::volume));
-    const string pitch(compose(lang_id::ru, option_name::pitch));
-    const string rate(compose(lang_id::ru, option_name::rate));
-    const string acceleration(compose(lang_id::ru, option_name::acceleration));
+    static const string engine(compose(lang_id::ru, option_name::engine));
+    static const string priority(compose(lang_id::ru, option_name::priority));
+    static const string volume(compose(lang_id::ru, option_name::volume));
+    static const string pitch(compose(lang_id::ru, option_name::pitch));
+    static const string rate(compose(lang_id::ru, option_name::rate));
+    static const string acceleration(compose(lang_id::ru, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::ru, option_name::char_pitch));
-    const string char_rate(compose(lang_id::ru, option_name::char_rate));
-    const string caps_factor(compose(lang_id::ru, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::ru, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::ru, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::ru, option_name::caps_factor));
   };
 
   // German speech section:
   namespace de
   {
-    const string engine(compose(lang_id::de, option_name::engine));
-    const string priority(compose(lang_id::de, option_name::priority));
-    const string volume(compose(lang_id::de, option_name::volume));
-    const string pitch(compose(lang_id::de, option_name::pitch));
-    const string rate(compose(lang_id::de, option_name::rate));
-    const string acceleration(compose(lang_id::de, option_name::acceleration));
+    static const string engine(compose(lang_id::de, option_name::engine));
+    static const string priority(compose(lang_id::de, option_name::priority));
+    static const string volume(compose(lang_id::de, option_name::volume));
+    static const string pitch(compose(lang_id::de, option_name::pitch));
+    static const string rate(compose(lang_id::de, option_name::rate));
+    static const string acceleration(compose(lang_id::de, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::de, option_name::char_pitch));
-    const string char_rate(compose(lang_id::de, option_name::char_rate));
-    const string caps_factor(compose(lang_id::de, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::de, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::de, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::de, option_name::caps_factor));
   };
 
   // French speech section:
   namespace fr
   {
-    const string engine(compose(lang_id::fr, option_name::engine));
-    const string priority(compose(lang_id::fr, option_name::priority));
-    const string volume(compose(lang_id::fr, option_name::volume));
-    const string pitch(compose(lang_id::fr, option_name::pitch));
-    const string rate(compose(lang_id::fr, option_name::rate));
-    const string acceleration(compose(lang_id::fr, option_name::acceleration));
+    static const string engine(compose(lang_id::fr, option_name::engine));
+    static const string priority(compose(lang_id::fr, option_name::priority));
+    static const string volume(compose(lang_id::fr, option_name::volume));
+    static const string pitch(compose(lang_id::fr, option_name::pitch));
+    static const string rate(compose(lang_id::fr, option_name::rate));
+    static const string acceleration(compose(lang_id::fr, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::fr, option_name::char_pitch));
-    const string char_rate(compose(lang_id::fr, option_name::char_rate));
-    const string caps_factor(compose(lang_id::fr, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::fr, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::fr, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::fr, option_name::caps_factor));
   };
 
   // Spanish speech section:
   namespace es
   {
-    const string engine(compose(lang_id::es, option_name::engine));
-    const string priority(compose(lang_id::es, option_name::priority));
-    const string volume(compose(lang_id::es, option_name::volume));
-    const string pitch(compose(lang_id::es, option_name::pitch));
-    const string rate(compose(lang_id::es, option_name::rate));
-    const string acceleration(compose(lang_id::es, option_name::acceleration));
+    static const string engine(compose(lang_id::es, option_name::engine));
+    static const string priority(compose(lang_id::es, option_name::priority));
+    static const string volume(compose(lang_id::es, option_name::volume));
+    static const string pitch(compose(lang_id::es, option_name::pitch));
+    static const string rate(compose(lang_id::es, option_name::rate));
+    static const string acceleration(compose(lang_id::es, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::es, option_name::char_pitch));
-    const string char_rate(compose(lang_id::es, option_name::char_rate));
-    const string caps_factor(compose(lang_id::es, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::es, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::es, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::es, option_name::caps_factor));
   };
 
   // Portuguese speech section:
   namespace pt
   {
-    const string engine(compose(lang_id::pt, option_name::engine));
-    const string priority(compose(lang_id::pt, option_name::priority));
-    const string volume(compose(lang_id::pt, option_name::volume));
-    const string pitch(compose(lang_id::pt, option_name::pitch));
-    const string rate(compose(lang_id::pt, option_name::rate));
-    const string acceleration(compose(lang_id::pt, option_name::acceleration));
+    static const string engine(compose(lang_id::pt, option_name::engine));
+    static const string priority(compose(lang_id::pt, option_name::priority));
+    static const string volume(compose(lang_id::pt, option_name::volume));
+    static const string pitch(compose(lang_id::pt, option_name::pitch));
+    static const string rate(compose(lang_id::pt, option_name::rate));
+    static const string acceleration(compose(lang_id::pt, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::pt, option_name::char_pitch));
-    const string char_rate(compose(lang_id::pt, option_name::char_rate));
-    const string caps_factor(compose(lang_id::pt, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::pt, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::pt, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::pt, option_name::caps_factor));
   };
 
   // Italian speech section:
   namespace it
   {
-    const string engine(compose(lang_id::it, option_name::engine));
-    const string priority(compose(lang_id::it, option_name::priority));
-    const string volume(compose(lang_id::it, option_name::volume));
-    const string pitch(compose(lang_id::it, option_name::pitch));
-    const string rate(compose(lang_id::it, option_name::rate));
-    const string acceleration(compose(lang_id::it, option_name::acceleration));
+    static const string engine(compose(lang_id::it, option_name::engine));
+    static const string priority(compose(lang_id::it, option_name::priority));
+    static const string volume(compose(lang_id::it, option_name::volume));
+    static const string pitch(compose(lang_id::it, option_name::pitch));
+    static const string rate(compose(lang_id::it, option_name::rate));
+    static const string acceleration(compose(lang_id::it, option_name::acceleration));
 
     // Single letters pronunciation parameters:
-    const string char_pitch(compose(lang_id::it, option_name::char_pitch));
-    const string char_rate(compose(lang_id::it, option_name::char_rate));
-    const string caps_factor(compose(lang_id::it, option_name::caps_factor));
+    static const string char_pitch(compose(lang_id::it, option_name::char_pitch));
+    static const string char_rate(compose(lang_id::it, option_name::char_rate));
+    static const string caps_factor(compose(lang_id::it, option_name::caps_factor));
   };
 
 
   // Mbrola based backends options:
   namespace mbrola
   {
-    const string executable(compose(::mbrola::name, option_name::executable));
-    const string voices(compose(::mbrola::name, option_name::voices));
+    static const string executable(compose(::mbrola::name, option_name::executable));
+    static const string voices(compose(::mbrola::name, option_name::voices));
   };
 
   // Espeak based backends options:
   namespace espeak
   {
-    const string executable(compose(::espeak::name, option_name::executable));
+    static const string executable(compose(::espeak::name, option_name::executable));
 
     // Espeak voices assignment:
-    const string en(compose(::espeak::name, lang_id::en));
-    const string ru(compose(::espeak::name, lang_id::ru));
-    const string de(compose(::espeak::name, lang_id::de));
-    const string fr(compose(::espeak::name, lang_id::fr));
-    const string es(compose(::espeak::name, lang_id::es));
-    const string pt(compose(::espeak::name, lang_id::pt));
-    const string it(compose(::espeak::name, lang_id::it));
+    static const string en(compose(::espeak::name, lang_id::en));
+    static const string ru(compose(::espeak::name, lang_id::ru));
+    static const string de(compose(::espeak::name, lang_id::de));
+    static const string fr(compose(::espeak::name, lang_id::fr));
+    static const string es(compose(::espeak::name, lang_id::es));
+    static const string pt(compose(::espeak::name, lang_id::pt));
+    static const string it(compose(::espeak::name, lang_id::it));
 
     // Mbrola voices assignment:
     namespace mbrola
     {
-      const string en(compose(::espeak::name, compose(::mbrola::name, lang_id::en)));
-      const string de(compose(::espeak::name, compose(::mbrola::name, lang_id::de)));
-      const string fr(compose(::espeak::name, compose(::mbrola::name, lang_id::fr)));
-      const string es(compose(::espeak::name, compose(::mbrola::name, lang_id::es)));
-      const string pt(compose(::espeak::name, compose(::mbrola::name, lang_id::pt)));
-      const string it(compose(::espeak::name, compose(::mbrola::name, lang_id::it)));
+      static const string en(compose(::espeak::name, compose(::mbrola::name, lang_id::en)));
+      static const string de(compose(::espeak::name, compose(::mbrola::name, lang_id::de)));
+      static const string fr(compose(::espeak::name, compose(::mbrola::name, lang_id::fr)));
+      static const string es(compose(::espeak::name, compose(::mbrola::name, lang_id::es)));
+      static const string pt(compose(::espeak::name, compose(::mbrola::name, lang_id::pt)));
+      static const string it(compose(::espeak::name, compose(::mbrola::name, lang_id::it)));
     };
   };
 
   // Freephone backend options:
   namespace freephone
   {
-    const string executable(compose(::freephone::name, option_name::executable));
-    const string lexicon(compose(::freephone::name, option_name::lexicon));
+    static const string executable(compose(::freephone::name, option_name::executable));
+    static const string lexicon(compose(::freephone::name, option_name::lexicon));
   };
 
   // Ru_tts backend options:
   namespace ru_tts
   {
-    const string executable(compose(::ru_tts::name, option_name::executable));
-    const string lexicon(compose(::ru_tts::name, option_name::lexicon));
-    const string log(compose(::ru_tts::name, option_name::log));
-    const string expressiveness(compose(::ru_tts::name, option_name::expressiveness));
-    const string female_voice(compose(::ru_tts::name, option_name::female_voice));
-    const string decimal_point(compose(::ru_tts::name, option_name::decimal_point));
-    const string decimal_comma(compose(::ru_tts::name, option_name::decimal_comma));
-    const string interclause_gap_factor(compose(::ru_tts::name, option_name::interclause_gap_factor));
-    const string comma_gap_factor(compose(::ru_tts::name, option_name::comma_gap_factor));
-    const string dot_gap_factor(compose(::ru_tts::name, option_name::dot_gap_factor));
-    const string semicolon_gap_factor(compose(::ru_tts::name, option_name::semicolon_gap_factor));
-    const string colon_gap_factor(compose(::ru_tts::name, option_name::colon_gap_factor));
-    const string question_gap_factor(compose(::ru_tts::name, option_name::question_gap_factor));
-    const string exclamation_gap_factor(compose(::ru_tts::name, option_name::exclamation_gap_factor));
-    const string intonational_gap_factor(compose(::ru_tts::name, option_name::intonational_gap_factor));
+    static const string executable(compose(::ru_tts::name, option_name::executable));
+    static const string lexicon(compose(::ru_tts::name, option_name::lexicon));
+    static const string log(compose(::ru_tts::name, option_name::log));
+    static const string expressiveness(compose(::ru_tts::name, option_name::expressiveness));
+    static const string female_voice(compose(::ru_tts::name, option_name::female_voice));
+    static const string decimal_point(compose(::ru_tts::name, option_name::decimal_point));
+    static const string decimal_comma(compose(::ru_tts::name, option_name::decimal_comma));
+    static const string interclause_gap_factor(compose(::ru_tts::name, option_name::interclause_gap_factor));
+    static const string comma_gap_factor(compose(::ru_tts::name, option_name::comma_gap_factor));
+    static const string dot_gap_factor(compose(::ru_tts::name, option_name::dot_gap_factor));
+    static const string semicolon_gap_factor(compose(::ru_tts::name, option_name::semicolon_gap_factor));
+    static const string colon_gap_factor(compose(::ru_tts::name, option_name::colon_gap_factor));
+    static const string question_gap_factor(compose(::ru_tts::name, option_name::question_gap_factor));
+    static const string exclamation_gap_factor(compose(::ru_tts::name, option_name::exclamation_gap_factor));
+    static const string intonational_gap_factor(compose(::ru_tts::name, option_name::intonational_gap_factor));
   };
 
   // User defined TTS backend options:
   namespace user
   {
-    const string command(compose(user_tts::name, option_name::command));
-    const string format(compose(user_tts::name, option_name::format));
-    const string sampling(compose(user_tts::name, option_name::sampling));
-    const string stereo(compose(user_tts::name, option_name::stereo));
-    const string freq_control(compose(user_tts::name, option_name::freq_control));
-    const string charset(compose(user_tts::name, option_name::charset));
+    static const string command(compose(user_tts::name, option_name::command));
+    static const string format(compose(user_tts::name, option_name::format));
+    static const string sampling(compose(user_tts::name, option_name::sampling));
+    static const string stereo(compose(user_tts::name, option_name::stereo));
+    static const string freq_control(compose(user_tts::name, option_name::freq_control));
+    static const string charset(compose(user_tts::name, option_name::charset));
   };
-
-  // Dynamic options name composing:
-  const string compose(const string& section, const string& option)
-  {
-    return section + '.' + option;
-  }
 };
 
 
