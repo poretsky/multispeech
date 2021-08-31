@@ -7,8 +7,6 @@ MULTISPEECH_0 {
       voice_params::*;
       package::*;
       lang_id::*;
-      options::frontend::*;
-      options::spd::*;
       configuration::configuration*;
       configuration::error::*;
       configuration::stage*;
