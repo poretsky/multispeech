@@ -1,15 +1,13 @@
 MULTISPEECH_0 {
   global:
     extern "C++" {
+      *multispeech;
       *speech_server;
-      *voice_params;
+      multispeech::*;
       speech_server::*;
       voice_params::*;
       package::*;
       lang_id::*;
-      configuration::configuration*;
-      configuration::error::*;
-      configuration::stage*;
       speech_engine::name*;
       speech_engine::voice*;
       speech_engine::language*;
