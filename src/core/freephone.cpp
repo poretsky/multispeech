@@ -35,7 +35,7 @@ using namespace FBB;
 
 
 // Static data:
-const string freephone::name("freephone");
+const string freephone::name(FREEPHONE);
 const string freephone::lexicon_default_path(complete("freespeech/enlex.db", package::datadir).generic_string());
 string freephone::executable(freephone::name);
 string freephone::lexicon(freephone::lexicon_default_path);

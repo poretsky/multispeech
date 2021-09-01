@@ -33,7 +33,7 @@ using namespace boost::filesystem;
 
 
 // Static data:
-const string mbrola::name("mbrola");
+const string mbrola::name(MBROLA);
 const string mbrola::voices_default_path(complete("mbrola", package::datadir).generic_string());
 string mbrola::executable(mbrola::name);
 string mbrola::voices(mbrola::voices_default_path);
