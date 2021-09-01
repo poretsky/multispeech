@@ -26,6 +26,9 @@
 
 #include "speech_engine.hpp"
 
+// Backend name:
+#define MBROLA "mbrola"
+
 class mbrola: public speech_engine
 {
 public:
