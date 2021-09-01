@@ -18,20 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef MULTISPEECH_SYSCONFIG_H
-#define MULTISPEECH_SYSCONFIG_H
-#include <sysconfig.h>
-#endif
-
-// Package configuration data:
-namespace package
-{
-  extern const char* const name = PACKAGE_NAME;
-  extern const char* const string = PACKAGE_STRING;
-  extern const char* const version = PACKAGE_VERSION;
-  extern const char* const datadir = DATA_DIR;
-};
-
 #include <cstdlib>
 #include <string>
 #include <sstream>
@@ -66,6 +52,8 @@ namespace package
 #include "Portuguese.hpp"
 #include "Russian.hpp"
 
+#include "sysconfig.hpp"
+
 
 // Option names:
 #define PRIORITY "priority"
@@ -98,7 +86,7 @@ namespace package
 #define INTONATIONAL_GAP_FACTOR "intonational_gap_factor"
 #define NATIVE_VOICES "native_voices"
 #define DTK_VOICES "dtk_voices"
-#define SPD_VERSION "version"
+#define VERSION "version"
 #define SOUND_ICONS "sound_icons"
 #define USE_VOICE_LANGUAGE "use_voice_language"
 #define ACCEPT_EXPLICIT_LANGUAGE "accept_explicit_language"
@@ -169,10 +157,18 @@ using namespace portaudio;
 
 
 // Configuration files:
-
 static const path global_conf(complete("multispeech.conf", SYSCONF_DIR));
 static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 
+
+// Package configuration data:
+namespace package
+{
+  const char* const name = PACKAGE_NAME;
+  const char* const string = PACKAGE_STRING;
+  const char* const version = PACKAGE_VERSION;
+  const char* const datadir = DATA_DIR;
+};
 
 // Language id strings:
 namespace lang_id
@@ -342,7 +338,7 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     STRING(USER_TTS, CHARSET, user_tts::charset, "")
 
     // Registering Speech Dispatcher backend options:
-    STRING(SPD, SPD_VERSION, speech_server::spd_version, "")
+    STRING(SPD, VERSION, speech_server::spd_version, "")
     STRING(SPD, SOUND_ICONS, speech_server::spd_sound_icons, speech_server::spd_sound_icons_default_path)
     BOOLEAN(SPD, USE_VOICE_LANGUAGE, speech_server::spd_use_voice_language, true)
     BOOLEAN(SPD, ACCEPT_EXPLICIT_LANGUAGE, speech_server::spd_accept_explicit_language, true)
