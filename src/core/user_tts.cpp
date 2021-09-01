@@ -27,7 +27,7 @@ using namespace std;
 
 // Static data:
 
-const string user_tts::name("user");
+const string user_tts::name(USER_TTS);
 string user_tts::command;
 string user_tts::format;
 unsigned int user_tts::sampling = 22050;

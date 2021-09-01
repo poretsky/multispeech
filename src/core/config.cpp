@@ -66,6 +66,102 @@ namespace package
 #include "Portuguese.hpp"
 #include "Russian.hpp"
 
+
+// Option names:
+#define PRIORITY "priority"
+#define LOUDNESS "volume"
+#define ENGINE "engine"
+#define COMMAND "command"
+#define FORMAT "format"
+#define STEREO "stereo"
+#define FREQ_CONTROL "freq_control"
+#define CHARSET "charset"
+#define VOICES "voices"
+#define LOG "log"
+#define PITCH "pitch"
+#define RATE "rate"
+#define CHAR_PITCH "char_pitch"
+#define CHAR_RATE "char_rate"
+#define CAPS_FACTOR "caps_factor"
+#define ACCELERATION "acceleration"
+#define EXPRESSIVENESS "expressiveness"
+#define FEMALE_VOICE "female_voice"
+#define DECIMAL_POINT "decimal_point"
+#define DECIMAL_COMMA "decimal_comma"
+#define INTERCLAUSE_GAP_FACTOR "interclause_gap_factor"
+#define COMMA_GAP_FACTOR "comma_gap_factor"
+#define DOT_GAP_FACTOR "dot_gap_factor"
+#define SEMICOLON_GAP_FACTOR "semicolon_gap_factor"
+#define COLON_GAP_FACTOR "colon_gap_factor"
+#define QUESTION_GAP_FACTOR "question_gap_factor"
+#define EXCLAMATION_GAP_FACTOR "exclamation_gap_factor"
+#define INTONATIONAL_GAP_FACTOR "intonational_gap_factor"
+#define NATIVE_VOICES "native_voices"
+#define DTK_VOICES "dtk_voices"
+#define SPD_VERSION "version"
+#define SOUND_ICONS "sound_icons"
+#define USE_VOICE_LANGUAGE "use_voice_language"
+#define ACCEPT_EXPLICIT_LANGUAGE "accept_explicit_language"
+#define IGNORE_UNKNOWN_VOICE "ignore_unknown_voice"
+#define INDEX_MARKS "index_marks"
+#define GENERAL_VOLUME "general_volume"
+#define LATENCY "latency"
+#define ASYNC_OPERATION "async_operation"
+#define PULSEAUDIO_DIRECT "pulseaudio_direct"
+#define LANG_PREF "language"
+#define FALLBACK "fallback"
+
+// Configuration sections names:
+#define FRONTEND "frontend"
+#define SPD "spd"
+#define AUDIO "audio"
+#define SOUNDS "sounds"
+#define TONES "tones"
+#define SPEECH "speech"
+
+// Supported languages:
+#define EN "en"
+#define DE "de"
+#define IT "it"
+#define FR "fr"
+#define ES "es"
+#define PT "pt"
+#define RU "ru"
+
+// Option description items:
+#define OPTION(section, name, type, variable, default) (COMPOSE(section, name), value<type>(&variable)->default_value(default))
+#define STRING(section, name, variable, default) OPTION(section, name, string, variable, default)
+#define INT(section, name, variable, default) OPTION(section, name, int, variable, default)
+#define UINT(section, name, variable, default) OPTION(section, name, unsigned int, variable, default)
+#define DOUBLE(section, name, variable, default) OPTION(section, name, double, variable, default)
+#define FLOAT(section, name, variable, default) OPTION(section, name, float, variable, default)
+#define BOOLEAN(section, name, variable, default) (section "." name, bool_switch(&variable)->default_value(default))
+
+// Some common options appearing in several sections:
+#define DEVICE(section, component) STRING(section, "device", component::device, "")
+#define VOLUME(section, component) FLOAT(section, LOUDNESS, component::relative_volume, 1.0)
+#define ASYNCHRONOUS(section, component) BOOLEAN(section, "asynchronous", component::asynchronous, true)
+#define SAMPLING(section, component, default) UINT(section, "sampling", component::sampling, default)
+#define EXECUTABLE(backend, component) STRING(backend, "executable", component::executable, component::name)
+#define LEXICON(backend, component) STRING(backend, "lexicon", component::lexicon, component::lexicon_default_path)
+
+// Backend specific voice items:
+#define MBROLA_VOICE(lang, field, default) STRING(COMPOSE(ESPEAK, MBROLA), lang,mbrola::field, default)
+#define ESPEAK_VOICE(lang, field) STRING(ESPEAK, lang,espeak::field, lang_id::field)
+
+// Language related options group:
+#define LANGUAGE(lang, component)                                       \
+  STRING(lang, ENGINE, component::settings.engine, "")                  \
+  INT(lang, PRIORITY, component::settings.priority, 0)                  \
+  DOUBLE(lang, LOUDNESS, component::settings.volume, 1.0)               \
+  DOUBLE(lang, PITCH, component::settings.pitch, 1.0)                   \
+  DOUBLE(lang, RATE, component::settings.rate, 1.0)                     \
+  DOUBLE(lang, ACCELERATION, component::settings.acceleration, 0.0)     \
+  DOUBLE(lang, CHAR_PITCH, component::settings.char_pitch, 1.0)         \
+  DOUBLE(lang, CHAR_RATE, component::settings.char_rate, 1.0)           \
+  DOUBLE(lang, CAPS_FACTOR, component::settings.caps_factor, 1.2)
+
+
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
@@ -81,302 +177,14 @@ static const path local_conf(complete(".multispeechrc", getenv("HOME")));
 // Language id strings:
 namespace lang_id
 {
-  const char* const en = "en";
-  const char* const ru = "ru";
-  const char* const de = "de";
-  const char* const fr = "fr";
-  const char* const es = "es";
-  const char* const pt = "pt";
-  const char* const it = "it";
+  const char* const en = EN;
+  const char* const ru = RU;
+  const char* const de = DE;
+  const char* const fr = FR;
+  const char* const es = ES;
+  const char* const pt = PT;
+  const char* const it = IT;
   const char* const autodetect = "autodetect";
-};
-
-// Various option names used in sections:
-namespace option_name
-{
-  static const char* const priority = "priority";
-  static const char* const engine = "engine";
-  static const char* const executable = "executable";
-  static const char* const command = "command";
-  static const char* const format = "format";
-  static const char* const sampling = "sampling";
-  static const char* const stereo = "stereo";
-  static const char* const freq_control = "freq_control";
-  static const char* const charset = "charset";
-  static const char* const voices = "voices";
-  static const char* const lexicon = "lexicon";
-  static const char* const log = "log";
-  static const char* const volume = "volume";
-  static const char* const pitch = "pitch";
-  static const char* const rate = "rate";
-  static const char* const char_pitch = "char_pitch";
-  static const char* const char_rate = "char_rate";
-  static const char* const caps_factor = "caps_factor";
-  static const char* const acceleration = "acceleration";
-  static const char* const expressiveness = "expressiveness";
-  static const char* const female_voice = "female_voice";
-  static const char* const decimal_point = "decimal_point";
-  static const char* const decimal_comma = "decimal_comma";
-  static const char* const interclause_gap_factor = "interclause_gap_factor";
-  static const char* const comma_gap_factor = "comma_gap_factor";
-  static const char* const dot_gap_factor = "dot_gap_factor";
-  static const char* const semicolon_gap_factor = "semicolon_gap_factor";
-  static const char* const colon_gap_factor = "colon_gap_factor";
-  static const char* const question_gap_factor = "question_gap_factor";
-  static const char* const exclamation_gap_factor = "exclamation_gap_factor";
-  static const char* const intonational_gap_factor = "intonational_gap_factor";
-};
-
-
-// Option names definition
-namespace options
-{
-
-  // Dynamic options name composing:
-  static const string compose(const string& section, const string& option)
-  {
-    return section + '.' + option;
-  }
-
-  // Frontend related options:
-  namespace frontend
-  {
-    static const char* const charset = "frontend.charset";
-    static const char* const native_voices = "frontend.native_voices";
-    static const char* const dtk_voices = "frontend.dtk_voices";
-  };
-
-  // Speech Dispatcher backend options:
-  namespace spd
-  {
-    static const char* const version = "spd.version";
-    static const char* const sound_icons = "spd.sound_icons";
-    static const char* const use_voice_language = "spd.use_voice_language";
-    static const char* const accept_explicit_language = "spd.accept_explicit_language";
-    static const char* const ignore_unknown_voice = "spd.ignore_unknown_voice";
-    static const char* const index_marks = "spd.index_marks";
-  };
-
-  // General audio output options:
-  namespace audio
-  {
-    static const char* const device = "audio.device";
-    static const char* const general_volume = "audio.general_volume";
-    static const char* const latency = "audio.latency";
-    static const char* const async_operation = "audio.async_operation";
-    static const char* const pulseaudio_direct = "audio.pulseaudio_direct";
-  };
-
-  // Sound files playing section:
-  namespace sounds
-  {
-    static const char* const device = "sounds.device";
-    static const char* const volume = "sounds.volume";
-    static const char* const asynchronous = "sounds.asynchronous";
-  };
-
-  // tones producing section:
-  namespace tones
-  {
-    static const char* const device = "tones.device";
-    static const char* const volume = "tones.volume";
-    static const char* const sampling = "tones.sampling";
-    static const char* const asynchronous = "tones.asynchronous";
-  };
-
-  // Speech section:
-  namespace speech
-  {
-    // General speech control options:
-    static const char* const device = "speech.device";
-    static const char* const volume = "speech.volume";
-    static const char* const language = "speech.language";
-    static const char* const fallback = "speech.fallback";
-  };
-
-  // English speech section:
-  namespace en
-  {
-    static const string engine(compose(lang_id::en, option_name::engine));
-    static const string priority(compose(lang_id::en, option_name::priority));
-    static const string volume(compose(lang_id::en, option_name::volume));
-    static const string pitch(compose(lang_id::en, option_name::pitch));
-    static const string rate(compose(lang_id::en, option_name::rate));
-    static const string acceleration(compose(lang_id::en, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::en, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::en, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::en, option_name::caps_factor));
-  };
-
-  // Russian speech section:
-  namespace ru
-  {
-    static const string engine(compose(lang_id::ru, option_name::engine));
-    static const string priority(compose(lang_id::ru, option_name::priority));
-    static const string volume(compose(lang_id::ru, option_name::volume));
-    static const string pitch(compose(lang_id::ru, option_name::pitch));
-    static const string rate(compose(lang_id::ru, option_name::rate));
-    static const string acceleration(compose(lang_id::ru, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::ru, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::ru, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::ru, option_name::caps_factor));
-  };
-
-  // German speech section:
-  namespace de
-  {
-    static const string engine(compose(lang_id::de, option_name::engine));
-    static const string priority(compose(lang_id::de, option_name::priority));
-    static const string volume(compose(lang_id::de, option_name::volume));
-    static const string pitch(compose(lang_id::de, option_name::pitch));
-    static const string rate(compose(lang_id::de, option_name::rate));
-    static const string acceleration(compose(lang_id::de, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::de, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::de, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::de, option_name::caps_factor));
-  };
-
-  // French speech section:
-  namespace fr
-  {
-    static const string engine(compose(lang_id::fr, option_name::engine));
-    static const string priority(compose(lang_id::fr, option_name::priority));
-    static const string volume(compose(lang_id::fr, option_name::volume));
-    static const string pitch(compose(lang_id::fr, option_name::pitch));
-    static const string rate(compose(lang_id::fr, option_name::rate));
-    static const string acceleration(compose(lang_id::fr, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::fr, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::fr, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::fr, option_name::caps_factor));
-  };
-
-  // Spanish speech section:
-  namespace es
-  {
-    static const string engine(compose(lang_id::es, option_name::engine));
-    static const string priority(compose(lang_id::es, option_name::priority));
-    static const string volume(compose(lang_id::es, option_name::volume));
-    static const string pitch(compose(lang_id::es, option_name::pitch));
-    static const string rate(compose(lang_id::es, option_name::rate));
-    static const string acceleration(compose(lang_id::es, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::es, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::es, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::es, option_name::caps_factor));
-  };
-
-  // Portuguese speech section:
-  namespace pt
-  {
-    static const string engine(compose(lang_id::pt, option_name::engine));
-    static const string priority(compose(lang_id::pt, option_name::priority));
-    static const string volume(compose(lang_id::pt, option_name::volume));
-    static const string pitch(compose(lang_id::pt, option_name::pitch));
-    static const string rate(compose(lang_id::pt, option_name::rate));
-    static const string acceleration(compose(lang_id::pt, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::pt, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::pt, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::pt, option_name::caps_factor));
-  };
-
-  // Italian speech section:
-  namespace it
-  {
-    static const string engine(compose(lang_id::it, option_name::engine));
-    static const string priority(compose(lang_id::it, option_name::priority));
-    static const string volume(compose(lang_id::it, option_name::volume));
-    static const string pitch(compose(lang_id::it, option_name::pitch));
-    static const string rate(compose(lang_id::it, option_name::rate));
-    static const string acceleration(compose(lang_id::it, option_name::acceleration));
-
-    // Single letters pronunciation parameters:
-    static const string char_pitch(compose(lang_id::it, option_name::char_pitch));
-    static const string char_rate(compose(lang_id::it, option_name::char_rate));
-    static const string caps_factor(compose(lang_id::it, option_name::caps_factor));
-  };
-
-
-  // Mbrola based backends options:
-  namespace mbrola
-  {
-    static const string executable(compose(::mbrola::name, option_name::executable));
-    static const string voices(compose(::mbrola::name, option_name::voices));
-  };
-
-  // Espeak based backends options:
-  namespace espeak
-  {
-    static const string executable(compose(::espeak::name, option_name::executable));
-
-    // Espeak voices assignment:
-    static const string en(compose(::espeak::name, lang_id::en));
-    static const string ru(compose(::espeak::name, lang_id::ru));
-    static const string de(compose(::espeak::name, lang_id::de));
-    static const string fr(compose(::espeak::name, lang_id::fr));
-    static const string es(compose(::espeak::name, lang_id::es));
-    static const string pt(compose(::espeak::name, lang_id::pt));
-    static const string it(compose(::espeak::name, lang_id::it));
-
-    // Mbrola voices assignment:
-    namespace mbrola
-    {
-      static const string en(compose(::espeak::name, compose(::mbrola::name, lang_id::en)));
-      static const string de(compose(::espeak::name, compose(::mbrola::name, lang_id::de)));
-      static const string fr(compose(::espeak::name, compose(::mbrola::name, lang_id::fr)));
-      static const string es(compose(::espeak::name, compose(::mbrola::name, lang_id::es)));
-      static const string pt(compose(::espeak::name, compose(::mbrola::name, lang_id::pt)));
-      static const string it(compose(::espeak::name, compose(::mbrola::name, lang_id::it)));
-    };
-  };
-
-  // Freephone backend options:
-  namespace freephone
-  {
-    static const string executable(compose(::freephone::name, option_name::executable));
-    static const string lexicon(compose(::freephone::name, option_name::lexicon));
-  };
-
-  // Ru_tts backend options:
-  namespace ru_tts
-  {
-    static const string executable(compose(::ru_tts::name, option_name::executable));
-    static const string lexicon(compose(::ru_tts::name, option_name::lexicon));
-    static const string log(compose(::ru_tts::name, option_name::log));
-    static const string expressiveness(compose(::ru_tts::name, option_name::expressiveness));
-    static const string female_voice(compose(::ru_tts::name, option_name::female_voice));
-    static const string decimal_point(compose(::ru_tts::name, option_name::decimal_point));
-    static const string decimal_comma(compose(::ru_tts::name, option_name::decimal_comma));
-    static const string interclause_gap_factor(compose(::ru_tts::name, option_name::interclause_gap_factor));
-    static const string comma_gap_factor(compose(::ru_tts::name, option_name::comma_gap_factor));
-    static const string dot_gap_factor(compose(::ru_tts::name, option_name::dot_gap_factor));
-    static const string semicolon_gap_factor(compose(::ru_tts::name, option_name::semicolon_gap_factor));
-    static const string colon_gap_factor(compose(::ru_tts::name, option_name::colon_gap_factor));
-    static const string question_gap_factor(compose(::ru_tts::name, option_name::question_gap_factor));
-    static const string exclamation_gap_factor(compose(::ru_tts::name, option_name::exclamation_gap_factor));
-    static const string intonational_gap_factor(compose(::ru_tts::name, option_name::intonational_gap_factor));
-  };
-
-  // User defined TTS backend options:
-  namespace user
-  {
-    static const string command(compose(user_tts::name, option_name::command));
-    static const string format(compose(user_tts::name, option_name::format));
-    static const string sampling(compose(user_tts::name, option_name::sampling));
-    static const string stereo(compose(user_tts::name, option_name::stereo));
-    static const string freq_control(compose(user_tts::name, option_name::freq_control));
-    static const string charset(compose(user_tts::name, option_name::charset));
-  };
 };
 
 
@@ -440,175 +248,106 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     speech_server::debug = true;
 
   // Declare configuration options:
-  using namespace options;
   conf.add_options()
 
     // Frontend related options:
-    (frontend::charset, value<string>(&speech_server::frontend_charset))
-    (frontend::native_voices, bool_switch(&speech_server::support_native_voices)->default_value(true))
-    (frontend::dtk_voices, bool_switch(&speech_server::support_dtk_voices)->default_value(false))
+    STRING(FRONTEND, CHARSET, speech_server::frontend_charset, "")
+    BOOLEAN(FRONTEND, NATIVE_VOICES, speech_server::support_native_voices, true)
+    BOOLEAN(FRONTEND, DTK_VOICES, speech_server::support_dtk_voices, false)
 
     // General audio options:
-    (audio::device, value<string>(&audioplayer::device)->default_value(""))
-    (audio::general_volume, value<float>(&audioplayer::general_volume)->default_value(0.8))
-    (audio::latency, value<double>(&audioplayer::suggested_latency)->default_value(0.05))
-    (audio::async_operation, bool_switch(&audioplayer::async)->default_value(false))
-    (audio::pulseaudio_direct, bool_switch(&audioplayer::use_pa)->default_value(true))
+    DEVICE(AUDIO, audioplayer)
+    FLOAT(AUDIO, GENERAL_VOLUME, audioplayer::general_volume, 0.8)
+    DOUBLE(AUDIO, LATENCY, audioplayer::suggested_latency, 0.05)
+    BOOLEAN(AUDIO, ASYNC_OPERATION, audioplayer::async, false)
+    BOOLEAN(AUDIO, PULSEAUDIO_DIRECT, audioplayer::use_pa, true)
 
     // Sound files playing section:
-    (sounds::device, value<string>(&file_player::device)->default_value(""))
-    (sounds::volume, value<float>(&file_player::relative_volume)->default_value(1.0))
-    (sounds::asynchronous, bool_switch(&file_player::asynchronous)->default_value(true))
+    DEVICE(SOUNDS, file_player)
+    VOLUME(SOUNDS, file_player)
+    ASYNCHRONOUS(SOUNDS, file_player)
 
     // tones producing section:
-    (tones::device, value<string>(&tone_generator::device)->default_value(""))
-    (tones::volume, value<float>(&tone_generator::relative_volume)->default_value(1.0))
-    (tones::sampling, value<unsigned int>(&tone_generator::sampling)->default_value(44100))
-    (tones::asynchronous, bool_switch(&tone_generator::asynchronous)->default_value(true))
+    DEVICE(TONES, tone_generator)
+    VOLUME(TONES, tone_generator)
+    ASYNCHRONOUS(TONES, tone_generator)
+    SAMPLING(TONES, tone_generator, 44100)
 
     // General speech control options:
-    (speech::device, value<string>(&loudspeaker::device)->default_value(""))
-    (speech::volume, value<float>(&loudspeaker::relative_volume)->default_value(1.0))
-    (speech::language, value<string>(&polyglot::language_preference))
-    (speech::fallback, value<string>(&polyglot::fallback_language)->default_value(lang_id::en))
+    DEVICE(SPEECH, loudspeaker)
+    VOLUME(SPEECH, loudspeaker)
+    STRING(SPEECH, LANG_PREF, polyglot::language_preference, "")
+    STRING(SPEECH, FALLBACK, polyglot::fallback_language, lang_id::en)
 
-    // English speech options:
-    (en::engine.c_str(), value<string>(&English::settings.engine))
-    (en::priority.c_str(), value<int>(&English::settings.priority)->default_value(0))
-    (en::volume.c_str(), value<double>(&English::settings.volume)->default_value(1.0))
-    (en::pitch.c_str(), value<double>(&English::settings.pitch)->default_value(1.0))
-    (en::rate.c_str(), value<double>(&English::settings.rate)->default_value(1.0))
-    (en::acceleration.c_str(), value<double>(&English::settings.acceleration)->default_value(0.0))
-    (en::char_pitch.c_str(), value<double>(&English::settings.char_pitch)->default_value(1.0))
-    (en::char_rate.c_str(), value<double>(&English::settings.char_rate)->default_value(1.0))
-    (en::caps_factor.c_str(), value<double>(&English::settings.caps_factor)->default_value(1.2))
-
-    // Russian speech options:
-    (ru::engine.c_str(), value<string>(&Russian::settings.engine))
-    (ru::priority.c_str(), value<int>(&Russian::settings.priority)->default_value(0))
-    (ru::volume.c_str(), value<double>(&Russian::settings.volume)->default_value(1.0))
-    (ru::pitch.c_str(), value<double>(&Russian::settings.pitch)->default_value(1.0))
-    (ru::rate.c_str(), value<double>(&Russian::settings.rate)->default_value(1.0))
-    (ru::acceleration.c_str(), value<double>(&Russian::settings.acceleration)->default_value(0.0))
-    (ru::char_pitch.c_str(), value<double>(&Russian::settings.char_pitch)->default_value(1.0))
-    (ru::char_rate.c_str(), value<double>(&Russian::settings.char_rate)->default_value(1.0))
-    (ru::caps_factor.c_str(), value<double>(&Russian::settings.caps_factor)->default_value(1.2))
-
-    // German speech options:
-    (de::engine.c_str(), value<string>(&German::settings.engine))
-    (de::priority.c_str(), value<int>(&German::settings.priority)->default_value(0))
-    (de::volume.c_str(), value<double>(&German::settings.volume)->default_value(1.0))
-    (de::pitch.c_str(), value<double>(&German::settings.pitch)->default_value(1.0))
-    (de::rate.c_str(), value<double>(&German::settings.rate)->default_value(1.0))
-    (de::acceleration.c_str(), value<double>(&German::settings.acceleration)->default_value(0.0))
-    (de::char_pitch.c_str(), value<double>(&German::settings.char_pitch)->default_value(1.0))
-    (de::char_rate.c_str(), value<double>(&German::settings.char_rate)->default_value(1.0))
-    (de::caps_factor.c_str(), value<double>(&German::settings.caps_factor)->default_value(1.2))
-
-    // French speech options:
-    (fr::engine.c_str(), value<string>(&French::settings.engine))
-    (fr::priority.c_str(), value<int>(&French::settings.priority)->default_value(0))
-    (fr::volume.c_str(), value<double>(&French::settings.volume)->default_value(1.0))
-    (fr::pitch.c_str(), value<double>(&French::settings.pitch)->default_value(1.0))
-    (fr::rate.c_str(), value<double>(&French::settings.rate)->default_value(1.0))
-    (fr::acceleration.c_str(), value<double>(&French::settings.acceleration)->default_value(0.0))
-    (fr::char_pitch.c_str(), value<double>(&French::settings.char_pitch)->default_value(1.0))
-    (fr::char_rate.c_str(), value<double>(&French::settings.char_rate)->default_value(1.0))
-    (fr::caps_factor.c_str(), value<double>(&French::settings.caps_factor)->default_value(1.2))
-
-    // Spanish speech options:
-    (es::engine.c_str(), value<string>(&Spanish::settings.engine))
-    (es::priority.c_str(), value<int>(&Spanish::settings.priority)->default_value(0))
-    (es::volume.c_str(), value<double>(&Spanish::settings.volume)->default_value(1.0))
-    (es::pitch.c_str(), value<double>(&Spanish::settings.pitch)->default_value(1.0))
-    (es::rate.c_str(), value<double>(&Spanish::settings.rate)->default_value(1.0))
-    (es::acceleration.c_str(), value<double>(&Spanish::settings.acceleration)->default_value(0.0))
-    (es::char_pitch.c_str(), value<double>(&Spanish::settings.char_pitch)->default_value(1.0))
-    (es::char_rate.c_str(), value<double>(&Spanish::settings.char_rate)->default_value(1.0))
-    (es::caps_factor.c_str(), value<double>(&Spanish::settings.caps_factor)->default_value(1.2))
-
-    // Portuguese speech options:
-    (pt::engine.c_str(), value<string>(&Portuguese::settings.engine))
-    (pt::priority.c_str(), value<int>(&Portuguese::settings.priority)->default_value(0))
-    (pt::volume.c_str(), value<double>(&Portuguese::settings.volume)->default_value(1.0))
-    (pt::pitch.c_str(), value<double>(&Portuguese::settings.pitch)->default_value(1.0))
-    (pt::rate.c_str(), value<double>(&Portuguese::settings.rate)->default_value(1.0))
-    (pt::acceleration.c_str(), value<double>(&Portuguese::settings.acceleration)->default_value(0.0))
-    (pt::char_pitch.c_str(), value<double>(&Portuguese::settings.char_pitch)->default_value(1.0))
-    (pt::char_rate.c_str(), value<double>(&Portuguese::settings.char_rate)->default_value(1.0))
-    (pt::caps_factor.c_str(), value<double>(&Portuguese::settings.caps_factor)->default_value(1.2))
-
-    // Italian speech options:
-    (it::engine.c_str(), value<string>(&Italian::settings.engine))
-    (it::priority.c_str(), value<int>(&Italian::settings.priority)->default_value(0))
-    (it::volume.c_str(), value<double>(&Italian::settings.volume)->default_value(1.0))
-    (it::pitch.c_str(), value<double>(&Italian::settings.pitch)->default_value(1.0))
-    (it::rate.c_str(), value<double>(&Italian::settings.rate)->default_value(1.0))
-    (it::acceleration.c_str(), value<double>(&Italian::settings.acceleration)->default_value(0.0))
-    (it::char_pitch.c_str(), value<double>(&Italian::settings.char_pitch)->default_value(1.0))
-    (it::char_rate.c_str(), value<double>(&Italian::settings.char_rate)->default_value(1.0))
-    (it::caps_factor.c_str(), value<double>(&Italian::settings.caps_factor)->default_value(1.2))
+    // Language sections:
+    LANGUAGE(EN, English)
+    LANGUAGE(RU, Russian)
+    LANGUAGE(DE, German)
+    LANGUAGE(FR, French)
+    LANGUAGE(ES, Spanish)
+    LANGUAGE(PT, Portuguese)
+    LANGUAGE(IT, Italian)
 
     // Mbrola based backends options:
-    (mbrola::executable.c_str(), value<string>(&::mbrola::executable)->default_value(::mbrola::name))
-    (mbrola::voices.c_str(), value<string>(&::mbrola::voices)->default_value(::mbrola::voices_default_path))
+    EXECUTABLE(MBROLA,mbrola)
+    STRING(MBROLA, VOICES,mbrola::voices,mbrola::voices_default_path)
 
     // Espeak based backends options:
-    (espeak::executable.c_str(), value<string>(&::espeak::executable)->default_value(::espeak::name))
+    EXECUTABLE(ESPEAK,espeak)
 
     // Espeak voices assignment:
-    (espeak::en.c_str(), value<string>(&::espeak::en)->default_value(lang_id::en))
-    (espeak::ru.c_str(), value<string>(&::espeak::ru)->default_value(lang_id::ru))
-    (espeak::de.c_str(), value<string>(&::espeak::de)->default_value(lang_id::de))
-    (espeak::fr.c_str(), value<string>(&::espeak::fr)->default_value(lang_id::fr))
-    (espeak::es.c_str(), value<string>(&::espeak::es)->default_value(lang_id::es))
-    (espeak::pt.c_str(), value<string>(&::espeak::pt)->default_value(lang_id::pt))
-    (espeak::it.c_str(), value<string>(&::espeak::it)->default_value(lang_id::it))
+    ESPEAK_VOICE(EN, en)
+    ESPEAK_VOICE(RU, ru)
+    ESPEAK_VOICE(DE, de)
+    ESPEAK_VOICE(FR, fr)
+    ESPEAK_VOICE(ES, es)
+    ESPEAK_VOICE(PT, pt)
+    ESPEAK_VOICE(IT, it)
 
     // Mbrola voices assignment:
-    (espeak::mbrola::en.c_str(), value<string>(&::mbrola::en)->default_value("en1"))
-    (espeak::mbrola::de.c_str(), value<string>(&::mbrola::de)->default_value("de6"))
-    (espeak::mbrola::fr.c_str(), value<string>(&::mbrola::fr)->default_value("fr4"))
-    (espeak::mbrola::es.c_str(), value<string>(&::mbrola::es)->default_value("es1"))
-    (espeak::mbrola::pt.c_str(), value<string>(&::mbrola::pt)->default_value("br3"))
-    (espeak::mbrola::it.c_str(), value<string>(&::mbrola::it)->default_value("it3"))
+    MBROLA_VOICE(EN, en, "en1")
+    MBROLA_VOICE(DE, de, "de6")
+    MBROLA_VOICE(FR, fr, "fr4")
+    MBROLA_VOICE(ES, es, "es1")
+    MBROLA_VOICE(PT, pt, "br3")
+    MBROLA_VOICE(IT, it, "it3")
 
     // Freephone backend options:
-    (freephone::executable.c_str(), value<string>(&::freephone::executable)->default_value(::freephone::name))
-    (freephone::lexicon.c_str(), value<string>(&::freephone::lexicon)->default_value(::freephone::lexicon_default_path))
+    EXECUTABLE(FREEPHONE,freephone)
+    LEXICON(FREEPHONE,freephone)
 
     // Ru_tts backend options:
-    (ru_tts::executable.c_str(), value<string>(&::ru_tts::executable)->default_value(::ru_tts::name))
-    (ru_tts::lexicon.c_str(), value<string>(&::ru_tts::lexicon)->default_value(::ru_tts::lexicon_default_path))
-    (ru_tts::log.c_str(), value<string>(&::ru_tts::log_file))
-    (ru_tts::expressiveness.c_str(), value<double>(&::ru_tts::expressiveness)->default_value(1.0))
-    (ru_tts::female_voice.c_str(), bool_switch(&::ru_tts::female_voice)->default_value(false))
-    (ru_tts::decimal_point.c_str(), bool_switch(&::ru_tts::decimal_point)->default_value(true))
-    (ru_tts::decimal_comma.c_str(), bool_switch(&::ru_tts::decimal_comma)->default_value(true))
-    (ru_tts::interclause_gap_factor.c_str(), value<double>(&::ru_tts::interclause_gap_factor)->default_value(1.0))
-    (ru_tts::comma_gap_factor.c_str(), value<double>(&::ru_tts::comma_gap_factor)->default_value(1.0))
-    (ru_tts::dot_gap_factor.c_str(), value<double>(&::ru_tts::dot_gap_factor)->default_value(1.0))
-    (ru_tts::semicolon_gap_factor.c_str(), value<double>(&::ru_tts::semicolon_gap_factor)->default_value(1.0))
-    (ru_tts::colon_gap_factor.c_str(), value<double>(&::ru_tts::colon_gap_factor)->default_value(1.0))
-    (ru_tts::question_gap_factor.c_str(), value<double>(&::ru_tts::question_gap_factor)->default_value(1.0))
-    (ru_tts::exclamation_gap_factor.c_str(), value<double>(&::ru_tts::exclamation_gap_factor)->default_value(1.0))
-    (ru_tts::intonational_gap_factor.c_str(), value<double>(&::ru_tts::intonational_gap_factor)->default_value(1.0))
+    EXECUTABLE(RU_TTS,ru_tts)
+    LEXICON(RU_TTS,ru_tts)
+    STRING(RU_TTS, LOG,ru_tts::log_file, "")
+    DOUBLE(RU_TTS, EXPRESSIVENESS,ru_tts::expressiveness, 1.0)
+    BOOLEAN(RU_TTS, FEMALE_VOICE,ru_tts::female_voice, false)
+    BOOLEAN(RU_TTS, DECIMAL_POINT,ru_tts::decimal_point, true)
+    BOOLEAN(RU_TTS, DECIMAL_COMMA,ru_tts::decimal_comma, true)
+    DOUBLE(RU_TTS, INTERCLAUSE_GAP_FACTOR,ru_tts::interclause_gap_factor, 1.0)
+    DOUBLE(RU_TTS, COMMA_GAP_FACTOR,ru_tts::comma_gap_factor, 1.0)
+    DOUBLE(RU_TTS, DOT_GAP_FACTOR,ru_tts::dot_gap_factor, 1.0)
+    DOUBLE(RU_TTS, SEMICOLON_GAP_FACTOR,ru_tts::semicolon_gap_factor, 1.0)
+    DOUBLE(RU_TTS, COLON_GAP_FACTOR,ru_tts::colon_gap_factor, 1.0)
+    DOUBLE(RU_TTS, QUESTION_GAP_FACTOR,ru_tts::question_gap_factor, 1.0)
+    DOUBLE(RU_TTS, EXCLAMATION_GAP_FACTOR,ru_tts::exclamation_gap_factor, 1.0)
+    DOUBLE(RU_TTS, INTONATIONAL_GAP_FACTOR,ru_tts::intonational_gap_factor, 1.0)
 
     // User defined TTS backend options:
-    (user::command.c_str(), value<string>(&user_tts::command))
-    (user::format.c_str(), value<string>(&user_tts::format))
-    (user::sampling.c_str(), value<unsigned int>(&user_tts::sampling)->default_value(22050))
-    (user::stereo.c_str(), bool_switch(&user_tts::stereo)->default_value(false))
-    (user::freq_control.c_str(), bool_switch(&user_tts::freq_control)->default_value(false))
-    (user::charset.c_str(), value<string>(&user_tts::charset)->default_value(""))
+    STRING(USER_TTS, COMMAND, user_tts::command, "")
+    STRING(USER_TTS, FORMAT, user_tts::format, "")
+    SAMPLING(USER_TTS, user_tts, 22050)
+    BOOLEAN(USER_TTS, STEREO, user_tts::stereo, false)
+    BOOLEAN(USER_TTS, FREQ_CONTROL, user_tts::freq_control, false)
+    STRING(USER_TTS, CHARSET, user_tts::charset, "")
 
     // Registering Speech Dispatcher backend options:
-    (spd::version, value<string>(&speech_server::spd_version))
-    (spd::sound_icons, value<string>(&speech_server::spd_sound_icons)->default_value(speech_server::spd_sound_icons_default_path))
-    (spd::use_voice_language, bool_switch(&speech_server::spd_use_voice_language)->default_value(true))
-    (spd::accept_explicit_language, bool_switch(&speech_server::spd_accept_explicit_language)->default_value(true))
-    (spd::ignore_unknown_voice, bool_switch(&speech_server::spd_ignore_unknown_voice)->default_value(false))
-    (spd::index_marks, bool_switch(&speech_server::spd_support_index_marks)->default_value(true));
+    STRING(SPD, SPD_VERSION, speech_server::spd_version, "")
+    STRING(SPD, SOUND_ICONS, speech_server::spd_sound_icons, speech_server::spd_sound_icons_default_path)
+    BOOLEAN(SPD, USE_VOICE_LANGUAGE, speech_server::spd_use_voice_language, true)
+    BOOLEAN(SPD, ACCEPT_EXPLICIT_LANGUAGE, speech_server::spd_accept_explicit_language, true)
+    BOOLEAN(SPD, IGNORE_UNKNOWN_VOICE, speech_server::spd_ignore_unknown_voice, false)
+    BOOLEAN(SPD, INDEX_MARKS, speech_server::spd_support_index_marks, true);
 
   // Parse config files and store values
   path extra_conf;
