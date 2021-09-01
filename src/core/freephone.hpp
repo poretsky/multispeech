@@ -27,6 +27,9 @@
 
 #include "mbrola.hpp"
 
+// Backend name:
+#define FREEPHONE "freephone"
+
 class freephone: public mbrola
 {
 public:

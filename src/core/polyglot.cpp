@@ -285,7 +285,7 @@ polyglot::speech_backend(const string& name,
     return new ru_tts;
   else if (espeak::name == name)
     return new espeak(lang);
-  else if ((espeak::name + '.' + mbrola::name) == name)
+  else if (COMPOSE(ESPEAK, MBROLA) == name)
     return new mbrespeak(lang);
   else if (user_tts::name == name)
     return new user_tts(lang);
