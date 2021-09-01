@@ -28,6 +28,9 @@
 
 #include "speech_engine.hpp"
 
+// Backend name:
+#define USER_TTS "user"
+
 class user_tts: public speech_engine
 {
 public:

@@ -28,6 +28,9 @@
 
 #include "mbrola.hpp"
 
+// Backend name:
+#define ESPEAK "espeak"
+
 // Espeak backend.
 class espeak: public speech_engine
 {

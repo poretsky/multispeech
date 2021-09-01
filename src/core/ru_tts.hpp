@@ -27,6 +27,9 @@
 
 #include "speech_engine.hpp"
 
+// Backend name:
+#define RU_TTS "ru_tts"
+
 class ru_tts: public speech_engine
 {
 public:
