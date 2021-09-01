@@ -36,7 +36,7 @@ using namespace boost::assign;
 // Espeak backend.
 
 // Static data:
-const string espeak::name("espeak");
+const string espeak::name(ESPEAK);
 string espeak::executable(espeak::name);
 string espeak::en(lang_id::en);
 string espeak::de(lang_id::de);
@@ -100,7 +100,7 @@ espeak::voicify(double rate, double pitch)
 
 // Object construction:
 mbrespeak::mbrespeak(const char* lang):
-  mbrola(espeak::name + '.' + mbrola::name, getvoiceid(lang, mbrola_voices), lang)
+  mbrola(COMPOSE(ESPEAK, MBROLA), getvoiceid(lang, mbrola_voices), lang)
 {
   if (!espeak::executable.empty())
     {

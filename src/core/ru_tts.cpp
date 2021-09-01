@@ -41,7 +41,7 @@ using namespace FBB;
 
 
 // Static data:
-const string ru_tts::name("ru_tts");
+const string ru_tts::name(RU_TTS);
 const string ru_tts::lexicon_default_path(complete("freespeech/rulex.db", package::datadir).generic_string());
 string ru_tts::executable(ru_tts::name);
 string ru_tts::lexicon(ru_tts::lexicon_default_path);
