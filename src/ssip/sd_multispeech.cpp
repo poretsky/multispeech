@@ -17,87 +17,36 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <unistd.h>
-
-#include <cstdlib>
-#include <exception>
-#include <string>
 #include <iostream>
 
-#include <boost/scoped_ptr.hpp>
-
-#include <bobcat/syslogstream>
-
-#include <portaudiocpp/PortAudioCpp.hxx>
-
-#include "config.hpp"
 #include "speech_server.hpp"
+#include "multispeech.hpp"
 #include "frontend.hpp"
 
 using namespace std;
-using namespace boost;
-using namespace FBB;
-using namespace portaudio;
+
+class application: public multispeech
+{
+private:
+  speech_server* bootstrap(void)
+  {
+    return frontend::instantiate();
+  }
+
+  bool is_spd(void)
+  {
+    return true;
+  }
+
+  void report_error(const string& msg)
+  {
+    cout << "399-" << msg << endl;
+    cout << "399 ERR CANT INIT MODULE" << endl;
+  }
+};
 
 int main(int argc, char* argv[])
 {
-  unsetenv("DISPLAY");
-
-  scoped_ptr<speech_server> multispeech;
-  AutoSystem audio(false);
-  int efd = dup(STDERR_FILENO);
-
-  try
-    {
-      configuration conf(argc, argv, true);
-
-      if (speech_server::verbose)
-        cerr << "Initializing audio system..." << endl;
-      audio.initialize();
-      if (speech_server::verbose)
-        cerr << "Audio system initialization complete." << endl;
-      multispeech.reset(frontend::instantiate());
-    }
-  catch (const string& info)
-    {
-      cout << info << endl;
-      if (efd >= 0)
-        close(efd);
-      return EXIT_SUCCESS;
-    }
-  catch (const configuration::error& error)
-    {
-      speech_server::log << SyslogStream::err << error.what() << endl;
-      if (efd >= 0)
-        {
-          dup2(efd, STDERR_FILENO);
-          close(efd);
-        }
-      string msg("ERROR: ");
-      msg += error.what();
-      cout << "399-" << msg << endl;
-      cout << "399 ERR CANT INIT MODULE" << endl;
-      return EXIT_FAILURE;
-    }
-  catch (const std::exception& error)
-    {
-      speech_server::log << SyslogStream::err << error.what() << configuration::stage << endl;
-      if (efd >= 0)
-        {
-          dup2(efd, STDERR_FILENO);
-          close(efd);
-        }
-      cerr << "ERROR" << configuration::stage << ": " << error.what() << endl;
-      return EXIT_FAILURE;
-    }
-
-  if (efd >= 0)
-    {
-      close(efd);
-      efd = -1;
-    }
-
-  int exit_status = multispeech->run();
-
-  return exit_status;
+  application app;
+  return app.execute(argc, argv);
 }

@@ -40,7 +40,8 @@ libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	Portuguese.cpp Portuguese.hpp \
 	mbrola.cpp mbrola.hpp espeak.cpp espeak.hpp \
 	freephone.cpp freephone.hpp ru_tts.cpp ru_tts.hpp \
-	user_tts.cpp user_tts.hpp
+	user_tts.cpp user_tts.hpp \
+	multispeech.cpp multispeech.hpp
 
 EXTRA_DIST = multispeech.vscript
 MAINTAINERCLEANFILES = Makefile.in
