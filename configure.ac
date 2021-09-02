@@ -83,6 +83,9 @@ if test "$ax_cv_boost_thread" != "yes"
 then AC_MSG_ERROR([Boost thread support is mandatory])
 fi
 
+# Check for additional headers.
+AC_CHECK_HEADERS([libspeechd_version.h])
+
 # Output results.
 AC_CONFIG_FILES([Makefile src/Makefile src/core/Makefile src/emacspeak_ss/Makefile src/ssip/Makefile doc/Makefile])
 AC_OUTPUT
