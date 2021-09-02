@@ -32,13 +32,19 @@
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <libspeechd_version.h>
-
 #include "frontend.hpp"
 
 #include "config.hpp"
 #include "strcvt.hpp"
 #include "file_player.hpp"
+
+#include "sysconfig.hpp"
+#if HAVE_LIBSPEECHD_VERSION_H
+#include <libspeechd_version.h>
+#else
+#define LIBSPEECHD_MAJOR_VERSION 0
+#define LIBSPEECHD_MINOR_VERSION 8
+#endif
 
 using namespace std;
 using namespace FBB;
