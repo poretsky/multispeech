@@ -41,8 +41,8 @@ using namespace FBB;
 
 
 // Static data:
-const string ru_tts::name(RU_TTS);
-const string ru_tts::lexicon_default_path(complete("freespeech/rulex.db", package::datadir).generic_string());
+const char* const ru_tts::name = RU_TTS;
+const string ru_tts::lexicon_default_path(complete("freespeech/rulex.db", DATA_DIR).generic_string());
 string ru_tts::executable(ru_tts::name);
 string ru_tts::lexicon(ru_tts::lexicon_default_path);
 string ru_tts::log_file;
@@ -146,7 +146,7 @@ ru_tts::ru_tts(void):
         }
       command(cmd);
     }
-  else throw configuration::error("no path to " + name);
+  else throw configuration::error("no path to " + string(name));
 }
 
 
@@ -166,8 +166,8 @@ ru_tts::voicify(double rate, double pitch)
       else if (rate < 1.0)
         r = 1.0 / (rate + 1.0);
       else r = 1.0 / rate - 0.5;
-      format_macros["%pitch"] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
-      format_macros["%rate"] = lexical_cast<string>(r);
+      format_macros[pitch_macro] = lexical_cast<string>(atan(p * p / 5.0) * M_2_PI);
+      format_macros[rate_macro] = lexical_cast<string>(r);
     }
   else speech_engine::voicify(rate, pitch);
 }

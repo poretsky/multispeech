@@ -39,7 +39,7 @@ public:
   explicit espeak(const char* lang);
 
   // Constant data for references:
-  static const std::string name;
+  static const char* const name;
 
   // Configurable parameters:
   static std::string executable;
