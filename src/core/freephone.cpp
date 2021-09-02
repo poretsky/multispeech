@@ -35,8 +35,8 @@ using namespace FBB;
 
 
 // Static data:
-const string freephone::name(FREEPHONE);
-const string freephone::lexicon_default_path(complete("freespeech/enlex.db", package::datadir).generic_string());
+const char* const freephone::name = FREEPHONE;
+const string freephone::lexicon_default_path(complete("freespeech/enlex.db", DATA_DIR).generic_string());
 string freephone::executable(freephone::name);
 string freephone::lexicon(freephone::lexicon_default_path);
 
@@ -66,5 +66,5 @@ freephone::freephone(void):
       cmd += " -i - -o -";
       command(cmd);
     }
-  else throw configuration::error("no path to " + name);
+  else throw configuration::error("no path to " + string(name));
 }
