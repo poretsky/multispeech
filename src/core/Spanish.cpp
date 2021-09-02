@@ -26,6 +26,7 @@
 
 #include "config.hpp"
 #include "strcvt.hpp"
+#include "espeak.hpp"
 
 using namespace std;
 using namespace boost::assign;
@@ -34,7 +35,7 @@ using namespace boost::assign;
 // Static data:
 language_description::options Spanish::settings =
   {
-    .engine = "",
+    .engine = espeak::name,
     .priority = 0,
     .volume = 1.0,
     .pitch = 1.0,
