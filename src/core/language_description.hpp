@@ -93,7 +93,7 @@ protected:
 
   // These members are to be initialized in derived classes.
   std::vector<const wchar_t*> punctuations;
-  std::map<const std::wstring, const std::wstring> dictionary;
+  std::map<const std::wstring, const wchar_t*> dictionary;
   text_filter filter_chain;
 
 private:

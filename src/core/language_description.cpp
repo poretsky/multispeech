@@ -71,7 +71,7 @@ language_description::filter(const wstring& s)
 wstring
 language_description::translate(const wstring& s) const
 {
-  map<const wstring, const wstring>::const_iterator item = dictionary.find(s);
+  map<const wstring, const wchar_t*>::const_iterator item = dictionary.find(s);
   return (item == dictionary.end()) ? wstring(L"") : item->second;
 }
 
