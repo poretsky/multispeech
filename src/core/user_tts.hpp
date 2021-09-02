@@ -38,7 +38,7 @@ public:
   explicit user_tts(const char* lang);
 
   // Constant data for reference:
-  static const std::string name;
+  static const char* const name;
 
   // Configurable parameters:
   static std::string command;
