@@ -152,7 +152,7 @@ Portuguese::Portuguese(void):
     (L"dot", L"ponto")
 
     // Language name:
-    (intern_string(id, locale("")).c_str(), L"Brasileiro")
+    (intern_string(id, locale("")).c_str(), L"Português")
     .convert_to_container< map<const wstring, const wchar_t*> >();
 
   // Text filtering chain:
