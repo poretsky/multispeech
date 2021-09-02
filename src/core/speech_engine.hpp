@@ -127,7 +127,7 @@ public:
   boost::scoped_ptr<language_description> language;
 
   // Special value for disabling language:
-  static const std::string disabled;
+  static const char* const disabled;
 
   // Empty string for no specific voice designation:
   static const std::string novoice;
@@ -145,7 +145,13 @@ protected:
   void sampling(unsigned int value);
 
   // Format substitutions to construct actual command:
-  std::map<const std::string, std::string> format_macros;
+  std::map<const char*, std::string> format_macros;
+
+  // command pattern macros:
+  static const char* const lang_macro;
+  static const char* const pitch_macro;
+  static const char* const rate_macro;
+  static const char* const freq_macro;
 
   // General options:
   static bool split_caps, capitalize, space_special_chars;
