@@ -42,7 +42,7 @@ Description: Multilingual Speech Dispatcher backend
   - language autodetection capability;
   - online voice control means.
 
-Package: libmultispeech0
+Package: libmultispeech3
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
