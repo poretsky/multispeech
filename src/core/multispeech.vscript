@@ -8,11 +8,11 @@ MULTISPEECH_0 {
       voice_params::*;
       package::*;
       lang_id::*;
-      speech_engine::name*;
+      speech_engine::name;
       speech_engine::voice*;
-      speech_engine::language*;
-      speech_engine::disabled*;
-      speech_engine::volume*;
+      speech_engine::language;
+      speech_engine::disabled;
+      speech_engine::volume;
       speech_engine::*voice_pitch*;
       speech_engine::*speech_rate*;
       speech_engine::sampling_deviation*;
@@ -35,7 +35,7 @@ MULTISPEECH_0 {
       polyglot::*_task*;
       polyglot::silence*;
       polyglot::talker;
-      language_description::id*;
+      language_description::id;
       intern_string::*;
       extern_string::*;
       punctuations::punctuations*;
