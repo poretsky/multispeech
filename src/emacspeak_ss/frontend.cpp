@@ -32,7 +32,6 @@
 #include "frontend.hpp"
 
 #include "strcvt.hpp"
-#include "text_filter.hpp"
 #include "speech_engine.hpp"
 #include "multispeech_voices.hpp"
 #include "dtk_voices.hpp"
