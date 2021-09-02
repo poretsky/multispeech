@@ -139,7 +139,7 @@
 
 // Language related options group:
 #define LANGUAGE(lang, component)                                       \
-  STRING(lang, ENGINE, component::settings.engine, "")                  \
+  STRING(lang, ENGINE, component::settings.engine, espeak::name)        \
   INT(lang, PRIORITY, component::settings.priority, 0)                  \
   DOUBLE(lang, LOUDNESS, component::settings.volume, 1.0)               \
   DOUBLE(lang, PITCH, component::settings.pitch, 1.0)                   \

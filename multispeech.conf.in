@@ -161,11 +161,13 @@ dtk_voices = on
 # Language related sections. These sections contain quite the same
 # collection of options that affect speech on a specific language.
 # Actual speech engine is chosen by the key option "engine".
-# This option has no default. If it is not set or set as "disabled"
-# then the language will not be available in Multispeech. It is not
-# necessary to define speech engine for each language, but at least
-# one must be defined. It is wise to define speech engine for only
-# those languages that are actually to be used or define speech
+# By default it is "espeak" for all languages. If it is set as
+# "disabled" then the language will not be available in Multispeech
+# and no resources will be spent for it. Each language has its own
+# choice, but these two values are legitimate for every one. It is
+# not necessary to define speech engine for each language, but at
+# least one must be defined. It is wise to define speech engine for
+# only those languages that are actually to be used or define speech
 # engine for all languages in global configuration and then
 # locally disable some of them that are not needed.
 
@@ -173,9 +175,9 @@ dtk_voices = on
 # English language related speech options.
 #
 engine = freephone
-# English TTS engine. This option has no default. If it is not set
-# then English speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+# English TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then English speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # freephone -- English speech with Freephone and Mbrola voice "en1";
 # espeak -- English speech with Espeak TTS engine;
 # espeak.mbrola -- English speech with Espeak and Mbrola voices;
@@ -219,9 +221,9 @@ engine = freephone
 # Russian language related speech options.
 #
 engine = ru_tts
-# Russian TTS engine. This option has no default. If it is not set
-# then Russian speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+# Russian TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then Russian speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # ru_tts -- Russian speech with Ru_tts speech synthesizer;
 # espeak -- Russian speech with Espeak speech synthesizer;
 # user -- User defined TTS engine.
@@ -263,10 +265,10 @@ engine = ru_tts
 [de]
 # German language related speech options.
 #
-engine = espeak
-# German TTS engine. This option has no default. If it is not set
-# then German speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+#engine = espeak
+# German TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then German speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # espeak -- German speech with Espeak TTS engine;
 # espeak.mbrola -- German speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
@@ -308,10 +310,10 @@ engine = espeak
 [fr]
 # French language related speech options.
 #
-engine = espeak
-# French TTS engine. This option has no default. If it is not set
-# then French speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+#engine = espeak
+# French TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then French speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # espeak -- French speech with Espeak TTS engine;
 # espeak.mbrola -- French speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
@@ -353,10 +355,10 @@ engine = espeak
 [es]
 # Spanish language related speech options.
 #
-engine = espeak
-# Spanish TTS engine. This option has no default. If it is not set
-# then Spanish speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+#engine = espeak
+# Spanish TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then Spanish speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # espeak -- Spanish speech with Espeak TTS engine;
 # espeak.mbrola -- Spanish speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
@@ -398,10 +400,10 @@ engine = espeak
 [pt]
 # Portuguese language related speech options.
 #
-engine = espeak
-# Portuguese TTS engine. This option has no default. If it is not set
-# then Portuguese speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+#engine = espeak
+# Portuguese TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then Portuguese speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # espeak -- Portuguese speech with Espeak TTS engine;
 # espeak.mbrola -- Portuguese speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
@@ -443,10 +445,10 @@ engine = espeak
 [it]
 # Italian language related speech options.
 #
-engine = espeak
-# Italian TTS engine. This option has no default. If it is not set
-# then Italian speech output will be unavailable in Multispeech.
-# The alternatives are as follows:
+#engine = espeak
+# Italian TTS engine. It is "espeak" by default. If it is explicitly
+# not set or set as "disabled" then Italian speech output will be
+# unavailable in Multispeech. The alternatives are as follows:
 # espeak -- Italian speech with Espeak TTS engine;
 # espeak.mbrola -- Italian speech with Espeak and Mbrola voices;
 # user -- user defined TTS engine.
