@@ -18,13 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <string>
 #include <locale>
-#include <vector>
-#include <map>
 
 #include <boost/assign.hpp>
-#include <boost/range.hpp>
 
 #include "Russian.hpp"
 
@@ -172,7 +168,7 @@ Russian::Russian(void):
 
     // Language name:
     (intern_string(id, locale("")).c_str(), L"русский")
-    .convert_to_container< map<const wstring, const wstring> >();
+    .convert_to_container< map<const wstring, const wchar_t*> >();
 
   // Transliteration table:
   translit = map_list_of
