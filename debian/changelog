@@ -1,3 +1,13 @@
+multispeech (4.2.0focal1) focal; urgency=medium
+
+  * Extensive ru_tts options support.
+  * Don't place comma between numbers in a text prepared for Russian TTS
+    engines.
+  * Set Espeak as default TTS engine for all languages.
+  * Allowed comma as decimal separator for Russian TTS engines.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 03 Sep 2021 01:53:15 +0300
+
 multispeech (4.1.2focal1) focal; urgency=medium
 
   * Real fix of startup crashes.
