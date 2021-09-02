@@ -33,8 +33,8 @@ using namespace boost::filesystem;
 
 
 // Static data:
-const string mbrola::name(MBROLA);
-const string mbrola::voices_default_path(complete("mbrola", package::datadir).generic_string());
+const char* const mbrola::name = MBROLA;
+const string mbrola::voices_default_path(complete("mbrola", DATA_DIR).generic_string());
 string mbrola::executable(mbrola::name);
 string mbrola::voices(mbrola::voices_default_path);
 string mbrola::en("en1");
@@ -88,6 +88,6 @@ mbrola::mbrola(const string& backend,
 void
 mbrola::voicify(double rate, double pitch)
 {
-  format_macros["%pitch"] = lexical_cast<string>(pitch);
-  format_macros["%rate"] = lexical_cast<string>(1.0 / rate);
+  format_macros[pitch_macro] = lexical_cast<string>(pitch);
+  format_macros[rate_macro] = lexical_cast<string>(1.0 / rate);
 }

@@ -63,8 +63,14 @@ bool speech_engine::capitalize = false;
 bool speech_engine::space_special_chars = false;
 
 // string constants:
-const string speech_engine::disabled("disabled");
+const char* const speech_engine::disabled = "disabled";
 const string speech_engine::novoice;
+
+// command pattern macros:
+const char* const speech_engine::lang_macro = "%lang";
+const char* const speech_engine::pitch_macro = "%pitch";
+const char* const speech_engine::rate_macro = "%rate";
+const char* const speech_engine::freq_macro = "%freq";
 
 
 // Constructing and destroying:
@@ -102,7 +108,7 @@ speech_engine::speech_engine(const string& backend,
   else if (lang_id::it == lang)
     language.reset(new Italian);
   else throw configuration::error("unsupported language " + string(lang) + " specified for " + backend);
-  format_macros["%lang"] = lang;
+  format_macros[lang_macro] = lang;
 }
 
 speech_engine::~speech_engine(void)
@@ -216,8 +222,8 @@ speech_engine::command(const string& pattern)
 void
 speech_engine::voicify(double rate, double pitch)
 {
-  format_macros["%pitch"] = lexical_cast<string>(pitch);
-  format_macros["%rate"] = lexical_cast<string>(rate);
+  format_macros[pitch_macro] = lexical_cast<string>(pitch);
+  format_macros[rate_macro] = lexical_cast<string>(rate);
 }
 
 void
@@ -252,14 +258,14 @@ speech_engine::wrap_text(const wstring& s,
           playing_params.sound.channels = sound_channels;
         }
       else playing_params.deviation = (deviation > 0.0) ? deviation : persistent_deviation;
-      format_macros["%freq"] = lexical_cast<string>(native_sampling);
+      format_macros[freq_macro] = lexical_cast<string>(native_sampling);
     }
   else
     {
       playing_params.sound.sampling = native_sampling;
       playing_params.sound.channels = sound_channels;
       freq *= (deviation > 0.0) ? deviation : persistent_deviation;
-      format_macros["%freq"] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
+      format_macros[freq_macro] = lexical_cast<string>(numeric_cast<unsigned int>(nearbyint(freq)));
     }
   voicify(language->settings.rate * ((rate > 0.0) ? rate : persistent_rate),
           language->settings.pitch * ((pitch > 0.0) ? pitch : persistent_pitch));

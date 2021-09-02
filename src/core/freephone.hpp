@@ -37,7 +37,7 @@ public:
   freephone(void);
 
   // Constant data for references:
-  static const std::string name;
+  static const char* const name;
   static const std::string lexicon_default_path;
 
   // Configurable parameters:

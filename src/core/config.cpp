@@ -167,7 +167,6 @@ namespace package
   const char* const name = PACKAGE_NAME;
   const char* const string = PACKAGE_STRING;
   const char* const version = PACKAGE_VERSION;
-  const char* const datadir = DATA_DIR;
 };
 
 // Language id strings:
