@@ -36,7 +36,6 @@ namespace package
   extern const char* const name;
   extern const char* const string;
   extern const char* const version;
-  extern const char* const datadir;
 };
 
 // Language id strings:

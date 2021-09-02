@@ -36,7 +36,7 @@ using namespace boost::assign;
 // Espeak backend.
 
 // Static data:
-const string espeak::name(ESPEAK);
+const char* const espeak::name = ESPEAK;
 string espeak::executable(espeak::name);
 string espeak::en(lang_id::en);
 string espeak::de(lang_id::de);
@@ -84,15 +84,15 @@ espeak::espeak(const char* lang):
       cmd += " --stdin --stdout -z -s %rate -p %pitch -v " + voice;
       command(cmd);
     }
-  else throw configuration::error("no path to " + name);
+  else throw configuration::error("no path to " + string(name));
 }
 
 // Making up voice parameters:
 void
 espeak::voicify(double rate, double pitch)
 {
-  format_macros["%pitch"] = lexical_cast<string>((atan((pitch * pitch) - 1) * 50.0 / M_2_PI) + 50.0);
-  format_macros["%rate"] = lexical_cast<string>(rate * 170.0);
+  format_macros[pitch_macro] = lexical_cast<string>((atan((pitch * pitch) - 1) * 50.0 / M_2_PI) + 50.0);
+  format_macros[rate_macro] = lexical_cast<string>(rate * 170.0);
 }
 
 
