@@ -1,3 +1,9 @@
+multispeech (4.2.1buster1) buster; urgency=medium
+
+  * Debian package dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 05 Sep 2021 20:16:20 +0300
+
 multispeech (4.2.0buster1) buster; urgency=medium
 
   * Extensive ru_tts options support.
