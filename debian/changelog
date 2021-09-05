@@ -1,3 +1,9 @@
+multispeech (4.2.1bionic1) bionic; urgency=medium
+
+  * Debian package dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 05 Sep 2021 20:16:20 +0300
+
 multispeech (4.2.0bionic1) bionic; urgency=medium
 
   * Extensive ru_tts options support.
