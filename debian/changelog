@@ -1,3 +1,9 @@
+multispeech (4.2.1focal1) focal; urgency=medium
+
+  * Debian package dependency fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 05 Sep 2021 20:16:20 +0300
+
 multispeech (4.2.0focal1) focal; urgency=medium
 
   * Extensive ru_tts options support.
