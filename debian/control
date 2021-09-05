@@ -46,8 +46,8 @@ Package: libmultispeech3
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
-Conflicts: multispeech (<< 4.0.0)
-Replaces: multispeech (<< 4.0.0)
+Conflicts: libmultispeech0, multispeech (<< 4.0.0)
+Replaces: libmultispeech0, multispeech (<< 4.0.0)
 Description: Multilingual speech server
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, but being capable to work with Speech Dispatcher
