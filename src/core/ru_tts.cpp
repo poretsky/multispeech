@@ -23,6 +23,7 @@
 #include <cmath>
 #include <cstdio>
 
+#include <boost/assign.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -36,6 +37,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace boost::assign;
 using namespace boost::filesystem;
 using namespace FBB;
 
@@ -59,12 +61,18 @@ double ru_tts::question_gap_factor = 1.0;
 double ru_tts::exclamation_gap_factor = 1.0;
 double ru_tts::intonational_gap_factor = 1.0;
 
+// Backend specific substitutions:
+static const map<wchar_t, const wchar_t*> substitutions = map_list_of
+  (0x301, L"+");
+
 
 // Object construction:
 
 ru_tts::ru_tts(void):
   speech_engine(name, novoice, lang_id::ru, soundfile::s8, 10000, 1, true, "KOI8-R")
 {
+  extra_fixes.setup()
+    (substitutions);
   if (!executable.empty())
     {
       string cmd(executable);
