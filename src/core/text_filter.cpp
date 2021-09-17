@@ -219,6 +219,16 @@ text_filter::text_filter(void)
 {
 }
 
+wstring
+text_filter::process(const wstring& text)
+{
+  wostringstream result;
+  push(result);
+  (*this) << text;
+  pop();
+  return result.str();
+}
+
 text_filter_constructor
 text_filter::setup(void)
 {
