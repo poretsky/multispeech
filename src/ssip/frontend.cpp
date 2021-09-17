@@ -281,13 +281,7 @@ void
 frontend::enqueue_text_chunk(string::const_iterator start, string::const_iterator end)
 {
   if (start != end)
-    {
-      wostringstream text;
-      stripper.push(text);
-      stripper << intern_string(string(start, end), input_charset);
-      stripper.pop();
-      soundmaster.enqueue(speechmaster.text_task(text.str(), &settings));
-    }
+    soundmaster.enqueue(speechmaster.text_task(stripper.process(intern_string(string(start, end), input_charset)), &settings));
 }
 
 
