@@ -297,6 +297,8 @@ speech_engine::wrap_text(const wstring& s,
   if (!prepared.empty())
     {
       prepared = regex_replace(prepared, blank_pattern, L" ");
+      if (!extra_fixes.empty())
+        prepared = extra_fixes.process(prepared);
       trim(prepared);
     }
 
