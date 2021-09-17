@@ -191,6 +191,9 @@ public:
   // Object constructor:
   text_filter(void);
 
+  // Perform filtering:
+  std::wstring process(const std::wstring& text);
+
   // Filter chain assembling:
   text_filter_constructor setup(void);
 };

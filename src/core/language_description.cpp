@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <sstream>
-
 #include "language_description.hpp"
 
 using namespace std;
@@ -61,11 +59,7 @@ language_description::foreign(const wstring& s)
 wstring
 language_description::filter(const wstring& s)
 {
-  wostringstream result;
-  filter_chain.push(result);
-  filter_chain << s;
-  filter_chain.pop();
-  return result.str();
+  return filter_chain.process(s);
 }
 
 wstring
