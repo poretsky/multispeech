@@ -74,6 +74,7 @@
 #include "loudspeaker.hpp"
 #include "language_description.hpp"
 #include "voice_params.hpp"
+#include "text_filter.hpp"
 
 class speech_engine
 {
@@ -143,6 +144,9 @@ protected:
 
   // Change native sampling frequency:
   void sampling(unsigned int value);
+
+  // Backend specific text preparation:
+  text_filter extra_fixes;
 
   // Format substitutions to construct actual command:
   std::map<const char*, std::string> format_macros;
