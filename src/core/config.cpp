@@ -134,8 +134,8 @@
 #define LEXICON(backend, component) STRING(backend, "lexicon", component::lexicon, component::lexicon_default_path)
 
 // Backend specific voice items:
-#define MBROLA_VOICE(lang, field, default) STRING(COMPOSE(ESPEAK, MBROLA), lang,mbrola::field, default)
-#define ESPEAK_VOICE(lang, field) STRING(ESPEAK, lang,espeak::field, lang_id::field)
+#define MBROLA_VOICE(lang, field, default) STRING(COMPOSE(ESPEAK, MBROLA), lang, mbrola::field, default)
+#define ESPEAK_VOICE(lang, field) STRING(ESPEAK, lang, espeak::field, lang_id::field)
 
 // Language related options group:
 #define LANGUAGE(lang, component)                                       \
@@ -284,11 +284,11 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     LANGUAGE(IT, Italian)
 
     // Mbrola based backends options:
-    EXECUTABLE(MBROLA,mbrola)
-    STRING(MBROLA, VOICES,mbrola::voices,mbrola::voices_default_path)
+    EXECUTABLE(MBROLA, mbrola)
+    STRING(MBROLA, VOICES, mbrola::voices, mbrola::voices_default_path)
 
     // Espeak based backends options:
-    EXECUTABLE(ESPEAK,espeak)
+    EXECUTABLE(ESPEAK, espeak)
 
     // Espeak voices assignment:
     ESPEAK_VOICE(EN, en)
@@ -308,25 +308,25 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
     MBROLA_VOICE(IT, it, "it3")
 
     // Freephone backend options:
-    EXECUTABLE(FREEPHONE,freephone)
-    LEXICON(FREEPHONE,freephone)
+    EXECUTABLE(FREEPHONE, freephone)
+    LEXICON(FREEPHONE, freephone)
 
     // Ru_tts backend options:
-    EXECUTABLE(RU_TTS,ru_tts)
-    LEXICON(RU_TTS,ru_tts)
-    STRING(RU_TTS, LOG,ru_tts::log_file, "")
-    DOUBLE(RU_TTS, EXPRESSIVENESS,ru_tts::expressiveness, 1.0)
-    BOOLEAN(RU_TTS, FEMALE_VOICE,ru_tts::female_voice, false)
-    BOOLEAN(RU_TTS, DECIMAL_POINT,ru_tts::decimal_point, true)
-    BOOLEAN(RU_TTS, DECIMAL_COMMA,ru_tts::decimal_comma, true)
-    DOUBLE(RU_TTS, INTERCLAUSE_GAP_FACTOR,ru_tts::interclause_gap_factor, 1.0)
-    DOUBLE(RU_TTS, COMMA_GAP_FACTOR,ru_tts::comma_gap_factor, 1.0)
-    DOUBLE(RU_TTS, DOT_GAP_FACTOR,ru_tts::dot_gap_factor, 1.0)
-    DOUBLE(RU_TTS, SEMICOLON_GAP_FACTOR,ru_tts::semicolon_gap_factor, 1.0)
-    DOUBLE(RU_TTS, COLON_GAP_FACTOR,ru_tts::colon_gap_factor, 1.0)
-    DOUBLE(RU_TTS, QUESTION_GAP_FACTOR,ru_tts::question_gap_factor, 1.0)
-    DOUBLE(RU_TTS, EXCLAMATION_GAP_FACTOR,ru_tts::exclamation_gap_factor, 1.0)
-    DOUBLE(RU_TTS, INTONATIONAL_GAP_FACTOR,ru_tts::intonational_gap_factor, 1.0)
+    EXECUTABLE(RU_TTS, ru_tts)
+    LEXICON(RU_TTS, ru_tts)
+    STRING(RU_TTS, LOG, ru_tts::log_file, "")
+    DOUBLE(RU_TTS, EXPRESSIVENESS, ru_tts::expressiveness, 1.0)
+    BOOLEAN(RU_TTS, FEMALE_VOICE, ru_tts::female_voice, false)
+    BOOLEAN(RU_TTS, DECIMAL_POINT, ru_tts::decimal_point, true)
+    BOOLEAN(RU_TTS, DECIMAL_COMMA, ru_tts::decimal_comma, true)
+    DOUBLE(RU_TTS, INTERCLAUSE_GAP_FACTOR, ru_tts::interclause_gap_factor, 1.0)
+    DOUBLE(RU_TTS, COMMA_GAP_FACTOR, ru_tts::comma_gap_factor, 1.0)
+    DOUBLE(RU_TTS, DOT_GAP_FACTOR, ru_tts::dot_gap_factor, 1.0)
+    DOUBLE(RU_TTS, SEMICOLON_GAP_FACTOR, ru_tts::semicolon_gap_factor, 1.0)
+    DOUBLE(RU_TTS, COLON_GAP_FACTOR, ru_tts::colon_gap_factor, 1.0)
+    DOUBLE(RU_TTS, QUESTION_GAP_FACTOR, ru_tts::question_gap_factor, 1.0)
+    DOUBLE(RU_TTS, EXCLAMATION_GAP_FACTOR, ru_tts::exclamation_gap_factor, 1.0)
+    DOUBLE(RU_TTS, INTONATIONAL_GAP_FACTOR, ru_tts::intonational_gap_factor, 1.0)
 
     // User defined TTS backend options:
     STRING(USER_TTS, COMMAND, user_tts::command, "")
