@@ -21,10 +21,6 @@
 #ifndef MULTISPEECH_RUSSIAN_HPP
 #define MULTISPEECH_RUSSIAN_HPP
 
-#include <map>
-
-#include <boost/regex.hpp>
-
 #include "language_description.hpp"
 
 class Russian: public language_description
@@ -38,13 +34,6 @@ public:
 
   // Foreign language presence recognition:
   bool foreign(const std::wstring& s);
-
-private:
-  // Transliteration table:
-  std::map<wchar_t, const wchar_t*> translit;
-
-  // Foreign characters:
-  const boost::wregex foreign_chars;
 };
 
 #endif

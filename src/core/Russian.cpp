@@ -19,8 +19,10 @@
 */
 
 #include <locale>
+#include <map>
 
 #include <boost/assign.hpp>
+#include <boost/regex.hpp>
 
 #include "Russian.hpp"
 
@@ -47,12 +49,44 @@ language_description::options Russian::settings =
     .caps_factor = 1.2
   };
 
+// Foreign characters:
+static const wregex foreign_chars(L"[a-zA-Z]");
+
+// Transliteration table:
+static const map<wchar_t, const wchar_t*> translit = map_list_of
+  (L'a', L"а")
+  (L'b', L"б")
+  (L'c', L"ц")
+  (L'd', L"д")
+  (L'e', L"е")
+  (L'f', L"ф")
+  (L'g', L"г")
+  (L'h', L"х")
+  (L'i', L"и")
+  (L'j', L"й")
+  (L'k', L"к")
+  (L'l', L"л")
+  (L'm', L"м")
+  (L'n', L"н")
+  (L'o', L"о")
+  (L'p', L"п")
+  (L'q', L"к")
+  (L'r', L"р")
+  (L's', L"с")
+  (L't', L"т")
+  (L'u', L"у")
+  (L'v', L"в")
+  (L'w', L"в")
+  (L'x', L"кс")
+  (L'y', L"и")
+  (L'z', L"з")
+  .convert_to_container< map<wchar_t, const wchar_t*> >();
+
 
 // Object construction:
 
 Russian::Russian(void):
-  language_description(lang_id::ru, settings, L"[а-яёА-ЯЁ]"),
-  foreign_chars(L"[a-zA-Z]")
+  language_description(lang_id::ru, settings, L"[а-яёА-ЯЁ]")
 {
   // Punctuations pronunciation:
   punctuations = list_of
@@ -170,36 +204,6 @@ Russian::Russian(void):
     // Language name:
     (intern_string(id, locale("")).c_str(), L"русский")
     .convert_to_container< map<const wstring, const wchar_t*> >();
-
-  // Transliteration table:
-  translit = map_list_of
-    (L'a', L"а")
-    (L'b', L"б")
-    (L'c', L"ц")
-    (L'd', L"д")
-    (L'e', L"е")
-    (L'f', L"ф")
-    (L'g', L"г")
-    (L'h', L"х")
-    (L'i', L"и")
-    (L'j', L"й")
-    (L'k', L"к")
-    (L'l', L"л")
-    (L'm', L"м")
-    (L'n', L"н")
-    (L'o', L"о")
-    (L'p', L"п")
-    (L'q', L"к")
-    (L'r', L"р")
-    (L's', L"с")
-    (L't', L"т")
-    (L'u', L"у")
-    (L'v', L"в")
-    (L'w', L"в")
-    (L'x', L"кс")
-    (L'y', L"и")
-    (L'z', L"з")
-    .convert_to_container< map<wchar_t, const wchar_t*> >();
 
   // Text filtering chain:
   filter_chain.setup()
