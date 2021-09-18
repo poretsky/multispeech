@@ -117,7 +117,7 @@
 #define RU "ru"
 
 // Option description items:
-#define OPTION(section, name, type, variable, default) (COMPOSE(section, name), value<type>(&variable)->default_value(default))
+#define OPTION(section, name, type, variable, default) (section "." name, value<type>(&variable)->default_value(default))
 #define STRING(section, name, variable, default) OPTION(section, name, string, variable, default)
 #define INT(section, name, variable, default) OPTION(section, name, int, variable, default)
 #define UINT(section, name, variable, default) OPTION(section, name, unsigned int, variable, default)
@@ -134,7 +134,7 @@
 #define LEXICON(backend, component) STRING(backend, "lexicon", component::lexicon, component::lexicon_default_path)
 
 // Backend specific voice items:
-#define MBROLA_VOICE(lang, field, default) STRING(COMPOSE(ESPEAK, MBROLA), lang, mbrola::field, default)
+#define MBROLA_VOICE(lang, field, default) STRING(MBROLA, lang, mbrola::field, default)
 #define ESPEAK_VOICE(lang, field) STRING(ESPEAK, lang, espeak::field, lang_id::field)
 
 // Language related options group:
@@ -285,7 +285,7 @@ configuration::configuration(int argc, char* argv[], bool is_spd_backend):
 
     // Mbrola based backends options:
     EXECUTABLE(MBROLA, mbrola)
-    STRING(MBROLA, VOICES, mbrola::voices, mbrola::voices_default_path)
+    STRING(MBROLA, VOICES, mbrola::voices_path, mbrola::voices_default_path)
 
     // Espeak based backends options:
     EXECUTABLE(ESPEAK, espeak)

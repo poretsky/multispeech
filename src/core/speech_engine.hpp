@@ -160,6 +160,9 @@ protected:
   // General options:
   static bool split_caps, capitalize, space_special_chars;
 
+  // Utility function for choosing voice for language from provided map:
+  static const std::string& getvoiceid(const char* lang, const std::map<const char*, const std::string*>& voices);
+
 private:
   // Generated sound stream sample format:
   soundfile::format format;

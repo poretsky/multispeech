@@ -20,15 +20,18 @@
 
 #include <string>
 
+#include <boost/assign.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "mbrola.hpp"
+#include "espeak.hpp"
 
 #include "config.hpp"
 
 using namespace std;
 using namespace boost;
+using namespace boost::assign;
 using namespace boost::filesystem;
 
 
@@ -36,7 +39,7 @@ using namespace boost::filesystem;
 const char* const mbrola::name = MBROLA;
 const string mbrola::voices_default_path(complete("mbrola", DATA_DIR).generic_string());
 string mbrola::executable(mbrola::name);
-string mbrola::voices(mbrola::voices_default_path);
+string mbrola::voices_path(mbrola::voices_default_path);
 string mbrola::en("en1");
 string mbrola::de("de6");
 string mbrola::it("it3");
@@ -44,8 +47,29 @@ string mbrola::fr("fr4");
 string mbrola::es("es1");
 string mbrola::pt("br3");
 
+static const map<const char*, const string*> voices = map_list_of
+  (lang_id::en, &mbrola::en)
+  (lang_id::de, &mbrola::de)
+  (lang_id::it, &mbrola::it)
+  (lang_id::fr, &mbrola::fr)
+  (lang_id::es, &mbrola::es)
+  (lang_id::pt, &mbrola::pt)
+  .convert_to_container< map<const char*, const string*> >();
+
 
 // Object construction:
+
+mbrola::mbrola(const char* lang):
+  mbrola(MBROLA, getvoiceid(lang, voices), lang)
+{
+  if (!espeak::executable.empty())
+    {
+      string cmd(espeak::executable);
+      cmd += " --stdin -q --pho -z -v mb-" + voice;
+      command(cmd);
+    }
+  else throw configuration::error(string("no path to ") + espeak::name);
+}
 
 mbrola::mbrola(const string& backend,
                const string& voice_id,
@@ -61,9 +85,9 @@ mbrola::mbrola(const string& backend,
       // The en1 voice is especially quiet.
       cmd += (voice == "en1") ? "3.0" : "1.0";
       cmd += " -e ";
-      if (!voices.empty())
+      if (!voices_path.empty())
         {
-          path voice_path(complete(voice, voices));
+          path voice_path(complete(voice, voices_path));
           path voice_file(complete(voice, voice_path));
           if (exists(voice_file))
             cmd += voice_file.generic_string();

@@ -27,9 +27,6 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 
-// Name composing macro:
-#define COMPOSE(section, name) section "." name
-
 // Package configuration data:
 namespace package
 {
