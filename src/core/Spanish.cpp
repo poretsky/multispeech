@@ -50,7 +50,7 @@ language_description::options Spanish::settings =
 // Object construction:
 
 Spanish::Spanish(void):
-  language_description(lang_id::es, settings, L"[ñóú¿¡]|(^| )(qu|los|el|ll[aeou][bcdfgmnprstv].*) ")
+  language_description(lang_id::es, settings, L"[ñóú¿¡]|(^| )(qué|los|el|ll[aeou][bcdfgmnprstv].*) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
