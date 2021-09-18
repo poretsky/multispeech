@@ -240,8 +240,9 @@ TTS engine specification. Allowed values are as follows:
 .br
 \fBespeak\fP \- all supported languages with Espeak TTS engine;
 .br
-\fBespeak.mbrola\fP \- English, German, French, Spanish, Portuguese and
-Italian speech with Espeak and Mbrola voices;
+\fBmbrola\fP \- English, German, French, Spanish, Portuguese and
+Italian speech produced by Mbrola in conjunction with Espeak as a
+preprocessor;
 .br
 \fBuser\fP \- user defined TTS engine.
 .TP
@@ -303,6 +304,36 @@ will be examined and all paths mentioned there will be searched.
 .br
 Path to the directory where Mbrola voice files are stored.
 By default \(oq<datadir>/mbrola\(cq is suggested.
+.SH "MBROLA VOICES ASSIGNMENT"
+These voices are used by Mbrola backend in conjunction with Espeak.
+To see the list of the voices supported by Espeak try to invoke
+\(oqespeak \-\-voices\(cq. Only Mbrola voices are allowed here. Also
+make sure that you have corresponding Mbrola voices itself.
+See Espeak documentation for further details.
+.TP
+.B en
+.br
+English voice. By default \(oqen1\(cq is used.
+.TP
+.B de
+.br
+German voice. By default \(oqde6\(cq is used.
+.TP
+.B fr
+.br
+French voice. By default \(oqfr4\(cq is used.
+.TP
+.B es
+.br
+Spanish voice. By default \(oqes1\(cq is used.
+.TP
+.B pt
+.br
+Portuguese voice. By default \(oqbr3\(cq is used.
+.TP
+.B it
+.br
+Italian voice. By default \(oqit3\(cq is used.
 .SH "FREEPHONE RELATED OPTIONS"
 Section named \(oqfreephone\(cq is devoted to \fBfreephone\fP speech
 backend. Here are the following options:
@@ -433,39 +464,6 @@ alternatives.
 Italian voice specification. By default \(oqit\(cq is
 suggested. Invoke \(oqespeak \-\-voices\(cq to see all available
 alternatives.
-.SH "ESPEAK AND MBROLA COMBINED SPEECH BACKEND RELATED OPTIONS"
-This section is named \(oqespeak.mbrola\(cq. It is devoted to
-assigning Mbrola voices to the supported languages. To see the list of
-the voices supported by Espeak try to invoke \(oqespeak \-\-voices\(cq.
-Only Mbrola voices are allowed here. Also make sure
-that you have corresponding Mbrola voices itself.
-See Espeak documentation for further details.
-.PP
-The following options are allowed here:
-.TP
-.B en
-.br
-English voice. By default \(oqen1\(cq is used.
-.TP
-.B de
-.br
-German voice. By default \(oqde6\(cq is used.
-.TP
-.B fr
-.br
-French voice. By default \(oqfr4\(cq is used.
-.TP
-.B es
-.br
-Spanish voice. By default \(oqes1\(cq is used.
-.TP
-.B pt
-.br
-Portuguese voice. By default \(oqbr3\(cq is used.
-.TP
-.B it
-.br
-Italian voice. By default \(oqit3\(cq is used.
 .SH "USER DEFINED TTS BACKEND OPTIONS"
 The section name is \(oquser\(cq. The following options are grouped
 here:
