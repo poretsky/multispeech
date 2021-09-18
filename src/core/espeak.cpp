@@ -46,7 +46,7 @@ string espeak::es(lang_id::es);
 string espeak::pt(lang_id::pt);
 string espeak::ru(lang_id::ru);
 
-static const map<const char*, const string*> espeak_voices = map_list_of
+static const map<const char*, const string*> voices = map_list_of
   (lang_id::en, &espeak::en)
   (lang_id::de, &espeak::de)
   (lang_id::it, &espeak::it)
@@ -56,25 +56,9 @@ static const map<const char*, const string*> espeak_voices = map_list_of
   (lang_id::ru, &espeak::ru)
   .convert_to_container< map<const char*, const string*> >();
 
-static const map<const char*, const string*> mbrola_voices = map_list_of
-  (lang_id::en, &mbrola::en)
-  (lang_id::de, &mbrola::de)
-  (lang_id::it, &mbrola::it)
-  (lang_id::fr, &mbrola::fr)
-  (lang_id::es, &mbrola::es)
-  (lang_id::pt, &mbrola::pt)
-  .convert_to_container< map<const char*, const string*> >();
-
-// Choose voice for language from provided map:
-static const string&
-getvoiceid(const char* lang, const map<const char*, const string*>& voices)
-{
-  return voices.count(lang) ? *voices.at(lang) : speech_engine::novoice;
-}
-
 // Object construction:
 espeak::espeak(const char* lang):
-  speech_engine(name, getvoiceid(lang, espeak_voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
+  speech_engine(name, getvoiceid(lang, voices), lang, soundfile::autodetect, 22050, 1, true, "UTF-8")
 {
   if (voice.empty())
     throw configuration::error(string(lang) + " voice for " + name + " is not specified");
@@ -93,20 +77,4 @@ espeak::voicify(double rate, double pitch)
 {
   format_macros[pitch_macro] = lexical_cast<string>((atan((pitch * pitch) - 1) * 50.0 / M_2_PI) + 50.0);
   format_macros[rate_macro] = lexical_cast<string>(rate * 170.0);
-}
-
-
-// Espeak+Mbrola backend.
-
-// Object construction:
-mbrespeak::mbrespeak(const char* lang):
-  mbrola(COMPOSE(ESPEAK, MBROLA), getvoiceid(lang, mbrola_voices), lang)
-{
-  if (!espeak::executable.empty())
-    {
-      string cmd(espeak::executable);
-      cmd += " --stdin -q --pho -z -v mb-" + voice;
-      command(cmd);
-    }
-  else throw configuration::error(string("no path to ") + espeak::name);
 }
