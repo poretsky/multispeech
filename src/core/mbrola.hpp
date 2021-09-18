@@ -32,13 +32,16 @@
 class mbrola: public speech_engine
 {
 public:
+  // Constructing the backend with Espeak preprocessor:
+  explicit mbrola(const char* lang);
+
   // Constant data for references:
   static const char* const name;
   static const std::string voices_default_path;
 
   // Configurable parameters:
   static std::string executable;
-  static std::string voices;
+  static std::string voices_path;
 
   // Voices assignment:
   static std::string en;
@@ -49,7 +52,7 @@ public:
   static std::string pt;
 
 protected:
-  // Constructing the object:
+  // For constructing derived backend:
   mbrola(const std::string& backend,
          const std::string& voice_id,
          const char* lang);

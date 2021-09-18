@@ -285,8 +285,8 @@ polyglot::speech_backend(const string& name,
     return new ru_tts;
   else if (espeak::name == name)
     return new espeak(lang);
-  else if (COMPOSE(ESPEAK, MBROLA) == name)
-    return new mbrespeak(lang);
+  else if (mbrola::name == name)
+    return new mbrola(lang);
   else if (user_tts::name == name)
     return new user_tts(lang);
   throw configuration::error("unknown speech backend " + name);

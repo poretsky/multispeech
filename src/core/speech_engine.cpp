@@ -232,6 +232,12 @@ speech_engine::sampling(unsigned int value)
   native_sampling = value;
 }
 
+const string&
+speech_engine::getvoiceid(const char* lang, const map<const char*, const string*>& voices)
+{
+  return voices.count(lang) ? *voices.at(lang) : novoice;
+}
+
 
 // Private methods:
 

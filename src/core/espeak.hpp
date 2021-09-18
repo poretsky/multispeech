@@ -26,7 +26,7 @@
 
 #include <string>
 
-#include "mbrola.hpp"
+#include "speech_engine.hpp"
 
 // Backend name:
 #define ESPEAK "espeak"
@@ -56,14 +56,6 @@ public:
 private:
   // Make up voice parameters for backend:
   void voicify(double rate, double pitch = 1.0);
-};
-
-// Espeak+Mbrola backend.
-class mbrespeak: public mbrola
-{
-public:
-  // Object construction:
-  explicit mbrespeak(const char* lang);
 };
 
 #endif
