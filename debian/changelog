@@ -1,3 +1,13 @@
+multispeech (4.3.0focal1) focal; urgency=medium
+
+  * Enabled explicit stress notation for Russian.
+  * Explicit stress notation support in ru_tts backend.
+  * Russian transliteration rules enhancement.
+  * Simplified configuration structure a bit.
+  * Spanish detector fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 18 Sep 2021 20:44:54 +0300
+
 multispeech (4.2.1focal1) focal; urgency=medium
 
   * Debian package dependency fix.
