@@ -66,8 +66,8 @@ bool speech_server::spd_support_index_marks = true;
 
 speech_server::speech_server(void):
   input_charset(frontend_charset.empty() ?
-                locale("") :
-                locale(locale(""), new iconv_codecvt(frontend_charset.c_str(), NULL))),
+                locale() :
+                locale(locale(), new iconv_codecvt(frontend_charset.c_str(), NULL))),
   soundmaster(this),
   exit_status(EXIT_SUCCESS)
 {

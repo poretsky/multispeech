@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <locale>
-
 #include <boost/assign.hpp>
 
 #include "German.hpp"
@@ -132,7 +130,7 @@ German::German(void):
     (L"dot", L"Punkt")
 
     // Language name:
-    (intern_string(id, locale("")).c_str(), L"Deutsch")
+    (intern_string(id).c_str(), L"Deutsch")
     .convert_to_container< map<const wstring, const wchar_t*> >();
 
   // Text filtering chain:
