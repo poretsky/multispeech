@@ -20,7 +20,6 @@
 
 #include <string>
 #include <sstream>
-#include <locale>
 #include <vector>
 #include <map>
 
@@ -195,9 +194,7 @@ text_filter_constructor&
 text_filter_constructor::operator()(const wchar_t* pattern, const wchar_t* replacement,
                                     bool icase_mode)
 {
-  locale saved(locale::global(locale("")));
   filter->push(simple_substitution(pattern, replacement, icase_mode));
-  locale::global(saved);
   return *this;
 }
 
@@ -206,9 +203,7 @@ text_filter_constructor::operator()(const wchar_t* pattern,
                                     const advanced_substitution::formatter& fmt,
                                     bool icase_mode)
 {
-  locale saved(locale::global(locale("")));
   filter->push(advanced_substitution(pattern, fmt, icase_mode));
-  locale::global(saved);
   return *this;
 }
 

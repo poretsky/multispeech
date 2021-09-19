@@ -26,6 +26,8 @@
 
 #include <bobcat/syslogstream>
 
+#include <boost/locale/generator.hpp>
+
 #include "multispeech.hpp"
 
 #include "config.hpp"
@@ -33,8 +35,8 @@
 
 
 using namespace std;
-using namespace boost;
 using namespace FBB;
+using namespace boost::locale;
 
 
 // Construct / destroy:
@@ -43,6 +45,8 @@ multispeech::multispeech(void):
   audio(false),
   efd(dup(STDERR_FILENO))
 {
+  locale lc;
+  locale::global(generator().generate(locale("").combine< numpunct<char> >(lc).combine< numpunct<wchar_t> >(lc), ""));
   unsetenv("DISPLAY");
 }
 
