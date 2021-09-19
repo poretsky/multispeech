@@ -63,6 +63,11 @@ if test "$ax_cv_boost_iostreams" != "yes"
 then AC_MSG_ERROR([Boost iostreams support is mandatory])
 fi
 
+AX_BOOST_LOCALE
+if test "$ax_cv_boost_locale" != "yes"
+then AC_MSG_ERROR([Boost locale support is mandatory])
+fi
+
 AX_BOOST_PROGRAM_OPTIONS
 if test "$ax_cv_boost_program_options" != "yes"
 then AC_MSG_ERROR([Boost program options support is mandatory])
