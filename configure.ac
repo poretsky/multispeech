@@ -50,42 +50,42 @@ AM_PATH_PULSEAUDIO
 AM_PATH_SNDFILE
 AM_PATH_BOBCAT
 
-AM_PATH_SOUNDTOUCH([], [], AC_MSG_ERROR([the SoundTouch library is mandatory]))
-AX_BOOST_BASE([1.45], [], AC_MSG_ERROR([the Boost library is mandatory]))
+AM_PATH_SOUNDTOUCH([], [], AC_MSG_ERROR([the SoundTouch library is missing or corrupted]))
+AX_BOOST_BASE([1.45], [], AC_MSG_ERROR([the Boost library is missing or corrupted]))
 
 AX_BOOST_FILESYSTEM
 if test "$ax_cv_boost_filesystem" != "yes"
-then AC_MSG_ERROR([Boost file system support is mandatory])
+then AC_MSG_ERROR([Boost file system support library is missing or corrupted])
 fi
 
 AX_BOOST_IOSTREAMS
 if test "$ax_cv_boost_iostreams" != "yes"
-then AC_MSG_ERROR([Boost iostreams support is mandatory])
+then AC_MSG_ERROR([Boost iostreams support library is missing or corrupted])
 fi
 
 AX_BOOST_LOCALE
 if test "$ax_cv_boost_locale" != "yes"
-then AC_MSG_ERROR([Boost locale support is mandatory])
+then AC_MSG_ERROR([Boost locale support library is missing or corrupted])
 fi
 
 AX_BOOST_PROGRAM_OPTIONS
 if test "$ax_cv_boost_program_options" != "yes"
-then AC_MSG_ERROR([Boost program options support is mandatory])
+then AC_MSG_ERROR([Boost program options support library is missing or corrupted])
 fi
 
 AX_BOOST_REGEX
 if test "$ax_cv_boost_regex" != "yes"
-then AC_MSG_ERROR([Boost regex support is mandatory])
+then AC_MSG_ERROR([Boost regex support library is missing or corrupted])
 fi
 
 AX_BOOST_SYSTEM
 if test "$ax_cv_boost_system" != "yes"
-then AC_MSG_ERROR([Boost system support is mandatory])
+then AC_MSG_ERROR([Boost system support library is missing or corrupted])
 fi
 
 AX_BOOST_THREAD
 if test "$ax_cv_boost_thread" != "yes"
-then AC_MSG_ERROR([Boost thread support is mandatory])
+then AC_MSG_ERROR([Boost thread support library is missing or corrupted])
 fi
 
 # Check for additional headers.
