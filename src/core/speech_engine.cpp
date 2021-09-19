@@ -90,8 +90,8 @@ speech_engine::speech_engine(const string& backend,
   sound_channels(channels),
   playing_deviation(deviate),
   backend_charset(charset.empty() ?
-                  locale("") :
-                  locale(locale(""), new iconv_codecvt(NULL, charset.c_str())))
+                  locale() :
+                  locale(locale(), new iconv_codecvt(NULL, charset.c_str())))
 {
   if (lang_id::en == lang)
     language.reset(new English);
@@ -322,9 +322,9 @@ speech_engine::wrap_letter(wstring s,
 {
   if (s.length() == 1)
     {
-      if (isupper(s[0], locale("")))
+      if (isupper(s[0], locale()))
         pitch *= language->settings.caps_factor;
-      else s[0] = toupper(s[0], locale(""));
+      else s[0] = toupper(s[0], locale());
     }
   return wrap_text(s, volume, rate * language->settings.char_rate, pitch * language->settings.char_pitch, deviation, true, true);
 }
