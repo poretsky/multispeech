@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include <locale>
-
 #include <boost/assign.hpp>
 
 #include "English.hpp"
@@ -93,7 +91,7 @@ English::English(void):
     (L"newline", L"new line")
 
     // Language name:
-    (intern_string(id, locale("")).c_str(), L"English")
+    (intern_string(id).c_str(), L"English")
     .convert_to_container< map<const wstring, const wchar_t*> >();
 
   // Text filtering chain:
