@@ -126,7 +126,7 @@ frontend::get_command(void)
             break;
           }
       if (!disbalance)
-        speech_server::cmd = extern_string(data, locale(""));
+        speech_server::cmd = extern_string(data);
       else if ((disbalance < 0) || (disbalance > 1))
         communication_reset();
     }
@@ -194,14 +194,14 @@ frontend::do_say_letter(void)
 bool
 frontend::do_enqueue_sound(void)
 {
-  soundmaster.enqueue(sound_task(extern_string(data, locale("")).c_str()));
+  soundmaster.enqueue(sound_task(extern_string(data).c_str()));
   return true;
 }
 
 bool
 frontend::do_play_sound(void)
 {
-  soundmaster.execute(sound_task(extern_string(data, locale("")).c_str()));
+  soundmaster.execute(sound_task(extern_string(data).c_str()));
   return true;
 }
 
@@ -325,10 +325,10 @@ frontend::do_set_language(void)
 {
   if (regex_match(data, parse_result, lang_parameters))
     {
-      speechmaster.language(extern_string(wstring(parse_result[1].first, parse_result[1].second), locale("")));
+      speechmaster.language(extern_string(wstring(parse_result[1].first, parse_result[1].second)));
       if (parse_result[2].matched &&
           (wstring(parse_result[3].first, parse_result[3].second) != L"nil"))
-        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+        soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language()), true));
     }
   return true;
 }
@@ -338,7 +338,7 @@ frontend::do_next_language(void)
 {
   speechmaster.lang_switch(true);
   if (!data.empty() && (data != L"nil"))
-    soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+    soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language()), true));
   return true;
 }
 
@@ -347,7 +347,7 @@ frontend::do_prev_language(void)
 {
   speechmaster.lang_switch(false);
   if (!data.empty() && (data != L"nil"))
-    soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language(), locale("")), true));
+    soundmaster.execute(speechmaster.text_task(intern_string(speechmaster.language()), true));
   return true;
 }
 
@@ -371,7 +371,7 @@ frontend::do_sync_state(void)
 bool
 frontend::do_say_version(void)
 {
-  soundmaster.execute(speechmaster.text_task(intern_string(package::version, locale(""))));
+  soundmaster.execute(speechmaster.text_task(intern_string(package::version)));
   return true;
 }
 

@@ -19,7 +19,6 @@
 */
 
 #include <string>
-#include <locale>
 
 #include <boost/iostreams/code_converter.hpp>
 #include <boost/iostreams/device/array.hpp>
