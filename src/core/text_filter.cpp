@@ -25,6 +25,7 @@
 
 #include <boost/foreach.hpp>
 #include <boost/regex.hpp>
+#include <boost/locale.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex_find_format.hpp>
@@ -35,6 +36,7 @@ using namespace std;
 using namespace boost;
 using namespace boost::iostreams;
 using namespace boost::algorithm;
+using namespace boost::locale;
 
 
 // case_conversion members:
@@ -50,9 +52,9 @@ case_conversion::do_filter(const wstring& s)
   switch (conversion_mode)
     {
     case lowercase:
-      return to_lower_copy(s, locale(""));
+      return to_lower(s);
     case uppercase:
-      return to_upper_copy(s, locale(""));
+      return to_upper(s);
     }
   return s;
 }
