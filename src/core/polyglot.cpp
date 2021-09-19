@@ -26,6 +26,7 @@
 #include <bobcat/syslogstream>
 
 #include <boost/assign.hpp>
+#include <boost/locale.hpp>
 
 #include "polyglot.hpp"
 
@@ -49,6 +50,7 @@ using namespace std;
 using namespace FBB;
 using namespace boost;
 using namespace boost::assign;
+using namespace boost::locale;
 
 
 // Static data:
@@ -146,10 +148,11 @@ polyglot::polyglot(void):
 speech_task
 polyglot::text_task(const wstring& s, bool use_translation)
 {
+  wstring t = normalize(s, norm_nfkc);
   if (autolanguage)
-    detect_language(s, use_translation);
+    detect_language(t, use_translation);
   if (talker[lang].get())
-    return talker[lang]->text_task(s, use_translation);
+    return talker[lang]->text_task(t, use_translation);
   return speech_task();
 }
 
@@ -158,13 +161,14 @@ polyglot::text_task(const wstring& s,
                     voice_params* voice,
                     bool use_translation)
 {
+  wstring t = normalize(s, norm_nfkc);
   if (autolanguage)
-    detect_language(s, use_translation);
+    detect_language(t, use_translation);
   if (talker[lang].get())
     {
       punctuations::mode preserve = punctuations::verbosity;
       punctuations::verbosity = voice->punctuations_mode;
-      speech_task task = talker[lang]->text_task(s, voice, use_translation);
+      speech_task task = talker[lang]->text_task(t, voice, use_translation);
       punctuations::verbosity = preserve;
       return task;
     }
@@ -174,20 +178,22 @@ polyglot::text_task(const wstring& s,
 speech_task
 polyglot::letter_task(const wstring& s)
 {
+  wstring t = normalize(s, norm_nfkc);
   if (autolanguage)
-    detect_language(s, true);
+    detect_language(t, true);
   if (talker[lang].get())
-    return talker[lang]->letter_task(s);
+    return talker[lang]->letter_task(t);
   return speech_task();
 }
 
 speech_task
 polyglot::letter_task(const wstring& s, voice_params* voice)
 {
+  wstring t = normalize(s, norm_nfkc);
   if (autolanguage)
-    detect_language(s, true);
+    detect_language(t, true);
   if (talker[lang].get())
-    return talker[lang]->letter_task(s, voice);
+    return talker[lang]->letter_task(t, voice);
   return speech_task();
 }
 
