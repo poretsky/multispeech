@@ -20,8 +20,7 @@ endif
 
 libmultispeech_la_SOURCES = exec_queue.hpp config.cpp config.hpp \
 	voice_params.cpp voice_params.hpp \
-	iconv_codecvt.cpp iconv_codecvt.hpp strcvt.cpp strcvt.hpp \
-	text_filter.cpp text_filter.hpp \
+	strcvt.cpp strcvt.hpp text_filter.cpp text_filter.hpp \
 	language_description.cpp language_description.hpp \
 	audioplayer.cpp audioplayer.hpp \
 	soundfile.cpp soundfile.hpp \
