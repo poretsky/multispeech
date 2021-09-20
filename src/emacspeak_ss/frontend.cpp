@@ -109,7 +109,7 @@ frontend::get_command(void)
   else
     {
       accumulator << s << endl;
-      data = intern_string(accumulator.str(), input_charset);
+      data = intern_string(accumulator.str(), frontend_charset);
       int disbalance = 0;
       for (unsigned int i = 0; i < data.length(); i++)
         switch (data[i])
@@ -142,7 +142,7 @@ frontend::perform_command(void)
   if (!speech_server::cmd.empty())
     {
       FunctionPtr action = findCmd(speech_server::cmd);
-      data = intern_string(String::trim(beyond()), input_charset);
+      data = intern_string(String::trim(beyond()), frontend_charset);
       done = (this->*action)();
       communication_reset();
     }

@@ -28,19 +28,21 @@
 #include <locale>
 
 // Initialize wide character string from ordinary string decoding it
-// by the way according to specified locale.
+// by the way according to specified charset.
 class intern_string: public std::wstring
 {
 public:
-  intern_string(const std::string& s, const std::locale& charset_holder = std::locale());
+  explicit intern_string(const std::string& s, const std::locale& charset_holder = std::locale());
+  intern_string(const std::string& s, const std::string& charset);
 };
 
 // Initialize ordinary string from wide character string encoding it
-// by the way according to specified locale.
+// by the way according to specified charset.
 class extern_string: public std::string
 {
 public:
-  extern_string(const std::wstring& s, const std::locale& charset_holder = std::locale());
+  explicit extern_string(const std::wstring& s, const std::locale& charset_holder = std::locale());
+  extern_string(const std::wstring& s, const std::string& charset);
 };
 
 #endif
