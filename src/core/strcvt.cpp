@@ -20,36 +20,35 @@
 
 #include <string>
 
-#include <boost/iostreams/code_converter.hpp>
-#include <boost/iostreams/device/array.hpp>
-#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/locale/encoding.hpp>
 
 #include "strcvt.hpp"
 
 using namespace std;
-using namespace boost::iostreams;
+using namespace boost::locale::conv;
 
-intern_string::intern_string(const string& s, const locale& charset_holder)
+
+intern_string::intern_string(const string& s, const locale& charset_holder):
+  wstring(to_utf<wchar_t>(s, charset_holder))
 {
-  size_t size = s.length();
-  if (size)
-    {
-      int chunk_size;
-      wchar_t chunk[size];
-      code_converter<array_source> source(array_source(s.c_str(), size));
-      source.imbue(charset_holder);
-      while ((chunk_size = source.read(chunk, size)) > 0)
-        append(chunk, chunk + chunk_size);
-    }
 }
 
-extern_string::extern_string(const wstring& s, const locale& charset_holder)
+intern_string::intern_string(const string& s, const string& charset):
+  wstring(charset.empty() ?
+          to_utf<wchar_t>(s, locale()) :
+          to_utf<wchar_t>(s, charset))
 {
-  size_t size = s.length();
-  if (size)
-    {
-      code_converter< back_insert_device<string> > sink(boost::iostreams::back_inserter(*static_cast<string*>(this)));
-      sink.imbue(charset_holder);
-      sink.write(s.c_str(), size);
-    }
+}
+
+
+extern_string::extern_string(const wstring& s, const locale& charset_holder):
+  string(from_utf(s, charset_holder))
+{
+}
+
+extern_string::extern_string(const wstring& s, const string& charset):
+  string(charset.empty() ?
+         from_utf(s, locale()) :
+         from_utf(s, charset))
+{
 }

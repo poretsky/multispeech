@@ -281,7 +281,7 @@ void
 frontend::enqueue_text_chunk(string::const_iterator start, string::const_iterator end)
 {
   if (start != end)
-    soundmaster.enqueue(speechmaster.text_task(stripper.process(intern_string(string(start, end), input_charset)), &settings));
+    soundmaster.enqueue(speechmaster.text_task(stripper.process(intern_string(string(start, end), frontend_charset)), &settings));
 }
 
 
@@ -352,7 +352,7 @@ frontend::do_char(void)
           boost::mutex::scoped_lock lock(access);
           if (can_speak())
             {
-              soundmaster.enqueue(speechmaster.letter_task(intern_string(data, input_charset), &settings));
+              soundmaster.enqueue(speechmaster.letter_task(intern_string(data, frontend_charset), &settings));
               start_queue();
             }
         }
@@ -378,13 +378,13 @@ frontend::do_sound_icon(void)
           if (can_speak())
             {
               if (spd_sound_icons.empty())
-                soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
+                soundmaster.enqueue(speechmaster.text_task(intern_string(data, frontend_charset), &settings));
               else
                 {
                   path icon_file(complete(data, spd_sound_icons));
                   if (exists(icon_file))
                     soundmaster.enqueue(sound_task(icon_file));
-                  else soundmaster.enqueue(speechmaster.text_task(intern_string(data, input_charset), &settings));
+                  else soundmaster.enqueue(speechmaster.text_task(intern_string(data, frontend_charset), &settings));
                 }
               start_queue();
             }
