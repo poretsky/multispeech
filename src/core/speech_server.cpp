@@ -31,7 +31,6 @@
 
 #include "speech_server.hpp"
 
-#include "iconv_codecvt.hpp"
 #include "config.hpp"
 
 using namespace std;
@@ -65,9 +64,6 @@ bool speech_server::spd_support_index_marks = true;
 // Construct / destroy:
 
 speech_server::speech_server(void):
-  input_charset(frontend_charset.empty() ?
-                locale() :
-                locale(locale(), new iconv_codecvt(frontend_charset.c_str(), NULL))),
   soundmaster(this),
   exit_status(EXIT_SUCCESS)
 {

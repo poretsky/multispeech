@@ -28,7 +28,6 @@
 
 #include <string>
 #include <sstream>
-#include <locale>
 
 #include <bobcat/syslogstream>
 
@@ -91,9 +90,6 @@ protected:
   // Data read from input:
   std::string cmd;
   std::ostringstream accumulator;
-
-  // Input charset holder:
-  const std::locale input_charset;
 
   // Speech and sounds:
   polyglot speechmaster;

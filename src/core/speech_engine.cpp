@@ -20,6 +20,7 @@
 
 #include <cmath>
 #include <utility>
+#include <locale>
 
 #include <boost/regex.hpp>
 #include <boost/foreach.hpp>
@@ -30,7 +31,6 @@
 #include "speech_engine.hpp"
 
 #include "config.hpp"
-#include "iconv_codecvt.hpp"
 #include "strcvt.hpp"
 #include "text_filter.hpp"
 #include "pipeline.hpp"
@@ -89,9 +89,7 @@ speech_engine::speech_engine(const string& backend,
   native_sampling(sampling),
   sound_channels(channels),
   playing_deviation(deviate),
-  backend_charset(charset.empty() ?
-                  locale() :
-                  locale(locale(), new iconv_codecvt(NULL, charset.c_str())))
+  backend_charset(charset)
 {
   if (lang_id::en == lang)
     language.reset(new English);

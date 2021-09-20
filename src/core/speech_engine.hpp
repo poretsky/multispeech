@@ -64,7 +64,6 @@
 #define MULTISPEECH_SPEECH_ENGINE_HPP
 
 #include <string>
-#include <locale>
 #include <list>
 #include <map>
 
@@ -176,8 +175,8 @@ private:
   // Deviate sampling frequency by player:
   bool playing_deviation;
 
-  // Output charset holder:
-  const std::locale backend_charset;
+  // Output charset:
+  const std::string backend_charset;
 
   // Shell command patterns to make up a TTS script:
   std::list<std::string> command_patterns;
