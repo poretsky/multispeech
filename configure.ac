@@ -51,7 +51,7 @@ AM_PATH_SNDFILE
 AM_PATH_BOBCAT
 
 AM_PATH_SOUNDTOUCH([], [], AC_MSG_ERROR([the SoundTouch library is missing or corrupted]))
-AX_BOOST_BASE([1.45], [], AC_MSG_ERROR([the Boost library is missing or corrupted]))
+AX_BOOST_BASE([1.49], [], AC_MSG_ERROR([the Boost library is missing or corrupted]))
 
 AX_BOOST_FILESYSTEM
 if test "$ax_cv_boost_filesystem" != "yes"
