@@ -54,6 +54,7 @@ protected:
   // Object constructor:
   language_description(const char* language_id,
                        const options& language_settings,
+                       const std::wstring& alphabet,
                        const wchar_t* language_detector);
 
 public:
@@ -70,7 +71,7 @@ public:
   bool recognize(const std::wstring& s);
 
   // Foreign language presence recognition:
-  virtual bool foreign(const std::wstring& s);
+  bool foreign(const std::wstring& s);
 
   // text filtering:
   std::wstring filter(const std::wstring& s);
@@ -97,7 +98,8 @@ protected:
   text_filter filter_chain;
 
 private:
-  // Native language detector:
+  // Language belonging criteria:
+  const boost::wregex test;
   const boost::wregex detector;
 };
 

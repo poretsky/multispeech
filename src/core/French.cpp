@@ -48,7 +48,7 @@ language_description::options French::settings =
 // Object construction:
 
 French::French(void):
-  language_description(lang_id::fr, settings, L"[ëîïœû]|(^| )(([cn]')?est|du) ")
+  language_description(lang_id::fr, settings, L"a-zàâæçéèêëîïôœùûüÿ", L"[ëîïœû]|(^| )(([cn]')?est|du) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
