@@ -48,9 +48,6 @@ language_description::options Russian::settings =
     .caps_factor = 1.2
   };
 
-// Foreign characters:
-static const wregex foreign_chars(L"[a-zA-Z]");
-
 // Transliteration table:
 static const map<wchar_t, const wchar_t*> translit = map_list_of
   (L'a', L"а")
@@ -106,7 +103,7 @@ static const map<wchar_t, const wchar_t*> translit = map_list_of
 // Object construction:
 
 Russian::Russian(void):
-  language_description(lang_id::ru, settings, L"[а-яёА-ЯЁ]")
+  language_description(lang_id::ru, settings, L"а-яё", L"[а-яё]")
 {
   // Punctuations pronunciation:
   punctuations = list_of
@@ -239,13 +236,4 @@ Russian::Russian(void):
     (L"([^аеёиоуыэюя])\\x{301}", L"$1 ")
     (L"(^[^-0-9а-яё]+| +$)", L"")
     (L"  +", L" ");
-}
-
-
-// Foreign language presence recognition:
-
-bool
-Russian::foreign(const wstring& s)
-{
-  return regex_search(s, foreign_chars, match_default | match_any);
 }
