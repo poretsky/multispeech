@@ -48,7 +48,7 @@ language_description::options Portuguese::settings =
 // Object construction:
 
 Portuguese::Portuguese(void):
-  language_description(lang_id::pt, settings, L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
+  language_description(lang_id::pt, settings, L"a-záâãàçéêíóôõúü", L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of

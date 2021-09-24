@@ -31,9 +31,6 @@ public:
 
   // Configurable parameters container:
   static options settings;
-
-  // Foreign language presence recognition:
-  bool foreign(const std::wstring& s);
 };
 
 #endif
