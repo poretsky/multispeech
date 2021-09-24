@@ -277,7 +277,18 @@ polyglot::detect_language(const wstring& s, bool check_translation)
       if (newlang < langs.size())
         lang = newlang;
       else if (talker[lang]->language->foreign(s))
-        lang = fallback;
+        {
+          if (talker[fallback]->language->foreign(s))
+            {
+              for (unsigned int i = 0; i < langs.size(); i++)
+                if ((i != lang) && (i != fallback) && talker[i].get() && !talker[i]->language->foreign(s))
+                  {
+                    lang = i;
+                    break;
+                  }
+            }
+          else lang = fallback;
+        }
     }
 }
 

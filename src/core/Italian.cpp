@@ -48,7 +48,7 @@ language_description::options Italian::settings =
 // Object construction:
 
 Italian::Italian(void):
-  language_description(lang_id::it, settings, L"[òùì]|(^| )(c'(è|era)|gli(e(l[aeio]|ne))?) |[aeiou]cch[ei]|\\<è\\>")
+  language_description(lang_id::it, settings, L"a-zàòùìèé", L"[òùì]|(^| )(c'(è|era)|gli(e(l[aeio]|ne))?) |[aeiou]cch[ei]|\\<è\\>")
 {
   // Punctuations pronunciation:
   punctuations = list_of

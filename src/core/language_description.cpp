@@ -28,9 +28,11 @@ using namespace boost;
 
 language_description::language_description(const char* language_id,
                                            const options& language_settings,
+                                           const wstring& alphabet,
                                            const wchar_t* language_detector):
   id(language_id),
   settings(language_settings),
+  test(L"(?:\\P{alpha}|[" + alphabet + L"])*", regex::normal | regex::icase),
   detector(language_detector, regex::normal | regex::icase)
 {
   filter_chain.setup()
@@ -53,7 +55,7 @@ language_description::recognize(const wstring& s)
 bool
 language_description::foreign(const wstring& s)
 {
-  return false;
+  return !regex_match(s, test);
 }
 
 wstring

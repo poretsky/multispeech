@@ -48,7 +48,7 @@ language_description::options English::settings =
 // Object construction:
 
 English::English(void):
-  language_description(lang_id::en, settings, L"th|wh[aeioy]|([abefhlmnrstw]i|[ao]u)ghts? ")
+  language_description(lang_id::en, settings, L"a-z", L"th|wh[aeioy]|([abefhlmnrstw]i|[ao]u)ghts? ")
 {
   // Punctuations pronunciation:
   punctuations = list_of

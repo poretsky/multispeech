@@ -48,7 +48,7 @@ language_description::options German::settings =
 // Object construction:
 
 German::German(void):
-  language_description(lang_id::de, settings, L"[äöß]|(^| )(der|und|von|sich|eine?|auf|dieser?) ")
+  language_description(lang_id::de, settings, L"a-zäöüß", L"[äöß]|(^| )(der|und|von|sich|eine?|auf|dieser?) ")
 {
   // Punctuations pronunciation:
   punctuations = list_of
