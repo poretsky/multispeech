@@ -31,6 +31,7 @@ using namespace boost::assign;
 
 
 // Static data:
+
 language_description::options French::settings =
   {
     .engine = espeak::name,
@@ -44,11 +45,71 @@ language_description::options French::settings =
     .caps_factor = 1.2
   };
 
+static const wchar_t* criterion =
+  L"(?:[pm]â|vê)t|"
+  L"t(?:o(?:mburn)|aill)er|"
+  L"(?:cass|unit)é|"
+  L"(?:\\A|\\s|[\"‘])(?:"
+  L"p(?:rêt|énal|ou(?:sser|pon)|luriel|ieds)|"
+  L"mé(?:tal|gi)|"
+  L"(?:(?:lai|pou)ss|(?:devi|four|gag)n|(?:rê|(?:tro|sa)u)v)er|"
+  L"nu(?:age|it)|"
+  L"v(?:o(?:ir|mis)|errou)|"
+  L"déjà|"
+  L"bébé|"
+  L"coeur|"
+  L"(?:"
+  L"a(?:vec|lors)|"
+  L"v(?:ue|o(?:tre|ulez))|"
+  L"t(?:ous|uer)|"
+  L"ça"
+  L")\\b|"
+  L"(?:"
+  L"dé(?:n|se|li|ro|f[ra]|v[aie]|p[olr]|c(?:[re]|ha|o[num]))|"
+  L"ré(?:[feh]|v?[oé]|i[nm]|a[clpsdrfmb]|t[ra]|s(?:o|ul)|g[la]|p[ouae]|c(?:[urea]|o(?:n|lt)))"
+  L")\\B"
+  L")|"
+  L"\\B(?:"
+  L"(?:e|nd)raie|"
+  L"é(?:r(?:aie|er)|con|sent|mé|nage)|"
+  L"r(?:odui|ése)|"
+  L"a(?:ît|raî)|"
+  L"è[nt]|"
+  L"[îê]tr|"
+  L"xpé|"
+  L"tionne|"
+  L"ectionn|"
+  L"phiq"
+  L")\\B|"
+  L"(?:"
+  L"ser(?:ions|ez|(?:on|ai)t)|"
+  L"ir(?:iez|(?:ai|on)t)|"
+  L"v(?:e(?:ux|nions)|oies)|"
+  L"passe(?:z|ra)|"
+  L"ouais|"
+  L"aient|"
+  L"âmes|"
+  L"niez|"
+  L"\\B(?:"
+  L"(?:[f-is-vmy]|er)iez|"
+  L"è(?:re(?:me)?nt|(?:[nsd]|tr?|qu)es?)|"
+  L"âtr?es|"
+  L"[f-it-zlrdmpbcokçé]assent|"
+  L"(?:r|[idv]e?|[tslnugm]e)r(?:ai|on)t|"
+  L"(?:re|tt)r(?:ions|(?:ai|on)[ts])|"
+  L"(?:î|[tslnr]â)t|"
+  L"i(?:s?ait|onner|s(?:ez|ées)|ées?)|"
+  L"é(?:té|(?:r|gl?)?er)|"
+  L"êt(?:ez|ir|res?)|"
+  L"[altorvng]issera?"
+  L")"
+  L")\\b";
+
 
 // Object construction:
 
 French::French(void):
-  language_description(lang_id::fr, settings, L"a-zàâæçéèêëîïôœùûüÿ", L"[ëîïœû]|(^| )(([cn]')?est|du) ")
+  language_description(lang_id::fr, settings, L"a-zàâæçéèêëîïôœùûüÿ", criterion)
 {
   // Punctuations pronunciation:
   punctuations = list_of

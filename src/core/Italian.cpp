@@ -31,6 +31,7 @@ using namespace boost::assign;
 
 
 // Static data:
+
 language_description::options Italian::settings =
   {
     .engine = espeak::name,
@@ -44,11 +45,72 @@ language_description::options Italian::settings =
     .caps_factor = 1.2
   };
 
+static const wchar_t* criterion =
+  L"[^o]ù|fatto|spetta|"
+  L"(?:abb|lasc|facc|migl)ia|"
+  L"(?:\\A|\\s|[\"‘])(?:"
+  L"qu(?:indi|atto)|"
+  L"figli[oae]|"
+  L"ragazz[oai]|"
+  L"piaceva|"
+  L"(?:"
+  L"que(?:st[oie]|ll[oai]|gli)|"
+  L"(?:[nv]|[ptsb]u)oi|"
+  L"st?iamo|"
+  L"(?:d?[ae]|ne)gli|"
+  L"buon[aeio]?|"
+  L"(?:[csn]')?è"
+  L")\\b|"
+  L"(?:"
+  L"(?:(?:(?:[sn]u|(?:[dnb]|qu)e|d?a|co)l|[nd]eg|qua)?l|(?:u|buo)n|glie[ln])'[aieou]|"
+  L"[lctm]'h|"
+  L"(?:[csd]'e|o(?:lt|sse))r|"
+  L"r(?:a(?:vv|ggr)|i(?:n(?:v|fr|ca)|un|pro|mpi|gua|s(?:ta|c[hi])|vend|c(?:re|o[nmsp])|f(?:u|o?r)|a(?:[pfv]|ss|mm|tt)))|"
+  L"a(?:zz|gg(?:h|iu)|(?:cc|bb)on|vv(?:[ea]|ol|i[ncsl]))|"
+  L"s(?:g[ou]|b(?:u|a[rl])|o(?:tto|vv))"
+  L")\\B"
+  L")|"
+  L"(?:"
+  L"v(?:ogli[oae]|uo(?:i|le)|ediamo)|"
+  L"s(?:udiamo|ezione)|"
+  L"a(?:veva|ndiamo)|"
+  L"[rf](?:idiamo|azione)|"
+  L"(?:lo|ba|c[ea]|in)diamo|"
+  L"nazione|"
+  L"piace|"
+  L"\\B(?:"
+  L"(?:r|it)à|"
+  L"(?:bber|er(?:emm|ann))o|"
+  L"eresti|"
+  L"i(?:a(?:v(?:[io]|a(?:[nm]o|te))|s(?:s(?:i(?:mo)?|ero)|ti)|(?:mm|ron)o)|(?:sser|mm)o|r(?:e(?:st[ie]|bbe|(?:mm|on)o)|anno)|scono)|"
+  L"t(?:ere(?:st|bb)e|a(?:ss(?:i(?:mo)?|ero)|(?:mm|(?:va|ro)n)o))|"
+  L"[ncz](?:ere(?:s?t|bb)e|a(?:ssi(?:mo)?|(?:sser|mm|(?:va|ro)n)o))|"
+  L"l(?:a(?:ss(?:i(?:mo)?|ero)|(?:mm|(?:va|ro)n)o)|ere(?:bb|st)e)|"
+  L"zz(?:a(?:t[oe]|(?:r|s[st])e|(?:st)?i|v(?:[oi]|a(?:te|mo)?))|i(?:n|am)o|er(?:[ae]i|emo))|"
+  L"[rdmpb](?:a(?:ss(?:er|im)|ron)o|ere(?:bb|st)e)|"
+  L"g(?:assero|ere(?:bb|st)e)|"
+  L"here(?:bb|st)e|"
+  L"(?:essi|chia)mo"
+  L")"
+  L")\\b|"
+  L"\\B(?:"
+  L"(?:[tmc]|[aioe][lrn])izz|"
+  L"i(?:zza[vs]|ficher)|"
+  L"g(?:gia[sv]|iun)|"
+  L"razion|"
+  L"h(?:egg|iud)|"
+  L"seg(?:g|na)|"
+  L"[aeuo]tt[ai]v|"
+  L"p(?:ezz|i(?:cc|gl)i)|"
+  L"[nd]eggi|"
+  L"(?:ua|vi)gl"
+  L")\\B";
+
 
 // Object construction:
 
 Italian::Italian(void):
-  language_description(lang_id::it, settings, L"a-zàòùìèé", L"[òùì]|(^| )(c'(è|era)|gli(e(l[aeio]|ne))?) |[aeiou]cch[ei]|\\<è\\>")
+  language_description(lang_id::it, settings, L"a-zàòùìèé", criterion)
 {
   // Punctuations pronunciation:
   punctuations = list_of
