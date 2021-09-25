@@ -1,4 +1,4 @@
-MULTISPEECH_3 {
+MULTISPEECH_5 {
   global:
     extern "C++" {
       *multispeech;
