@@ -1,3 +1,12 @@
+multispeech (4.4.0) unstable; urgency=medium
+
+  * A bit more accurate text processing.
+  * Unicode normalization before passing text to a speech synthesizer.
+  * Russian text preparation minor fixes.
+  * Minor language detection improvement.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 25 Sep 2021 11:17:39 +0300
+
 multispeech (4.3.0) unstable; urgency=medium
 
   * Enabled explicit stress notation for Russian.
