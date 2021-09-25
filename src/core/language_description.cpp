@@ -18,25 +18,32 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#include <map>
+
 #include "language_description.hpp"
 
 using namespace std;
 using namespace boost;
 
 
+// Alphabets of all instantiated languages:
+static map<const char*, const wchar_t*> alphabets;
+
+
 // Construct / destroy:
 
 language_description::language_description(const char* language_id,
                                            const options& language_settings,
-                                           const wstring& alphabet,
+                                           const wchar_t* alphabet,
                                            const wchar_t* language_detector):
   id(language_id),
   settings(language_settings),
-  test(L"(?:\\P{alpha}|[" + alphabet + L"])*", regex::normal | regex::icase),
-  detector(language_detector, regex::normal | regex::icase)
+  patterns(language_detector),
+  test(wstring(L"(?:\\P{alpha}|[") + alphabet + L"])*", regex::normal | regex::icase)
 {
   filter_chain.setup()
     (L"\\s+", L" ");
+  alphabets[id] = alphabet;
 }
 
 language_description::~language_description(void)
@@ -49,6 +56,29 @@ language_description::~language_description(void)
 bool
 language_description::recognize(const wstring& s)
 {
+  if (detector.empty())
+    {
+      wstring others;
+      for (auto const& item : alphabets)
+        if (item.first != id)
+          others += item.second;
+      if (others.empty())
+        detector.assign(L".", regex::normal);
+      else
+        {
+          const wchar_t* latin = L"a-z";
+          wstring symbols;
+          if (alphabets[id][0] == L'a')
+            for (const wchar_t* s = alphabets[id] + 3; *s; s++)
+              if (others.find(*s) == string::npos)
+                symbols += *s;
+          if ((alphabets[id][0] == L'a') && (others.find(latin) == string::npos))
+            detector.assign(L"[" + symbols + latin + L"]", regex::normal | regex::icase);
+          else if (symbols.empty())
+            detector.assign(patterns, regex::normal | regex::icase);
+          else detector.assign(L"[" + symbols + L"]|" + patterns, regex::normal | regex::icase);
+        }
+    }
   return regex_search(s, detector, match_default | match_any);
 }
 
