@@ -31,6 +31,7 @@ using namespace boost::assign;
 
 
 // Static data:
+
 language_description::options Spanish::settings =
   {
     .engine = espeak::name,
@@ -44,11 +45,78 @@ language_description::options Spanish::settings =
     .caps_factor = 1.2
   };
 
+static const wchar_t* criterion =
+  L"[¿¡]|"
+  L"[ai]rán|"
+  L"v(?:i(?:vir|ento)|aina)|"
+  L"c(?:a(?:mina|llar)|uchar|o(?:l[ge]ar|(?:mis|raz)a))|"
+  L"pas(?:é|a(?:d[oa]|rá))|"
+  L"(?:\\A|\\s|[\"‘])(?:"
+  L"l(?:la(?:m(?:[eé]|a[rdn])|na)|(?:impi|uch)a)|"
+  L"habla|"
+  L"cual|"
+  L"quier|"
+  L"(?:"
+  L"qu(?:é|ieres)|"
+  L"a(?:quí|hora|llá)|"
+  L"(?:mu|(?:v|est)o)y"
+  L")\\b|"
+  L"(?:"
+  L"ll(?:e[vngctri]|u[veb]|o[rti])|"
+  L"cua(?:n[td]|dr[au]|ja)|"
+  L"[jrlhb]ueg|"
+  L"eje(?:[rm]|cu)|"
+  L"desh[oieu]|"
+  L"quiera"
+  L")\\B"
+  L")|"
+  L"(?:"
+  L"i(?:r(?:éis|ías?)|za(?:d|ba[sn]|r(?:é|on|ais))|céis)|"
+  L"(?:[ncdtlvp]|(?:[tf]|[vsh]e)r)ías?|"
+  L"[vc]alidad|"
+  L"puerta|"
+  L"mía?|"
+  L"ación|"
+  L"sí|"
+  L"\\B(?:"
+  L"ía(?:n|is)|"
+  L"á(?:i|bamo)s|"
+  L"(?:[gsbjehü]|(?:[aodurbgn]|(?:[d-gl-pijrtuaby]|[eanrol]c)e)r)ías?|"
+  L"(?:[a-drtghpnv]|(?:s|[icuroelb]c)i)ón|"
+  L"(?:[tn]|iz?)a(?:r(?:é(?:is)?|ais)|(?:ba|ste)is)|"
+  L"e(?:é(?:is)?|a(?:r(?:é(?:is)?|ais|on)|ba(?:[sn]|is)|steis))|"
+  L"i(?:za(?:d|ba[ns]|ron)|a(?:ba|r[oa])n|(?:e|a?li)dad)|"
+  L"rar(?:on|[aé]is|se)|"
+  L"za(?:ste|ré|ba)is|"
+  L"l(?:aste|(?:ar)?é)is|"
+  L"er(?:éis|án)|"
+  L"ca(?:ban|(?:ré|ste)is)|"
+  L"(?:[uvtr]e|[ao]r|[ieu]n|(?:[srmet]|r[nv]|[nutm]al|a[cv]|[tr]ic)i)dad|"
+  L"[zsfyx]ón?|"
+  L"[euo]ó"
+  L")"
+  L")\\b|"
+  L"\\B(?:"
+  L"[b-js-vlmpz]án|"
+  L"(?:"
+  L"l(?:l(?:á|ar[íáé])|ecci)|"
+  L"[rnlzsmh]amient|"
+  L"ezc(?:l|am)|"
+  L"puest|"
+  L"scuch"
+  L")\\B"
+  L")|"
+  L"(?:"
+  L"cuent|"
+  L"mueb|"
+  L"izq"
+  L")\\B";
+
 
 // Object construction:
 
 Spanish::Spanish(void):
-  language_description(lang_id::es, settings, L"a-zñáéíóúü", L"[ñóú¿¡]|(^| )(qué|los|el|ll[aeou][bcdfgmnprstv].*) ")
+  language_description(lang_id::es, settings, L"a-zñáéíóúü", criterion)
 {
   // Punctuations pronunciation:
   punctuations = list_of

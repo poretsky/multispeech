@@ -54,7 +54,7 @@ protected:
   // Object constructor:
   language_description(const char* language_id,
                        const options& language_settings,
-                       const std::wstring& alphabet,
+                       const wchar_t* alphabet,
                        const wchar_t* language_detector);
 
 public:
@@ -99,8 +99,9 @@ protected:
 
 private:
   // Language belonging criteria:
+  const wchar_t* const patterns;
   const boost::wregex test;
-  const boost::wregex detector;
+  boost::wregex detector;
 };
 
 #endif
