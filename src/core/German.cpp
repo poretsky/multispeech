@@ -31,6 +31,7 @@ using namespace boost::assign;
 
 
 // Static data:
+
 language_description::options German::settings =
   {
     .engine = espeak::name,
@@ -44,11 +45,66 @@ language_description::options German::settings =
     .caps_factor = 1.2
   };
 
+static const wchar_t* criterion =
+  L"übers|"
+  L"z(?:ie(?:h|rt)|(?:eu|un)ge)|"
+  L"f(?:ehl|(?:arb|ind)en)|"
+  L"g(?:e(?:ben|lte)|reife)|"
+  L"l(?:aufen|e(?:bend|[gb]t|ih))|"
+  L"(?:acht|reit)en|"
+  L"t(?:eile|reff)|"
+  L"w(?:a(?:hr|chs|sch)|i(?:ckel|llig|ssen)|e(?:rte[ns]|sen))|"
+  L"b(?:ringen|aute)|"
+  L"h(?:a(?:ndels|uen)|iebe)|"
+  L"s(?:cheren|pruch)|"
+  L"mische|"
+  L"kratz|"
+  L"(?:\\A|\\s|[\"‘])(?:"
+  L"we(?:ite|gs)|"
+  L"z(?:uge|wang)|"
+  L"her(?:um|ab|bei|auf)|"
+  L"d(?:urchs|azu)|"
+  L"rechts|"
+  L"berufs|"
+  L"sch(?:alt|laf|uld)|"
+  L"leicht|"
+  L"(?:"
+  L"a(?:b(?:z|ge|sch)|u(?:f[szfr]|s[br]))|"
+  L"z(?:u(?:sa|rü)|ers)|"
+  L"ein(?:[gzf]|sc)|"
+  L"ver(?:f|sc)|"
+  L"hin(?:ei|au)|"
+  L"gesc|"
+  L"besch"
+  L")\\B"
+  L")|"
+  L"(?:"
+  L"(?:rinn|nisch|fahr|halt|ah[ml]|zung|gab|teil|eig)en|"
+  L"tisch(?:en)?|"
+  L"\\B(?:"
+  L"barer|"
+  L"ier(?:te(?:r|s?t)|ende?)|"
+  L"(?:rung|gend|gt)en|"
+  L"chst(?:e[rm])?|"
+  L"hste[ns]?|"
+  L"igste[nm]|"
+  L"gstes?"
+  L")"
+  L")\\b|"
+  L"\\B(?:"
+  L"u(?:samme|rüc)|"
+  L"(?:h|(?:t|is)ie)rt|"
+  L"lichst|"
+  L"ufge|"
+  L"eraus|"
+  L"rungs"
+  L")\\B";
+
 
 // Object construction:
 
 German::German(void):
-  language_description(lang_id::de, settings, L"a-zäöüß", L"[äöß]|(^| )(der|und|von|sich|eine?|auf|dieser?) ")
+  language_description(lang_id::de, settings, L"a-zäöüß", criterion)
 {
   // Punctuations pronunciation:
   punctuations = list_of
