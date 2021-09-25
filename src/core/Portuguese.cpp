@@ -31,6 +31,7 @@ using namespace boost::assign;
 
 
 // Static data:
+
 language_description::options Portuguese::settings =
   {
     .engine = espeak::name,
@@ -44,11 +45,46 @@ language_description::options Portuguese::settings =
     .caps_factor = 1.2
   };
 
+static const wchar_t* criterion =
+  L"atual|"
+  L"f(?:eira|az(?:er|ia))|"
+  L"co(?:mum|bria)|"
+  L"(?:\\A|\\s|[\"‘])(?:"
+  L"(?:des)?enx|"
+  L"(?:f|(?:re|es)?c)?olh"
+  L")\\B|"
+  L"(?:"
+  L"(?:lhe|(?:i|da)rei)s|"
+  L"fic(?:a(?:mo?|is|re[sm])|ou)|"
+  L"ilh(?:o|a[sr])|"
+  L"tinhas?|"
+  L"[cdvtrbp]ê|"
+  L"(?:\\A|\\s|[\"‘])és?|"
+  L"\\B(?:"
+  L"(?:[b-gpt]|[b-jl-pr-vzxç]a)riam|"
+  L"(?:ç|lh|n[hjs]|i[zjrgxf]|r[je]|o[jc]|a[jpi]|[eu]j|[tdp]e)arias?|"
+  L"iz(?:(?:ei|ava)s|a(?:r(?:ei|des|am)|(?:i|sse)s?)|ou)|"
+  L"(?:sse|ar)mos|"
+  L"á(?:vel|mos)"
+  L")"
+  L")\\b|"
+  L"\\B(?:"
+  L"á(?:sse|vam|[rv]ei)|"
+  L"í(?:ram|[rv]?ei|ss)|"
+  L"(?:[dmxz]|r[tfvb]?)ilh|"
+  L"[pc]i[ln]h|"
+  L"i[ln]há|"
+  L"scr[ea]v|"
+  L"ê(?:[sruebx]|n(?:[dsu]|i?[ct]))|"
+  L"(?:[trzchsmjfbxç]|on?|[eui][lg]?|[ni]d|a[ln])arei|"
+  L"qü"
+  L")\\B";
+
 
 // Object construction:
 
 Portuguese::Portuguese(void):
-  language_description(lang_id::pt, settings, L"a-záâãàçéêíóôõúü", L"[õã]|(^| )(não|você|(meu|el[ae])s?|isso) ")
+  language_description(lang_id::pt, settings, L"a-záâãàçéêíóôõúü", criterion)
 {
   // Punctuations pronunciation:
   punctuations = list_of
