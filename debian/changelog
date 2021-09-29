@@ -1,3 +1,9 @@
+multispeech (4.4.1bionic1) bionic; urgency=medium
+
+  * More sophisticated language recognition criteria.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 29 Sep 2021 16:53:18 +0300
+
 multispeech (4.4.0bionic1) bionic; urgency=medium
 
   * A bit more accurate text processing.
