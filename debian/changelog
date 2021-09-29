@@ -1,3 +1,9 @@
+multispeech (4.4.1xenial1) xenial; urgency=medium
+
+  * More sophisticated language recognition criteria.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 29 Sep 2021 16:53:18 +0300
+
 multispeech (4.4.0xenial1) xenial; urgency=medium
 
   * A bit more accurate text processing.
