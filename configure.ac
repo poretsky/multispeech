@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [4.4.0focal1])
+AC_INIT([Multispeech], [4.4.1focal1])
 AC_CONFIG_SRCDIR([src/core/speech_server.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
 AC_CONFIG_MACRO_DIRS([m4])
