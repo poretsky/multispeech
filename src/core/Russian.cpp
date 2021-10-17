@@ -97,6 +97,9 @@ static const map<wchar_t, const wchar_t*> translit = map_list_of
   (L'ù', L"у\u0301")
   (L'ü', L"ю")
   (L'û', L"ю")
+  (L'є', L"е")
+  (L'і', L"и")
+  (L'ї', L"йи")
   .convert_to_container< map<wchar_t, const wchar_t*> >();
 
 
