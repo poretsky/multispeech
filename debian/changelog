@@ -1,3 +1,10 @@
+multispeech (4.4.2xenial1) xenial; urgency=medium
+
+  * Ukrainian letters reading by Russian voices.
+  * Russian text preprocessing minor fixes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 17 Oct 2021 14:10:31 +0300
+
 multispeech (4.4.1xenial1) xenial; urgency=medium
 
   * More sophisticated language recognition criteria.
