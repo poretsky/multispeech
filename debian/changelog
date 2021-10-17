@@ -1,3 +1,10 @@
+multispeech (4.4.2focal1) focal; urgency=medium
+
+  * Ukrainian letters reading by Russian voices.
+  * Russian text preprocessing minor fixes.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 17 Oct 2021 14:10:31 +0300
+
 multispeech (4.4.1focal1) focal; urgency=medium
 
   * More sophisticated language recognition criteria.
