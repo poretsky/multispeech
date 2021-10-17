@@ -84,7 +84,7 @@ static const map<wchar_t, const wchar_t*> translit = map_list_of
   (L'è', L"э\u0301")
   (L'í', L"и\u0301")
   (L'ì', L"и\u0301")
-  (L'ï', L"и")
+  (L'ï', L"й")
   (L'î', L"и")
   (L'ñ', L"нь")
   (L'ó', L"о\u0301")
