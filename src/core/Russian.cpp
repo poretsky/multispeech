@@ -233,7 +233,7 @@ Russian::Russian(void):
     (L"\\b[БВКС]\\.", spell(this))
     (case_conversion::lowercase)
     (L"([^[:alpha:]\\x{301}])([bcdfghj-np-tv-zб-джзй-нп-тф-ъь]{2,}|[a-zбжъь])\\>", L"$1 $2")
-    (L" ([bcdfghj-np-tv-zб-джзй-нп-тф-ъь]{2,}|[a-zбжъь])\\>", spell(this))
+    (L"(^| )([bcdfghj-np-tv-zб-джзй-нп-тф-ъь]{2,}|[a-zбжъь])\\>", spell(this))
     (translit)
     (punctuations)
     (L"[^-\\.,!\\?;\\:0-9а-яё\\x{301}]", L" ")
