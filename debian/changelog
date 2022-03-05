@@ -1,3 +1,9 @@
+multispeech (4.4.4) unstable; urgency=medium
+
+  * Russian text preprocessing fix.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sat, 05 Mar 2022 11:55:35 +0300
+
 multispeech (4.4.3) unstable; urgency=medium
 
   * Fixed preprocessing of Russian text with explicit stress notation.
