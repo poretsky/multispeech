@@ -290,6 +290,16 @@ letters pronunciation. By default 1.0 is suggested.
 .br
 Voice pitch factor for capital letters. By default it is 1.2
 so capital letters are pronounced by slightly higher pitch.
+.TP
+.B speak_numbers
+.br
+This option affects numbers speaking. When it is \(oqyes\(cq or
+\(oqon\(cq, digits are treated as if they belong to the native
+alphabet and, therefore, do not cause language switching. When it is
+\(oqno\(cq or \(oqoff\(cq, digits are treated as foreign symbols
+causing switch to another language that will be the fallback one or
+some other according to the language priority settings. It is
+\(oqyes\(cq by default.
 .SH "MBROLA RELATED OPTIONS"
 Section named \(oqmbrola\(cq contains some options affecting
 \fBmultispeech\fP interaction with \fBmbrola\fP speech engine:
