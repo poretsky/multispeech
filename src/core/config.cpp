@@ -98,6 +98,7 @@
 #define PULSEAUDIO_DIRECT "pulseaudio_direct"
 #define LANG_PREF "language"
 #define FALLBACK "fallback"
+#define SPEAK_NUMBERS "speak_numbers"
 
 // Configuration sections names:
 #define FRONTEND "frontend"
@@ -147,7 +148,8 @@
   DOUBLE(lang, ACCELERATION, component::settings.acceleration, 0.0)     \
   DOUBLE(lang, CHAR_PITCH, component::settings.char_pitch, 1.0)         \
   DOUBLE(lang, CHAR_RATE, component::settings.char_rate, 1.0)           \
-  DOUBLE(lang, CAPS_FACTOR, component::settings.caps_factor, 1.2)
+  DOUBLE(lang, CAPS_FACTOR, component::settings.caps_factor, 1.2)       \
+  BOOLEAN(lang, SPEAK_NUMBERS, component::settings.speak_numbers, true)
 
 
 using namespace std;

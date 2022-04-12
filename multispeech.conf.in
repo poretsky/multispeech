@@ -216,6 +216,14 @@ engine = freephone
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [ru]
 # Russian language related speech options.
@@ -261,6 +269,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [de]
 # German language related speech options.
@@ -306,6 +322,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [fr]
 # French language related speech options.
@@ -351,6 +375,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [es]
 # Spanish language related speech options.
@@ -396,6 +428,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [pt]
 # Portuguese language related speech options.
@@ -441,6 +481,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 [it]
 # Italian language related speech options.
@@ -486,6 +534,14 @@ engine = ru_tts
 #caps_factor = 1.2
 # Voice pitch factor for capital letters. By default it is 1.2
 # so capital letters are pronounced by slightly higher pitch.
+#
+#speak_numbers = yes
+# This option affects numbers speaking. When it is "yes" or "on",
+# digits are treated as if they belong to the native alphabet and,
+# therefore, do not cause language switching. When it is "no" or
+# "off", digits are treated as foreign symbols causing switch to
+# another language that will be the fallback one or some other
+# according to the language priority settings.
 
 # Speech backend sections. These sections contain some options
 # allowing to control various aspects of interaction with the
