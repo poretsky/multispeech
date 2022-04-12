@@ -49,6 +49,7 @@ protected:
     double char_pitch;
     double char_rate;
     double caps_factor;
+    bool speak_numbers;
   } options;
 
   // Object constructor:

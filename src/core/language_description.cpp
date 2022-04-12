@@ -39,7 +39,10 @@ language_description::language_description(const char* language_id,
   id(language_id),
   settings(language_settings),
   patterns(language_detector),
-  test(wstring(L"(?:\\P{alpha}|[") + alphabet + L"])*", regex::normal | regex::icase)
+  test(wstring(L"(?:\\P{al") +
+       (language_settings.speak_numbers ? L"pha" : L"num") +
+       L"}|[" + alphabet + L"])*",
+       regex::normal | regex::icase)
 {
   filter_chain.setup()
     (L"\\s+", L" ");
