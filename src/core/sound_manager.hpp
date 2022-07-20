@@ -58,7 +58,7 @@ public:
   // Submit a job to the queue. If some job is executing already
   // at the time of submission, this one will be added
   // to the running queue and so will be executed automatically
-  // when the time will come. Otherwise actual execution
+  // when the time comes. Otherwise actual execution
   // should be started explicitly.
   template <typename task_description>
   void enqueue(const task_description& task)
