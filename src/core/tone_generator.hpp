@@ -56,7 +56,7 @@ class tone_generator:
 {
 public:
   // Construct / destroy:
-  tone_generator(void);
+  tone_generator(completion_callback* cb);
   ~tone_generator(void);
 
   // Start task execution. If there is a task executing already
@@ -87,6 +87,7 @@ private:
   // Methods required by audioplayer:
   unsigned int source_read(float* buffer, unsigned int nframes);
   void source_release(void);
+  void notify_completion(void);
 
   // Methods required by sound_processor:
   unsigned int get_source(float* buffer, unsigned int nframes);

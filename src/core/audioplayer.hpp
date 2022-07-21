@@ -33,6 +33,9 @@
 // void source_release(void)
 // Notify source that it is not needed anymore.
 //
+// void notify_completion(void)
+// Called when playing is actually done.
+//
 // All these methods are declared as private.
 
 #ifndef MULTISPEECH_AUDIOPLAYER_HPP
@@ -50,9 +53,17 @@
 
 class audioplayer: private portaudio::CallbackInterface
 {
+public:
+  // Completion callback interface:
+  class completion_callback
+  {
+  public:
+    virtual void notify(void) = 0;
+  };
+
 protected:
   // Construct / destroy:
-  audioplayer(const std::string& device_name, const char* stream_id);
+  audioplayer(const std::string& device_name, const char* stream_id, completion_callback* cb);
   ~audioplayer(void);
 
 public:
@@ -62,9 +73,6 @@ public:
 
   // Get canonical name for PortAudio device:
   static std::string canonical_name(portaudio::Device& device);
-
-  // Playback completion notifier:
-  static boost::condition complete;
 
   // Configurable parameters:
   static std::string device;
@@ -84,8 +92,13 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
+  // Playing completion callback:
+  completion_callback* host;
+
   // Indicate that playback is in progress:
   bool playing;
+
+  // Data access control means:
   boost::mutex access;
   boost::condition abandon;
 
@@ -122,9 +135,10 @@ private:
   // Playing finishing callback:
   static void release(void* handle);
 
-  // The following two methods must be defined in the derived classes:
+  // The following three methods must be defined in the derived classes:
   virtual unsigned int source_read(float* buffer, unsigned int nframes) = 0;
   virtual void source_release(void) = 0;
+  virtual void notify_completion(void) = 0;
 };
 
 #endif
