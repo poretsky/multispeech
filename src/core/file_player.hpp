@@ -55,7 +55,7 @@ class file_player:
 {
 public:
   // Object constructor:
-  file_player(void);
+  file_player(completion_callback* cb);
 
   // Start task execution. If there is a task executing already
   // and the new one is started with the override option, then
@@ -75,6 +75,9 @@ public:
   static float relative_volume;
 
 private:
+  // Method required by audioplayer:
+  void notify_completion(void);
+
   // Methods required by exec_queue:
   void execute(const sound_task& task);
   void abort(void);

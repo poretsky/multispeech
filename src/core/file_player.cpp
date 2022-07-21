@@ -43,8 +43,8 @@ sound_task::sound_task(const path& sound_file, float sound_volume):
 
 // Object constructor:
 
-file_player::file_player(void):
-  soundfile(device.empty() ? audioplayer::device : device, "sounds")
+file_player::file_player(audioplayer::completion_callback* cb):
+  soundfile(device.empty() ? audioplayer::device : device, "sounds", cb)
 {
 }
 
@@ -73,6 +73,12 @@ file_player::active(void)
 
 
 // Private methods:
+
+void
+file_player::notify_completion(void)
+{
+  event.notify_one();
+}
 
 void
 file_player::execute(const sound_task& sound)

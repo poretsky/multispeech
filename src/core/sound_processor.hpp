@@ -65,8 +65,11 @@ private:
 
   // Thread synchronization control:
   boost::mutex access;
-  boost::condition event;
+  boost::condition state_change;
   status state;
+
+  // Change state and notify waiting threads:
+  void change_state(status new_state);
 
   // Amount of data to keep ready:
   unsigned int capacity;
