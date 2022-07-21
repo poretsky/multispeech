@@ -47,7 +47,7 @@ sound_processor::start_processing(unsigned int reserve)
     {
       mutex::scoped_lock lock(access);
       while (state == hungry)
-        event.wait(lock);
+        state_change.wait(lock);
     }
 }
 
@@ -58,10 +58,9 @@ sound_processor::stop_processing(void)
   fifo.clear();
   if (state != inactive)
     {
-      state = quit;
-      event.notify_all();
+      change_state(quit);
       while (state != inactive)
-        event.wait(lock);
+        state_change.wait(lock);
     }
 }
 
@@ -71,22 +70,18 @@ sound_processor::read_result(float* buffer, unsigned int nframes)
   unsigned int obtained;
   mutex::scoped_lock lock(access);
   while (state == hungry)
-    event.wait(lock);
+    state_change.wait(lock);
   if ((state == replete) && (fifo.numSamples() < nframes))
     {
       if (capacity < nframes)
         capacity = nframes;
-      state = hungry;
-      event.notify_all();
+      change_state(hungry);
       while (state == hungry)
-        event.wait(lock);
+        state_change.wait(lock);
     }
   obtained = fifo.receiveSamples(buffer, nframes);
   if (state == replete)
-    {
-      state = hungry;
-      event.notify_all();
-    }
+    change_state(hungry);
   return obtained;
 }
 
@@ -99,7 +94,7 @@ sound_processor::operator()(void)
   while (state != quit)
     {
       while (state == replete)
-        event.wait(lock);
+        state_change.wait(lock);
       if (state == hungry)
         {
           obtained = get_source(buffer, chunk_size);
@@ -112,17 +107,22 @@ sound_processor::operator()(void)
             }
           else if (fifo.numSamples() >= capacity)
             {
-              state = replete;
-              event.notify_all();
+              change_state(replete);
             }
         }
     }
-  state = inactive;
-  event.notify_all();
+  change_state(inactive);
 }
 
 
 // Private methods:
+
+void
+sound_processor::change_state(sound_processor::status new_state)
+{
+  state = new_state;
+  state_change.notify_all();
+}
 
 void
 sound_processor::flush(void)

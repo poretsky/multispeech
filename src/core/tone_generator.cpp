@@ -45,8 +45,8 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 
 // Construct / destroy:
 
-tone_generator::tone_generator(void):
-  audioplayer(device.empty() ? audioplayer::device : device, "tones"),
+tone_generator::tone_generator(audioplayer::completion_callback* cb):
+  audioplayer(device.empty() ? audioplayer::device : device, "tones", cb),
   sound_processor(fifo),
   fifo(1)
 {
@@ -122,6 +122,12 @@ void
 tone_generator::source_release(void)
 {
   stop_processing();
+}
+
+void
+tone_generator::notify_completion(void)
+{
+  event.notify_one();
 }
 
 void
