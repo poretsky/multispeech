@@ -36,7 +36,6 @@ using namespace portaudio;
 
 // Internal data:
 static const regex devname_pattern("\\((.+)\\)");
-static boost::mutex control;
 
 
 // Internal routines:
@@ -54,7 +53,6 @@ find_device(const string& device_name)
 
 
 // Static data:
-condition audioplayer::complete;
 string audioplayer::device;
 PaTime audioplayer::suggested_latency = 0;
 float audioplayer::general_volume = 0.8;
@@ -64,7 +62,8 @@ bool audioplayer::use_pa = true;
 
 // Construct / destroy:
 
-audioplayer::audioplayer(const string& device_name, const char* stream_id):
+audioplayer::audioplayer(const string& device_name, const char* stream_id, completion_callback* cb):
+  host(cb),
   playing(false),
   stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
@@ -207,11 +206,10 @@ audioplayer::operator()(void)
   else if (blockingStream->isActive())
     blockingStream->abort();
   if (!blockingStream)
-    {
-      boost::mutex::scoped_lock exclusive(control);
-      paActive = false;
-    }
-  complete.notify_all();
+    paActive = false;
+  if (host)
+    host->notify();
+  notify_completion();
 }
 
 
@@ -226,7 +224,7 @@ audioplayer::bufsize(unsigned int rate)
 void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
-  boost::mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock lock(access);
   volume_level = volume * general_volume;
   frame_size = channels;
   sampling_rate = static_cast<double>(rate);
@@ -295,7 +293,7 @@ audioplayer::clock_time(void)
 bool
 audioplayer::stream_is_active(void)
 {
-  boost::mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock lock(access);
   if (stream)
     return stream->isOpen() && stream->isActive();
   return paStream && paActive;
@@ -311,7 +309,7 @@ audioplayer::stream_is_over(void)
 void
 audioplayer::close_stream(void)
 {
-  boost::mutex::scoped_lock exclusive(control);
+  boost::mutex::scoped_lock lock(access);
   if (stream)
     {
       if (stream->isOpen())
@@ -367,5 +365,7 @@ audioplayer::release(void* handle)
   player->source_release();
   boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
-  complete.notify_all();
+  if (player->host)
+    player->host->notify();
+  player->notify_completion();
 }

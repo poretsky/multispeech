@@ -37,8 +37,6 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
-#include "audioplayer.hpp"
-
 template <typename task_description>
 class exec_queue: private std::queue<task_description>
 {
@@ -59,6 +57,9 @@ protected:
     }
     service.join();
   }
+
+  // Internal events control means:
+  boost::condition event;
 
 public:
   // Run or queue a new task:
@@ -91,10 +92,8 @@ public:
     while (alive)
       {
         boost::mutex::scoped_lock lock(access);
-        while (alive && this->empty())
+        while (alive && (this->empty() || busy()))
           event.wait(lock);
-        while (alive && busy())
-          audioplayer::complete.wait(lock);
         if (!this->empty())
           {
             execute(this->front());
@@ -107,9 +106,8 @@ private:
   // Clearing this flag causes execution thread termination.
   bool alive;
 
-  // Critical data access control means.
+  // Exclusive data access control means.
   boost::mutex access;
-  boost::condition event;
 
   // Thread handler.
   boost::thread service;

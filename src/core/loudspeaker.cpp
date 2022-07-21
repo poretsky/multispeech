@@ -77,8 +77,8 @@ speech_task::silence_params(unsigned int sampling, unsigned int length)
 
 // Construct / destroy:
 
-loudspeaker::loudspeaker(void):
-  soundfile(device.empty() ? audioplayer::device : device, "speech"),
+loudspeaker::loudspeaker(audioplayer::completion_callback* cb):
+  soundfile(device.empty() ? audioplayer::device : device, "speech", cb),
   sound_processor(accelerator),
   silence_timer(0),
   need_processing(false)
@@ -234,4 +234,9 @@ void
 loudspeaker::attach(int fd)
 {
   sfd = fd;
+}
+
+void
+loudspeaker::notify_completion(void)
+{
 }
