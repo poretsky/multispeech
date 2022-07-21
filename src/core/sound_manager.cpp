@@ -34,6 +34,9 @@ sound_manager::sound_manager(callback* host):
   state(idle),
   business(nothing),
   jobs(new jobs_queue),
+  sounds(this),
+  tones(this),
+  speech(this),
   events(host),
   service(boost::ref(*this))
 {
@@ -188,7 +191,7 @@ sound_manager::operator()(void)
       if ((state == running) && !jobs->empty())
         next_job();
       while (working())
-        audioplayer::complete.wait(lock);
+        event.wait(lock);
       if (jobs->empty())
         events->queue_done();
     }
@@ -297,4 +300,10 @@ sound_manager::working(void)
         }
     }
   return result;
+}
+
+void
+sound_manager::notify(void)
+{
+  event.notify_one();
 }

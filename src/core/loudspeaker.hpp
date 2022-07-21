@@ -83,7 +83,7 @@ class loudspeaker:
 {
 public:
   // Construct / destroy:
-  loudspeaker(void);
+  loudspeaker(completion_callback* cb);
   ~loudspeaker(void);
 
   // Start task execution:
@@ -99,6 +99,9 @@ private:
 
   // Finish gracefully:
   void source_release(void);
+
+  // Notify playing completion:
+  void notify_completion(void);
 
   // Get a sound chunk for processing:
   unsigned int get_source(float* buffer, unsigned int nframes);
