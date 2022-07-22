@@ -23,6 +23,7 @@
 #include "audioplayer.hpp"
 
 using namespace std;
+using namespace boost;
 using namespace boost::filesystem;
 
 
@@ -43,8 +44,9 @@ sound_task::sound_task(const path& sound_file, float sound_volume):
 
 // Object constructor:
 
-file_player::file_player(audioplayer::completion_callback* cb):
-  soundfile(device.empty() ? audioplayer::device : device, "sounds", cb)
+file_player::file_player(condition& completion_event_consumer):
+  soundfile(device.empty() ? audioplayer::device : device, "sounds"),
+  host(completion_event_consumer)
 {
 }
 
@@ -78,6 +80,7 @@ void
 file_player::notify_completion(void)
 {
   event.notify_one();
+  host.notify_one();
 }
 
 void

@@ -46,7 +46,7 @@ public:
   };
 
   // Construct / destroy:
-  soundfile(const std::string& device_name, const char* stream_id, completion_callback* cb);
+  soundfile(const std::string& device_name, const char* stream_id);
   ~soundfile(void);
 
 protected:
