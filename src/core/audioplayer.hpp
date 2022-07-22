@@ -53,17 +53,9 @@
 
 class audioplayer: private portaudio::CallbackInterface
 {
-public:
-  // Completion callback interface:
-  class completion_callback
-  {
-  public:
-    virtual void notify(void) = 0;
-  };
-
 protected:
   // Construct / destroy:
-  audioplayer(const std::string& device_name, const char* stream_id, completion_callback* cb);
+  audioplayer(const std::string& device_name, const char* stream_id);
   ~audioplayer(void);
 
 public:
@@ -92,9 +84,6 @@ protected:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
-  // Playing completion callback:
-  completion_callback* host;
-
   // Indicate that playback is in progress:
   bool playing;
 
