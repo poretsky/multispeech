@@ -26,6 +26,8 @@
 
 #include <string>
 
+#include <boost/thread/condition.hpp>
+
 #include <soundtouch/SoundTouch.h>
 
 #include "soundfile.hpp"
@@ -83,7 +85,7 @@ class loudspeaker:
 {
 public:
   // Construct / destroy:
-  loudspeaker(completion_callback* cb);
+  explicit loudspeaker(boost::condition& completion_event_consumer);
   ~loudspeaker(void);
 
   // Start task execution:
@@ -94,6 +96,9 @@ public:
   static float relative_volume;
 
 private:
+  // Playback completion event consumer:
+  boost::condition& host;
+
   // Retreive a chunk of audio data:
   unsigned int source_read(float* buffer, unsigned int nframes);
 
