@@ -66,9 +66,10 @@ public:
   void submit(const task_description& task)
   {
     boost::mutex::scoped_lock lock(access);
-    if (this->empty())
-      event.notify_one();
+    bool wasEmpty = this->empty();
     this->push(task);
+    if (wasEmpty)
+      event.notify_one();
   }
 
   // Stop current task if any and clear the queue:
