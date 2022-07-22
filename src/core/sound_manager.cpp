@@ -34,9 +34,9 @@ sound_manager::sound_manager(callback* host):
   state(idle),
   business(nothing),
   jobs(new jobs_queue),
-  sounds(this),
-  tones(this),
-  speech(this),
+  sounds(this->event),
+  tones(this->event),
+  speech(this->event),
   events(host),
   service(boost::ref(*this))
 {
@@ -300,10 +300,4 @@ sound_manager::working(void)
         }
     }
   return result;
-}
-
-void
-sound_manager::notify(void)
-{
-  event.notify_one();
 }
