@@ -28,6 +28,7 @@
 #include <string>
 
 #include <boost/filesystem.hpp>
+#include <boost/thread/condition.hpp>
 
 #include "soundfile.hpp"
 #include "exec_queue.hpp"
@@ -55,7 +56,7 @@ class file_player:
 {
 public:
   // Object constructor:
-  file_player(completion_callback* cb);
+  explicit file_player(boost::condition& completion_event_consumer);
 
   // Start task execution. If there is a task executing already
   // and the new one is started with the override option, then
@@ -75,6 +76,9 @@ public:
   static float relative_volume;
 
 private:
+  // Playback completion event consumer:
+  boost::condition& host;
+
   // Method required by audioplayer:
   void notify_completion(void);
 

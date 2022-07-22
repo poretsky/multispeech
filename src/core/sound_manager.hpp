@@ -36,12 +36,11 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/condition.hpp>
 
-#include "audioplayer.hpp"
 #include "file_player.hpp"
 #include "tone_generator.hpp"
 #include "loudspeaker.hpp"
 
-class sound_manager: audioplayer::completion_callback
+class sound_manager
 {
 public:
   // Callback interface to report events:
@@ -148,9 +147,6 @@ private:
   void die(void); // Make thread to break execution loop.
   void next_job(void); // Get and start the next job from the queue.
   bool working(void); // Return true if a job is in progress.
-
-  // audioplayer::completion_callback interface:
-  void notify(void);
 };
 
 #endif

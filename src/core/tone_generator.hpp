@@ -25,6 +25,8 @@
 #ifndef MULTISPEECH_TONE_GENERATOR_HPP
 #define MULTISPEECH_TONE_GENERATOR_HPP
 
+#include <boost/thread/condition.hpp>
+
 #include <soundtouch/FIFOSampleBuffer.h>
 
 #include "audioplayer.hpp"
@@ -56,7 +58,7 @@ class tone_generator:
 {
 public:
   // Construct / destroy:
-  tone_generator(completion_callback* cb);
+  explicit tone_generator(boost::condition& completion_event_consumer);
   ~tone_generator(void);
 
   // Start task execution. If there is a task executing already
@@ -78,6 +80,9 @@ public:
   static float relative_volume;
 
 private:
+  // Playback completion event consumer:
+  boost::condition& host;
+
   // Internal operating data:
   float omega_t, step;
   int count, amount, fade_in, fade_out;
