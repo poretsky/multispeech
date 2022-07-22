@@ -23,6 +23,7 @@
 #include "tone_generator.hpp"
 
 using namespace std;
+using namespace boost;
 
 
 // Static data definition:
@@ -45,9 +46,10 @@ tone_task::tone_task(unsigned int tone_frequency, float tone_duration,
 
 // Construct / destroy:
 
-tone_generator::tone_generator(audioplayer::completion_callback* cb):
-  audioplayer(device.empty() ? audioplayer::device : device, "tones", cb),
+tone_generator::tone_generator(condition& completion_event_consumer):
+  audioplayer(device.empty() ? audioplayer::device : device, "tones"),
   sound_processor(fifo),
+  host(completion_event_consumer),
   fifo(1)
 {
 }
@@ -128,6 +130,7 @@ void
 tone_generator::notify_completion(void)
 {
   event.notify_one();
+  host.notify_one();
 }
 
 void

@@ -62,8 +62,7 @@ bool audioplayer::use_pa = true;
 
 // Construct / destroy:
 
-audioplayer::audioplayer(const string& device_name, const char* stream_id, completion_callback* cb):
-  host(cb),
+audioplayer::audioplayer(const string& device_name, const char* stream_id):
   playing(false),
   stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
@@ -207,8 +206,6 @@ audioplayer::operator()(void)
     blockingStream->abort();
   if (!blockingStream)
     paActive = false;
-  if (host)
-    host->notify();
   notify_completion();
 }
 
@@ -365,7 +362,5 @@ audioplayer::release(void* handle)
   player->source_release();
   boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
-  if (player->host)
-    player->host->notify();
   player->notify_completion();
 }
