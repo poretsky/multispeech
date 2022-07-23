@@ -71,8 +71,7 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
          paFramesPerBufferUnspecified,
          paPrimeOutputBuffersUsingStreamCallback),
   paStream(NULL),
-  paStreamId(stream_id),
-  paActive(false)
+  paStreamId(stream_id)
 {
   System& system = System::instance();
   PaDeviceIndex devidx = device_name.empty() ?
@@ -123,29 +122,22 @@ audioplayer::~audioplayer(void)
 void
 audioplayer::stop(void)
 {
+  boost::mutex::scoped_lock lock(access);
   if (stream_is_active())
     {
-      boost::mutex::scoped_lock lock(access);
       playing = false;
       if (!(async && stream))
-        abandon.notify_all();
+        abandon.notify_one();
     }
   while (stream_is_active())
-    thread::yield();
-  close_stream();
+    complete.wait(lock);
 }
 
 bool
 audioplayer::active(void)
 {
-  if (stream_is_over())
-    {
-      while (stream_is_active())
-        thread::yield();
-      close_stream();
-    }
   boost::mutex::scoped_lock lock(access);
-  return playing;
+  return playing || stream_is_active();
 }
 
 string
@@ -160,6 +152,87 @@ audioplayer::canonical_name(Device& device)
 
 void
 audioplayer::operator()(void)
+{
+  if (stream && async)
+    {
+      boost::mutex::scoped_lock lock(access);
+      while (playing)
+        complete.wait(lock);
+    }
+  else do_sync_playback();
+  close_stream();
+}
+
+
+// Protected methods:
+
+unsigned int
+audioplayer::bufsize(unsigned int rate)
+{
+  return ((rate + 5000) / 10000) << 8;
+}
+
+void
+audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
+{
+  boost::mutex::scoped_lock lock(access);
+  volume_level = volume * general_volume;
+  frame_size = channels;
+  sampling_rate = static_cast<double>(rate);
+  params.setSampleRate(sampling_rate);
+  params.setFramesPerBuffer(bufsize(rate));
+  if (stream)
+    {
+      params.outputParameters().setNumChannels(channels);
+      if (params.isSupported())
+        {
+          if (async)
+            dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
+          else dynamic_cast<BlockingStream*>(stream)->open(params);
+          if (stream->isOpen())
+            {
+              playing = true;
+              finish_time = 0;
+              if (async)
+                {
+                  stream_time_available = stream->time() != 0;
+                  stream->setStreamFinishedCallback(release);
+                }
+              else stream_time_available = false;
+              if (!stream_time_available)
+                buffer_time = clock_time() + stream->outputLatency();
+              stream->start();
+              thread(boost::ref(*this));
+            }
+          else source_release();
+        }
+      else source_release();
+    }
+  else
+    {
+      paStreamParams.rate = rate;
+      paStreamParams.channels = channels;
+      if (pa_sample_spec_valid(&paStreamParams))
+        {
+          paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
+          paStream = pa_simple_new(NULL, package::name, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
+          if (paStream)
+            {
+              playing = true;
+              buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
+              thread(boost::ref(*this));
+            }
+          else source_release();
+        }
+      else source_release();
+    }
+}
+
+
+// Private methods:
+
+void
+audioplayer::do_sync_playback(void)
 {
   BlockingStream* blockingStream = stream ? dynamic_cast<BlockingStream*>(stream) : NULL;
   unsigned int paFrameSize = blockingStream ? 0 : pa_frame_size(&paStreamParams);
@@ -204,80 +277,7 @@ audioplayer::operator()(void)
     pa_simple_flush(paStream, NULL);
   else if (blockingStream->isActive())
     blockingStream->abort();
-  if (!blockingStream)
-    paActive = false;
-  notify_completion();
 }
-
-
-// Protected methods:
-
-unsigned int
-audioplayer::bufsize(unsigned int rate)
-{
-  return ((rate + 5000) / 10000) << 8;
-}
-
-void
-audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
-{
-  boost::mutex::scoped_lock lock(access);
-  volume_level = volume * general_volume;
-  frame_size = channels;
-  sampling_rate = static_cast<double>(rate);
-  params.setSampleRate(sampling_rate);
-  params.setFramesPerBuffer(bufsize(rate));
-  if (stream)
-    {
-      params.outputParameters().setNumChannels(channels);
-      if (params.isSupported())
-        {
-          if (async)
-            dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
-          else dynamic_cast<BlockingStream*>(stream)->open(params);
-          if (stream->isOpen())
-            {
-              playing = true;
-              finish_time = 0;
-              if (async)
-                {
-                  stream_time_available = stream->time() != 0;
-                  stream->setStreamFinishedCallback(release);
-                }
-              else stream_time_available = false;
-              if (!stream_time_available)
-                buffer_time = clock_time() + stream->outputLatency();
-              stream->start();
-              if (!async)
-                thread(boost::ref(*this));
-            }
-          else source_release();
-        }
-      else source_release();
-    }
-  else
-    {
-      paStreamParams.rate = rate;
-      paStreamParams.channels = channels;
-      if (pa_sample_spec_valid(&paStreamParams))
-        {
-          paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
-          paStream = pa_simple_new(NULL, package::name, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
-          if (paStream)
-            {
-              playing = true;
-              paActive = true;
-              buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
-              thread(boost::ref(*this));
-            }
-          else source_release();
-        }
-      else source_release();
-    }
-}
-
-
-// Private methods:
 
 PaTime
 audioplayer::clock_time(void)
@@ -290,10 +290,7 @@ audioplayer::clock_time(void)
 bool
 audioplayer::stream_is_active(void)
 {
-  boost::mutex::scoped_lock lock(access);
-  if (stream)
-    return stream->isOpen() && stream->isActive();
-  return paStream && paActive;
+  return stream ? stream->isOpen() : (paStream != NULL);
 }
 
 bool
@@ -317,6 +314,8 @@ audioplayer::close_stream(void)
       pa_simple_free(paStream);
       paStream = NULL;
     }
+  complete.notify_all();
+  notify_completion();
 }
 
 int
@@ -362,5 +361,5 @@ audioplayer::release(void* handle)
   player->source_release();
   boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
-  player->notify_completion();
+  player->complete.notify_all();
 }
