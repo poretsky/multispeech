@@ -90,9 +90,9 @@ public:
   // The thread execution loop.
   void operator()(void)
   {
+    boost::mutex::scoped_lock lock(access);
     while (alive)
       {
-        boost::mutex::scoped_lock lock(access);
         while (alive && (this->empty() || busy()))
           event.wait(lock);
         if (!this->empty())

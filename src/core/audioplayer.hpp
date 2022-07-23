@@ -87,9 +87,10 @@ private:
   // Indicate that playback is in progress:
   bool playing;
 
-  // Data access control means:
+  // Synchronization means:
   boost::mutex access;
   boost::condition abandon;
+  boost::condition complete;
 
   // Audio playing stream:
   portaudio::Stream* stream;
@@ -107,9 +108,9 @@ private:
   const char* paStreamId;
   pa_sample_spec paStreamParams;
   pa_buffer_attr paBufAttr;
-  bool paActive;
 
   // Internal audiostream control:
+  void do_sync_playback(void);
   PaTime clock_time(void);
   bool stream_is_active(void);
   bool stream_is_over(void);
