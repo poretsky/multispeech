@@ -86,6 +86,7 @@ protected:
 private:
   // Indicate that playback is in progress:
   bool playing;
+  bool running;
 
   // Synchronization means:
   boost::mutex access;
@@ -114,6 +115,7 @@ private:
   PaTime clock_time(void);
   bool stream_is_active(void);
   bool stream_is_over(void);
+  bool open_stream(void);
   void close_stream(void);
 
   // Audio playing callback function:
