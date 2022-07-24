@@ -124,7 +124,7 @@ void
 audioplayer::stop(void)
 {
   boost::mutex::scoped_lock lock(access);
-  if (stream_is_active())
+  if (stream ? stream->isOpen() : (paStream != NULL))
     {
       playing = false;
       if (!(async && stream))
@@ -208,7 +208,7 @@ audioplayer::do_sync_playback(void)
   unsigned int paFrameSize = blockingStream ? 0 : pa_frame_size(&paStreamParams);
   unsigned int chunk_size = params.framesPerBuffer();
   float buffer[chunk_size * frame_size];
-  while (!stream_is_over())
+  while (playback_in_progress())
     {
       unsigned int obtained = source_read(buffer, chunk_size);
       if (obtained)
@@ -228,7 +228,6 @@ audioplayer::do_sync_playback(void)
             else break;
           }
       else break;
-      thread::yield();
     }
   boost::mutex::scoped_lock lock(access);
   while (playing)
@@ -257,16 +256,10 @@ audioplayer::clock_time(void)
 }
 
 bool
-audioplayer::stream_is_active(void)
-{
-  return stream ? stream->isOpen() : (paStream != NULL);
-}
-
-bool
-audioplayer::stream_is_over(void)
+audioplayer::playback_in_progress(void)
 {
   boost::mutex::scoped_lock lock(access);
-  return !playing;
+  return playing;
 }
 
 bool
