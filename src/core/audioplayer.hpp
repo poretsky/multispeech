@@ -18,9 +18,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-// The audioplayer class takes care about audio stream playing process.
+// The audioplayer class takes care about audio stream playback process.
 // It is not for direct use, but serves as the base for other classes
-// that need audio playing functionality, such as sound file player,
+// that need audio playback functionality, such as sound file player,
 // tone generator or speech engine.
 
 // The following virtual methods must be defined in the derived classes:
@@ -59,8 +59,10 @@ protected:
   ~audioplayer(void);
 
 public:
-  // Playing process control:
+  // Stop playback process and wait until it completes:
   virtual void stop(void);
+
+  // Returns true when playback is in progress:
   virtual bool active(void);
 
   // Get canonical name for PortAudio device:
@@ -80,7 +82,7 @@ protected:
   // Internal buffer size in samples for specified rate:
   unsigned int bufsize(unsigned int rate);
 
-  // Use in derived classes to start audio stream playing:
+  // Use in derived classes to start playback process:
   void start_playback(float volume, unsigned int rate, unsigned int channels);
 
 private:
