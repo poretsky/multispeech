@@ -64,6 +64,7 @@ bool audioplayer::use_pa = true;
 
 audioplayer::audioplayer(const string& device_name, const char* stream_id):
   playing(false),
+  running(false),
   stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
@@ -129,7 +130,7 @@ audioplayer::stop(void)
       if (!(async && stream))
         abandon.notify_one();
     }
-  while (stream_is_active())
+  while (running)
     complete.wait(lock);
 }
 
@@ -137,7 +138,7 @@ bool
 audioplayer::active(void)
 {
   boost::mutex::scoped_lock lock(access);
-  return playing || stream_is_active();
+  return running;
 }
 
 string
@@ -153,13 +154,17 @@ audioplayer::canonical_name(Device& device)
 void
 audioplayer::operator()(void)
 {
-  if (stream && async)
+  if (open_stream())
     {
-      boost::mutex::scoped_lock lock(access);
-      while (playing)
-        complete.wait(lock);
+      if (stream && async)
+        {
+          boost::mutex::scoped_lock lock(access);
+          while (playing)
+            abandon.wait(lock);
+        }
+      else do_sync_playback();
     }
-  else do_sync_playback();
+  source_release();
   close_stream();
 }
 
@@ -182,50 +187,15 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
   params.setSampleRate(sampling_rate);
   params.setFramesPerBuffer(bufsize(rate));
   if (stream)
-    {
-      params.outputParameters().setNumChannels(channels);
-      if (params.isSupported())
-        {
-          if (async)
-            dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
-          else dynamic_cast<BlockingStream*>(stream)->open(params);
-          if (stream->isOpen())
-            {
-              playing = true;
-              finish_time = 0;
-              if (async)
-                {
-                  stream_time_available = stream->time() != 0;
-                  stream->setStreamFinishedCallback(release);
-                }
-              else stream_time_available = false;
-              if (!stream_time_available)
-                buffer_time = clock_time() + stream->outputLatency();
-              stream->start();
-              thread(boost::ref(*this));
-            }
-          else source_release();
-        }
-      else source_release();
-    }
+    params.outputParameters().setNumChannels(channels);
   else
     {
       paStreamParams.rate = rate;
       paStreamParams.channels = channels;
-      if (pa_sample_spec_valid(&paStreamParams))
-        {
-          paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
-          paStream = pa_simple_new(NULL, package::name, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
-          if (paStream)
-            {
-              playing = true;
-              buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
-              thread(boost::ref(*this));
-            }
-          else source_release();
-        }
-      else source_release();
     }
+  running = true;
+  playing = true;
+  thread(boost::ref(*this));
 }
 
 
@@ -260,7 +230,6 @@ audioplayer::do_sync_playback(void)
       else break;
       thread::yield();
     }
-  source_release();
   boost::mutex::scoped_lock lock(access);
   while (playing)
     if (!abandon.timed_wait(lock, posix_time::milliseconds(static_cast<int>((buffer_time - clock_time()) * 1000))))
@@ -300,6 +269,52 @@ audioplayer::stream_is_over(void)
   return !playing;
 }
 
+bool
+audioplayer::open_stream(void)
+{
+  boost::mutex::scoped_lock lock(access);
+  if (playing)
+    {
+      if (stream)
+        {
+          if (params.isSupported())
+            {
+              if (async)
+                dynamic_cast<InterfaceCallbackStream*>(stream)->open(params, *this);
+              else dynamic_cast<BlockingStream*>(stream)->open(params);
+              if (stream->isOpen())
+                {
+                  finish_time = 0;
+                  if (async)
+                    {
+                      stream_time_available = stream->time() != 0;
+                      stream->setStreamFinishedCallback(release);
+                    }
+                  else stream_time_available = false;
+                  if (!stream_time_available)
+                    buffer_time = clock_time() + stream->outputLatency();
+                  stream->start();
+                }
+              else playing = false;
+            }
+          else playing = false;
+        }
+      else
+        {
+          if (pa_sample_spec_valid(&paStreamParams))
+            {
+              paBufAttr.tlength = params.framesPerBuffer() * pa_frame_size(&paStreamParams);
+              paStream = pa_simple_new(NULL, package::name, PA_STREAM_PLAYBACK, NULL, paStreamId, &paStreamParams, NULL, &paBufAttr, NULL);
+              if (paStream)
+                buffer_time = clock_time() + fmax(suggested_latency, static_cast<double>(pa_simple_get_latency(paStream, NULL)) * 1e-6);
+              else playing = false;
+            }
+          else playing = false;
+        }
+    }
+  return playing;
+}
+
 void
 audioplayer::close_stream(void)
 {
@@ -314,6 +329,7 @@ audioplayer::close_stream(void)
       pa_simple_free(paStream);
       paStream = NULL;
     }
+  running = false;
   complete.notify_all();
   notify_completion();
 }
@@ -358,8 +374,7 @@ void
 audioplayer::release(void* handle)
 {
   audioplayer* player = static_cast<audioplayer*>(handle);
-  player->source_release();
   boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
-  player->complete.notify_all();
+  player->abandon.notify_one();
 }
