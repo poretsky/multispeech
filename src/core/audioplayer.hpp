@@ -115,8 +115,7 @@ private:
   // Internal audiostream control:
   void do_sync_playback(void);
   PaTime clock_time(void);
-  bool stream_is_active(void);
-  bool stream_is_over(void);
+  bool playback_in_progress(void);
   bool open_stream(void);
   void close_stream(void);
 
