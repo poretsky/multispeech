@@ -44,6 +44,7 @@ protected:
   // construct / destroy:
   exec_queue(void):
     alive(true),
+    discard(false),
     service(boost::ref(*this))
   {
   }
@@ -77,7 +78,11 @@ public:
   {
     boost::mutex::scoped_lock lock(access);
     clear();
-    abort();
+    if (busy())
+      {
+        discard = true;
+        event.notify_one();
+      }
   }
 
   // Return true when all the work is done and queue is empty:
@@ -93,8 +98,11 @@ public:
     boost::mutex::scoped_lock lock(access);
     while (alive)
       {
-        while (alive && (this->empty() || busy()))
+        discard = false;
+        while (alive && (this->empty() || busy()) && !discard)
           event.wait(lock);
+        if (discard)
+          abort();
         if (!this->empty())
           {
             execute(this->front());
@@ -106,6 +114,9 @@ public:
 private:
   // Clearing this flag causes execution thread termination.
   bool alive;
+
+  // Discard current job along with the waiting queue:
+  bool discard;
 
   // Exclusive data access control means.
   boost::mutex access;
