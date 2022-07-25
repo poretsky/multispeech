@@ -267,32 +267,28 @@ sound_manager::working(void)
   bool result = false;
   if (state == running)
     {
-      if (jobs->empty())
-        {
-          state = idle;
-          business = nothing;
-        }
-      else switch (business)
-        {
-        case playing:
-          if (file_player::asynchronous || !sounds.active())
+      if (!jobs->empty())
+        switch (business)
+          {
+          case playing:
+            if (file_player::asynchronous || !sounds.active())
+              jobs->pop();
+            else result = true;
+            break;
+          case beeping:
+            if (tone_generator::asynchronous || !tones.active())
+              jobs->pop();
+            else result = true;
+            break;
+          case speaking:
+            if (!speech.active())
+              jobs->pop();
+            else result = true;
+            break;
+          default:
             jobs->pop();
-          else result = true;
-          break;
-        case beeping:
-          if (tone_generator::asynchronous || !tones.active())
-            jobs->pop();
-          else result = true;
-          break;
-        case speaking:
-          if (!speech.active())
-            jobs->pop();
-          else result = true;
-          break;
-        default:
-          jobs->pop();
-          break;
-        }
+            break;
+          }
       if (jobs->empty())
         {
           state = idle;
