@@ -64,6 +64,7 @@ bool audioplayer::use_pa = true;
 
 audioplayer::audioplayer(const string& device_name, const char* stream_id):
   playing(false),
+  playing_async(false),
   running(false),
   stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
@@ -159,7 +160,7 @@ audioplayer::operator()(void)
       if (stream && async)
         {
           boost::mutex::scoped_lock lock(access);
-          while (playing)
+          while (playing_async)
             abandon.wait(lock);
         }
       else do_sync_playback();
@@ -280,6 +281,7 @@ audioplayer::open_stream(void)
                   finish_time = 0;
                   if (async)
                     {
+                      playing_async = true;
                       stream_time_available = stream->time() != 0;
                       stream->setStreamFinishedCallback(release);
                     }
@@ -369,5 +371,6 @@ audioplayer::release(void* handle)
   audioplayer* player = static_cast<audioplayer*>(handle);
   boost::mutex::scoped_lock lock(player->access);
   player->playing = false;
+  player->playing_async = false;
   player->abandon.notify_one();
 }
