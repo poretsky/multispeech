@@ -162,6 +162,7 @@ audioplayer::operator()(void)
           boost::mutex::scoped_lock lock(access);
           while (playing_async)
             abandon.wait(lock);
+          playing = false;
         }
       else do_sync_playback();
     }
@@ -359,8 +360,7 @@ audioplayer::paCallbackFun(const void *inputBuffer, void *outputBuffer,
       if (!stream_time_available)
         buffer_time += static_cast<double>(numFrames) / sampling_rate;
     }
-  boost::mutex::scoped_lock lock(access);
-  if (!playing)
+  if (!playback_in_progress())
     result = paAbort;
   return result;
 }
@@ -370,7 +370,6 @@ audioplayer::release(void* handle)
 {
   audioplayer* player = static_cast<audioplayer*>(handle);
   boost::mutex::scoped_lock lock(player->access);
-  player->playing = false;
   player->playing_async = false;
   player->abandon.notify_one();
 }
