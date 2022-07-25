@@ -88,6 +88,7 @@ protected:
 private:
   // Indicate that playback is in progress:
   bool playing;
+  bool playing_async;
   bool running;
 
   // Synchronization means:
