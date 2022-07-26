@@ -103,15 +103,12 @@ sound_manager::execute(const speech_task& task)
 void
 sound_manager::proceed(void)
 {
-  {
-    boost::recursive_mutex::scoped_lock lock(access);
-    if ((state == idle) && !jobs->empty())
-      {
-        state = running;
-        event.notify_one();
-      }
-  }
-  thread::yield();
+  boost::recursive_mutex::scoped_lock lock(access);
+  if ((state == idle) && !jobs->empty())
+    {
+      state = running;
+      event.notify_one();
+    }
 }
 
 void
@@ -146,7 +143,6 @@ sound_manager::resume(void)
         }
     }
   else stop();
-  thread::yield();
 }
 
 void
