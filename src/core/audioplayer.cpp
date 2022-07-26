@@ -194,6 +194,8 @@ void
 audioplayer::start_playback(float volume, unsigned int rate, unsigned int channels)
 {
   boost::mutex::scoped_lock lock(access);
+  while (running)
+    complete.wait(lock);
   volume_level = volume * general_volume;
   frame_size = channels;
   sampling_rate = static_cast<double>(rate);
