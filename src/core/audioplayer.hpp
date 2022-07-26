@@ -44,6 +44,7 @@
 #include <string>
 #include <memory>
 
+#include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
 
@@ -90,11 +91,16 @@ private:
   bool playing;
   bool playing_async;
   bool running;
+  bool alive;
 
   // Synchronization means:
   boost::mutex access;
   boost::condition abandon;
+  boost::condition start;
   boost::condition complete;
+
+  // Thread handler.
+  boost::thread service;
 
   // Audio playing stream:
   portaudio::Stream* stream;
@@ -117,6 +123,7 @@ private:
   void do_sync_playback(void);
   PaTime clock_time(void);
   bool playback_in_progress(void);
+  bool wait_start(void);
   bool open_stream(void);
   void close_stream(void);
 

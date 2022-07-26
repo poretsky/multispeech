@@ -23,7 +23,6 @@
 #include <exception>
 
 #include <boost/regex.hpp>
-#include <boost/thread/thread.hpp>
 
 #include "audioplayer.hpp"
 
@@ -66,6 +65,8 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
   playing(false),
   playing_async(false),
   running(false),
+  alive(true),
+  service(boost::ref(*this)),
   stream(NULL),
   params(DirectionSpecificStreamParameters::null(),
          DirectionSpecificStreamParameters::null(),
@@ -114,8 +115,15 @@ audioplayer::audioplayer(const string& device_name, const char* stream_id):
 
 audioplayer::~audioplayer(void)
 {
+  audioplayer::stop();
+  {
+    boost::mutex::scoped_lock lock(access);
+    alive = false;
+    start.notify_one();
+  }
   if (stream)
     delete stream;
+  service.join();
 }
 
 
@@ -155,19 +163,22 @@ audioplayer::canonical_name(Device& device)
 void
 audioplayer::operator()(void)
 {
-  if (open_stream())
+  while (wait_start())
     {
-      if (stream && async)
+      if (open_stream())
         {
-          boost::mutex::scoped_lock lock(access);
-          while (playing_async)
-            abandon.wait(lock);
-          playing = false;
+          if (stream && async)
+            {
+              boost::mutex::scoped_lock lock(access);
+              while (playing_async)
+                abandon.wait(lock);
+              playing = false;
+            }
+          else do_sync_playback();
         }
-      else do_sync_playback();
+      source_release();
+      close_stream();
     }
-  source_release();
-  close_stream();
 }
 
 
@@ -197,7 +208,7 @@ audioplayer::start_playback(float volume, unsigned int rate, unsigned int channe
     }
   running = true;
   playing = true;
-  thread(boost::ref(*this));
+  start.notify_one();
 }
 
 
@@ -262,6 +273,15 @@ audioplayer::playback_in_progress(void)
 {
   boost::mutex::scoped_lock lock(access);
   return playing;
+}
+
+bool
+audioplayer::wait_start(void)
+{
+  boost::mutex::scoped_lock lock(access);
+  while (alive && !running)
+    start.wait(lock);
+  return alive;
 }
 
 bool
