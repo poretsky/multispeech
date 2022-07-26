@@ -154,17 +154,10 @@ sound_manager::stop(void)
 {
   boost::recursive_mutex::scoped_lock lock(access);
   mute();
-  switch (state)
-    {
-    case running:
-      while (jobs->size() > 1)
-        jobs->pop();
-      break;
-    default:
-      while (!jobs->empty())
-        jobs->pop();
-      break;
-    }
+  while (!jobs->empty())
+    jobs->pop();
+  if (state == running)
+    jobs->push(any());
 }
 
 unsigned int
@@ -183,9 +176,9 @@ sound_manager::active(void)
 void
 sound_manager::operator()(void)
 {
+  boost::recursive_mutex::scoped_lock lock(access);
   while (state != dead)
     {
-      boost::recursive_mutex::scoped_lock lock(access);
       while (state == idle)
         event.wait(lock);
       if ((state == running) && !jobs->empty())
