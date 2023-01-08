@@ -1,3 +1,9 @@
+multispeech (4.5.1jammy1) jammy; urgency=medium
+
+  * Release for Ubuntu Jammy.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 08 Jan 2023 06:57:47 +0300
+
 multispeech (4.5.1) unstable; urgency=medium
 
   * Hopefully increased stability.
