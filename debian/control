@@ -1,9 +1,9 @@
 Source: multispeech
 Section: sound
-Priority: extra
+Priority: optional
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
-Build-Depends: cdbs, debhelper (>= 5), po-debconf, autotools-dev, libsndfile1-dev, libsoundtouch-dev, portaudio19-dev, libportaudiocpp0, libpulse-dev, libbobcat-dev, libboost-thread-dev, libboost-regex-dev, libboost-filesystem-dev, libboost-iostreams-dev, libboost-locale-dev, libboost-program-options-dev, libspeechd-dev
-Standards-Version: 3.9.3
+Build-Depends: cdbs, debhelper (>= 10), po-debconf, libsndfile1-dev, libsoundtouch-dev, portaudio19-dev, libportaudiocpp0, libpulse-dev, libbobcat-dev, libboost-thread-dev, libboost-regex-dev, libboost-filesystem-dev, libboost-iostreams-dev, libboost-locale-dev, libboost-program-options-dev, libspeechd-dev
+Standards-Version: 4.3.0
 
 Package: multispeech
 Architecture: any

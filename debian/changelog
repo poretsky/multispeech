@@ -1,3 +1,9 @@
+multispeech (4.5.1bullseye1) bullseye; urgency=medium
+
+  * Release for Debian Bullseye.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 11 Jan 2023 07:08:10 +0300
+
 multispeech (4.5.1) unstable; urgency=medium
 
   * Hopefully increased stability.
