@@ -1,3 +1,9 @@
+multispeech (4.5.2buster1) buster; urgency=medium
+
+  * English ordinals support.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 14 Feb 2023 16:01:55 +0300
+
 multispeech (4.5.1buster1) buster; urgency=medium
 
   * Hopefully increased stability.
