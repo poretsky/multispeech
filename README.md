@@ -1,5 +1,7 @@
 # Multilingual speech server
 
+[![Latest Release](https://img.shields.io/github/v/release/poretsky/multispeech.svg)](https://github.com/poretsky/multispeech/releases/latest)
+
 Multispeech was primarily designed as a multilingual speech server for
 [Emacspeak](https://github.com/tvraman/emacspeak),
 but it can be useful in some other circumstances as well,
