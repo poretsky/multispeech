@@ -1,3 +1,10 @@
+multispeech (4.6.0-1) unstable; urgency=medium
+
+  * Debian package has been separated from the upstream sources.
+  * Switch to dpkg-source 3.0 format.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 08 Nov 2023 15:24:25 +0300
+
 multispeech (4.5.2) unstable; urgency=medium
 
   * English ordinals support.
