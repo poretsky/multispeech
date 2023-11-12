@@ -1,0 +1,2 @@
+# debconf via perl, lintian does not know
+multispeech: possible-bashism-in-maintainer-script '(($port eq "none") || (-c $port))' [prerm:173]
