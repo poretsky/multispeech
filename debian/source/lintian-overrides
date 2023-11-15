@@ -1,0 +1,2 @@
+# Suppress warning caused by package type transition
+multispeech source: odd-historical-debian-changelog-version 4.5.2focal1 *
