@@ -1,3 +1,10 @@
+multispeech (4.6.0-1bionic1) bionic; urgency=medium
+
+  * Debian package has been separated from the upstream sources.
+  * Switch to dpkg-source 3.0 format.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 15 Nov 2023 06:51:37 +0300
+
 multispeech (4.5.2bionic1) bionic; urgency=medium
 
   * English ordinals support.
