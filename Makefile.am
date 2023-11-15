@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src doc
 doc_DATA = AUTHORS README
 sysconf_DATA = multispeech.conf
-EXTRA_DIST = multispeech.conf.in debian
+EXTRA_DIST = multispeech.conf.in
 CLEANFILES = multispeech.conf
 MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub configure \
 	COPYING depcomp INSTALL install-sh Makefile.in missing sysconfig.h.in \
