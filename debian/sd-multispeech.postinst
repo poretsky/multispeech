@@ -47,7 +47,7 @@ if [ -n "$SPD" ] ; then
         RUN=no
         . /etc/default/speech-dispatcher
         if [ "x$RUN" != "xyes" ] ; then
-            kill $SPD
+            kill -HUP $SPD
         else
             service speech-dispatcher restart
         fi
