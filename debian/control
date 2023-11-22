@@ -44,6 +44,7 @@ Description: Multilingual Speech Dispatcher backend
 
 Package: libmultispeech5
 Architecture: any
+Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
 Conflicts: libmultispeech0, libmultispeech3, multispeech (<< 4.0.0)
