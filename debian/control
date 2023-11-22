@@ -11,7 +11,7 @@ Vcs-Git: https://github.com/poretsky/multispeech.git
 Package: multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: espeak, espeak-data
+Recommends: espeak-ng, espeak-ng-data
 Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
 Enhances: emacspeak
 Description: Multilingual speech server for Emacspeak
@@ -29,7 +29,7 @@ Description: Multilingual speech server for Emacspeak
 Package: sd-multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: espeak, espeak-data
+Recommends: espeak-ng, espeak-ng-data
 Suggests: speech-dispatcher, mbrola, mbrola-en1, freephone, ru-tts
 Enhances: speech-dispatcher
 Description: Multilingual Speech Dispatcher backend
