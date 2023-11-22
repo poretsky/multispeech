@@ -4,6 +4,9 @@ Priority: optional
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
 Build-Depends: cdbs, debhelper (>= 10), po-debconf, libsndfile1-dev, libsoundtouch-dev, portaudio19-dev, libportaudiocpp0, libpulse-dev, libbobcat-dev, libboost-thread-dev, libboost-regex-dev, libboost-filesystem-dev, libboost-iostreams-dev, libboost-locale-dev, libboost-program-options-dev, libspeechd-dev
 Standards-Version: 4.5.1
+Homepage: https://github.com/poretsky/multispeech
+Vcs-Browser: https://github.com/poretsky/multispeech
+Vcs-Git: https://github.com/poretsky/multispeech.git
 
 Package: multispeech
 Architecture: any
