@@ -21,15 +21,7 @@ case "$1" in
     configure)
         SPD=`pidof speech-dispatcher`
         if [ -n "$SPD" ] ; then
-            if [ -f /etc/default/speech-dispatcher ] ; then
-                RUN=no
-                . /etc/default/speech-dispatcher
-                if [ "x$RUN" != "xyes" ] ; then
-                    kill -HUP $SPD
-                else
-                    service speech-dispatcher restart
-                fi
-            fi
+            kill -HUP $SPD
         fi
     ;;
 
