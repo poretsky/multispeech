@@ -11,6 +11,7 @@ Rules-Requires-Root: no
 
 Package: multispeech
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak-ng, espeak-ng-data
 Suggests: emacspeak, mbrola, mbrola-en1
@@ -29,6 +30,7 @@ Description: Multilingual speech server for Emacspeak
 
 Package: sd-multispeech
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak-ng, espeak-ng-data
 Suggests: speech-dispatcher, mbrola, mbrola-en1
@@ -48,6 +50,7 @@ Description: Multilingual Speech Dispatcher backend
 
 Package: libmultispeech5
 Architecture: any
+Multi-Arch: same
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
