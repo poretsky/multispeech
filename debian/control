@@ -13,7 +13,7 @@ Package: multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak-ng, espeak-ng-data
-Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
+Suggests: emacspeak, mbrola, mbrola-en1
 Enhances: emacspeak
 Description: Multilingual speech server for Emacspeak
  This speech server provides multilingual speech output for Emacspeak
@@ -31,7 +31,7 @@ Package: sd-multispeech
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak-ng, espeak-ng-data
-Suggests: speech-dispatcher, mbrola, mbrola-en1, freephone, ru-tts
+Suggests: speech-dispatcher, mbrola, mbrola-en1
 Enhances: speech-dispatcher
 Description: Multilingual Speech Dispatcher backend
  This module provides multilingual speech output for Speech Dispatcher
@@ -51,8 +51,6 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
-Conflicts: libmultispeech0, libmultispeech3, multispeech (<< 4.0.0)
-Replaces: libmultispeech0, libmultispeech3, multispeech (<< 4.0.0)
 Description: Multilingual speech server
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, but being capable to work with Speech Dispatcher
