@@ -8,6 +8,7 @@ Homepage: https://github.com/poretsky/multispeech
 
 Package: multispeech
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak, espeak-data
 Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
@@ -26,6 +27,7 @@ Description: Multilingual speech server for Emacspeak
 
 Package: sd-multispeech
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: espeak, espeak-data
 Suggests: speech-dispatcher, mbrola, mbrola-en1, freephone, ru-tts
@@ -45,6 +47,7 @@ Description: Multilingual Speech Dispatcher backend
 
 Package: libmultispeech5
 Architecture: any
+Multi-Arch: same
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: multispeech | sd-multispeech
