@@ -131,7 +131,7 @@ affect sound file playing capability:
 .B device
 .br
 Sound files playing device. This setting overwrites general default
-and allows to play sound files on a separate audio device.
+and allows one to play sound files on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
 are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
 to get list of all available devices on your system.
@@ -154,7 +154,7 @@ Section name is \(oqtones\(cq. It consists of the following options:
 .B device
 .br
 Tones producing device. This setting overwrites general default
-and allows to use a separate device for tone signals.
+and allows one to use a separate device for tone signals.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
 are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
 to get list of all available devices on your system.
@@ -183,7 +183,7 @@ general:
 .B device
 .br
 Speech output device. This setting overwrites general default
-and allows to produce speech on a separate audio device.
+and allows one to produce speech on a separate audio device.
 The DSP device specifications (such as \(oq/dev/dsp\(cq)
 are accepted here as well as the ALSA ones. Invoke \(oqmultispeech \-l\(cq
 to get list of all available devices on your system.
