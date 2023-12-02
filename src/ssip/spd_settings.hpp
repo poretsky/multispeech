@@ -57,6 +57,8 @@ private:
     double voice_pitch, pitch_factor;
   };
 
+  FunctionPtr get_function(const std::string& option);
+
   // Executors:
   bool apply_volume(void);
   bool apply_rate(void);

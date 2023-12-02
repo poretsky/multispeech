@@ -290,7 +290,13 @@ frontend::enqueue_text_chunk(string::const_iterator start, string::const_iterato
 bool
 frontend::perform_command(void)
 {
-  return (this->*findCmd(speech_server::cmd))();
+  return (this->*get_function())();
+}
+
+frontend::FunctionPtr
+frontend::get_function(void)
+{
+  return findCmd(speech_server::cmd);
 }
 
 bool
