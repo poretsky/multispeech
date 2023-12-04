@@ -19,7 +19,7 @@ set -e
 
 case "$1" in
     configure)
-        SPD=`pidof speech-dispatcher`
+        SPD=`pidof speech-dispatcher || true`
         if [ -n "$SPD" ] ; then
             kill -HUP $SPD
         fi
