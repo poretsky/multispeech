@@ -48,17 +48,29 @@ Description: Multilingual Speech Dispatcher backend
   - language autodetection capability;
   - online voice control means.
 
-Package: libmultispeech5
-Architecture: any
-Multi-Arch: same
-Section: libs
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: multispeech | sd-multispeech
-Description: Multilingual speech server
+Package: multispeech-common
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Multilingual speech server - common files
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, but being capable to work with Speech Dispatcher
  as its backend module, it can provide multilingual speech output
  for Orca screenreader as well.
  .
- This package provides common shared library and main
- configuration file used by all Multispeech implementations.
+ This package provides common configuration file used by all Multispeech
+ implementations along with its documentation.
+
+Package: libmultispeech5
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: multispeech-common (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
+Recommends: multispeech | sd-multispeech
+Description: Multilingual speech server - core shared library
+ Though Multispeech was primarily designed for use in conjunction
+ with Emacspeak, but being capable to work with Speech Dispatcher
+ as its backend module, it can provide multilingual speech output
+ for Orca screenreader as well.
+ .
+ This package provides core shared library.
