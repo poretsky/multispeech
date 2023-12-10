@@ -1,10 +1,10 @@
-multispeech (4.6.0-1) unstable; urgency=medium
+multispeech (4.6.1-1) unstable; urgency=medium
 
   * Debian package has been separated from the upstream sources.
   * Switch to dpkg-source 3.0 format.
   * Debian package release. (Closes: #1055902)
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Tue, 14 Nov 2023 01:27:33 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Sun, 10 Dec 2023 16:01:03 +0300
 
 multispeech (4.5.2) unstable; urgency=medium
 
