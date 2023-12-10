@@ -80,7 +80,7 @@ spd_settings::apply(const string& message)
       for (int i = 0; i < option.length(); i++)
         if (option[i] == '=')
           option[i] = ' ';
-      FunctionPtr action = findCmd(option);
+      FunctionPtr action = get_function(option);
       if (beyond().empty())
         {
           cout << frontend::bad_syntax << endl;
@@ -99,6 +99,12 @@ spd_settings::apply(const string& message)
 
 
 // private methods:
+
+spd_settings::FunctionPtr
+spd_settings::get_function(const string& option)
+{
+  return findCmd(option);
+}
 
 bool
 spd_settings::apply_volume(void)
