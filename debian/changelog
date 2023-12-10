@@ -1,3 +1,9 @@
+multispeech (4.6.1-0xenial1) xenial; urgency=medium
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 Dec 2023 22:20:24 +0300
+
 multispeech (4.6.0-1xenial1) xenial; urgency=medium
 
   * Debian package has been separated from the upstream sources.

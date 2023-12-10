@@ -76,6 +76,7 @@ private:
   // Input method and command syntax definition (see base class):
   void get_command(void);
   bool perform_command(void);
+  FunctionPtr get_function(void);
 
   // Check for internal error:
   bool state_ok(void);
