@@ -1,2 +1,2 @@
-usr/lib/*/*.la
-usr/lib/*/*.so
+usr/lib/${DEB_HOST_MULTIARCH}/*.la
+usr/lib/${DEB_HOST_MULTIARCH}/*.so
