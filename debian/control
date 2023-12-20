@@ -48,7 +48,7 @@ Description: Multilingual Speech Dispatcher backend
 Package: multispeech-common
 Architecture: all
 Multi-Arch: foreign
-Conflicts: libmultispeech0, libmultispeech3, libmultispeech5 (<< 4.6.1), multispeech (<< 4.0.0)
+Breaks: libmultispeech0, libmultispeech3, libmultispeech5 (<< 4.6.1), multispeech (<< 4.0.0)
 Replaces: libmultispeech0, libmultispeech3, libmultispeech5 (<< 4.6.1), multispeech (<< 4.0.0)
 Depends: ${misc:Depends}
 Description: Multilingual speech server - common files
