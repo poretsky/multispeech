@@ -1,8 +1,26 @@
 multispeech (4.6.1-0focal1) focal; urgency=medium
 
   * New upstream release.
+  * Proper section for library package.
+  * Force Speech Dispatcher to reconfigure instead of stopping it.
+  * Don't restart Speech Dispatcher service.
+  * Nudge Speech Dispatcher only when installation succeeded.
+  * Notify Speech Dispatcher when sd-multispeech module is removed.
+  * DEP5 compliant debian/copyright file.
+  * Debhelper compatibility version update.
+  * Homepage added.
+  * Conventional dh build instead of cdbs.
+  * Hardening issue addressed.
+  * Multi-Arch field added.
+  * Separate packages for core shared library and common configuration.
+  * Use "Breaks" instead of "Conflicts" in dependencies.
+  * Added espeak-ng as alternative for espeak in recommendations.
+  * Added debian/watch file.
+  * Explicitly declared that debian/rules doesn't require root.
+  * Standards version has been bumped to 4.5.0.
+  * Removed wrong dependency.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 Dec 2023 22:20:24 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Fri, 05 Jan 2024 07:38:16 +0300
 
 multispeech (4.6.0-1focal1) focal; urgency=medium
 
