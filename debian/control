@@ -10,7 +10,7 @@ Package: multispeech
 Architecture: any
 Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: espeak, espeak-data
+Recommends: espeak | espeak-ng, espeak-data | espeak-ng-data
 Suggests: emacspeak, mbrola, mbrola-en1, freephone, ru-tts
 Enhances: emacspeak
 Description: Multilingual speech server for Emacspeak
@@ -29,7 +29,7 @@ Package: sd-multispeech
 Architecture: any
 Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: espeak, espeak-data
+Recommends: espeak | espeak-ng, espeak-data | espeak-ng-data
 Suggests: speech-dispatcher, mbrola, mbrola-en1, freephone, ru-tts
 Enhances: speech-dispatcher
 Description: Multilingual Speech Dispatcher backend
