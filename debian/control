@@ -65,7 +65,6 @@ Architecture: any
 Multi-Arch: same
 Section: libs
 Depends: multispeech-common (= ${source:Version}), ${shlibs:Depends}, ${misc:Depends}
-Recommends: multispeech | sd-multispeech
 Description: Multilingual speech server - core shared library
  Though Multispeech was primarily designed for use in conjunction
  with Emacspeak, but being capable to work with Speech Dispatcher
