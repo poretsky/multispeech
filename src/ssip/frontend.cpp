@@ -387,7 +387,7 @@ frontend::do_sound_icon(void)
                 soundmaster.enqueue(speechmaster.text_task(intern_string(data, frontend_charset), &settings));
               else
                 {
-                  path icon_file(complete(data, spd_sound_icons));
+                  path icon_file(absolute(data, spd_sound_icons));
                   if (exists(icon_file))
                     soundmaster.enqueue(sound_task(icon_file));
                   else soundmaster.enqueue(speechmaster.text_task(intern_string(data, frontend_charset), &settings));

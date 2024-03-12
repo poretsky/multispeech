@@ -159,8 +159,8 @@ using namespace portaudio;
 
 
 // Configuration files:
-static const path global_conf(complete("multispeech.conf", SYSCONF_DIR));
-static const path local_conf(complete(".multispeechrc", getenv("HOME")));
+static const path global_conf(absolute("multispeech.conf", SYSCONF_DIR));
+static const path local_conf(absolute(".multispeechrc", getenv("HOME")));
 
 
 // Package configuration data:

@@ -37,7 +37,7 @@ using namespace boost::filesystem;
 
 // Static data:
 const char* const mbrola::name = MBROLA;
-const string mbrola::voices_default_path(complete("mbrola", DATA_DIR).generic_string());
+const string mbrola::voices_default_path(absolute("mbrola", DATA_DIR).generic_string());
 string mbrola::executable(mbrola::name);
 string mbrola::voices_path(mbrola::voices_default_path);
 string mbrola::en("en1");
@@ -87,8 +87,8 @@ mbrola::mbrola(const string& backend,
       cmd += " -e ";
       if (!voices_path.empty())
         {
-          path voice_path(complete(voice, voices_path));
-          path voice_file(complete(voice, voice_path));
+          path voice_path(absolute(voice, voices_path));
+          path voice_file(absolute(voice, voice_path));
           if (exists(voice_file))
             cmd += voice_file.generic_string();
           else if (exists(voice_path))
