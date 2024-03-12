@@ -36,7 +36,7 @@ using namespace FBB;
 
 // Static data:
 const char* const freephone::name = FREEPHONE;
-const string freephone::lexicon_default_path(complete("freespeech/enlex.db", DATA_DIR).generic_string());
+const string freephone::lexicon_default_path(absolute("freespeech/enlex.db", DATA_DIR).generic_string());
 string freephone::executable(freephone::name);
 string freephone::lexicon(freephone::lexicon_default_path);
 

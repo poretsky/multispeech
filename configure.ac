@@ -2,14 +2,14 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [4.6.1])
+AC_INIT([Multispeech], [4.6.2])
 AC_CONFIG_SRCDIR([src/core/speech_server.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_SUBST(VERSION)
 
