@@ -18,7 +18,7 @@ set -e
 
 case "$1" in
     upgrade)
-	exit 0
+        exit 0
         ;;
     remove|deconfigure)
         ;;
@@ -51,13 +51,13 @@ if [ -e /usr/share/debconf/confmodule ]; then # {{{
 
             # See if the shared question still exists.
     if db_get shared/emacspeak/fake; then
-	db_metaget shared/emacspeak/fake owners
-	db_subst shared/emacspeak/fake choices $RET
+        db_metaget shared/emacspeak/fake owners
+        db_subst shared/emacspeak/fake choices $RET
 
-	export task=$1	  # save argument
+        export task=$1    # save argument
 
-	perl -x $0        # execute this file as a perl program
-	true <<EOF        # bash discards everything from here to EOF
+        perl -x $0        # execute this file as a perl program
+        true <<EOF        # bash discards everything from here to EOF
 # perl ignores everything until the next line, due to the "-x" option above
 #!/usr/bin/perl -w $*
 
@@ -73,11 +73,11 @@ my ($ret, $database) = metaget ('shared/emacspeak/database', 'choices');
 foreach (split (/, */, $database)){ # debconf database is comma separated
     ($b, $p, $t, $device)=split(/:/);
     if ($deleted_device ne $device){
-	    $blurb{$device}=$b;
-	    $program{$device}=$p;
-	    $tcl{$device}=$t;
-	    $db{$device}="$b:$p:$t";
-	}
+        $blurb{$device}=$b;
+        $program{$device}=$p;
+        $tcl{$device}=$t;
+        $db{$device}="$b:$p:$t";
+    }
 }
 
 # Add choices from unpacked .blurb files from other packages, in case
@@ -87,21 +87,21 @@ if (opendir(DIR,$dirname)){
     my @fnames=readdir(DIR);
     closedir(DIR);
     foreach (@fnames){
-	if (/.blurb$/){
-	    open(IF,"$dirname/$_");
-	    while(<IF>){
-		if (/^blurb: *(.*)$/) {$b=$1;}
-		if (/^program: *(.*)$/) {$p=$1;}
-		if (/^tcl: *(.*)$/) {$t=$1;}
-		if (/^device: *(.*)$/) {$device=$1;}
-	    }
-	    if ($deleted_device ne $device){
-		$blurb{$device}=$b;
-		$program{$device}=$p;
-		$tcl{$device}=$t;
-		$db{$device}="$b:$p:$t";
-	    }
-	}
+        if (/.blurb$/){
+            open(IF,"$dirname/$_");
+            while(<IF>){
+                if (/^blurb: *(.*)$/) {$b=$1;}
+                if (/^program: *(.*)$/) {$p=$1;}
+                if (/^tcl: *(.*)$/) {$t=$1;}
+                if (/^device: *(.*)$/) {$device=$1;}
+            }
+            if ($deleted_device ne $device){
+                $blurb{$device}=$b;
+                $program{$device}=$p;
+                $tcl{$device}=$t;
+                $db{$device}="$b:$p:$t";
+            }
+        }
     }
 }
 
@@ -124,21 +124,21 @@ my $tcl='';
 
 if (-e $configfile){
     open(CF,$configfile)
-	or die("$configfile exists but could not be opened for reading\n");
+        or die("$configfile exists but could not be opened for reading\n");
     while (<CF>){
-	/^\s*DTK_PROGRAM\s*=\s*(\S+)/ and
-	    set('shared/emacspeak/program',$1);
-	/^\s*DTK_PORT\s*=\s*(\S+)/ and
-	    set('shared/emacspeak/port',$1);
-	/^\s*DTK_TCL\s*=\s*(\S+)/ and
-	    set('shared/emacspeak/tcl',$1);
-	/^\s*DTK_DEVICE\s*=\s*(\S+)/ and
-	    set('shared/emacspeak/device',$1);
+        /^\s*DTK_PROGRAM\s*=\s*(\S+)/ and
+            set('shared/emacspeak/program',$1);
+        /^\s*DTK_PORT\s*=\s*(\S+)/ and
+            set('shared/emacspeak/port',$1);
+        /^\s*DTK_TCL\s*=\s*(\S+)/ and
+            set('shared/emacspeak/tcl',$1);
+        /^\s*DTK_DEVICE\s*=\s*(\S+)/ and
+            set('shared/emacspeak/device',$1);
         # If device is a quoted string, rescan to get the whole thing
-	/^\s*DTK_DEVICE\s*=\s*\"(.+)\"/ and
-	    set('shared/emacspeak/device',$1);
-	/^\s*DTK_DEVICE\s*=\s*\'(.+)\'/ and
-	    set('shared/emacspeak/device',$1);
+        /^\s*DTK_DEVICE\s*=\s*\"(.+)\"/ and
+            set('shared/emacspeak/device',$1);
+        /^\s*DTK_DEVICE\s*=\s*\'(.+)\'/ and
+            set('shared/emacspeak/device',$1);
     }
     close(CF);
 }
@@ -153,13 +153,13 @@ if ($ENV{task} eq "remove" && $deleted_device eq $device){
     $device=get('shared/emacspeak/device');
 
     if (get('shared/emacspeak/program') eq ''){
-	set('shared/emacspeak/program',$program{$device});
+        set('shared/emacspeak/program',$program{$device});
     }
     if (get('shared/emacspeak/tcl') eq ''){
-	set('shared/emacspeak/tcl',$tcl{$device});
+        set('shared/emacspeak/tcl',$tcl{$device});
     }
     if ($device eq "DoubleTalk PC" and $port =~ m./dev/tty.){
-	set('shared/emacspeak/port','/dev/dtlk');
+        set('shared/emacspeak/port','/dev/dtlk');
     }
 
     set('shared/emacspeak/program',$program{$device});
@@ -168,14 +168,14 @@ if ($ENV{task} eq "remove" && $deleted_device eq $device){
 
     my $valid=0;
     while (!$valid) {
-	input('high', 'shared/emacspeak/port'); go();
-	$port=get('shared/emacspeak/port');
-	if (($port eq "none") || (-c $port)){
-	    $valid=1;
-	} else {
-	    subst("shared/emacspeak/invalidport",'port',$port);
-	    input('high','shared/emacspeak/invalidport'); go();
-	}
+        input('high', 'shared/emacspeak/port'); go();
+        $port=get('shared/emacspeak/port');
+        if (($port eq "none") || (-c $port)){
+            $valid=1;
+        } else {
+            subst("shared/emacspeak/invalidport",'port',$port);
+            input('high','shared/emacspeak/invalidport'); go();
+        }
     }
     # we don't check port permissions or ownership, or add or delete
     # users from the port's group
@@ -184,8 +184,8 @@ if ($ENV{task} eq "remove" && $deleted_device eq $device){
 __END__         # perl ignores everything after this
 EOF
 
-    fi				# shared question still exists
-fi				# debconf is installed
+    fi                          # shared question still exists
+fi                              # debconf is installed
 
 
 # dh_installdeb will replace this with shell code automatically
