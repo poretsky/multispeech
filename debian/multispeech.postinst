@@ -33,6 +33,75 @@ esac
 
 # Debconf integration
 . /usr/share/debconf/confmodule
+CONFIGFILE=/etc/emacspeak.conf
+
+# original config file was missing the `$' characters on the variable names
+# insert them if necessary
+if [ -f $CONFIGFILE ]; then
+    sed 's/^if  *\[  *"DTK/if \[ "$DTK/' $CONFIGFILE >/etc/temp.$$
+    mv /etc/temp.$$ $CONFIGFILE
+    if ! grep 'export' $CONFIGFILE >/dev/null; then
+	cat >>$CONFIGFILE <<\EOF
+export DTK_PROGRAM DTK_PORT DTK_TCL
+EOF
+    fi
+fi
+
+# if there is no configuration file, then create one
+if [ ! -e $CONFIGFILE ]; then
+cat >$CONFIGFILE  <<\EOF
+# emacspeak configuration file
+#
+#
+if [ "$DTK_PROGRAM" = "" ]; then
+  DTK_PROGRAM=
+fi
+if [ "$DTK_TCL" = "" ]; then
+  DTK_TCL=
+fi
+if [ "$DTK_PORT" = "" ]; then
+  DTK_PORT=
+fi
+if [ "$DTK_DEVICE" = "" ]; then
+  DTK_DEVICE=
+fi
+export DTK_PROGRAM DTK_PORT DTK_DEVICE
+if [ "$DTK_TCL" != "" ]; then export DTK_TCL; fi
+EOF
+fi
+
+# Substitute in the values from the debconf db.
+db_get shared/emacspeak/program
+DTK_PROGRAM="$RET"
+db_get shared/emacspeak/tcl
+DTK_TCL="$RET"
+db_get shared/emacspeak/port
+DTK_PORT="$RET"
+db_get shared/emacspeak/device
+DTK_DEVICE="$RET"
+
+# This cp ensures we do not mess up
+# the config file's ownership and permissions.
+cp -a -f $CONFIGFILE $CONFIGFILE.tmp
+
+# If the admin deleted or commented some variables but then set
+# them via debconf, (re-)add them to the conffile.
+test -z "$DTK_PROGRAM" || grep -Eq '^ *DTK_PROGRAM=' $CONFIGFILE || \
+    echo "DTK_PROGRAM=" >> $CONFIGFILE
+test -z "$DTK_TCL" || grep -Eq '^ *DTK_TCL=' $CONFIGFILE || \
+    echo "DTK_TCL=" >> $CONFIGFILE
+test -z "$DTK_PORT" || grep -Eq '^ *DTK_PORT=' $CONFIGFILE || \
+    echo "DTK_PORT=" >> $CONFIGFILE
+test -z "$DTK_DEVICE" || grep -Eq '^ *DTK_DEVICE=' $CONFIGFILE || \
+    echo "DTK_DEVICE=" >> $CONFIGFILE
+
+# the strings can contain slashes, so use something else to delimit patterns
+sed -e "s|^ *DTK_PROGRAM=.*|DTK_PROGRAM=$DTK_PROGRAM|" \
+    -e "s|^ *DTK_TCL=.*|DTK_TCL=$DTK_TCL|" \
+    -e "s|^ *DTK_PORT=.*|DTK_PORT=$DTK_PORT|" \
+    -e "s/^ *DTK_DEVICE=.*/DTK_DEVICE=\"$DTK_DEVICE\"/" \
+    < $CONFIGFILE > $CONFIGFILE.tmp
+mv -f $CONFIGFILE.tmp $CONFIGFILE
 
 
 # dh_installdeb will replace this with shell code automatically

@@ -27,7 +27,7 @@ Rules-Requires-Root: no
 Package: multispeech
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
 Recommends: espeak-ng, espeak-ng-data
 Suggests: emacspeak, mbrola, mbrola-en1
 Enhances: emacspeak
