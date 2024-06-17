@@ -25,7 +25,7 @@ _Description: Default speech server:
  You may change the selection later by running
  'dpkg-reconfigure emacspeak' as root, or temporarily override the
  selection by setting the environment variable DTK_PROGRAM.
-Default: DECtalk Express
+Default: Multispeech
 
 Template: shared/emacspeak/port
 Type: string
