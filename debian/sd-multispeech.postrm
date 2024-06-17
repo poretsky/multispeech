@@ -8,16 +8,16 @@ case "$1" in
         if [ -n "$SPD" ] ; then
             kill -HUP $SPD
         fi
-    ;;
+        ;;
 
     upgrade|disappear|failed-upgrade|abort-install|abort-upgrade)
 
-    ;;
+        ;;
 
     *)
         echo "postrm called with unknown argument \`$1'" >&2
         exit 1
-    ;;
+        ;;
 esac
 
 
