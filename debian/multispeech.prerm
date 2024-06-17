@@ -27,7 +27,7 @@ case "$1" in
     *)
         echo "prerm called with unknown argument \`$1'" >&2
         exit 1
-    ;;
+        ;;
 esac
 
 #echo "  deconfiguring" >>/var/log/emacspeak
@@ -49,7 +49,7 @@ if [ -e /usr/share/debconf/confmodule ]; then # {{{
         db_unregister shared/emacspeak/database
     fi
 
-            # See if the shared question still exists.
+    # See if the shared question still exists.
     if db_get shared/emacspeak/fake; then
         db_metaget shared/emacspeak/fake owners
         db_subst shared/emacspeak/fake choices $RET
