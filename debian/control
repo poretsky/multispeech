@@ -24,7 +24,7 @@ Homepage: https://github.com/poretsky/multispeech
 Package: multispeech
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
 Recommends: espeak (>= 1.44.01), espeak-data (>= 1.44.01)
 Suggests: emacspeak, freephone, mbrola, mbrola-en1, ru-tts
 Enhances: emacspeak
