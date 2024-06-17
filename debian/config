@@ -5,12 +5,12 @@
 #    config  configure  <installed-version>
 #    config  reconfigure  <installed-version>
 #
-# 
+#
 # ----  Configuring a speech server using debconf  ----
-# 
+#
 # A package can contribute several speech servers, as follows.
-# 
-# 
+#
+#
 # Use the method described in debconf-devel(7) "choosing among related
 # packages" to detect a new package.  All packages installing speech
 # servers include the same template file.  A fake question
@@ -53,7 +53,7 @@ if ($owners ne $choices){
 #   choices with debconf)
 
 # get choices already in the debconf database
-my ($b, $p, $t, $device, $olddevice, 
+my ($b, $p, $t, $device, $olddevice,
     %blurb, %program, %tcl, %device, %db, $devicelist);
 ($ret, $database) = metaget ('shared/emacspeak/database', 'choices');
 foreach (split (/, */, $database)){ # debconf database is comma separated
