@@ -25,7 +25,7 @@ Rules-Requires-Root: no
 Package: multispeech
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
 Recommends: espeak | espeak-ng, espeak-data | espeak-ng-data
 Suggests: emacspeak, freephone, mbrola, mbrola-en1, ru-tts
 Enhances: emacspeak
