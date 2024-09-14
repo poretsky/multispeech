@@ -2,6 +2,9 @@ multispeech (4.6.3-0focal1) focal; urgency=medium
 
   * New upstream release.
 
+  [ Camaleón ]
+  * po/es.po: Add Spanish translation of multispeech debconf template
+
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 10 Nov 2025 00:38:27 +0300
 
 multispeech (4.6.1-0focal1) focal; urgency=medium
