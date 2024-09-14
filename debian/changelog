@@ -1,3 +1,11 @@
+multispeech (4.6.2-2) UNRELEASED; urgency=medium
+
+  [ Camaleón ]
+  * po/es.po: Add Spanish translation of multispeech debconf template
+    (Closes: Bug#1081763)
+
+ -- Samuel Thibault <sthibault@debian.org>  Sat, 14 Sep 2024 20:23:41 +0200
+
 multispeech (4.6.2-1) unstable; urgency=medium
 
   * Initial release. (Closes: #1055902)
