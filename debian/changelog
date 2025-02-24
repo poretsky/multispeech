@@ -8,6 +8,9 @@ multispeech (4.6.3-0bionic1) bionic; urgency=medium
   [ Frans Spiesschaert ]
   * po/nl.po: Add Dutch translation of multispeech debconf template
 
+  [ Pablo Lucas Silva Santos ]
+  * po/pt_BR.po: Add Brazilian Portuguese translation.
+
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 10 Nov 2025 00:38:27 +0300
 
 multispeech (4.6.1-0bionic1) bionic; urgency=medium
