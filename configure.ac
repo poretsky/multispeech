@@ -33,7 +33,19 @@ fi
 
 # Language choice.
 AC_LANG([C++])
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX([23], [], [optional])
+if test x$ax_cv_cxx_compile_cxx23 != xyes ; then
+    AX_CXX_COMPILE_STDCXX([20], [], [optional])
+    if test x$ax_cv_cxx_compile_cxx20 != xyes ; then
+        AX_CXX_COMPILE_STDCXX([17], [], [optional])
+        if test x$ax_cv_cxx_compile_cxx17 != xyes ; then
+            AX_CXX_COMPILE_STDCXX([14], [], [optional])
+            if test x$ax_cv_cxx_compile_cxx14 != xyes ; then
+                AX_CXX_COMPILE_STDCXX_11
+            fi
+        fi
+    fi
+fi
 AX_CHECK_VSCRIPT
 
 # Checks for typedefs, structures, and compiler characteristics.
