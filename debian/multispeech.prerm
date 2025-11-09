@@ -67,7 +67,7 @@ use Debconf::Client::ConfModule q(:all);
 # get choices already in the debconf database
 my $deleted_device='Multispeech';
 
-my ($b, $p, $t, $device, $olddevice, 
+my ($b, $p, $t, $device, $olddevice,
     %blurb, %program, %tcl, %device, %db);
 my ($ret, $database) = metaget ('shared/emacspeak/database', 'choices');
 foreach (split (/, */, $database)){ # debconf database is comma separated
@@ -123,12 +123,12 @@ my $port='';
 my $tcl='';
 
 if (-e $configfile){
-    open(CF,$configfile) 
+    open(CF,$configfile)
 	or die("$configfile exists but could not be opened for reading\n");
     while (<CF>){
-	/^\s*DTK_PROGRAM\s*=\s*(\S+)/ and     
+	/^\s*DTK_PROGRAM\s*=\s*(\S+)/ and
 	    set('shared/emacspeak/program',$1);
-	/^\s*DTK_PORT\s*=\s*(\S+)/ and 
+	/^\s*DTK_PORT\s*=\s*(\S+)/ and
 	    set('shared/emacspeak/port',$1);
 	/^\s*DTK_TCL\s*=\s*(\S+)/ and
 	    set('shared/emacspeak/tcl',$1);
@@ -144,7 +144,7 @@ if (-e $configfile){
 }
 
 if ($ENV{task} eq "remove" && $deleted_device eq $device){
-    # the currently configured device is being removed, 
+    # the currently configured device is being removed,
     # so ask which remaining device to use
     fset('shared/emacspeak/device', 'seen', 'false');
 
