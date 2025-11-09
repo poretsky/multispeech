@@ -96,12 +96,12 @@ msgstr ""
 msgid ""
 "If you later add users to the system, you can either reconfigure the "
 "emacspeak package afterwards, or enroll the user in ${group} with 'adduser "
-"${group} <user>'."
+"<user> ${group}'."
 msgstr ""
 "Om du lägger till användare i systemet framöver kan du antingen köra den här "
 "guiden eller manuellt lägga till användaren eller användarna i rätt grupp. "
 "Använd kommandot dpkg-reconfigure emacspeak eller lägg till användare "
-"manuellt i gruppen ${group} med kommandot \"adduser ${group} <användare>\"."
+"manuellt i gruppen ${group} med kommandot \"adduser <användare> ${group}\"."
 
 #. Type: string
 #. Description
