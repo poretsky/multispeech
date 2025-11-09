@@ -52,7 +52,7 @@ _Description: Users of speech server:
  .
  If you later add users to the system, you can either reconfigure
  the emacspeak package afterwards, or enroll the user in ${group}
- with 'adduser ${group} <user>'.
+ with 'adduser <user> ${group}'.
  .
  Group membership is checked at login time, so new members must log
  out and log in again before using the speech server.

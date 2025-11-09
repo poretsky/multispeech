@@ -11,6 +11,9 @@ multispeech (4.6.3-0xenial1) xenial; urgency=medium
   [ Pablo Lucas Silva Santos ]
   * po/pt_BR.po: Add Brazilian Portuguese translation.
 
+  [ Carles Pina i Estany ]
+  * Fix order of adduser command in d/templates and d/po/*.
+
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 10 Nov 2025 00:38:27 +0300
 
 multispeech (4.6.1-0xenial1) xenial; urgency=medium

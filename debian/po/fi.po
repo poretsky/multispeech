@@ -97,11 +97,11 @@ msgstr ""
 msgid ""
 "If you later add users to the system, you can either reconfigure the "
 "emacspeak package afterwards, or enroll the user in ${group} with 'adduser "
-"${group} <user>'."
+"<user> ${group}'."
 msgstr ""
 "Jos lisäät järjestelmään käyttäjiä myöhemmin, voit joko tehdä paketin "
 "emacspeak asetukset uudelleen tai lisätä käyttäjän ryhmään ${group} "
-"komennolla ”adduser ${group} <käyttäjä>”."
+"komennolla ”adduser <käyttäjä> ${group}”."
 
 #. Type: string
 #. Description
