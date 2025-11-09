@@ -1,3 +1,9 @@
+multispeech (4.6.3-0jammy1) jammy; urgency=medium
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 10 Nov 2025 00:38:27 +0300
+
 multispeech (4.6.1-0jammy1) jammy; urgency=medium
 
   * New upstream release.

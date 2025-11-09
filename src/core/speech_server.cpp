@@ -52,7 +52,7 @@ bool speech_server::support_native_voices = true;
 bool speech_server::support_dtk_voices = false;
 
 // Speech dispatcher backend related data:
-const string speech_server::spd_sound_icons_default_path(complete("sounds/sound-icons", DATA_DIR).generic_string());
+const string speech_server::spd_sound_icons_default_path(absolute("sounds/sound-icons", DATA_DIR).generic_string());
 string speech_server::spd_version;
 string speech_server::spd_sound_icons(speech_server::spd_sound_icons_default_path);
 bool speech_server::spd_use_voice_language = true;
