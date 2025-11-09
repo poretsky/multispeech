@@ -13,6 +13,7 @@ multispeech (4.6.3-0bionic1) bionic; urgency=medium
 
   [ Carles Pina i Estany ]
   * Fix order of adduser command in d/templates and d/po/*.
+  * debian/po/ca.po: Update/add Catalan po-debconf translation.
 
  -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 10 Nov 2025 00:38:27 +0300
 
