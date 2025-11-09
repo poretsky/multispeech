@@ -2,14 +2,14 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [4.6.1])
+AC_INIT([Multispeech], [4.6.3], [https://github.com/poretsky/multispeech/issues/new], [], [https://github.com/poretsky/multispeech])
 AC_CONFIG_SRCDIR([src/core/speech_server.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
 AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_SUBST(VERSION)
 
@@ -33,7 +33,19 @@ fi
 
 # Language choice.
 AC_LANG([C++])
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX([23], [], [optional])
+if test x$ax_cv_cxx_compile_cxx23 != xyes ; then
+    AX_CXX_COMPILE_STDCXX([20], [], [optional])
+    if test x$ax_cv_cxx_compile_cxx20 != xyes ; then
+        AX_CXX_COMPILE_STDCXX([17], [], [optional])
+        if test x$ax_cv_cxx_compile_cxx17 != xyes ; then
+            AX_CXX_COMPILE_STDCXX([14], [], [optional])
+            if test x$ax_cv_cxx_compile_cxx14 != xyes ; then
+                AX_CXX_COMPILE_STDCXX_11
+            fi
+        fi
+    fi
+fi
 AX_CHECK_VSCRIPT
 
 # Checks for typedefs, structures, and compiler characteristics.
