@@ -1,2 +1,7 @@
 # debconf via perl, lintian does not know
 multispeech: possible-bashism-in-maintainer-script '(($port eq "none") || (-c $port))' [prerm:173]
+
+# debconf via perl, lintian does not know
+multispeech: unused-debconf-template shared/emacspeak/invalidport [templates:92]
+multispeech: unused-debconf-template shared/emacspeak/invaliduser [templates:166]
+multispeech: unused-debconf-template shared/emacspeak/rootgroup [templates:188]
