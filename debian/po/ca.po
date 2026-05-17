@@ -1,0 +1,162 @@
+# Catalan translation of multispeech's debconf messages
+# Copyright © 2025 Free Software Foundation, Inc.
+# This file is distributed under the same license as the multispeech package.
+# poc senderi <pocsenderi@protonmail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: emacspeak@packages.debian.org\n"
+"POT-Creation-Date: 2008-12-09 07:29+0100\n"
+"PO-Revision-Date: 2025-03-29 18:56+0100\n"
+"Last-Translator: poc senderi <pocsenderi@protonmail.com>\n"
+"Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ca\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. Type: select
+#. Description
+#: ../templates:3001
+msgid "Default speech server:"
+msgstr "Servidor de parla predeterminat:"
+
+#. Type: select
+#. Description
+#: ../templates:3001
+msgid ""
+"The /etc/emacspeak.conf file will be configured so that the command '/usr/"
+"bin/emacspeak' will start Emacs with emacspeak support using this server."
+msgstr ""
+"El fitxer «/etc/emacspeak.conf» serà configurat de manera que l'ordre «/usr/"
+"bin/emacspeak» iniciï l'Emacs amb suport d'«emacspeak» utilitzant aquest "
+"servidor."
+
+#. Type: select
+#. Description
+#: ../templates:3001
+msgid ""
+"You may change the selection later by running 'dpkg-reconfigure emacspeak' "
+"as root, or temporarily override the selection by setting the environment "
+"variable DTK_PROGRAM."
+msgstr ""
+"Podeu canviar la selecció més endavant executant «dpkg-reconfigure "
+"emacspeak» com a «root», o anul·lar temporalment la selecció establint la "
+"variable d'entorn DTK_PROGRAM."
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid "Hardware port of the speech generation device:"
+msgstr "Port de maquinari del dispositiu de generació de parla:"
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid ""
+"If a hardware device is used to generate speech, please enter the Unix "
+"device file associated with it, such as '/dev/ttyS0' or '/dev/ttyUSB0'."
+msgstr ""
+"Si s'utilitza un dispositiu de maquinari per generar parla, introduïu-ne el "
+"fitxer de dispositiu Unix associat, com ara «/dev/ttyS0» o «/dev/ttyUSB0»."
+
+#. Type: string
+#. Description
+#. Translators, please do not translate "none"
+#: ../templates:4001
+msgid "If you use a software method to generate speech, please enter 'none'."
+msgstr ""
+"Si utilitzeu un sistema de programari per a generar parla, introduïu «none»."
+
+#. Type: error
+#. Description
+#: ../templates:5001
+msgid "${port} is not a character special device"
+msgstr "${port} no és un dispositiu especial de caràcters"
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid "Users of speech server:"
+msgstr "Usuaris del servidor de parla:"
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid ""
+"Users must be members of group ${group} to access the speech server "
+"connected to ${port}. Please review the space-separated list of current "
+"members of that group, and add or remove usernames if needed."
+msgstr ""
+"Els usuaris han de ser membres del grup ${group} per accedir al servidor de "
+"parla connectat a ${port}. Reviseu la llista separada per espais dels "
+"membres actuals d'aquest grup, i afegiu o suprimiu els noms d'usuari que "
+"calgui."
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid ""
+"If you later add users to the system, you can either reconfigure the "
+"emacspeak package afterwards, or enroll the user in ${group} with 'adduser "
+"<user> ${group}'."
+msgstr ""
+"Si més endavant s'afegeixen usuaris al sistema, podeu reconfigurar el "
+"paquet «emacspeak» després, o afegir l'usuari a ${group} amb «adduser "
+"<usuari> ${group}»."
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid ""
+"Group membership is checked at login time, so new members must log out and "
+"log in again before using the speech server."
+msgstr ""
+"La pertinença al grup es comprova en el moment d'iniciar sessió, de manera "
+"que els membres nous han de tancar la sessió i tornar-la a iniciar abans "
+"d'utilitzar el servidor de parla."
+
+#. Type: error
+#. Description
+#: ../templates:7001
+msgid "Invalid username ${user}"
+msgstr "El nom d'usuari ${user} no és vàlid"
+
+#. Type: error
+#. Description
+#: ../templates:7001
+msgid ""
+"There is no user named ${user}, so no such user could be added to ${group}."
+msgstr ""
+"No hi ha cap usuari anomenat ${user}, de manera que no pot ser afegit a "
+"${group}."
+
+#. Type: error
+#. Description
+#: ../templates:8001
+msgid "${port} non-writable by unprivileged users"
+msgstr "Els usuaris no privilegiats no poden escriure a ${port}"
+
+#. Type: error
+#. Description
+#: ../templates:8001
+msgid ""
+"Since the speech device is connected to ${port}, unprivileged users must "
+"have read/write access to that device."
+msgstr ""
+"Atès que el dispositiu de veu està connectat a ${port}, els usuaris sense "
+"privilegis han de tenir accés de lectura/escriptura en aquest dispositiu."
+
+#. Type: error
+#. Description
+#: ../templates:8001
+msgid ""
+"You should modify the device permissions with 'chmod a+rw ${port}' or "
+"modify the device group with 'chown root:dialout ${port}', then reconfigure "
+"emacspeak with 'dpkg-reconfigure emacspeak'."
+msgstr ""
+"Hauríeu de modificar els permisos del dispositiu amb «chmod a+rw ${port}» o "
+"modificar el grup del dispositiu amb «chown root:dialout ${port}», i tot "
+"seguit reconfigurar l'«emacspeak» amb «dpkg-reconfigure emacspeak»."

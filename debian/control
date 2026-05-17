@@ -1,0 +1,92 @@
+Source: multispeech
+Section: sound
+Priority: optional
+Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
+Build-Depends: autoconf-archive,
+               debhelper-compat (= 13),
+               libbobcat-dev,
+               libboost-filesystem-dev,
+               libboost-iostreams-dev,
+               libboost-locale-dev,
+               libboost-program-options-dev,
+               libboost-regex-dev,
+               libboost-thread-dev,
+               libportaudiocpp0,
+               libpulse-dev,
+               libsndfile1-dev,
+               libsoundtouch-dev,
+               libspeechd-dev,
+               po-debconf,
+               portaudio19-dev
+Standards-Version: 4.6.0.1
+Homepage: https://github.com/poretsky/multispeech
+Rules-Requires-Root: no
+
+Package: multispeech
+Architecture: any
+Multi-Arch: foreign
+Depends: adduser, ${misc:Depends}, ${shlibs:Depends}
+Recommends: espeak | espeak-ng, espeak-data | espeak-ng-data
+Suggests: emacspeak, freephone, mbrola, mbrola-en1, ru-tts
+Enhances: emacspeak
+Description: Multilingual speech server for Emacspeak
+ This speech server provides multilingual speech output for Emacspeak
+ using software TTS engines such as mbrola, espeak, ru_tts, etc.
+ At the moment English, German, French, Italian, Spanish,
+ Portuguese and Russian languages are supported.
+ .
+ The most prominent features are as follows:
+  - flexible configuration;
+  - easy adaptation to various speech engines;
+  - language autodetection capability;
+  - online voice control means.
+
+Package: sd-multispeech
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: espeak | espeak-ng, espeak-data | espeak-ng-data
+Suggests: freephone, mbrola, mbrola-en1, ru-tts, speech-dispatcher
+Enhances: speech-dispatcher
+Description: Multilingual Speech Dispatcher backend
+ This module provides multilingual speech output for Speech Dispatcher
+ using software TTS engines such as mbrola, espeak, ru_tts, etc.
+ It is based on the Multispeech speech server.
+ At the moment English, German, French, Italian, Spanish,
+ Portuguese and Russian languages are supported.
+ .
+ The most prominent features are as follows:
+  - flexible configuration;
+  - easy adaptation to various speech engines;
+  - language autodetection capability;
+  - online voice control means.
+
+Package: multispeech-common
+Architecture: all
+Multi-Arch: foreign
+Breaks: libmultispeech0, libmultispeech3, libmultispeech5 (<< 4.6.1), multispeech (<< 4.0.0)
+Replaces: libmultispeech0, libmultispeech3, libmultispeech5 (<< 4.6.1), multispeech (<< 4.0.0)
+Depends: ${misc:Depends}
+Description: Multilingual speech server - common files
+ Though Multispeech was primarily designed for use in conjunction
+ with Emacspeak, but being capable to work with Speech Dispatcher
+ as its backend module, it can provide multilingual speech output
+ for Orca screenreader as well.
+ .
+ This package provides common configuration file used by all Multispeech
+ implementations along with its documentation.
+
+Package: libmultispeech5
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: multispeech-common (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: Multilingual speech server - core shared library
+ Though Multispeech was primarily designed for use in conjunction
+ with Emacspeak, but being capable to work with Speech Dispatcher
+ as its backend module, it can provide multilingual speech output
+ for Orca screenreader as well.
+ .
+ This package provides core shared library.
