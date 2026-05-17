@@ -1,0 +1,5 @@
+Version: 5
+
+Source: https://api.github.com/repos/poretsky/multispeech/releases
+Matching-Pattern: https://github.com/poretsky/multispeech/releases/download/v\d[\.\d]*/@PACKAGE@@ANY_VERSION@@ARCHIVE_EXT@
+Searchmode: plain
