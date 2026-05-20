@@ -1,6 +1,5 @@
 Source: multispeech
 Section: sound
-Priority: optional
 Maintainer: Igor B. Poretsky <poretsky@mlbox.ru>
 Build-Depends: autoconf-archive,
                debhelper-compat (= 13),
@@ -20,7 +19,6 @@ Build-Depends: autoconf-archive,
                portaudio19-dev
 Standards-Version: 4.7.3
 Homepage: https://github.com/poretsky/multispeech
-Rules-Requires-Root: no
 
 Package: multispeech
 Architecture: any
