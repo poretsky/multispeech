@@ -1,11 +1,11 @@
-multispeech (4.6.4-0resolute2) UNRELEASED; urgency=medium
+multispeech (4.6.4-0resolute2) resolute; urgency=medium
 
   * Standards version bumped to 4.7.3.
   * Actual lintian overrides.
   * Removed redundant debian/control fields.
   * Copyright update.
 
- -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 May 2026 13:56:36 +0300
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 May 2026 14:09:33 +0300
 
 multispeech (4.6.4-0resolute1) resolute; urgency=medium
 
