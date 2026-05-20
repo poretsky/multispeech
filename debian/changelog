@@ -1,3 +1,9 @@
+multispeech (4.6.4-0resolute1) resolute; urgency=medium
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 May 2026 07:14:41 +0300
+
 multispeech (4.6.3-0resolute1) resolute; urgency=medium
 
   * Initial release for Ubuntu Resolute.
