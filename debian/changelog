@@ -1,3 +1,9 @@
+multispeech (4.6.4-0noble1) noble; urgency=medium
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 20 May 2026 07:19:42 +0300
+
 multispeech (4.6.3-0noble1) noble; urgency=medium
 
   * Initial release for Ubuntu Noble.
