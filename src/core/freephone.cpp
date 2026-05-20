@@ -56,6 +56,8 @@ freephone::freephone(void):
           path lexicon(freephone::lexicon);
           if (exists(lexicon))
             cmd += " -h " + lexicon.generic_string();
+          else if (exists(lexicon.replace_extension("dir")) && exists(lexicon.replace_extension("pag")))
+            cmd += " -h " + lexicon.replace_extension().generic_string();
           else
             {
               speech_server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
