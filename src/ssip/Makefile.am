@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-sdmoduledir = $(bindir)
+sdmoduledir = @sdmodule_dir@
 sdmodule_PROGRAMS = sd_multispeech
 
 AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
