@@ -1,4 +1,4 @@
-# Configure paths for libsndfile
+# Configure installation path for speech-dispatcher module
 #
 # Designed especially for the Multispeech project
 # by Artem Semenov <savoptik@altlinux.org>
