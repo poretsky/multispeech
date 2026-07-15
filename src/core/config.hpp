@@ -48,6 +48,13 @@ namespace lang_id
   extern const char* const autodetect;
 };
 
+// Lexicon path specification particular cases:
+namespace lexicon_path
+{
+  extern const char* const search_default;
+  extern const char* const none;
+};
+
 // Configuration parser and options value storage
 class configuration
 {

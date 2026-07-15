@@ -44,9 +44,8 @@ using namespace FBB;
 
 // Static data:
 const char* const ru_tts::name = RU_TTS;
-const string ru_tts::lexicon_default_path(absolute("freespeech/rulex.db", DATA_DIR).generic_string());
 string ru_tts::executable(ru_tts::name);
-string ru_tts::lexicon(ru_tts::lexicon_default_path);
+string ru_tts::lexicon(lexicon_path::search_default);
 string ru_tts::log_file;
 double ru_tts::expressiveness = 1.0;
 bool ru_tts::female_voice = false;
@@ -61,9 +60,32 @@ double ru_tts::question_gap_factor = 1.0;
 double ru_tts::exclamation_gap_factor = 1.0;
 double ru_tts::intonational_gap_factor = 1.0;
 
+static const path rulex_db("freespeech/rulex.db");
+
 // Backend specific substitutions:
 static const map<wchar_t, const wchar_t*> substitutions = map_list_of
   (0x301, L"+");
+
+
+// Internal routines:
+
+static bool
+utilize_lexicon(path& lexicon, string& cmd)
+{
+  if (exists(lexicon))
+    {
+      cmd += " -s " + lexicon.generic_string();
+      return true;
+    }
+  return false;
+}
+
+static bool
+search_lexicon(const path& base_path, string& cmd)
+{
+  path lexicon(absolute(rulex_db, base_path));
+  return utilize_lexicon(lexicon, cmd);
+}
 
 
 // Object construction:
@@ -96,12 +118,19 @@ ru_tts::ru_tts(void):
             version = lexical_cast<double>(string(versioninfo[1].first, versioninfo[1].second));
         }
       cmd += " -r %rate -p %pitch";
-      if (!lexicon.empty())
+      if (lexicon == lexicon_path::search_default)
+        {
+          if (!(search_lexicon(LIB_DIR, cmd) || search_lexicon(DATA_DIR, cmd)))
+            {
+              speech_server::log << SyslogStream::warning << name << " lexicon is not found on its conventional places" << endl;
+              if (speech_server::verbose)
+                cerr << "Warning: " << name << " lexicon is not found on its conventional places" << endl;
+            }
+        }
+      else if ((!lexicon.empty()) && (lexicon != lexicon_path::none))
         {
           path lexicon(ru_tts::lexicon);
-          if (exists(lexicon))
-            cmd += " -s " + lexicon.generic_string();
-          else
+          if (!utilize_lexicon(lexicon, cmd))
             {
               speech_server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
               if (speech_server::verbose)
