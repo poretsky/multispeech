@@ -1,3 +1,11 @@
+multispeech (4.6.5-0resolute1) resolute; urgency=medium
+
+  * New upstream release.
+  * Enhanced lexicon path specification providing compatibility with new
+    freespeech and rulex packages.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 15 Jul 2026 16:16:11 +0300
+
 multispeech (4.6.4-0resolute2) resolute; urgency=medium
 
   * Standards version bumped to 4.7.3.
