@@ -132,7 +132,7 @@
 #define ASYNCHRONOUS(section, component) BOOLEAN(section, "asynchronous", component::asynchronous, true)
 #define SAMPLING(section, component, default) UINT(section, "sampling", component::sampling, default)
 #define EXECUTABLE(backend, component) STRING(backend, "executable", component::executable, component::name)
-#define LEXICON(backend, component) STRING(backend, "lexicon", component::lexicon, component::lexicon_default_path)
+#define LEXICON(backend, component) STRING(backend, "lexicon", component::lexicon, lexicon_path::search_default)
 
 // Backend specific voice items:
 #define MBROLA_VOICE(lang, field, default) STRING(MBROLA, lang, mbrola::field, default)
@@ -182,6 +182,13 @@ namespace lang_id
   const char* const pt = PT;
   const char* const it = IT;
   const char* const autodetect = "autodetect";
+};
+
+// Lexicon path specification particular cases:
+namespace lexicon_path
+{
+  const char* const search_default = "default";
+  const char* const none = "none";
 };
 
 

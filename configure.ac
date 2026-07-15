@@ -2,7 +2,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Multispeech], [4.6.4], [https://github.com/poretsky/multispeech/issues/new], [], [https://github.com/poretsky/multispeech])
+AC_INIT([Multispeech], [4.6.5], [https://github.com/poretsky/multispeech/issues/new], [], [https://github.com/poretsky/multispeech])
 AC_CONFIG_SRCDIR([src/core/speech_server.cpp])
 AC_CONFIG_HEADERS([sysconfig.h])
 AC_CONFIG_MACRO_DIRS([m4])
@@ -99,6 +99,8 @@ AX_BOOST_THREAD
 if test "$ax_cv_boost_thread" != "yes"
 then AC_MSG_ERROR([Boost thread support library is missing or corrupted])
 fi
+
+SD_MODULE_DIR([${libdir}/speech-dispatcher-modules])
 
 # Check for additional headers.
 AC_CHECK_HEADERS([libspeechd_version.h])
