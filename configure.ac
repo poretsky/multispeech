@@ -101,6 +101,7 @@ then AC_MSG_ERROR([Boost thread support library is missing or corrupted])
 fi
 
 EXTRA_PATH_OPTION([sdmodule], [Directory for Speech Dispatcher modules], [${libdir}/speech-dispatcher-modules])
+EXTRA_PATH_OPTION([freespeech], [Directory where lexical dictionaries are searched], [${libdir}/freespeech])
 
 # Check for additional headers.
 AC_CHECK_HEADERS([libspeechd_version.h])

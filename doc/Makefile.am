@@ -10,4 +10,4 @@ multispeech.1: multispeech.man
 	sed -e "s|<sysconfdir>|$(sysconfdir)|g" $< > $@
 
 multispeech.conf.5: multispeech.conf.man
-	sed -e "s|<sysconfdir>|$(sysconfdir)|g" -e "s|<datadir>|$(datadir)|g" $< > $@
+	sed -e "s|<sysconfdir>|$(sysconfdir)|g" -e "s|<datadir>|$(datadir)|g" -e "s|<freespeech_dir>|$(freespeech_dir)|g" $< > $@
