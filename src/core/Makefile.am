@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES = libmultispeech.la
 
-AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" -DLIB_DIR=\"$(libdir)\" \
+AM_CPPFLAGS = -DSYSCONF_DIR=\"$(sysconfdir)\" -DDATA_DIR=\"$(datadir)\" \
 	@BOOST_CPPFLAGS@ @BOBCAT_CPPFLAGS@ @SNDFILE_CPPFLAGS@ \
 	@PORTAUDIOCPP_CPPFLAGS@ @PULSEAUDIO_CPPFLAGS@ @SOUNDTOUCH_CXXFLAGS@
 AM_CXXFLAGS = -Wall -Wno-sign-compare

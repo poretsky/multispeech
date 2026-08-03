@@ -36,37 +36,11 @@ using namespace FBB;
 
 // Static data:
 const char* const freephone::name = FREEPHONE;
+const string freephone::lexicon_default_path(absolute("freespeech/enlex.db", DATA_DIR).generic_string());
 string freephone::executable(freephone::name);
-string freephone::lexicon(lexicon_path::search_default);
+string freephone::lexicon(freephone::lexicon_default_path);
 
 static const string mbrola_en1("en1");
-static const path enlex_db("freespeech/enlex.db");
-
-
-// Internal routines:
-
-static bool
-utilize_lexicon(path& lexicon, string& cmd)
-{
-  if (exists(lexicon))
-    {
-      cmd += " -h " + lexicon.generic_string();
-      return true;
-    }
-  else if (exists(lexicon.replace_extension("dir")) && exists(lexicon.replace_extension("pag")))
-    {
-      cmd += " -h " + lexicon.replace_extension().generic_string();
-      return true;
-    }
-  return false;
-}
-
-static bool
-search_lexicon(const path& base_path, string& cmd)
-{
-  path lexicon(absolute(enlex_db, base_path));
-  return utilize_lexicon(lexicon, cmd);
-}
 
 
 // Object construction:
@@ -77,19 +51,14 @@ freephone::freephone(void):
   if (!executable.empty())
     {
       string cmd(executable);
-      if (lexicon == lexicon_path::search_default)
-        {
-          if (!(search_lexicon(LIB_DIR, cmd) || search_lexicon(DATA_DIR, cmd)))
-            {
-              speech_server::log << SyslogStream::warning << name << " lexicon is not found on its conventional places" << endl;
-              if (speech_server::verbose)
-                cerr << "Warning: " << name << " lexicon is not found on its conventional places" << endl;
-            }
-        }
-      else if ((!lexicon.empty()) && (lexicon != lexicon_path::none))
+      if (!lexicon.empty())
         {
           path lexicon(freephone::lexicon);
-          if (!utilize_lexicon(lexicon, cmd))
+          if (exists(lexicon))
+            cmd += " -h " + lexicon.generic_string();
+          else if (exists(lexicon.replace_extension("dir")) && exists(lexicon.replace_extension("pag")))
+            cmd += " -h " + lexicon.replace_extension().generic_string();
+          else
             {
               speech_server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
               if (speech_server::verbose)
