@@ -1,3 +1,10 @@
+multispeech (4.6.6-0resolute1) resolute; urgency=medium
+
+  * New upstream release.
+  * Fixed freespeech compatibility.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Mon, 03 Aug 2026 18:46:36 +0300
+
 multispeech (4.6.5-0resolute1) resolute; urgency=medium
 
   * New upstream release.
