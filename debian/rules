@@ -6,4 +6,4 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- --with-sdmodule-dir=/usr/lib/speech-dispatcher-modules
+	dh_auto_configure -- --with-sdmodule-dir=/usr/lib/speech-dispatcher-modules --with-freespeech-dir=/usr/lib/freespeech
