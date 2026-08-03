@@ -38,6 +38,7 @@ public:
 
   // Constant data for references:
   static const char* const name;
+  static const std::string lexicon_default_path;
 
   // Configurable parameters:
   static std::string executable;
