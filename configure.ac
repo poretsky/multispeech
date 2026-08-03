@@ -100,7 +100,7 @@ if test "$ax_cv_boost_thread" != "yes"
 then AC_MSG_ERROR([Boost thread support library is missing or corrupted])
 fi
 
-SD_MODULE_DIR([${libdir}/speech-dispatcher-modules])
+EXTRA_PATH_OPTION([sdmodule], [Directory for Speech Dispatcher modules], [${libdir}/speech-dispatcher-modules])
 
 # Check for additional headers.
 AC_CHECK_HEADERS([libspeechd_version.h])
