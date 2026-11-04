@@ -357,7 +357,7 @@ will be examined and all paths mentioned there will be searched.
 .B lexicon
 .br
 Path to the lexical database. By default
-\(oq<datadir>/freespeech/enlex.db\(cq is suggested.
+\(oq<freespeech_dir>/enlex.db\(cq is suggested.
 .SH "RU TTS RELATED OPTIONS"
 Section named \(oqru_tts\(cq consists of options that control
 \fBmultispeech\fP interaction with \fBru_tts\fP speech synthesizer:
@@ -371,7 +371,7 @@ will be examined and all paths mentioned there will be searched.
 .B lexicon
 .br
 Path to the lexical database. By default
-\(oq<datadir>/freespeech/rulex.db\(cq is suggested.
+\(oq<freespeech_dir>/rulex.db\(cq is suggested.
 .TP
 .B log
 .br

@@ -12,4 +12,4 @@ MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub configure \
 	ltmain.sh m4/libtool.m4 m4/lt*.m4 *~
 
 %.conf: %.conf.in
-	sed -e "s|<sysconfdir>|$(sysconfdir)|g" -e "s|<datadir>|$(datadir)|g" $< > $@
+	sed -e "s|<sysconfdir>|$(sysconfdir)|g" -e "s|<datadir>|$(datadir)|g" -e "s|<freespeech_dir>|$(freespeech_dir)|g" $< > $@
