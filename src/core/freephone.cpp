@@ -36,7 +36,7 @@ using namespace FBB;
 
 // Static data:
 const char* const freephone::name = FREEPHONE;
-const string freephone::lexicon_default_path(absolute("freespeech/enlex.db", DATA_DIR).generic_string());
+const string freephone::lexicon_default_path(absolute("enlex.db", FREESPEECH_DIR).generic_string());
 string freephone::executable(freephone::name);
 string freephone::lexicon(freephone::lexicon_default_path);
 
@@ -56,6 +56,8 @@ freephone::freephone(void):
           path lexicon(freephone::lexicon);
           if (exists(lexicon))
             cmd += " -h " + lexicon.generic_string();
+          else if (exists(lexicon.replace_extension("dir")) && exists(lexicon.replace_extension("pag")))
+            cmd += " -h " + lexicon.replace_extension().generic_string();
           else
             {
               speech_server::log << SyslogStream::warning << lexicon.generic_string() << " does not exist" << endl;
