@@ -593,9 +593,9 @@ engine = ru_tts
 # (as it is by default) then environment variable "PATH"
 # will be examined and all paths mentioned there will be searched.
 #
-#lexicon = <datadir>/freespeech/enlex.db
+#lexicon = <freespeech_dir>/enlex.db
 # Path to the lexical database. By default
-# "<datadir>/freespeech/enlex.db" is suggested.
+# "<freespeech_dir>/enlex.db" is suggested.
 
 [ru_tts]
 # Ru_tts backend specific options.
@@ -605,9 +605,9 @@ engine = ru_tts
 # (as it is by default) then environment variable "PATH"
 # will be examined and all paths mentioned there will be searched.
 #
-#lexicon = <datadir>/freespeech/rulex.db
+#lexicon = <freespeech_dir>/rulex.db
 # Path to the lexical database. By default
-# "<datadir>/freespeech/rulex.db" is suggested.
+# "<freespeech_dir>/rulex.db" is suggested.
 #
 #log = 
 # Optional file to collect unknown words. This file must be writable
