@@ -1,3 +1,9 @@
+multispeech (4.6.6-0bionic1) bionic; urgency=medium
+
+  * New upstream release.
+
+ -- Igor B. Poretsky <poretsky@mlbox.ru>  Wed, 04 Nov 2026 16:57:48 +0300
+
 multispeech (4.6.3-0bionic1) bionic; urgency=medium
 
   * New upstream release.
